@@ -1,0 +1,77 @@
+{
+  "name": "OptimizationPrompt",
+  "type": "object",
+  "properties": {
+    "projectId": {
+      "type": "string"
+    },
+    "blueprintId": {
+      "type": "string"
+    },
+    "ownerId": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "UI Redesign",
+        "Sales Copy",
+        "SEO",
+        "Conversion",
+        "Performance"
+      ],
+      "default": "UI Redesign"
+    },
+    "title": {
+      "type": "string"
+    },
+    "targetArea": {
+      "type": "string",
+      "description": "Which page or part of the app this optimization targets"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "promptText": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "not_used",
+        "copied",
+        "completed"
+      ],
+      "default": "not_used"
+    }
+  },
+  "required": [
+    "projectId"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
