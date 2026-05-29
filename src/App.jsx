@@ -30,6 +30,7 @@ import ProjectOverview from '@/pages/app/ProjectOverview';
 import BlueprintViewer from '@/pages/app/BlueprintViewer';
 import PromptPackViewer from '@/pages/app/PromptPackViewer';
 import OptimizationPrompts from '@/pages/app/OptimizationPrompts';
+import LaunchAudit from '@/pages/app/LaunchAudit';
 import SecurityReview from '@/pages/app/SecurityReview';
 import QAChecklist from '@/pages/app/QAChecklist';
 import Settings from '@/pages/app/Settings';
@@ -74,6 +75,7 @@ const AuthenticatedApp = () => {
             <Route path="optimize" element={<OptimizationPrompts />} />
             <Route path="security" element={<SecurityReview />} />
             <Route path="qa" element={<QAChecklist />} />
+            <Route path="launch-audit" element={<LaunchAudit />} />
           </Route>
           <Route path="/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />

@@ -126,7 +126,7 @@ export default function ProjectOverview() {
       {generating && <GenerationProgress progress={progress} />}
 
       {blueprint && getLaunchReady(promptItems, security, qa) === 100 && (
-        <LaunchAuditBanner onOrder={() => toast.success("Audit request received — our team will reach out shortly.")} />
+        <LaunchAuditBanner projectId={project.id} onOrder={() => toast.success("Audit request received — our team will reach out shortly.")} />
       )}
 
       {blueprint && (

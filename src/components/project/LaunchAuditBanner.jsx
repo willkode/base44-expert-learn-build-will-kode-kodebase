@@ -1,8 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, Clock, BadgeCheck } from "lucide-react";
 
-export default function LaunchAuditBanner({ onOrder }) {
+export default function LaunchAuditBanner({ onOrder, projectId }) {
+  const navigate = useNavigate();
   return (
     <div className="rounded-2xl border border-primary/40 bg-gradient-to-br from-primary/15 to-card/60 p-6 glow-orange">
       <div className="flex flex-col lg:flex-row lg:items-center gap-5">
@@ -29,12 +31,21 @@ export default function LaunchAuditBanner({ onOrder }) {
             </span>
           </div>
         </div>
-        <Button
-          onClick={onOrder}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold h-11 px-6 shrink-0"
-        >
-          Order Audit — $75
-        </Button>
+        <div className="flex items-center gap-2 shrink-0">
+          <Button
+            onClick={onOrder}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold h-11 px-6"
+          >
+            Order Audit — $75
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => navigate(`/projects/${projectId}/launch-audit`)}
+            className="h-11 px-6"
+          >
+            Learn more
+          </Button>
+        </div>
       </div>
     </div>
   );
