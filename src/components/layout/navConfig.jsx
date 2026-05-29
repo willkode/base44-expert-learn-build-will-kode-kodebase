@@ -12,6 +12,7 @@ import {
   ScrollText,
   LayoutTemplate,
   Cog,
+  LayoutPanelLeft,
 } from "lucide-react";
 
 export const userNav = [
@@ -22,6 +23,7 @@ export const userNav = [
 ];
 
 export const projectNav = [
+  { label: "Overview", to: "overview", icon: LayoutPanelLeft },
   { label: "Blueprint", to: "blueprint", icon: FileText },
   { label: "Prompt Pack", to: "prompts", icon: Wand2 },
   { label: "Security Review", to: "security", icon: ShieldCheck },

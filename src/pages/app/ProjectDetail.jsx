@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Outlet, NavLink, useOutletContext } from "react-router-dom";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { format } from "date-fns";
 import { base44 } from "@/api/base44Client";
-import { Button } from "@/components/ui/button";
 import LoadingState from "@/components/shared/LoadingState";
 import ErrorState from "@/components/shared/ErrorState";
+import StatusBadge from "@/components/project/StatusBadge";
 import { projectNav } from "@/components/layout/navConfig";
 
 export default function ProjectDetail() {
@@ -38,14 +39,16 @@ export default function ProjectDetail() {
         <ArrowLeft className="w-4 h-4" /> Back to projects
       </button>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-        <div>
+      <div className="mb-6">
+        <div className="flex items-center gap-3 mb-1.5">
           <h1 className="font-sora font-bold text-2xl md:text-3xl tracking-tight">{project.projectName}</h1>
-          <p className="text-muted-foreground mt-1 text-sm capitalize">{project.platformFocus || "Base44"} · {project.appType ? `${project.appType} · ` : ""}{project.status}</p>
+          <StatusBadge status={project.status} />
         </div>
-        <Button onClick={() => navigate(`/projects/${project.id}/blueprint`)} className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
-          <Sparkles className="w-4 h-4 mr-2" /> Generate Base44 Blueprint
-        </Button>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+          <span className="capitalize">{project.platformFocus || "Base44"}{project.appType ? ` · ${project.appType}` : ""}</span>
+          {project.created_date && <span>· Created {format(new Date(project.created_date), "MMM d, yyyy")}</span>}
+          {project.updated_date && <span>· Updated {format(new Date(project.updated_date), "MMM d, yyyy")}</span>}
+        </div>
       </div>
 
       <div className="flex gap-1 border-b border-border mb-6 overflow-x-auto">

@@ -26,6 +26,7 @@ import Dashboard from '@/pages/app/Dashboard';
 import Projects from '@/pages/app/Projects';
 import NewProject from '@/pages/app/NewProject';
 import ProjectDetail from '@/pages/app/ProjectDetail';
+import ProjectOverview from '@/pages/app/ProjectOverview';
 import BlueprintViewer from '@/pages/app/BlueprintViewer';
 import PromptPackViewer from '@/pages/app/PromptPackViewer';
 import SecurityReview from '@/pages/app/SecurityReview';
@@ -64,7 +65,8 @@ const AuthenticatedApp = () => {
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/new" element={<NewProject />} />
           <Route path="/projects/:id" element={<ProjectDetail />}>
-            <Route index element={<Navigate to="blueprint" replace />} />
+            <Route index element={<Navigate to="overview" replace />} />
+            <Route path="overview" element={<ProjectOverview />} />
             <Route path="blueprint" element={<BlueprintViewer />} />
             <Route path="prompts" element={<PromptPackViewer />} />
             <Route path="security" element={<SecurityReview />} />
