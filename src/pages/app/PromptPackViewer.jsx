@@ -32,6 +32,15 @@ export default function PromptPackViewer() {
     base44.entities.PromptItem.filter({ projectId: project.id }, "promptNumber").then(setItems);
   };
 
+  const markAllCompleted = async () => {
+    await Promise.all(
+      items.map((item) =>
+        base44.entities.PromptItem.update(item.id, { status: "completed" })
+      )
+    );
+    reloadItems();
+  };
+
   if (loading) return <LoadingState label="Loading prompt pack..." />;
 
   if (!pack || items.length === 0) {
@@ -63,6 +72,9 @@ export default function PromptPackViewer() {
           </Button>
           <Button variant="outline" size="sm" onClick={() => downloadMarkdown(`${project.projectName}-prompts.md`, promptPackMarkdown(project, pack, items))}>
             <Download className="w-4 h-4 mr-1.5" /> Export markdown
+          </Button>
+          <Button variant="outline" size="sm" onClick={markAllCompleted}>
+            Mark all completed
           </Button>
         </div>
       </div>
