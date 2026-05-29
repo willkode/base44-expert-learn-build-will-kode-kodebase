@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 
 const audience = [
-  { tag: "Base44 Builders", line: "Finally structure entities, roles, and security the right way." },
-  { tag: "Vibe Coders", line: "Describe your idea — get a real software plan, not guesswork." },
-  { tag: "Founders", line: "Turn rough ideas into clean technical scope before spending a dime." },
-  { tag: "Agencies", line: "Generate client-ready proposals and architecture docs in minutes." },
+  { tag: "Base44 Builders", line: "Finally structure your entities, roles, and security the right way." },
+  { tag: "Vibe Coders", line: "Describe your idea — get a real software plan instead of guesswork." },
+  { tag: "Founders", line: "Turn a rough idea into clean technical scope before spending a dollar." },
+  { tag: "Agencies", line: "Deliver client-ready proposals and architecture docs in minutes, not days." },
 ];
 
 const quotes = [
@@ -40,7 +40,7 @@ export default function Testimonials() {
         >
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">Built For</span>
           <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4">
-            Software architecture for everyone who builds
+            For everyone who builds with AI but won't ship something broken
           </h2>
         </motion.div>
 

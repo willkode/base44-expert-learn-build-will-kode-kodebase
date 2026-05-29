@@ -3,13 +3,13 @@ import { motion } from "framer-motion";
 import { Boxes, Database, ShieldCheck, Palette, Server, ClipboardCheck, Wand2 } from "lucide-react";
 
 const agents = [
-  { icon: Boxes, name: "Product Architect", desc: "Turns your idea into features, user types, flows, and scope." },
-  { icon: Database, name: "Database Architect", desc: "Designs entities, relationships, field names, and data rules." },
-  { icon: ShieldCheck, name: "Security Architect", desc: "Reviews permissions, ownership, role access, and risky flows." },
-  { icon: Palette, name: "UI Architect", desc: "Maps page structure, layouts, components, and user journeys." },
-  { icon: Server, name: "Backend Architect", desc: "Plans backend functions, automations, integrations, and APIs." },
-  { icon: ClipboardCheck, name: "QA Agent", desc: "Creates test cases, launch checklist, and bug-risk areas." },
-  { icon: Wand2, name: "Prompt Engineer", desc: "Turns the full plan into platform-specific build prompts." },
+  { icon: Boxes, name: "Product Architect", desc: "Turns your idea into clear features, user types, flows, and scope." },
+  { icon: Database, name: "Database Architect", desc: "Designs clean entities, relationships, and data rules — no duplication, no mess." },
+  { icon: ShieldCheck, name: "Security Architect", desc: "Locks down permissions, ownership, and role access before they become breaches." },
+  { icon: Palette, name: "UI Architect", desc: "Maps your pages, layouts, and user journeys so nothing's missing." },
+  { icon: Server, name: "Backend Architect", desc: "Plans your functions, automations, integrations, and APIs." },
+  { icon: ClipboardCheck, name: "QA Agent", desc: "Hands you test cases, a launch checklist, and the bugs to catch first." },
+  { icon: Wand2, name: "Prompt Engineer", desc: "Converts the whole plan into platform-specific prompts you can paste and build." },
 ];
 
 export default function Agents() {
@@ -25,10 +25,10 @@ export default function Agents() {
         >
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">The AI Architecture Team</span>
           <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-5">
-            You're not chatting with a bot.
+            One prompt won't architect software. A team will.
           </h2>
           <p className="text-lg text-muted-foreground">
-            You're running your idea through a full team of specialized architects — each an expert in their domain.
+            Your idea runs through seven specialized architects — each an expert in one part of building real software, working together on one cohesive plan.
           </p>
         </motion.div>
 
@@ -58,9 +58,9 @@ export default function Agents() {
             className="relative rounded-2xl border border-primary/30 bg-primary/5 p-7 flex flex-col justify-center overflow-hidden glow-orange"
           >
             <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-primary/10 rounded-full blur-2xl" />
-            <h3 className="relative font-sora font-bold text-lg mb-2 text-gradient-orange">7 Agents. One Blueprint.</h3>
+            <h3 className="relative font-sora font-bold text-lg mb-2 text-gradient-orange">7 Architects. One Blueprint.</h3>
             <p className="relative text-sm text-muted-foreground leading-relaxed">
-              Every architect contributes to a single, cohesive plan ready to build.
+              Every expert feeds one cohesive plan that's ready to build.
             </p>
           </motion.div>
         </div>

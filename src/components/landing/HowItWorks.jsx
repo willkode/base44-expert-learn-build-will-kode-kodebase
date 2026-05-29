@@ -7,19 +7,19 @@ const steps = [
     icon: MessageSquare,
     num: "01",
     title: "Describe your app",
-    desc: "Tell us your idea in plain English. \u201cI want to build a contractor marketplace.\u201d That\u2019s all it takes to begin.",
+    desc: "Say it in plain English: \u201cI want a contractor marketplace.\u201d That\u2019s enough to start.",
   },
   {
     icon: Cpu,
     num: "02",
-    title: "AI architects it",
-    desc: "A full team of specialized AI architects designs your entities, roles, permissions, pages, and security model.",
+    title: "Your AI team architects it",
+    desc: "A full team of specialized AI architects maps your entities, roles, permissions, pages, and security model \u2014 the way an experienced engineering team would.",
   },
   {
     icon: FileCode2,
     num: "03",
     title: "Get your Build Blueprint",
-    desc: "Receive a complete, platform-specific plan plus AI-ready prompts \u2014 build it right the first time.",
+    desc: "Walk away with a complete, platform-specific plan and sequenced AI prompts. Hand it to AI or your team and build it right the first time.",
   },
 ];
 
@@ -37,10 +37,10 @@ export default function HowItWorks() {
         >
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">How It Works</span>
           <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-5">
-            From idea to blueprint in 3 steps
+            From rough idea to build-ready blueprint in 3 steps
           </h2>
           <p className="text-lg text-muted-foreground">
-            No software degree required. Architect like a senior engineer in minutes.
+            No engineering background needed. Get a plan as solid as a senior architect's — in minutes, not weeks.
           </p>
         </motion.div>
 

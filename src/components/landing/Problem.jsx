@@ -3,12 +3,12 @@ import { motion } from "framer-motion";
 import { AlertTriangle, Layers, Lock, Copy, Workflow, EyeOff, Bug } from "lucide-react";
 
 const problems = [
-  { icon: Layers, text: "Messy entities & duplicated data" },
-  { icon: Lock, text: "Weak permissions & exposed data" },
-  { icon: Copy, text: "Duplicated, overlapping features" },
-  { icon: Workflow, text: "Confusing, broken user flows" },
+  { icon: Layers, text: "Tangled entities & duplicated data" },
+  { icon: Lock, text: "Weak permissions that leak user data" },
+  { icon: Copy, text: "Overlapping, half-built features" },
+  { icon: Workflow, text: "Confusing flows that lose users" },
   { icon: EyeOff, text: "No real security model" },
-  { icon: Bug, text: "Works in demo, breaks with real users" },
+  { icon: Bug, text: "Looks great in a demo — crashes with real traffic" },
 ];
 
 export default function Problem() {
@@ -27,11 +27,12 @@ export default function Problem() {
             <span className="text-sm font-medium text-destructive">The Problem</span>
           </div>
           <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mb-5">
-            Most apps are built wrong.
+            AI can build your app. It can't architect it.
           </h2>
           <p className="text-lg text-muted-foreground leading-relaxed">
-            Anyone can prompt AI to build an app. But almost no one knows how to architect software
-            correctly — and it shows the moment real users arrive.
+            Anyone can prompt their way to a working demo. But without a real architecture
+            underneath, that app falls apart the moment it meets real users — broken flows,
+            exposed data, and weeks of rework. Here's what "build first, plan never" costs you:
           </p>
         </motion.div>
 

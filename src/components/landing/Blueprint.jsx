@@ -6,10 +6,10 @@ const outputs = [
   "Product breakdown & core workflows",
   "User roles (Admin, Customer, Support, etc.)",
   "Full entity / data model with relations",
-  "Permissions model — who can do what",
+  "Permissions model — exactly who can do what",
   "Complete page map (user + admin)",
-  "Feature phases — MVP, V1, V2, future",
-  "AI build prompts, sequenced & ready",
+  "Feature phases — MVP, V1, V2, and beyond",
+  "Sequenced, copy-ready AI build prompts",
   "QA checklist & launch readiness plan",
 ];
 
@@ -27,11 +27,11 @@ export default function Blueprint() {
           >
             <span className="text-sm font-semibold text-primary uppercase tracking-widest">What You Get</span>
             <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-6">
-              A complete Build Blueprint
+              Your entire app, planned before you build it
             </h2>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Everything you need to build a clean, secure, scalable app — documented, structured,
-              and ready to hand to AI or your team.
+              A complete Build Blueprint — every decision documented, structured, and ready to hand
+              to AI or your team. No guesswork, no missing pieces, no expensive surprises mid-build.
             </p>
             <div className="grid sm:grid-cols-2 gap-x-6 gap-y-4">
               {outputs.map((o, i) => (

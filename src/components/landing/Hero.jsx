@@ -25,18 +25,19 @@ export default function Hero() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-8 backdrop-blur-sm">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Your AI Software Architect</span>
+            <span className="text-sm font-medium text-primary">Your AI Software Architecture Team</span>
           </div>
 
           <h1 className="font-sora font-extrabold text-4xl md:text-6xl lg:text-7xl leading-[1.04] tracking-tight mb-7">
-            Before AI builds your app,
+            Stop shipping apps that
             <br />
-            <span className="text-gradient-orange">let AI architect it correctly.</span>
+            <span className="text-gradient-orange">break when real users show up.</span>
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Turn any software idea into a complete build plan — architecture, entities, roles,
-            permissions, security model, and AI-ready prompts. Stop building messy, insecure apps.
+            Kode Architect turns your idea into a complete build plan — data model, user roles,
+            permissions, security, and copy-paste AI prompts — before you write a single line.
+            Build it right the first time instead of rebuilding it three times.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
@@ -45,7 +46,7 @@ export default function Hero() {
               size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base px-8 h-13 py-6 glow-orange group w-full sm:w-auto transition-transform hover:-translate-y-0.5"
             >
-              Get Started Free
+              Build My Blueprint Free
               <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button

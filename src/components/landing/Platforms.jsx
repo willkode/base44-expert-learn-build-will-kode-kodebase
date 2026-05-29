@@ -14,10 +14,10 @@ export default function Platforms() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="font-sora font-bold text-2xl md:text-3xl tracking-tight mb-3">
-            Platform-specific architecture output
+            Built for your stack, not a generic template
           </h2>
           <p className="text-muted-foreground mb-10 max-w-2xl mx-auto">
-            Pick your stack and Kode Architect tailors the entities, access rules, and prompts to it.
+            Pick your platform and Kode Architect tailors your entities, access rules, and prompts to it — so the plan actually works where you build.
           </p>
         </motion.div>
 

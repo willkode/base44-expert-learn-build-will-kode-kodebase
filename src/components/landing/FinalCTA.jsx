@@ -28,14 +28,14 @@ export default function FinalCTA() {
               <span className="text-gradient-orange">Architect it first.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-10">
-              Join the builders shipping clean, secure, scalable apps — starting with the right blueprint.
+              Join the builders shipping clean, secure, scalable apps — because they started with the right blueprint instead of a rebuild.
             </p>
             <Button
               onClick={getStarted}
               size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base px-10 py-6 glow-orange group transition-transform hover:-translate-y-0.5"
             >
-              Get Started Free
+              Build My Blueprint Free
               <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
             </Button>
             <p className="text-xs text-muted-foreground mt-5">No credit card required · Start in seconds</p>

@@ -32,10 +32,10 @@ export default function Pricing() {
         >
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">Pricing</span>
           <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-5">
-            Architect once. Build right.
+            Architect once. Build right. Skip the rebuild.
           </h2>
           <p className="text-lg text-muted-foreground">
-            Start free. Upgrade when you're ready to ship serious software.
+            Start free — no credit card. Upgrade when you're ready to ship software that holds up.
           </p>
         </motion.div>
 
