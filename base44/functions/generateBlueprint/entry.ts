@@ -111,14 +111,15 @@ const AGENTS = [
               issue: { type: "string" },
               risk: { type: "string" },
               recommendation: { type: "string" },
+              fixPrompt: { type: "string", description: "A complete, copy-paste-ready prompt the user can give to Base44 to fix this specific finding. Written as a direct instruction referencing the relevant entities/functions/roles." },
             },
-            required: ["severity", "area", "issue", "recommendation"],
+            required: ["severity", "area", "issue", "recommendation", "fixPrompt"],
           },
         },
       },
       required: ["securityPlan", "findings"],
     },
-    prompt: (ctx, prev) => `You are the Security Agent. Review the design for risks: exposed data, weak permissions, missing ownership checks, unsafe backend functions, and admin bypasses. Return concrete findings with severity.\n\nPermissions:\n${prev.rolePermissionPlan}\nBackend functions:\n${prev.backendFunctionPlan}\n\n${ctx}`,
+    prompt: (ctx, prev) => `You are the Security Agent. Review the design for risks: exposed data, weak permissions, missing ownership checks, unsafe backend functions, and admin bypasses. Return concrete findings with severity. For EACH finding, also write a "fixPrompt": a complete, copy-paste-ready Base44 prompt the user can paste to fix that specific issue.\n\nPermissions:\n${prev.rolePermissionPlan}\nBackend functions:\n${prev.backendFunctionPlan}\n\n${ctx}`,
   },
   {
     name: "QA Agent",
@@ -291,6 +292,7 @@ async function finalize(base44, projectId, project, accumulated, ownerProfile, u
         issue: f.issue || '',
         risk: f.risk || '',
         recommendation: f.recommendation || '',
+        fixPrompt: f.fixPrompt || '',
         fixedStatus: 'open',
       }))
     );

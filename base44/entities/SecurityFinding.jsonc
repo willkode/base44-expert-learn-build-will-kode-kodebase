@@ -33,6 +33,10 @@
     "recommendation": {
       "type": "string"
     },
+    "fixPrompt": {
+      "type": "string",
+      "description": "Ready-to-use Base44 prompt the user can paste to fix this finding"
+    },
     "fixedStatus": {
       "type": "string",
       "enum": [

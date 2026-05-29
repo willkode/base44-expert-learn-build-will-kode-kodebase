@@ -24,8 +24,9 @@ const SCHEMA = {
           issue: { type: "string" },
           risk: { type: "string" },
           recommendation: { type: "string" },
+          fixPrompt: { type: "string", description: "A complete, copy-paste-ready prompt the user can give to Base44 to fix this specific finding. Written as a direct instruction (e.g. 'Add RLS to the Order entity so each user can only read their own records...'). Be specific to this finding and reference the relevant entities/functions/roles." },
         },
-        required: ["severity", "area", "issue", "risk", "recommendation"],
+        required: ["severity", "area", "issue", "risk", "recommendation", "fixPrompt"],
       },
     },
   },
@@ -116,6 +117,7 @@ ${blueprint.workflowPlan || 'N/A'}`;
             issue: f.issue || '',
             risk: f.risk || '',
             recommendation: f.recommendation || '',
+            fixPrompt: f.fixPrompt || '',
             fixedStatus: 'open',
           }))
         );
