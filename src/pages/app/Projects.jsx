@@ -6,12 +6,14 @@ import PageHeader from "@/components/shared/PageHeader";
 import EmptyState from "@/components/shared/EmptyState";
 import LoadingState from "@/components/shared/LoadingState";
 import StatusBadge from "@/components/project/StatusBadge";
+import NewProjectModal from "@/components/project/NewProjectModal";
 import { Button } from "@/components/ui/button";
 
 export default function Projects() {
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     base44.entities.Project.list("-created_date", 100).then((p) => {
@@ -26,11 +28,13 @@ export default function Projects() {
         title="Projects"
         description="All your architecture projects in one place."
         actions={
-          <Button onClick={() => navigate("/projects/new")} className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+          <Button onClick={() => setModalOpen(true)} className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
             <FolderPlus className="w-4 h-4 mr-2" /> New Project
           </Button>
         }
       />
+
+      <NewProjectModal open={modalOpen} onOpenChange={setModalOpen} />
 
       {loading ? (
         <LoadingState />
@@ -40,7 +44,7 @@ export default function Projects() {
           title="No projects yet"
           description="Create your first project to generate a Base44 build blueprint."
           actionLabel="New Project"
-          onAction={() => navigate("/projects/new")}
+          onAction={() => setModalOpen(true)}
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

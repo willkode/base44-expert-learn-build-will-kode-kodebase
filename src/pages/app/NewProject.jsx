@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Loader2, ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
@@ -17,10 +17,12 @@ const STEP_LABELS = ["App Basics", "Users & Roles", "Core Features", "Data & Wor
 
 export default function NewProject() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [data, setData] = useState({ securityLevel: "standard" });
+  const [data, setData] = useState(location.state?.prefill || { securityLevel: "standard" });
+  const prefilled = !!location.state?.prefill;
 
   const set = (k, v) => setData((d) => ({ ...d, [k]: v }));
 
@@ -104,6 +106,13 @@ export default function NewProject() {
   return (
     <div className="max-w-3xl mx-auto">
       <PageHeader title="New Project" description="Answer a few questions — the AI Base44 Architect will plan the rest." />
+
+      {prefilled && (
+        <div className="mb-6 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-foreground flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-primary shrink-0" />
+          We pre-filled this from your PRD — please review and edit each step before creating.
+        </div>
+      )}
 
       <InfoCard topic="cleanData" className="mb-6" />
 

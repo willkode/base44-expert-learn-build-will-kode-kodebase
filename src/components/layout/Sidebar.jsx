@@ -1,27 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Compass, LogOut, Shield } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { userNav, adminNav } from "./navConfig";
+import NewProjectModal from "@/components/project/NewProjectModal";
 
 export default function Sidebar({ user, onNavigate }) {
   const location = useLocation();
   const isAdmin = user?.role === "admin";
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const baseClass = (active) =>
+    `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors w-full text-left ${
+      active
+        ? "bg-primary/10 text-primary"
+        : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
+    }`;
 
   const NavLink = ({ item }) => {
+    if (item.action === "newProject") {
+      return (
+        <button onClick={() => { onNavigate?.(); setModalOpen(true); }} className={baseClass(false)}>
+          <item.icon className="w-4.5 h-4.5 shrink-0" />
+          {item.label}
+        </button>
+      );
+    }
     const active =
       location.pathname === item.to ||
       (item.to !== "/dashboard" && item.to !== "/admin" && location.pathname.startsWith(item.to));
     return (
-      <Link
-        to={item.to}
-        onClick={onNavigate}
-        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-          active
-            ? "bg-primary/10 text-primary"
-            : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
-        }`}
-      >
+      <Link to={item.to} onClick={onNavigate} className={baseClass(active)}>
         <item.icon className="w-4.5 h-4.5 shrink-0" />
         {item.label}
       </Link>
@@ -30,6 +39,7 @@ export default function Sidebar({ user, onNavigate }) {
 
   return (
     <div className="flex flex-col h-full bg-card/60 border-r border-border w-64">
+      <NewProjectModal open={modalOpen} onOpenChange={setModalOpen} />
       <Link to="/dashboard" onClick={onNavigate} className="flex items-center gap-2.5 px-5 h-16 border-b border-border">
         <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
           <Compass className="w-5 h-5 text-primary-foreground" />
