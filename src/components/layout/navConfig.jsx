@@ -13,12 +13,14 @@ import {
   LayoutTemplate,
   Cog,
   LayoutPanelLeft,
+  GraduationCap,
 } from "lucide-react";
 
 export const userNav = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
   { label: "New Project", to: "/projects/new", icon: FolderPlus },
   { label: "Projects", to: "/projects", icon: FolderKanban },
+  { label: "Learn", to: "/help", icon: GraduationCap },
   { label: "Settings", to: "/settings", icon: Settings },
 ];
 

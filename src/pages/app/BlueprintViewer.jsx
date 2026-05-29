@@ -12,6 +12,7 @@ import BlueprintSection from "@/components/blueprint/BlueprintSection";
 import SecurityFindings from "@/components/blueprint/SecurityFindings";
 import QAChecklistView from "@/components/blueprint/QAChecklistView";
 import ClientReportView from "@/components/blueprint/ClientReportView";
+import InfoCard from "@/components/help/InfoCard";
 
 const TABS = [
   { key: "overview", label: "Overview" },
@@ -130,11 +131,13 @@ export default function BlueprintViewer() {
           <BlueprintSection title="App Architecture" content={blueprint.appArchitecture} />
         </TabsContent>
 
-        <TabsContent value="entities" className="mt-5">
+        <TabsContent value="entities" className="mt-5 space-y-5">
+          <InfoCard topic="cleanData" />
           <BlueprintSection title="Entity Plan" description="Entities, fields, relationships, and ownership rules." content={blueprint.entityPlan} />
         </TabsContent>
 
-        <TabsContent value="permissions" className="mt-5">
+        <TabsContent value="permissions" className="mt-5 space-y-5">
+          <InfoCard topic="ownerId" />
           <BlueprintSection title="Roles & Permissions" description="Role access, CRUD recommendations, admin-only areas, and ownership checks." content={blueprint.rolePermissionPlan} />
         </TabsContent>
 
@@ -146,7 +149,8 @@ export default function BlueprintViewer() {
           <BlueprintSection title="Workflows" description="Triggers, user/system actions, status changes, and notifications." content={blueprint.workflowPlan} />
         </TabsContent>
 
-        <TabsContent value="backend" className="mt-5">
+        <TabsContent value="backend" className="mt-5 space-y-5">
+          <InfoCard topic="backendFunctions" />
           <BlueprintSection title="Backend Functions" description="Function purpose, inputs/outputs, security, and error handling." content={blueprint.backendFunctionPlan} />
         </TabsContent>
 
@@ -154,17 +158,20 @@ export default function BlueprintViewer() {
           <BlueprintSection title="Integrations" description="Purpose, required data, backend needs, and security notes." content={blueprint.integrationPlan} />
         </TabsContent>
 
-        <TabsContent value="roadmap" className="mt-5">
+        <TabsContent value="roadmap" className="mt-5 space-y-5">
+          <InfoCard topic="phases" />
           <BlueprintSection title="MVP Roadmap" description="Phased build order and future upgrades." content={blueprint.mvpRoadmap} />
         </TabsContent>
 
-        <TabsContent value="security" className="mt-5">
+        <TabsContent value="security" className="mt-5 space-y-5">
+          <InfoCard topic="securityPrompts" />
           <BlueprintSection title="Security Notes" description="Findings detected during architecture review.">
             <SecurityFindings findings={findings} />
           </BlueprintSection>
         </TabsContent>
 
-        <TabsContent value="qa" className="mt-5">
+        <TabsContent value="qa" className="mt-5 space-y-5">
+          <InfoCard topic="qaPrompts" />
           <BlueprintSection title="QA Checklist" description="Tap an item to cycle pending → passed → failed.">
             <QAChecklistView items={qaItems} onUpdate={reloadQA} />
           </BlueprintSection>

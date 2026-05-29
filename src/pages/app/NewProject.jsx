@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Loader2, ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
+import InfoCard from "@/components/help/InfoCard";
 import WizardProgress from "@/components/wizard/WizardProgress";
 import Step1Basics from "@/components/wizard/Step1Basics";
 import Step2Users from "@/components/wizard/Step2Users";
@@ -98,6 +99,8 @@ export default function NewProject() {
   return (
     <div className="max-w-3xl mx-auto">
       <PageHeader title="New Project" description="Answer a few questions — the AI Base44 Architect will plan the rest." />
+
+      <InfoCard topic="cleanData" className="mb-6" />
 
       <WizardProgress steps={STEP_LABELS} current={step} />
 

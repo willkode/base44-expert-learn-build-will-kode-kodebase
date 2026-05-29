@@ -32,6 +32,7 @@ import PromptPackViewer from '@/pages/app/PromptPackViewer';
 import SecurityReview from '@/pages/app/SecurityReview';
 import QAChecklist from '@/pages/app/QAChecklist';
 import Settings from '@/pages/app/Settings';
+import Help from '@/pages/app/Help';
 
 // Admin pages
 import AdminDashboard from '@/pages/admin/AdminDashboard';
@@ -73,6 +74,7 @@ const AuthenticatedApp = () => {
             <Route path="qa" element={<QAChecklist />} />
           </Route>
           <Route path="/settings" element={<Settings />} />
+          <Route path="/help" element={<Help />} />
 
           {/* Admin */}
           <Route element={<AdminRoute />}>
