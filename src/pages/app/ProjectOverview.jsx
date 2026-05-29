@@ -6,6 +6,7 @@ import LoadingState from "@/components/shared/LoadingState";
 import ProjectActions from "@/components/project/ProjectActions";
 import GenerationProgress from "@/components/project/GenerationProgress";
 import ProjectSummary from "@/components/project/ProjectSummary";
+import ProjectMetrics from "@/components/project/ProjectMetrics";
 import BlueprintProgress from "@/components/project/BlueprintProgress";
 import ProjectActivity from "@/components/project/ProjectActivity";
 import PlanUsageCard from "@/components/plan/PlanUsageCard";
@@ -18,6 +19,7 @@ export default function ProjectOverview() {
   const [intake, setIntake] = useState(null);
   const [blueprint, setBlueprint] = useState(null);
   const [promptPack, setPromptPack] = useState(null);
+  const [promptItems, setPromptItems] = useState([]);
   const [security, setSecurity] = useState([]);
   const [qa, setQa] = useState([]);
   const [runs, setRuns] = useState([]);
@@ -31,15 +33,17 @@ export default function ProjectOverview() {
       base44.entities.ProjectIntake.filter({ projectId: project.id }),
       base44.entities.Blueprint.filter({ projectId: project.id }, "-created_date", 1),
       base44.entities.PromptPack.filter({ projectId: project.id }, "-created_date", 1),
+      base44.entities.PromptItem.filter({ projectId: project.id }),
       base44.entities.SecurityFinding.filter({ projectId: project.id }),
       base44.entities.QAItem.filter({ projectId: project.id }),
       base44.entities.AgentRun.filter({ projectId: project.id }, "-created_date", 10),
       base44.entities.UserProfile.filter({ userId: project.ownerId }, "-created_date", 1),
       base44.auth.me(),
-    ]).then(([i, b, pp, s, q, r, prof, me]) => {
+    ]).then(([i, b, pp, pi, s, q, r, prof, me]) => {
       setIntake(i[0] || null);
       setBlueprint(b[0] || null);
       setPromptPack(pp[0] || null);
+      setPromptItems(pi);
       setSecurity(s);
       setQa(q);
       setRuns(r);
@@ -119,6 +123,10 @@ export default function ProjectOverview() {
       )}
 
       {generating && <GenerationProgress progress={progress} />}
+
+      {blueprint && (
+        <ProjectMetrics prompts={promptItems} security={security} qa={qa} />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
