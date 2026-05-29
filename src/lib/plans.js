@@ -29,7 +29,7 @@ export const PLANS = {
     name: "Pro",
     price: "$39",
     period: "/mo",
-    desc: "For serious builders & founders.",
+    desc: "For freelance vibecoders.",
     projectLimit: 25,
     blueprintLimit: 25,
     promptPack: "full",
