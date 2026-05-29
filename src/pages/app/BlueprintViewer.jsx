@@ -1,18 +1,166 @@
-import React from "react";
-import { useOutletContext } from "react-router-dom";
-import { FileText, Sparkles } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { useOutletContext, useNavigate } from "react-router-dom";
+import { FileText, Download, Wand2, ShieldCheck, ArrowLeft } from "lucide-react";
+import { base44 } from "@/api/base44Client";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
+import BlueprintSection from "@/components/blueprint/BlueprintSection";
+import SecurityFindings from "@/components/blueprint/SecurityFindings";
+import QAChecklistView from "@/components/blueprint/QAChecklistView";
+
+const TABS = [
+  { key: "overview", label: "Overview" },
+  { key: "entities", label: "Entity Plan" },
+  { key: "permissions", label: "Roles & Permissions" },
+  { key: "pages", label: "Page Plan" },
+  { key: "workflows", label: "Workflows" },
+  { key: "backend", label: "Backend Functions" },
+  { key: "integrations", label: "Integrations" },
+  { key: "roadmap", label: "MVP Roadmap" },
+  { key: "security", label: "Security Notes" },
+  { key: "qa", label: "QA Checklist" },
+];
+
+function buildMarkdown(bp) {
+  return [
+    `# ${bp.title || "Base44 Build Blueprint"}`,
+    `\n## Executive Summary\n${bp.executiveSummary || ""}`,
+    `\n## App Architecture\n${bp.appArchitecture || ""}`,
+    `\n## Entity Plan\n${bp.entityPlan || ""}`,
+    `\n## Roles & Permissions\n${bp.rolePermissionPlan || ""}`,
+    `\n## Page Plan\n${bp.pagePlan || ""}`,
+    `\n## Workflows\n${bp.workflowPlan || ""}`,
+    `\n## Backend Functions\n${bp.backendFunctionPlan || ""}`,
+    `\n## Integrations\n${bp.integrationPlan || ""}`,
+    `\n## MVP Roadmap\n${bp.mvpRoadmap || ""}`,
+  ].join("\n");
+}
 
 export default function BlueprintViewer() {
   const { project } = useOutletContext();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [blueprint, setBlueprint] = useState(null);
+  const [findings, setFindings] = useState([]);
+  const [qaItems, setQaItems] = useState([]);
+
+  const loadData = () => {
+    Promise.all([
+      base44.entities.Blueprint.filter({ projectId: project.id }, "-created_date", 1),
+      base44.entities.SecurityFinding.filter({ projectId: project.id }),
+      base44.entities.QAItem.filter({ projectId: project.id }),
+    ]).then(([b, s, q]) => {
+      setBlueprint(b[0] || null);
+      setFindings(s);
+      setQaItems(q);
+      setLoading(false);
+    });
+  };
+
+  useEffect(loadData, [project.id]);
+
+  const reloadQA = () => {
+    base44.entities.QAItem.filter({ projectId: project.id }).then(setQaItems);
+  };
+
+  const handleExport = () => {
+    const md = buildMarkdown(blueprint);
+    const blob = new Blob([md], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${project.projectName}-blueprint.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Blueprint exported");
+  };
+
+  if (loading) return <LoadingState label="Loading blueprint..." />;
+
+  if (!blueprint) {
+    return (
+      <EmptyState
+        icon={FileText}
+        title="No blueprint generated yet"
+        description={`Generate a full Base44 build blueprint for "${project.projectName}" from the Overview tab.`}
+        actionLabel="Go to Overview"
+        onAction={() => navigate(`/projects/${project.id}/overview`)}
+      />
+    );
+  }
 
   return (
-    <EmptyState
-      icon={FileText}
-      title="No blueprint generated yet"
-      description={`Generate a full Base44 build blueprint for "${project.projectName}" — entities, roles, permissions, pages, and backend plan.`}
-      actionLabel="Generate Blueprint"
-      onAction={() => {}}
-    />
+    <div className="space-y-6">
+      <div className="flex flex-wrap gap-3">
+        <Button variant="outline" onClick={() => navigate(`/projects/${project.id}/overview`)}>
+          <ArrowLeft className="w-4 h-4 mr-2" /> Back to project
+        </Button>
+        <Button variant="outline" onClick={handleExport}>
+          <Download className="w-4 h-4 mr-2" /> Export markdown
+        </Button>
+        <Button variant="outline" onClick={() => navigate(`/projects/${project.id}/prompts`)}>
+          <Wand2 className="w-4 h-4 mr-2" /> Generate prompt pack
+        </Button>
+        <Button variant="outline" onClick={() => navigate(`/projects/${project.id}/security`)}>
+          <ShieldCheck className="w-4 h-4 mr-2" /> Run security review
+        </Button>
+      </div>
+
+      <Tabs defaultValue="overview">
+        <TabsList className="flex flex-wrap h-auto justify-start gap-1 bg-secondary/50 p-1">
+          {TABS.map((t) => (
+            <TabsTrigger key={t.key} value={t.key} className="text-xs sm:text-sm">{t.label}</TabsTrigger>
+          ))}
+        </TabsList>
+
+        <TabsContent value="overview" className="mt-5 space-y-5">
+          <BlueprintSection title="Executive Summary" content={blueprint.executiveSummary} />
+          <BlueprintSection title="App Architecture" content={blueprint.appArchitecture} />
+        </TabsContent>
+
+        <TabsContent value="entities" className="mt-5">
+          <BlueprintSection title="Entity Plan" description="Entities, fields, relationships, and ownership rules." content={blueprint.entityPlan} />
+        </TabsContent>
+
+        <TabsContent value="permissions" className="mt-5">
+          <BlueprintSection title="Roles & Permissions" description="Role access, CRUD recommendations, admin-only areas, and ownership checks." content={blueprint.rolePermissionPlan} />
+        </TabsContent>
+
+        <TabsContent value="pages" className="mt-5">
+          <BlueprintSection title="Page Plan" description="Public, user, admin, detail, and settings pages." content={blueprint.pagePlan} />
+        </TabsContent>
+
+        <TabsContent value="workflows" className="mt-5">
+          <BlueprintSection title="Workflows" description="Triggers, user/system actions, status changes, and notifications." content={blueprint.workflowPlan} />
+        </TabsContent>
+
+        <TabsContent value="backend" className="mt-5">
+          <BlueprintSection title="Backend Functions" description="Function purpose, inputs/outputs, security, and error handling." content={blueprint.backendFunctionPlan} />
+        </TabsContent>
+
+        <TabsContent value="integrations" className="mt-5">
+          <BlueprintSection title="Integrations" description="Purpose, required data, backend needs, and security notes." content={blueprint.integrationPlan} />
+        </TabsContent>
+
+        <TabsContent value="roadmap" className="mt-5">
+          <BlueprintSection title="MVP Roadmap" description="Phased build order and future upgrades." content={blueprint.mvpRoadmap} />
+        </TabsContent>
+
+        <TabsContent value="security" className="mt-5">
+          <BlueprintSection title="Security Notes" description="Findings detected during architecture review.">
+            <SecurityFindings findings={findings} />
+          </BlueprintSection>
+        </TabsContent>
+
+        <TabsContent value="qa" className="mt-5">
+          <BlueprintSection title="QA Checklist" description="Tap an item to cycle pending → passed → failed.">
+            <QAChecklistView items={qaItems} onUpdate={reloadQA} />
+          </BlueprintSection>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }
