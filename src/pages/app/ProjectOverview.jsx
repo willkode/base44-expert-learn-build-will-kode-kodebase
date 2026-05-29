@@ -8,6 +8,7 @@ import GenerationProgress from "@/components/project/GenerationProgress";
 import ProjectSummary from "@/components/project/ProjectSummary";
 import ProjectMetrics, { getLaunchReady } from "@/components/project/ProjectMetrics";
 import LaunchAuditBanner from "@/components/project/LaunchAuditBanner";
+import LaunchCelebrationDialog from "@/components/project/LaunchCelebrationDialog";
 import BlueprintProgress from "@/components/project/BlueprintProgress";
 import ProjectActivity from "@/components/project/ProjectActivity";
 import PlanUsageCard from "@/components/plan/PlanUsageCard";
@@ -28,6 +29,7 @@ export default function ProjectOverview() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [progress, setProgress] = useState(null);
+  const [celebrate, setCelebrate] = useState(false);
 
   const loadData = () => {
     Promise.all([
@@ -55,6 +57,16 @@ export default function ProjectOverview() {
   };
 
   useEffect(loadData, [project.id]);
+
+  // Celebrate the first time this project hits 100% launch ready (once per project).
+  useEffect(() => {
+    if (loading || !blueprint) return;
+    if (getLaunchReady(promptItems, security, qa) !== 100) return;
+    const key = `launchCelebrated_${project.id}`;
+    if (localStorage.getItem(key)) return;
+    localStorage.setItem(key, "1");
+    setCelebrate(true);
+  }, [loading, blueprint, promptItems, security, qa, project.id]);
 
   const handleGenerate = async () => {
     setGenerating(true);
@@ -106,6 +118,12 @@ export default function ProjectOverview() {
 
   return (
     <div className="space-y-6">
+      <LaunchCelebrationDialog
+        open={celebrate}
+        onOpenChange={setCelebrate}
+        appName={project.projectName}
+      />
+
       {limitReached ? (
         <UpgradeCard
           title="Blueprint limit reached"
