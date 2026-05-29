@@ -12,14 +12,14 @@ const steps = [
   {
     icon: Cpu,
     num: "02",
-    title: "Your AI team architects it",
-    desc: "A full team of specialized AI architects maps your entities, roles, permissions, pages, and security model \u2014 the way an experienced engineering team would.",
+    title: "Your AI architecture team plans it",
+    desc: "Specialized AI agents think through structure, data, security, workflows, pages, and prompts \u2014 building a real build strategy, not a generic feature list.",
   },
   {
     icon: FileCode2,
     num: "03",
-    title: "Get your Build Blueprint",
-    desc: "Walk away with a complete, platform-specific plan and sequenced AI prompts. Hand it to AI or your team and build it right the first time.",
+    title: "Get your Base44 build blueprint",
+    desc: "Walk away with app overview, roles, entities, relationships, permissions, page map, build phases, and copy-paste Base44 prompts. Now you're building from a plan, not guessing.",
   },
 ];
 
@@ -37,10 +37,10 @@ export default function HowItWorks() {
         >
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">How It Works</span>
           <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-5">
-            From rough idea to build-ready blueprint in 3 steps
+            From rough idea to Base44-ready blueprint in minutes
           </h2>
           <p className="text-lg text-muted-foreground">
-            No engineering background needed. Get a plan as solid as a senior architect's — in minutes, not weeks.
+            You don't need to know the database structure, the workflows, or the permissions. That's what Kode Architect is for.
           </p>
         </motion.div>
 

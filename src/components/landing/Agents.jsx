@@ -3,13 +3,13 @@ import { motion } from "framer-motion";
 import { Boxes, Database, ShieldCheck, Palette, Server, ClipboardCheck, Wand2 } from "lucide-react";
 
 const agents = [
-  { icon: Boxes, name: "Product Architect", desc: "Turns your idea into clear features, user types, flows, and scope." },
-  { icon: Database, name: "Database Architect", desc: "Designs clean entities, relationships, and data rules — no duplication, no mess." },
-  { icon: ShieldCheck, name: "Security Architect", desc: "Locks down permissions, ownership, and role access before they become breaches." },
-  { icon: Palette, name: "UI Architect", desc: "Maps your pages, layouts, and user journeys so nothing's missing." },
-  { icon: Server, name: "Backend Architect", desc: "Plans your functions, automations, integrations, and APIs." },
-  { icon: ClipboardCheck, name: "QA Agent", desc: "Hands you test cases, a launch checklist, and the bugs to catch first." },
-  { icon: Wand2, name: "Prompt Engineer", desc: "Converts the whole plan into platform-specific prompts you can paste and build." },
+  { icon: Boxes, name: "Product Architect", desc: "Defines your app structure, user types, features, workflows, and build scope." },
+  { icon: Database, name: "Database Architect", desc: "Maps your Base44 entities, fields, and relationships so your app doesn't become a mess later." },
+  { icon: ShieldCheck, name: "Security Architect", desc: "Plans roles, ownership rules, and access control before you accidentally expose user data." },
+  { icon: Palette, name: "UI Architect", desc: "Creates your page map, dashboards, user flows, and admin areas." },
+  { icon: Server, name: "Backend Architect", desc: "Plans functions, automations, integrations, notifications, and API logic." },
+  { icon: ClipboardCheck, name: "QA Agent", desc: "Creates test cases, launch checks, and bug prevention steps before your users find the problems." },
+  { icon: Wand2, name: "Prompt Engineer", desc: "Turns the full plan into structured, sequenced Base44 prompts you paste directly into your build." },
 ];
 
 export default function Agents() {
@@ -25,10 +25,10 @@ export default function Agents() {
         >
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">The AI Architecture Team</span>
           <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-5">
-            One prompt won't architect software. A team will.
+            One prompt cannot architect a full app. A team can.
           </h2>
           <p className="text-lg text-muted-foreground">
-            Your idea runs through seven specialized architects — each an expert in one part of building real software, working together on one cohesive plan.
+            Kode Architect uses specialized AI agents that each focus on one critical part of your app — working together on one cohesive Base44 build plan.
           </p>
         </motion.div>
 

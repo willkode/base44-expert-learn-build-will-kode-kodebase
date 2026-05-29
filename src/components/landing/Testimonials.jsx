@@ -3,25 +3,26 @@ import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 
 const audience = [
-  { tag: "Base44 Builders", line: "Finally structure your entities, roles, and security the right way." },
-  { tag: "Vibe Coders", line: "Describe your idea — get a real software plan instead of guesswork." },
-  { tag: "Founders", line: "Turn a rough idea into clean technical scope before spending a dollar." },
-  { tag: "Agencies", line: "Deliver client-ready proposals and architecture docs in minutes, not days." },
+  { tag: "Base44 Builders", line: "Plan your entities, roles, pages, permissions, and prompts before burning credits." },
+  { tag: "Vibe Coders", line: "Turn your rough idea into a structured build plan AI can actually follow." },
+  { tag: "Founders", line: "Validate your app structure before spending time or money building the wrong thing." },
+  { tag: "Agencies", line: "Create client-ready app plans, scopes, and build prompts in minutes instead of days." },
+  { tag: "Freelancers", line: "Look more professional, quote better, and build with fewer revisions." },
 ];
 
 const quotes = [
   {
-    quote: "I used to build apps that broke the moment real users showed up. Now I architect first — game changer.",
+    quote: "I stopped asking Base44 to guess what I wanted. Now I give it structured prompts from Kode Architect and the builds are cleaner from the start.",
     name: "Marcus T.",
-    role: "Indie Builder",
+    role: "Base44 Builder",
   },
   {
-    quote: "The security model alone saved me from shipping an app with wide-open permissions. Worth it instantly.",
+    quote: "The permission planning alone saved me from shipping an app that exposed customer data.",
     name: "Priya R.",
     role: "Startup Founder",
   },
   {
-    quote: "We use it for every client proposal now. Clean architecture docs in minutes instead of days.",
+    quote: "I used to waste credits fixing the same bugs over and over. Now I architect first, then build.",
     name: "Devon K.",
     role: "Agency Owner",
   },
@@ -40,11 +41,11 @@ export default function Testimonials() {
         >
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">Built For</span>
           <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4">
-            For everyone who builds with AI but won't ship something broken
+            Built for people using AI to build real software
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-16">
           {audience.map((a, i) => (
             <motion.div
               key={i}

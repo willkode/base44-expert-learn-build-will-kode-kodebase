@@ -23,12 +23,14 @@ export default function FinalCTA() {
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
           <div className="relative">
             <h2 className="font-sora font-extrabold text-3xl md:text-5xl tracking-tight mb-5">
-              Don't just prompt AI.
+              Don't just prompt your app.
               <br />
               <span className="text-gradient-orange">Architect it first.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-10">
-              Join the builders shipping clean, secure, scalable apps — because they started with the right blueprint instead of a rebuild.
+              AI can build faster than ever — but speed without structure creates chaos. Get the blueprint,
+              prompts, permissions, and build order before you start building in Base44. Stop guessing.
+              Stop wasting credits. Stop chasing preventable bugs.
             </p>
             <Button
               onClick={getStarted}

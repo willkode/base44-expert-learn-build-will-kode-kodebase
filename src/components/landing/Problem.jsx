@@ -3,12 +3,12 @@ import { motion } from "framer-motion";
 import { AlertTriangle, Layers, Lock, Copy, Workflow, EyeOff, Bug } from "lucide-react";
 
 const problems = [
-  { icon: Layers, text: "Tangled entities & duplicated data" },
-  { icon: Lock, text: "Weak permissions that leak user data" },
-  { icon: Copy, text: "Overlapping, half-built features" },
-  { icon: Workflow, text: "Confusing flows that lose users" },
-  { icon: EyeOff, text: "No real security model" },
-  { icon: Bug, text: "Looks great in a demo — crashes with real traffic" },
+  { icon: Layers, text: "Duplicated entities & a messy data model" },
+  { icon: Lock, text: "Weak permissions that expose user data" },
+  { icon: Copy, text: "Missing admin features & half-built flows" },
+  { icon: Workflow, text: "Broken user flows that lose people" },
+  { icon: EyeOff, text: "Endless bug chasing" },
+  { icon: Bug, text: "Wasted message credits fixing avoidable mistakes" },
 ];
 
 export default function Problem() {
@@ -27,12 +27,12 @@ export default function Problem() {
             <span className="text-sm font-medium text-destructive">The Problem</span>
           </div>
           <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mb-5">
-            AI can build your app. It can't architect it.
+            Conversational AI builds are great — until your app gets complicated.
           </h2>
           <p className="text-lg text-muted-foreground leading-relaxed">
-            Anyone can prompt their way to a working demo. But without a real architecture
-            underneath, that app falls apart the moment it meets real users — broken flows,
-            exposed data, and weeks of rework. Here's what "build first, plan never" costs you:
+            "Build me a dashboard" works fine. But real apps have users, roles, permissions, admin
+            flows, data relationships, payments, and security rules — and a simple conversation isn't
+            enough. Without structured prompts, Base44 has to guess. And when AI guesses, you get:
           </p>
         </motion.div>
 
@@ -54,6 +54,16 @@ export default function Problem() {
             </motion.div>
           ))}
         </div>
+
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center text-lg md:text-xl font-sora font-semibold mt-12"
+        >
+          The problem isn't Base44. <span className="text-gradient-orange">The problem is building without a plan.</span>
+        </motion.p>
       </div>
     </section>
   );

@@ -25,19 +25,20 @@ export default function Hero() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-8 backdrop-blur-sm">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Your AI Software Architecture Team</span>
+            <span className="text-sm font-medium text-primary">Plan before you build on Base44</span>
           </div>
 
           <h1 className="font-sora font-extrabold text-4xl md:text-6xl lg:text-7xl leading-[1.04] tracking-tight mb-7">
-            Stop shipping apps that
+            Stop wasting Base44 credits
             <br />
-            <span className="text-gradient-orange">break when real users show up.</span>
+            <span className="text-gradient-orange">fixing problems you could have avoided.</span>
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Kode Architect turns your idea into a complete build plan — data model, user roles,
-            permissions, security, and copy-paste AI prompts — before you write a single line.
-            Build it right the first time instead of rebuilding it three times.
+            Base44 makes it easy to build apps with AI — but a short conversation with AI is not the
+            same thing as a real software plan. Kode Architect gives you a complete Base44-ready
+            blueprint — data model, roles, permissions, page structure, security rules, workflows,
+            and copy-paste build prompts. Build with structure. Stop rebuilding the same app three times.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">

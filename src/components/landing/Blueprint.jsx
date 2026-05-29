@@ -27,11 +27,11 @@ export default function Blueprint() {
           >
             <span className="text-sm font-semibold text-primary uppercase tracking-widest">What You Get</span>
             <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-6">
-              Your entire app, planned before you build it
+              A complete app architecture built for AI development
             </h2>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              A complete Build Blueprint — every decision documented, structured, and ready to hand
-              to AI or your team. No guesswork, no missing pieces, no expensive surprises mid-build.
+              Your blueprint gives Base44 the structure it needs before it starts generating your app.
+              This is the difference between prompting blindly and building with a real plan.
             </p>
             <div className="grid sm:grid-cols-2 gap-x-6 gap-y-4">
               {outputs.map((o, i) => (
