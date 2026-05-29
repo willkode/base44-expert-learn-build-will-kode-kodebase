@@ -51,38 +51,43 @@ export default function NewProject() {
     setSaving(true);
     setError("");
 
-    const user = await base44.auth.me();
+    try {
+      const user = await base44.auth.me();
 
-    const project = await base44.entities.Project.create({
-      ownerId: user.id,
-      projectName: data.appName,
-      appType: data.appType,
-      shortDescription: data.shortDescription,
-      targetUsers: data.targetAudience,
-      platformFocus: "Base44",
-      status: "draft",
-      currentStep: 1,
-    });
+      const project = await base44.entities.Project.create({
+        ownerId: user.id,
+        projectName: data.appName,
+        appType: data.appType,
+        shortDescription: data.shortDescription,
+        targetUsers: data.targetAudience,
+        platformFocus: "Base44",
+        status: "draft",
+        currentStep: 1,
+      });
 
-    await base44.entities.ProjectIntake.create({
-      projectId: project.id,
-      ownerId: user.id,
-      appName: data.appName,
-      appDescription: data.shortDescription,
-      targetAudience: data.targetAudience,
-      userRoles: data.userRoles,
-      mainFeatures: data.mainFeatures,
-      adminNeeds: data.adminFeatures,
-      integrationsNeeded: data.externalApis,
-      paymentNeeds: data.paymentIntegration ? "Yes" : "No",
-      aiFeaturesNeeded: data.aiFeatures,
-      securityLevel: data.securityLevel || "standard",
-      launchGoal: data.launchGoal,
-      notes: data.notes,
-      stepData: data,
-    });
+      await base44.entities.ProjectIntake.create({
+        projectId: project.id,
+        ownerId: user.id,
+        appName: data.appName,
+        appDescription: data.shortDescription,
+        targetAudience: data.targetAudience,
+        userRoles: data.userRoles,
+        mainFeatures: data.mainFeatures,
+        adminNeeds: data.adminFeatures,
+        integrationsNeeded: data.externalApis,
+        paymentNeeds: data.paymentIntegration ? "Yes" : "No",
+        aiFeaturesNeeded: data.aiFeatures,
+        securityLevel: data.securityLevel || "standard",
+        launchGoal: data.launchGoal,
+        notes: data.notes,
+        stepData: data,
+      });
 
-    navigate(`/projects/${project.id}`);
+      navigate(`/projects/${project.id}`);
+    } catch (err) {
+      setError("Something went wrong creating your project. Please try again.");
+      setSaving(false);
+    }
   };
 
   const steps = [

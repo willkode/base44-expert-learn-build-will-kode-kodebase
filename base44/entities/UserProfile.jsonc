@@ -34,22 +34,15 @@
     },
     "blueprintLimit": {
       "type": "number",
-      "default": 1
+      "default": 3
     },
     "blueprintsUsed": {
       "type": "number",
-      "default": 0,
-      "description": "Blueprints generated in the current usage period"
-    },
-    "projectsUsed": {
-      "type": "number",
-      "default": 0,
-      "description": "Total projects created"
+      "default": 0
     },
     "usagePeriodStart": {
       "type": "string",
-      "format": "date-time",
-      "description": "Start of the current monthly usage period for blueprint limits"
+      "description": "ISO timestamp of the start of the current usage period"
     }
   },
   "required": [
@@ -69,16 +62,9 @@
       ]
     },
     "write": {
-      "$or": [
-        {
-          "created_by_id": "{{user.id}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "user_condition": {
+        "role": "admin"
+      }
     }
   }
 }

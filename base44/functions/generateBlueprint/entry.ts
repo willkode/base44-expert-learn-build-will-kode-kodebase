@@ -261,7 +261,7 @@ Deno.serve(async (req) => {
     }
 
     // Plan limit enforcement (skip for admins). Authoritative server-side check.
-    let ownerProfile = (await base44.entities.UserProfile.filter({ userId: project.created_by_id }, '-created_date', 1))[0] || null;
+    let ownerProfile = (await base44.asServiceRole.entities.UserProfile.filter({ userId: project.created_by_id }, '-created_date', 1))[0] || null;
     if (user.role !== 'admin') {
       const planId = ownerProfile?.plan || 'free';
       const limit = PLAN_BLUEPRINT_LIMITS[planId] ?? 1;
@@ -407,9 +407,9 @@ Deno.serve(async (req) => {
           : new Date().toISOString(),
       };
       if (ownerProfile) {
-        await base44.entities.UserProfile.update(ownerProfile.id, usageUpdate);
+        await base44.asServiceRole.entities.UserProfile.update(ownerProfile.id, usageUpdate);
       } else {
-        await base44.entities.UserProfile.create({
+        await base44.asServiceRole.entities.UserProfile.create({
           userId: project.created_by_id,
           plan: 'free',
           blueprintLimit: 1,
