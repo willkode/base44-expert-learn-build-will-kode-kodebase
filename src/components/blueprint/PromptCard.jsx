@@ -46,14 +46,8 @@ export default function PromptCard({ prompt, onUpdate }) {
             {prompt.dependencies && <p className="text-xs text-muted-foreground mt-1">Depends on: {prompt.dependencies}</p>}
           </div>
         </div>
-      </div>
 
-      <div className="p-5">
-        <div className="rounded-xl bg-background/50 border border-border p-4 max-h-80 overflow-y-auto">
-          <Markdown content={prompt.promptText} />
-        </div>
-
-        <div className="flex flex-wrap gap-2 mt-4">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
           <Button variant="outline" size="sm" onClick={handleCopy}>
             {copied ? <Check className="w-4 h-4 mr-1.5" /> : <Copy className="w-4 h-4 mr-1.5" />} Copy prompt
           </Button>
@@ -63,6 +57,12 @@ export default function PromptCard({ prompt, onUpdate }) {
           <Button variant="outline" size="sm" onClick={() => setStatus("completed")}>
             <CheckCircle2 className="w-4 h-4 mr-1.5" /> Mark as completed
           </Button>
+        </div>
+      </div>
+
+      <div className="p-5">
+        <div className="rounded-xl bg-background/50 border border-border p-4 max-h-80 overflow-y-auto">
+          <Markdown content={prompt.promptText} />
         </div>
       </div>
     </div>
