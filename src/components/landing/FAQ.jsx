@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { HelpCircle } from "lucide-react";
 
-const faqs = [
+export const faqs = [
   {
     q: "How long does blueprint generation take?",
     a: "Most blueprints are generated in 2–5 minutes depending on project complexity. Our AI agents work in parallel, and you can monitor progress in real time.",
@@ -14,7 +14,7 @@ const faqs = [
   },
   {
     q: "Can I use the blueprint with frameworks other than Base44?",
-    a: "Our blueprints are tailored specifically for Base44's architecture, entities, and backend functions. However, the core planning (data model, workflows, security rules) can inform development on other platforms.",
+    a: "Our blueprints are tailored specifically for ForgeBase's architecture, entities, and backend functions. However, the core planning (data model, workflows, security rules) can inform development on other platforms.",
   },
   {
     q: "What does the Launch Ready Audit include?",
@@ -26,7 +26,7 @@ const faqs = [
   },
   {
     q: "Do you update my app during the audit?",
-    a: "No. The audit is a review and reporting service. We identify issues and provide fix prompts you can paste into Base44 to resolve them yourself. Optional implementation services are available separately.",
+    a: "No. The audit is a review and reporting service. We identify issues and provide fix prompts you can paste into ForgeBase to resolve them yourself. Optional implementation services are available separately.",
   },
   {
     q: "Can I export the blueprint as a PDF or document?",
@@ -96,7 +96,7 @@ export default function FAQ() {
           className="mt-16 text-center"
         >
           <p className="text-muted-foreground mb-2">Still have a question?</p>
-          <a href="mailto:hello@kodearchitect.com" className="text-primary hover:text-primary/80 font-medium transition-colors">
+          <a href="mailto:hello@forgebase.us" className="text-primary hover:text-primary/80 font-medium transition-colors">
             Get in touch →
           </a>
         </motion.div>

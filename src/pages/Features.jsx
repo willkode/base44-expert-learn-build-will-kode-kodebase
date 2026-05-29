@@ -1,6 +1,8 @@
 import React from "react";
 import { Boxes, Database, ShieldCheck, Palette, Server, ClipboardCheck, Wand2, FileText } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
+import Seo from "@/components/seo/Seo";
+import { softwareApplicationSchema } from "@/lib/seo";
 
 const features = [
   { icon: Boxes, title: "Product Architecture", desc: "Turn an idea into features, user types, flows, and clear scope." },
@@ -16,6 +18,13 @@ const features = [
 export default function Features() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
+      <Seo
+        title="Features — ForgeBase"
+        description="Architect your app the right way: data models, security rules, page maps, backend plans, QA checklists, and copy-paste build prompts."
+        path="/features"
+        type="website"
+        jsonLd={[softwareApplicationSchema()]}
+      />
       <div className="text-center mb-14">
         <PageHeader title="Everything you need to architect a ForgeBase app" />
       </div>

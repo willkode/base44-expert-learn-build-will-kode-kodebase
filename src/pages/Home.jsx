@@ -1,4 +1,7 @@
 import React from "react";
+import Seo from "@/components/seo/Seo";
+import { SITE, softwareApplicationSchema, faqSchema } from "@/lib/seo";
+import { faqs } from "@/components/landing/FAQ";
 import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
 import Problem from "@/components/landing/Problem";
@@ -17,6 +20,13 @@ import Footer from "@/components/landing/Footer";
 export default function Home() {
   return (
     <div className="dark min-h-screen bg-background text-foreground font-inter antialiased overflow-x-hidden">
+      <Seo
+        title="ForgeBase — Plan Before You Build"
+        description={SITE.description}
+        path="/"
+        type="website"
+        jsonLd={[softwareApplicationSchema(), faqSchema(faqs)]}
+      />
       <Navbar />
       <main>
         <Hero />

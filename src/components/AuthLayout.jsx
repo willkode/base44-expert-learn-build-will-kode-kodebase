@@ -1,8 +1,10 @@
 import React from "react";
+import Seo from "@/components/seo/Seo";
 
 export default function AuthLayout({ icon: Icon, title, subtitle, footer, children }) {
   return (
     <div className="dark min-h-screen flex items-center justify-center bg-background text-foreground font-inter px-4">
+      <Seo title={`${title} — ForgeBase`} noindex jsonLd={[]} />
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary mb-4">
