@@ -30,6 +30,7 @@ export default function ProjectOverview() {
   const [generating, setGenerating] = useState(false);
   const [progress, setProgress] = useState(null);
   const [celebrate, setCelebrate] = useState(false);
+  const [rerunning, setRerunning] = useState(null);
 
   const loadData = () => {
     Promise.all([
@@ -99,6 +100,29 @@ export default function ProjectOverview() {
     }
   };
 
+  const handleRerun = async (agentName) => {
+    setRerunning(agentName);
+    try {
+      if (agentName === "Security Agent") {
+        const res = await base44.functions.invoke("runSecurityReview", { projectId: project.id });
+        if (res.data?.error) throw new Error(res.data.error);
+        toast.success("Security review re-run completed");
+      } else if (agentName === "QA Agent") {
+        const res = await base44.functions.invoke("runQAChecklist", { projectId: project.id });
+        if (res.data?.error) throw new Error(res.data.error);
+        toast.success("QA checklist re-run completed");
+      } else {
+        // Architect, Prompt Engineer and Optimization agents run as part of blueprint generation.
+        await handleGenerate();
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.error || err.message || "Re-run failed");
+    } finally {
+      setRerunning(null);
+      loadData();
+    }
+  };
+
   if (loading) return <LoadingState label="Loading project overview..." />;
 
   const usage = getBlueprintUsage(profile);
@@ -159,7 +183,7 @@ export default function ProjectOverview() {
         <div className="space-y-6">
           {!isAdmin && <PlanUsageCard profile={profile} />}
           <BlueprintProgress steps={steps} />
-          <ProjectActivity runs={runs} projectStatus={project.status} />
+          <ProjectActivity runs={runs} projectStatus={project.status} onRerun={handleRerun} rerunning={rerunning} />
         </div>
       </div>
     </div>
