@@ -3,7 +3,8 @@ import { useOutletContext } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { CheckCircle2, XCircle, MessageSquarePlus, Sparkles } from "lucide-react";
+import { CheckCircle2, XCircle, MessageSquarePlus, Sparkles, Copy, Check } from "lucide-react";
+import { toast } from "sonner";
 
 const STATUS_STYLES = {
   pending: "bg-secondary text-muted-foreground",
@@ -15,6 +16,14 @@ export default function QAItemCard({ item, onUpdate }) {
   const { openChatWith } = useOutletContext();
   const [showNotes, setShowNotes] = useState(false);
   const [notes, setNotes] = useState(item.notes || "");
+  const [copied, setCopied] = useState(false);
+
+  const copyAuditPrompt = () => {
+    navigator.clipboard.writeText(item.auditPrompt || "");
+    setCopied(true);
+    toast.success("Audit prompt copied");
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   const askAssistant = () => {
     const parts = [
@@ -90,6 +99,11 @@ export default function QAItemCard({ item, onUpdate }) {
         {!showNotes && (
           <Button variant="ghost" size="sm" onClick={() => setShowNotes(true)}>
             <MessageSquarePlus className="w-4 h-4 mr-1.5" /> {item.notes ? "Edit notes" : "Add notes"}
+          </Button>
+        )}
+        {item.auditPrompt && (
+          <Button variant="ghost" size="sm" onClick={copyAuditPrompt}>
+            {copied ? <Check className="w-4 h-4 mr-1.5" /> : <Copy className="w-4 h-4 mr-1.5" />} Copy prompt
           </Button>
         )}
       </div>

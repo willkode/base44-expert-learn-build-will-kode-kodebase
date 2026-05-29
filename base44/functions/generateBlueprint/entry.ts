@@ -137,14 +137,15 @@ const AGENTS = [
               testName: { type: "string" },
               description: { type: "string" },
               expectedResult: { type: "string" },
+              auditPrompt: { type: "string", description: "A complete, copy-paste-ready Base44 prompt the user can paste to audit/verify this specific QA task, referencing the relevant pages/entities/functions." },
             },
-            required: ["category", "testName", "expectedResult"],
+            required: ["category", "testName", "expectedResult", "auditPrompt"],
           },
         },
       },
       required: ["qaPlan", "tests"],
     },
-    prompt: (ctx, prev) => `You are the QA Agent. Create testing steps, a launch checklist, edge cases, and regression checks for the app. Return discrete test items.\n\nWorkflows:\n${prev.workflowPlan}\nPages:\n${prev.pagePlan}\n\n${ctx}`,
+    prompt: (ctx, prev) => `You are the QA Agent. Create testing steps, a launch checklist, edge cases, and regression checks for the app. Return discrete test items. For EACH test item, also write an "auditPrompt": a complete, copy-paste-ready Base44 prompt the user can paste to audit/verify that specific task.\n\nWorkflows:\n${prev.workflowPlan}\nPages:\n${prev.pagePlan}\n\n${ctx}`,
   },
   {
     name: "Prompt Engineer Agent",
@@ -309,6 +310,7 @@ async function finalize(base44, projectId, project, accumulated, ownerProfile, u
         testName: t.testName || '',
         description: t.description || '',
         expectedResult: t.expectedResult || '',
+        auditPrompt: t.auditPrompt || '',
         status: 'pending',
       }))
     );

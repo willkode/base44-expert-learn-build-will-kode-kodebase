@@ -11,7 +11,9 @@ const QA_SYSTEM = `You are the Base44 QA Agent — a senior QA engineer for Base
 Produce test items for EACH of these categories (multiple items where relevant):
 ${CATEGORIES.map((c, i) => `${i + 1}. ${c}`).join("\n")}
 
-Each test must be specific to THIS app's blueprint, not generic. Cover real flows, role boundaries, ownership, edge cases, and launch readiness. Write clear, verifiable expected results.`;
+Each test must be specific to THIS app's blueprint, not generic. Cover real flows, role boundaries, ownership, edge cases, and launch readiness. Write clear, verifiable expected results.
+
+For EACH test item, also write an "auditPrompt": a complete, copy-paste-ready Base44 prompt the user can paste to audit/verify that specific task, referencing the relevant pages/entities/functions.`;
 
 const SCHEMA = {
   type: "object",
@@ -25,8 +27,9 @@ const SCHEMA = {
           testName: { type: "string" },
           description: { type: "string" },
           expectedResult: { type: "string" },
+          auditPrompt: { type: "string" },
         },
-        required: ["category", "testName", "description", "expectedResult"],
+        required: ["category", "testName", "description", "expectedResult", "auditPrompt"],
       },
     },
   },
@@ -124,6 +127,7 @@ ${blueprint.securityPlan || 'N/A'}`;
             testName: it.testName || '',
             description: it.description || '',
             expectedResult: it.expectedResult || '',
+            auditPrompt: it.auditPrompt || '',
             status: 'pending',
             notes: '',
           }))

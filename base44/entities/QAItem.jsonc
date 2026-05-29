@@ -23,6 +23,10 @@
     "expectedResult": {
       "type": "string"
     },
+    "auditPrompt": {
+      "type": "string",
+      "description": "Ready-to-use Base44 prompt the user can paste to audit/verify this QA task"
+    },
     "status": {
       "type": "string",
       "enum": [
