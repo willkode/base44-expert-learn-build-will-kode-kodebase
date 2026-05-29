@@ -5,6 +5,7 @@ import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import OptimizationPromptCard from "@/components/optimization/OptimizationPromptCard";
+import PromptGenerator from "@/components/optimization/PromptGenerator";
 
 const FILTERS = ["all", "UI Redesign", "Sales Copy", "SEO", "Conversion", "Performance"];
 
@@ -30,13 +31,16 @@ export default function OptimizationPrompts() {
 
   if (prompts.length === 0) {
     return (
-      <EmptyState
-        icon={Sparkles}
-        title="No optimization prompts yet"
-        description={`Optimization prompts are generated together with the blueprint. Generate a blueprint for "${project.projectName}" from the Overview tab to get focused prompts for UI redesign, sales copy, and SEO.`}
-        actionLabel="Go to Overview"
-        onAction={() => navigate(`/projects/${project.id}/overview`)}
-      />
+      <div className="space-y-5">
+        <EmptyState
+          icon={Sparkles}
+          title="No optimization prompts yet"
+          description={`Optimization prompts are generated together with the blueprint. Generate a blueprint for "${project.projectName}" from the Overview tab to get focused prompts for UI redesign, sales copy, and SEO.`}
+          actionLabel="Go to Overview"
+          onAction={() => navigate(`/projects/${project.id}/overview`)}
+        />
+        <PromptGenerator project={project} onCreated={loadPrompts} />
+      </div>
     );
   }
 
@@ -48,6 +52,8 @@ export default function OptimizationPrompts() {
           Focused prompts to redesign pages, sharpen sales copy, and improve SEO — tailored to this app's blueprint.
         </p>
       </div>
+
+      <PromptGenerator project={project} onCreated={loadPrompts} />
 
       <div className="flex flex-wrap gap-1.5">
         {FILTERS.map((f) => (
