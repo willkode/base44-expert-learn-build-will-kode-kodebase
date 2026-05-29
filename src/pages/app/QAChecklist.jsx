@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
-import { ClipboardCheck, Loader2, RefreshCw } from "lucide-react";
+import { ClipboardCheck, Loader2, RefreshCw, Download } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { qaMarkdown, downloadMarkdown } from "@/lib/exporters";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
@@ -105,9 +106,14 @@ export default function QAChecklist() {
             </SelectContent>
           </Select>
         </div>
-        <Button variant="outline" onClick={runChecklist} disabled={running}>
-          {running ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />} Re-run
-        </Button>
+        <div className="flex gap-2 flex-wrap">
+          <Button variant="outline" onClick={() => downloadMarkdown(`${project.projectName}-qa.md`, qaMarkdown(project, items))}>
+            <Download className="w-4 h-4 mr-2" /> Export markdown
+          </Button>
+          <Button variant="outline" onClick={runChecklist} disabled={running}>
+            {running ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />} Re-run
+          </Button>
+        </div>
       </div>
 
       {filtered.length === 0 ? (

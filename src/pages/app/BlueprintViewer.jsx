@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
-import { FileText, Download, Wand2, ShieldCheck, ArrowLeft } from "lucide-react";
+import { FileText, Download, Wand2, ShieldCheck, ArrowLeft, Copy, Printer } from "lucide-react";
 import { base44 } from "@/api/base44Client";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { blueprintMarkdown, copyText, downloadMarkdown, printContent } from "@/lib/exporters";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
@@ -23,21 +23,6 @@ const TABS = [
   { key: "security", label: "Security Notes" },
   { key: "qa", label: "QA Checklist" },
 ];
-
-function buildMarkdown(bp) {
-  return [
-    `# ${bp.title || "Base44 Build Blueprint"}`,
-    `\n## Executive Summary\n${bp.executiveSummary || ""}`,
-    `\n## App Architecture\n${bp.appArchitecture || ""}`,
-    `\n## Entity Plan\n${bp.entityPlan || ""}`,
-    `\n## Roles & Permissions\n${bp.rolePermissionPlan || ""}`,
-    `\n## Page Plan\n${bp.pagePlan || ""}`,
-    `\n## Workflows\n${bp.workflowPlan || ""}`,
-    `\n## Backend Functions\n${bp.backendFunctionPlan || ""}`,
-    `\n## Integrations\n${bp.integrationPlan || ""}`,
-    `\n## MVP Roadmap\n${bp.mvpRoadmap || ""}`,
-  ].join("\n");
-}
 
 export default function BlueprintViewer() {
   const { project } = useOutletContext();
@@ -66,16 +51,19 @@ export default function BlueprintViewer() {
     base44.entities.QAItem.filter({ projectId: project.id }).then(setQaItems);
   };
 
-  const handleExport = () => {
-    const md = buildMarkdown(blueprint);
-    const blob = new Blob([md], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${project.projectName}-blueprint.md`;
-    a.click();
-    URL.revokeObjectURL(url);
-    toast.success("Blueprint exported");
+  const handleExport = () => downloadMarkdown(`${project.projectName}-blueprint.md`, blueprintMarkdown(project, blueprint));
+  const handleCopyAll = () => copyText(blueprintMarkdown(project, blueprint), "Full blueprint copied");
+  const handlePrint = () => {
+    const md = blueprintMarkdown(project, blueprint);
+    const html = md
+      .split("\n")
+      .map((l) =>
+        l.startsWith("# ") ? `<h1>${l.slice(2)}</h1>`
+        : l.startsWith("## ") ? `<h2>${l.slice(3)}</h2>`
+        : l.startsWith("**") ? `<p class="muted">${l.replace(/\*\*/g, "")}</p>`
+        : l.trim() ? `<p>${l}</p>` : ""
+      ).join("");
+    printContent(`${project.projectName} — Blueprint`, html);
   };
 
   if (loading) return <LoadingState label="Loading blueprint..." />;
@@ -98,8 +86,14 @@ export default function BlueprintViewer() {
         <Button variant="outline" onClick={() => navigate(`/projects/${project.id}/overview`)}>
           <ArrowLeft className="w-4 h-4 mr-2" /> Back to project
         </Button>
+        <Button variant="outline" onClick={handleCopyAll}>
+          <Copy className="w-4 h-4 mr-2" /> Copy full blueprint
+        </Button>
         <Button variant="outline" onClick={handleExport}>
           <Download className="w-4 h-4 mr-2" /> Export markdown
+        </Button>
+        <Button variant="outline" onClick={handlePrint}>
+          <Printer className="w-4 h-4 mr-2" /> Print
         </Button>
         <Button variant="outline" onClick={() => navigate(`/projects/${project.id}/prompts`)}>
           <Wand2 className="w-4 h-4 mr-2" /> Generate prompt pack

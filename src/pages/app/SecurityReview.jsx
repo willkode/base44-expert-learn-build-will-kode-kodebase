@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
-import { ShieldCheck, Loader2, RefreshCw } from "lucide-react";
+import { ShieldCheck, Loader2, RefreshCw, Download, Copy } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { securityMarkdown, securityFindingsText, copyText, downloadMarkdown } from "@/lib/exporters";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import FindingCard from "@/components/security/FindingCard";
@@ -85,9 +86,17 @@ export default function SecurityReview() {
             </button>
           ))}
         </div>
-        <Button variant="outline" onClick={runReview} disabled={running}>
-          {running ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />} Re-run
-        </Button>
+        <div className="flex gap-2 flex-wrap">
+          <Button variant="outline" onClick={() => copyText(securityFindingsText(findings), "All findings copied")}>
+            <Copy className="w-4 h-4 mr-2" /> Copy all
+          </Button>
+          <Button variant="outline" onClick={() => downloadMarkdown(`${project.projectName}-security.md`, securityMarkdown(project, findings))}>
+            <Download className="w-4 h-4 mr-2" /> Export markdown
+          </Button>
+          <Button variant="outline" onClick={runReview} disabled={running}>
+            {running ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />} Re-run
+          </Button>
+        </div>
       </div>
 
       {filtered.length === 0 ? (
