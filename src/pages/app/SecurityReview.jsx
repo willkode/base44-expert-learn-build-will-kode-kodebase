@@ -9,7 +9,7 @@ import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import FindingCard from "@/components/security/FindingCard";
 
-const FILTERS = ["all", "critical", "high", "medium", "low", "resolved"];
+const FILTERS = ["all", "unresolved", "reviewed", "critical", "high", "medium", "low", "resolved"];
 
 export default function SecurityReview() {
   const { project } = useOutletContext();
@@ -17,7 +17,7 @@ export default function SecurityReview() {
   const [loading, setLoading] = useState(true);
   const [running, setRunning] = useState(false);
   const [findings, setFindings] = useState([]);
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("unresolved");
 
   const loadFindings = () => {
     base44.entities.SecurityFinding.filter({ projectId: project.id }, "-severity").then((f) => {
@@ -45,6 +45,8 @@ export default function SecurityReview() {
   const filtered = findings.filter((f) => {
     if (filter === "all") return true;
     if (filter === "resolved") return f.fixedStatus === "resolved";
+    if (filter === "reviewed") return f.fixedStatus === "reviewed";
+    if (filter === "unresolved") return f.fixedStatus !== "resolved";
     return f.severity === filter;
   });
 
