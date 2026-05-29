@@ -4,12 +4,12 @@ import PageHeader from "@/components/shared/PageHeader";
 
 const features = [
   { icon: Boxes, title: "Product Architecture", desc: "Turn an idea into features, user types, flows, and clear scope." },
-  { icon: Database, title: "Entity & Data Model", desc: "Designed entities, relationships, fields, and data rules for Base44." },
+  { icon: Database, title: "Entity & Data Model", desc: "Designed entities, relationships, fields, and data rules for ForgeBase." },
   { icon: ShieldCheck, title: "Security Model", desc: "Role access, ownership checks, and protected backend functions." },
   { icon: Palette, title: "Page Map", desc: "Complete page structure across user and admin areas." },
   { icon: Server, title: "Backend Plan", desc: "Backend functions, automations, integrations, and APIs." },
   { icon: ClipboardCheck, title: "QA Checklist", desc: "Test cases, launch checklist, and bug-risk areas." },
-  { icon: Wand2, title: "Build Prompts", desc: "Base44-ready prompts, sequenced and ready to paste." },
+  { icon: Wand2, title: "Build Prompts", desc: "ForgeBase-ready prompts, sequenced and ready to paste." },
   { icon: FileText, title: "Full Blueprint", desc: "Everything compiled into one cohesive build document." },
 ];
 
@@ -17,7 +17,7 @@ export default function Features() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
       <div className="text-center mb-14">
-        <PageHeader title="Everything you need to architect a Base44 app" />
+        <PageHeader title="Everything you need to architect a ForgeBase app" />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {features.map((f, i) => (
