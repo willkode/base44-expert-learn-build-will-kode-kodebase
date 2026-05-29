@@ -172,7 +172,7 @@ const AGENTS = [
       },
       required: ["mvpRoadmap", "prompts"],
     },
-    prompt: (ctx, prev) => `You are the Prompt Engineer Agent. Turn the full architecture into an ORDERED sequence of Base44-ready build prompts the user can paste one-by-one. Also produce an MVP roadmap.
+    prompt: (ctx, prev) => `You are an EXPERT PROMPT ENGINEER Agent. Turn the full architecture into an ORDERED sequence of Base44-ready build prompts the user can paste one-by-one. Also produce an MVP roadmap. Each prompt must be highly detailed, structured, and expert-level — long, precise, and immediately usable with zero editing. Do NOT write vague or shallow prompts; specify exact entity names, field names and types, page routes, component names, states, and acceptance criteria drawn from the plans below.
 
 ORDERING RULES:
 - The FIRST prompt must be a "Foundation" prompt (design system, layout, routing, auth scaffolding).
@@ -180,23 +180,31 @@ ORDERING RULES:
 - The "category" field of each prompt MUST be exactly one of those category names.
 - The FINAL prompts must be, in this order: a Security review prompt, a QA review prompt, and a UI Polish prompt.
 
-EVERY "promptText" MUST follow this exact markdown structure:
+EVERY "promptText" MUST follow this EXACT markdown structure and be richly detailed in each section:
 ## 1. Context
-Explain what has already been built or planned.
-## 2. Task
-Tell Base44 exactly what to build.
-## 3. Requirements
-List specific, concrete details (entities, fields, pages, components).
-## 4. Safety Rules
-- Preserve existing logic
-- Do not duplicate pages or entities
-- Use existing patterns and components
-- Add loading, error, and empty states
-- Keep ownership and permissions strict
-## 5. Completion Check
-Tell Base44 exactly what to verify before finishing.
+Explain precisely what has already been built or planned in prior prompts (reference the relevant entities/pages/functions by name), and where this step fits in the overall build.
+## 2. Objective
+State the single clear outcome of this prompt in 1-2 sentences.
+## 3. Task
+Tell Base44 exactly what to build, step by step. Be explicit and unambiguous.
+## 4. Requirements
+List specific, concrete details:
+- Entities: exact names, every field with its type/enum/default, and relationships.
+- Pages: exact routes and the components/sections each contains.
+- Backend functions / integrations: exact names, inputs, outputs, and auth checks.
+- UI/UX: layout, key components, responsive behavior, and design-system usage.
+## 5. Data & Edge Cases
+Specify validation rules, required vs optional fields, and how to handle empty/loading/error states and permission failures.
+## 6. Safety Rules
+- Preserve existing logic and previously built work
+- Do not duplicate pages, entities, or functions
+- Reuse existing patterns, components, and the established design system
+- Add loading, error, and empty states everywhere
+- Keep ownership checks and role permissions strict
+## 7. Completion Check
+Give a concrete checklist of what Base44 must verify before finishing (e.g. "the X page renders, creating a Y persists with owner scoping, non-admins cannot access Z").
 
-Set "title" to a short build step name, "purpose" to a one-line goal, and "dependencies" to which earlier prompt numbers must be done first.
+Write detailed, expert-level content in EVERY section — no placeholders. Set "title" to a short build step name, "purpose" to a one-line goal, and "dependencies" to which earlier prompt numbers must be done first.
 
 Architecture:\n${prev.appArchitecture}\nEntities:\n${prev.entityPlan}\nPermissions:\n${prev.rolePermissionPlan}\nPages:\n${prev.pagePlan}\nWorkflows:\n${prev.workflowPlan}\nBackend:\n${prev.backendFunctionPlan}\n\n${ctx}`,
   },
@@ -537,6 +545,7 @@ Deno.serve(async (req) => {
         const result = await base44.integrations.Core.InvokeLLM({
           prompt: nextAgent.prompt(context, accumulated),
           response_json_schema: nextAgent.schema,
+          model: 'gpt_5_5',
         });
         Object.assign(accumulated, result);
         await base44.entities.AgentRun.update(run.id, {
