@@ -36,8 +36,8 @@ export const PLANS = {
     securityReview: true,
     qaChecklist: true,
     markdownExport: true,
-    agencyExport: false,
-    reusableTemplates: false,
+    agencyExport: true,
+    reusableTemplates: true,
     features: [
       "25 projects",
       "25 blueprints / month",
@@ -45,6 +45,9 @@ export const PLANS = {
       "Security reviews",
       "QA checklists",
       "Markdown export",
+      "Client-ready exports",
+      "Reusable templates",
+      "Advanced project organization",
     ],
   },
   agency: {
