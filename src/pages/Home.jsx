@@ -3,6 +3,7 @@ import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
 import Problem from "@/components/landing/Problem";
 import HowItWorks from "@/components/landing/HowItWorks";
+import Workspace from "@/components/landing/Workspace";
 import Agents from "@/components/landing/Agents";
 import Blueprint from "@/components/landing/Blueprint";
 import Platforms from "@/components/landing/Platforms";
@@ -19,6 +20,7 @@ export default function Home() {
         <Hero />
         <Problem />
         <HowItWorks />
+        <Workspace />
         <Agents />
         <Blueprint />
         <Platforms />
