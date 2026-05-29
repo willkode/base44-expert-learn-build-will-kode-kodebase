@@ -4,7 +4,7 @@
   "properties": {
     "userId": {
       "type": "string",
-      "description": "ID of the linked user"
+      "description": "Linked user id"
     },
     "fullName": {
       "type": "string"
@@ -38,7 +38,18 @@
     },
     "blueprintsUsed": {
       "type": "number",
-      "default": 0
+      "default": 0,
+      "description": "Blueprints generated in the current usage period"
+    },
+    "projectsUsed": {
+      "type": "number",
+      "default": 0,
+      "description": "Total projects created"
+    },
+    "usagePeriodStart": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start of the current monthly usage period for blueprint limits"
     }
   },
   "required": [

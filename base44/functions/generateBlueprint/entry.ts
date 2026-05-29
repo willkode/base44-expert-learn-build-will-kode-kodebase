@@ -200,6 +200,19 @@ Architecture:\n${prev.appArchitecture}\nEntities:\n${prev.entityPlan}\nPermissio
   },
 ];
 
+const PLAN_BLUEPRINT_LIMITS = { free: 1, pro: 25, agency: -1 };
+
+function needsMonthlyReset(periodStart) {
+  if (!periodStart) return false;
+  const start = new Date(periodStart);
+  if (isNaN(start.getTime())) return false;
+  const now = new Date();
+  return (
+    now.getUTCFullYear() > start.getUTCFullYear() ||
+    (now.getUTCFullYear() === start.getUTCFullYear() && now.getUTCMonth() > start.getUTCMonth())
+  );
+}
+
 function buildContext(intake, profile, project) {
   return `Project context:
 - Name: ${project?.projectName || intake?.appName || "Untitled"}
@@ -245,6 +258,24 @@ Deno.serve(async (req) => {
     const isOwner = project.created_by_id === user.id;
     if (!isOwner && user.role !== 'admin') {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Plan limit enforcement (skip for admins). Authoritative server-side check.
+    let ownerProfile = (await base44.entities.UserProfile.filter({ userId: project.created_by_id }, '-created_date', 1))[0] || null;
+    if (user.role !== 'admin') {
+      const planId = ownerProfile?.plan || 'free';
+      const limit = PLAN_BLUEPRINT_LIMITS[planId] ?? 1;
+      let used = ownerProfile?.blueprintsUsed || 0;
+      if (needsMonthlyReset(ownerProfile?.usagePeriodStart)) used = 0;
+      if (limit !== -1 && used >= limit) {
+        return Response.json({
+          error: `You've reached your ${planId} plan limit of ${limit} blueprint${limit === 1 ? '' : 's'}. Upgrade your plan to generate more.`,
+          code: 'PLAN_LIMIT_REACHED',
+          plan: planId,
+          limit,
+          used,
+        }, { status: 403 });
+      }
     }
 
     await base44.entities.Project.update(projectId, { status: 'generating' });
@@ -364,6 +395,28 @@ Deno.serve(async (req) => {
     }
 
     await base44.entities.Project.update(projectId, { status: 'completed' });
+
+    // Increment blueprint usage (skip for admins). Reset period if a new month started.
+    if (user.role !== 'admin') {
+      const reset = needsMonthlyReset(ownerProfile?.usagePeriodStart);
+      const priorUsed = reset ? 0 : (ownerProfile?.blueprintsUsed || 0);
+      const usageUpdate = {
+        blueprintsUsed: priorUsed + 1,
+        usagePeriodStart: ownerProfile?.usagePeriodStart && !reset
+          ? ownerProfile.usagePeriodStart
+          : new Date().toISOString(),
+      };
+      if (ownerProfile) {
+        await base44.entities.UserProfile.update(ownerProfile.id, usageUpdate);
+      } else {
+        await base44.entities.UserProfile.create({
+          userId: project.created_by_id,
+          plan: 'free',
+          blueprintLimit: 1,
+          ...usageUpdate,
+        });
+      }
+    }
 
     return Response.json({
       success: true,

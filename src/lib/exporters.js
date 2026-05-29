@@ -70,6 +70,42 @@ export function blueprintSectionMarkdown(label, content) {
   return `## ${label}\n${content || ""}`;
 }
 
+// ---------- Client Report ----------
+const CLIENT_REPORT_SECTIONS = [
+  ["Project Overview", "executiveSummary"],
+  ["Recommended Build Scope", "appArchitecture"],
+  ["MVP Features", "mvpRoadmap"],
+  ["User Roles", "rolePermissionPlan"],
+  ["Page List", "pagePlan"],
+  ["Workflow Summary", "workflowPlan"],
+  ["Integration Summary", "integrationPlan"],
+];
+
+export function clientReportMarkdown(project, bp, meta = {}) {
+  const lines = [`# ${project.projectName} — Project Report`, ""];
+  if (meta.clientName) lines.push(`**Prepared for:** ${meta.clientName}`);
+  if (meta.agencyName) lines.push(`**Prepared by:** ${meta.agencyName}`);
+  if (meta.preparedBy) lines.push(`**Author:** ${meta.preparedBy}`);
+  lines.push(`**Date:** ${today()}`, "");
+  if (project.shortDescription) lines.push(`> ${project.shortDescription}`, "");
+  CLIENT_REPORT_SECTIONS.forEach(([label, key]) => {
+    if (bp[key]) lines.push(`## ${label}\n${bp[key]}\n`);
+  });
+  if (meta.projectNotes) lines.push(`## Project Notes\n${meta.projectNotes}\n`);
+  lines.push(
+    `## Estimated Build Phases`,
+    bp.mvpRoadmap ? "See MVP Features above for phased build order." : "Phased delivery to be confirmed during kickoff.",
+    "",
+    `## Risk Notes`,
+    "Key risks and mitigations will be reviewed before development begins.",
+    "",
+    `## Next Steps`,
+    "1. Review and approve this report.\n2. Confirm scope and timeline.\n3. Begin MVP development.",
+    ""
+  );
+  return lines.join("\n");
+}
+
 // ---------- Prompt Pack ----------
 export function promptPackMarkdown(project, pack, items) {
   const lines = [

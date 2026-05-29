@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
-import { FileText, Download, Wand2, ShieldCheck, ArrowLeft, Copy, Printer } from "lucide-react";
+import { FileText, Download, Wand2, ShieldCheck, ArrowLeft, Copy, Printer, Presentation } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { blueprintMarkdown, copyText, downloadMarkdown, printContent } from "@/lib/exporters";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -10,6 +11,7 @@ import EmptyState from "@/components/shared/EmptyState";
 import BlueprintSection from "@/components/blueprint/BlueprintSection";
 import SecurityFindings from "@/components/blueprint/SecurityFindings";
 import QAChecklistView from "@/components/blueprint/QAChecklistView";
+import ClientReportView from "@/components/blueprint/ClientReportView";
 
 const TABS = [
   { key: "overview", label: "Overview" },
@@ -27,7 +29,12 @@ const TABS = [
 export default function BlueprintViewer() {
   const { project } = useOutletContext();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const plan = user?.plan || "free";
+  const canClientReport = plan === "pro" || plan === "agency";
+  const isAgency = plan === "agency";
   const [loading, setLoading] = useState(true);
+  const [clientMode, setClientMode] = useState(false);
   const [blueprint, setBlueprint] = useState(null);
   const [findings, setFindings] = useState([]);
   const [qaItems, setQaItems] = useState([]);
@@ -86,6 +93,11 @@ export default function BlueprintViewer() {
         <Button variant="outline" onClick={() => navigate(`/projects/${project.id}/overview`)}>
           <ArrowLeft className="w-4 h-4 mr-2" /> Back to project
         </Button>
+        {canClientReport && (
+          <Button variant={clientMode ? "default" : "outline"} onClick={() => setClientMode((v) => !v)}>
+            <Presentation className="w-4 h-4 mr-2" /> {clientMode ? "Exit client report" : "Client Report Mode"}
+          </Button>
+        )}
         <Button variant="outline" onClick={handleCopyAll}>
           <Copy className="w-4 h-4 mr-2" /> Copy full blueprint
         </Button>
@@ -103,6 +115,9 @@ export default function BlueprintViewer() {
         </Button>
       </div>
 
+      {clientMode && canClientReport ? (
+        <ClientReportView project={project} blueprint={blueprint} isAgency={isAgency} />
+      ) : (
       <Tabs defaultValue="overview">
         <TabsList className="flex flex-wrap h-auto justify-start gap-1 bg-secondary/50 p-1">
           {TABS.map((t) => (
@@ -155,6 +170,7 @@ export default function BlueprintViewer() {
           </BlueprintSection>
         </TabsContent>
       </Tabs>
+      )}
     </div>
   );
 }
