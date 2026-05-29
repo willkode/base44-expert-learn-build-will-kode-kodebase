@@ -12,12 +12,14 @@ import {
   Bug,
   Gauge,
   CheckCircle2,
+  Sparkles,
 } from "lucide-react";
 
 const WHAT_YOU_GET = [
   { icon: ShieldCheck, title: "Security hardening", text: "Row-level security, permissions and access rules reviewed by security experts." },
   { icon: Bug, title: "Bug & flow audit", text: "Every core user flow tested end-to-end so nothing breaks for your real users." },
   { icon: Gauge, title: "Performance & scale", text: "Architecture and data model checked for speed and scalability under real load." },
+  { icon: Sparkles, title: "Targeted optimization prompts", text: "Highly targeted prompts built by our industry-leading prompt engineer team to fix issues and improve your app." },
   { icon: CheckCircle2, title: "Launch sign-off", text: "A clear, prioritized report confirming your app is 100% ready to launch." },
 ];
 
