@@ -7,6 +7,7 @@ export default function LaunchAuditBanner({ onOrder }) {
     <div className="rounded-2xl border border-primary/40 bg-gradient-to-br from-primary/15 to-card/60 p-6 glow-orange">
       <div className="flex flex-col lg:flex-row lg:items-center gap-5">
         <div className="flex-1">
+          <p className="text-sm text-primary font-semibold mb-3">Congratulations! Your application is complete and ready for launch.</p>
           <div className="flex items-center gap-2 mb-2">
             <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
               <ShieldCheck className="w-5 h-5" />
