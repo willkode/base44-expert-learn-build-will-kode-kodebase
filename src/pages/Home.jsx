@@ -6,6 +6,7 @@ import HowItWorks from "@/components/landing/HowItWorks";
 import Workspace from "@/components/landing/Workspace";
 import Agents from "@/components/landing/Agents";
 import Blueprint from "@/components/landing/Blueprint";
+import BlueprintShowcase from "@/components/landing/BlueprintShowcase";
 import Platforms from "@/components/landing/Platforms";
 import Pricing from "@/components/landing/Pricing";
 import Testimonials from "@/components/landing/Testimonials";
@@ -23,6 +24,7 @@ export default function Home() {
         <Workspace />
         <Agents />
         <Blueprint />
+        <BlueprintShowcase />
         <Platforms />
         <Pricing />
         <Testimonials />
