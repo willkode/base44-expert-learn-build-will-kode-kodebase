@@ -40,9 +40,10 @@ export default function Agents() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: (i % 3) * 0.08 }}
-              className="group rounded-2xl border border-border bg-card/70 p-7 hover:border-primary/40 transition-all duration-300"
+              className="group relative rounded-2xl border border-border bg-card/70 p-7 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 overflow-hidden"
             >
-              <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center mb-5 group-hover:bg-primary/10 transition-colors">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center mb-5 group-hover:bg-primary/10 group-hover:scale-105 transition-all duration-300">
                 <a.icon className="w-6 h-6 text-primary" />
               </div>
               <h3 className="font-sora font-bold text-lg mb-2">{a.name}</h3>
@@ -54,10 +55,11 @@ export default function Agents() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.16 }}
-            className="rounded-2xl border border-primary/30 bg-primary/5 p-7 flex flex-col justify-center"
+            className="relative rounded-2xl border border-primary/30 bg-primary/5 p-7 flex flex-col justify-center overflow-hidden glow-orange"
           >
-            <h3 className="font-sora font-bold text-lg mb-2 text-gradient-orange">7 Agents. One Blueprint.</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-primary/10 rounded-full blur-2xl" />
+            <h3 className="relative font-sora font-bold text-lg mb-2 text-gradient-orange">7 Agents. One Blueprint.</h3>
+            <p className="relative text-sm text-muted-foreground leading-relaxed">
               Every architect contributes to a single, cohesive plan ready to build.
             </p>
           </motion.div>

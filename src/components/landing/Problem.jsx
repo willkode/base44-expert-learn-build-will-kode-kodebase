@@ -43,9 +43,10 @@ export default function Problem() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.05 }}
-              className="flex items-center gap-4 rounded-xl border border-border bg-card/60 p-5"
+              className="group relative flex items-center gap-4 rounded-xl border border-border bg-card/60 p-5 overflow-hidden hover:border-destructive/40 transition-colors duration-300"
             >
-              <div className="w-11 h-11 shrink-0 rounded-lg bg-destructive/10 flex items-center justify-center">
+              <div className="absolute left-0 top-0 h-full w-1 bg-destructive/0 group-hover:bg-destructive/60 transition-colors duration-300" />
+              <div className="w-11 h-11 shrink-0 rounded-lg bg-destructive/10 flex items-center justify-center group-hover:scale-105 transition-transform">
                 <p.icon className="w-5 h-5 text-destructive" />
               </div>
               <span className="font-medium text-foreground">{p.text}</span>

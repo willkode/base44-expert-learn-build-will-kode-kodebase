@@ -16,10 +16,11 @@ export default function FinalCTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative rounded-3xl border border-primary/30 bg-card/80 overflow-hidden p-12 md:p-16 text-center"
+          className="relative rounded-3xl border border-primary/30 bg-card/80 overflow-hidden p-12 md:p-16 text-center ring-1 ring-white/5"
         >
           <div className="absolute inset-0 blueprint-grid opacity-40" />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-primary/15 rounded-full blur-[100px]" />
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
           <div className="relative">
             <h2 className="font-sora font-extrabold text-3xl md:text-5xl tracking-tight mb-5">
               Don't just prompt AI.
@@ -32,7 +33,7 @@ export default function FinalCTA() {
             <Button
               onClick={getStarted}
               size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base px-10 py-6 glow-orange group"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base px-10 py-6 glow-orange group transition-transform hover:-translate-y-0.5"
             >
               Get Started Free
               <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />

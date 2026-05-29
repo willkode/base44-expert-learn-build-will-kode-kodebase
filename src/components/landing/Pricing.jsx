@@ -47,10 +47,10 @@ export default function Pricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className={`relative rounded-2xl border p-8 flex flex-col ${
+              className={`relative rounded-2xl border p-8 flex flex-col transition-all duration-300 hover:-translate-y-1 ${
                 t.highlight
-                  ? "border-primary bg-card glow-orange scale-[1.03]"
-                  : "border-border bg-card/60"
+                  ? "border-primary bg-card glow-orange lg:scale-[1.04] z-10"
+                  : "border-border bg-card/60 hover:border-primary/40"
               }`}
             >
               {t.highlight && (
