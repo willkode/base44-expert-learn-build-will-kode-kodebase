@@ -223,14 +223,65 @@ Architecture:\n${prev.appArchitecture}\nEntities:\n${prev.entityPlan}\nPermissio
       },
       required: ["optimizationPrompts"],
     },
-    prompt: (ctx, prev) => `You are the Optimization Agent. Produce 8-12 highly-focused, copy-paste-ready Base44 prompts to IMPROVE this specific app AFTER it has been built. These are NOT build prompts — they refine an existing app. Cover:
-- UI Redesign — modernize the look/layout/visual hierarchy of specific real pages from the Page Plan.
-- Sales Copy — rewrite landing/marketing copy to be more conversion- and sales-focused for this app's audience.
-- SEO — improve titles, meta tags, headings, content structure, internal linking.
-- Conversion — improve CTAs, onboarding, signup, pricing.
+    prompt: (ctx, prev) => `You are the Optimization Agent. Produce 8-12 IN-DEPTH, copy-paste-ready Base44 prompts to IMPROVE this specific app AFTER it has been built. These are NOT build prompts — they refine an existing app. Each "promptText" must be long, detailed, structured, and ready to paste with no editing. Do NOT write shallow one-liners.
+
+Cover these categories (weight toward UI Redesign, Sales Copy, and SEO):
+- UI Redesign — full premium redesign of specific REAL pages from the Page Plan.
+- Sales Copy — rewrite landing/marketing copy to be more conversion- and sales-focused.
+- SEO — titles, meta tags, headings, content structure, internal linking.
+- Conversion — CTAs, onboarding, signup, pricing.
 - Performance — lazy loading, image optimization where relevant.
 
-Weight toward UI Redesign, Sales Copy, and SEO. Each prompt MUST reference this app's REAL pages and purpose (from the plans below), be specific, and be written as a direct instruction to Base44.
+Every prompt MUST name this app's REAL pages and purpose (from the plans below).
+
+FORMAT RULES PER CATEGORY:
+
+For every "UI Redesign" prompt, the "promptText" MUST follow this EXACT structure (fill [PAGE] with the real page name and tailor every line to this app):
+"""
+Complete Page Redesign — Premium UI/UX Overhaul
+
+Redesign the "[PAGE]" page from the ground up for both mobile and desktop views.
+
+Critical Rule:
+- Do NOT change, remove, or rewrite any text content, copy, descriptions, service details, or information. Keep every word, stat, testimonial, and data point exactly as-is.
+- Do NOT alter any functionality, logic, links, routes, or behavior. Everything that works today must work identically after the redesign.
+- This is a pure design/UI/UX transformation only. The content and functionality are locked — your job is to make the existing content look and feel dramatically better.
+
+Design Direction:
+- Modern, clean, premium aesthetic — not generic or template-like
+- Friendly yet professional tone throughout
+- Next-level UI/UX that feels intuitive and effortless
+- Unique and creative — avoid default AI/bootstrap looks
+
+Requirements:
+- Fully responsive (mobile-first, scales beautifully to desktop)
+- Rethink and improve the page layout — don't just reskin, restructure if it serves the user better
+- Implement and enhance all relevant features and functions for this page
+- Prioritize clarity, hierarchy, and flow — every element should earn its place
+- Smooth micro-interactions and transitions where appropriate
+- Accessible, fast-loading, and production-ready code
+
+UI/UX Priorities:
+- Strong visual hierarchy with intentional spacing and typography
+- Clear CTAs and user pathways
+- Reduce cognitive load — simplify without losing functionality
+- Consistent design language (colors, type scale, spacing system)
+- Thoughtful empty states, loading states, and edge cases
+
+Tone: Premium but approachable. Think: high-end product that's still easy to use.
+
+Output: Complete, working code — not a mockup or wireframe. Ready to preview in browser. All original content and functionality preserved exactly.
+"""
+
+For "Sales Copy", "SEO", "Conversion", and "Performance" prompts, write equally detailed, multi-section promptText with these sections (tailored to this app):
+- A one-line bold goal headline naming the target page/area.
+- "Critical Rule:" — preserve all existing functionality, logic, links, and routes; only change what the category targets.
+- "Context:" — what this page/app does and who it's for.
+- "Requirements:" — a specific bulleted list of concrete changes for that category.
+- "Guidelines:" — best practices for that category.
+- "Output:" — exactly what to deliver, production-ready, with everything else preserved.
+
+Make each prompt self-contained, specific to this app, and immediately usable.
 
 Pages:\n${prev.pagePlan}\nArchitecture:\n${prev.appArchitecture}\nExecutive Summary:\n${prev.executiveSummary}\n\n${ctx}`,
   },
