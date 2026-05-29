@@ -1,0 +1,66 @@
+{
+  "name": "Project",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Project / app name"
+    },
+    "idea": {
+      "type": "string",
+      "description": "The raw app idea description"
+    },
+    "app_type": {
+      "type": "string",
+      "description": "Type of app (marketplace, SaaS, etc.)"
+    },
+    "target_users": {
+      "type": "string",
+      "description": "Who the app is for"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "base44",
+        "supabase",
+        "firebase",
+        "bubble",
+        "lovable",
+        "bolt",
+        "replit",
+        "custom_react"
+      ],
+      "default": "base44"
+    },
+    "security_level": {
+      "type": "string",
+      "enum": [
+        "basic",
+        "standard",
+        "high"
+      ],
+      "default": "standard"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "generating",
+        "ready",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "monetization": {
+      "type": "string",
+      "description": "Monetization approach"
+    },
+    "launch_timeline": {
+      "type": "string",
+      "description": "Target launch timeline"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

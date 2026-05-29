@@ -2,10 +2,11 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles, Database, ShieldCheck, LayoutGrid } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { useNavigate } from "react-router-dom";
 
 export default function Hero() {
-  const getStarted = () => base44.auth.redirectToLogin();
+  const navigate = useNavigate();
+  const getStarted = () => navigate("/register");
 
   return (
     <section className="relative pt-36 pb-24 overflow-hidden">

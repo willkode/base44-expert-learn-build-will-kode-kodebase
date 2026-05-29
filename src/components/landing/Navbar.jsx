@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Compass, Menu, X } from "lucide-react";
-import { base44 } from "@/api/base44Client";
 
 const links = [
   { label: "How It Works", href: "#how" },
@@ -13,6 +13,7 @@ const links = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -20,7 +21,8 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const getStarted = () => base44.auth.redirectToLogin();
+  const getStarted = () => navigate("/register");
+  const signIn = () => navigate("/login");
 
   return (
     <header
@@ -49,7 +51,7 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <Button variant="ghost" onClick={getStarted} className="text-muted-foreground hover:text-foreground">
+          <Button variant="ghost" onClick={signIn} className="text-muted-foreground hover:text-foreground">
             Sign In
           </Button>
           <Button onClick={getStarted} className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">

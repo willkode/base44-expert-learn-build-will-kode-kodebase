@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { useNavigate } from "react-router-dom";
 
 const tiers = [
   {
@@ -47,7 +47,8 @@ const tiers = [
 ];
 
 export default function Pricing() {
-  const getStarted = () => base44.auth.redirectToLogin();
+  const navigate = useNavigate();
+  const getStarted = () => navigate("/register");
 
   return (
     <section id="pricing" className="py-24 relative scroll-mt-20">

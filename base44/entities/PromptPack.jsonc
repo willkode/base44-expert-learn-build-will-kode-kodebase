@@ -1,0 +1,31 @@
+{
+  "name": "PromptPack",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "ID of the related Project"
+    },
+    "prompts": {
+      "type": "array",
+      "description": "Ordered build prompts",
+      "items": {
+        "type": "object",
+        "properties": {
+          "order": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "project_id"
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "name": "Blueprint",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "ID of the related Project"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Product breakdown summary"
+    },
+    "entities": {
+      "type": "array",
+      "description": "Generated entity definitions",
+      "items": {
+        "type": "object"
+      }
+    },
+    "roles": {
+      "type": "array",
+      "description": "User roles",
+      "items": {
+        "type": "object"
+      }
+    },
+    "permissions": {
+      "type": "array",
+      "description": "Permissions model",
+      "items": {
+        "type": "object"
+      }
+    },
+    "pages": {
+      "type": "array",
+      "description": "Page map",
+      "items": {
+        "type": "object"
+      }
+    },
+    "backend_functions": {
+      "type": "array",
+      "description": "Backend function plan",
+      "items": {
+        "type": "object"
+      }
+    },
+    "feature_phases": {
+      "type": "array",
+      "description": "MVP / V1 / V2 phases",
+      "items": {
+        "type": "object"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "complete"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "project_id"
+  ]
+}
