@@ -207,8 +207,12 @@ Deno.serve(async (req) => {
     }
 
     // Load and authorize the project (owner or admin only)
-    const projects = await base44.entities.Project.filter({ id: projectId });
-    const project = projects[0];
+    let project = null;
+    try {
+      project = await base44.entities.Project.get(projectId);
+    } catch (_e) {
+      project = null;
+    }
     if (!project) {
       return Response.json({ error: 'Project not found' }, { status: 404 });
     }
