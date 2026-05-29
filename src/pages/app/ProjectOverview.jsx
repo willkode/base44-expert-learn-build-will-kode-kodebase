@@ -127,7 +127,7 @@ export default function ProjectOverview() {
         <div className="space-y-6">
           {!isAdmin && <PlanUsageCard profile={profile} />}
           <BlueprintProgress steps={steps} />
-          <ProjectActivity runs={runs} />
+          <ProjectActivity runs={runs} projectStatus={project.status} />
         </div>
       </div>
     </div>

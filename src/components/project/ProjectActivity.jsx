@@ -8,7 +8,7 @@ const ICONS = {
   pending: { icon: Clock, color: "text-chart-2" },
 };
 
-export default function ProjectActivity({ runs }) {
+export default function ProjectActivity({ runs, projectStatus }) {
   return (
     <div className="rounded-2xl border border-border bg-card/70 p-6">
       <h3 className="font-sora font-semibold text-lg mb-4">Activity</h3>
@@ -19,7 +19,10 @@ export default function ProjectActivity({ runs }) {
       ) : (
         <ul className="space-y-4">
           {runs.map((r) => {
-            const meta = ICONS[r.status] || ICONS.pending;
+            // If the project already finished, no run can still be pending.
+            const effectiveStatus =
+              r.status === "pending" && projectStatus === "completed" ? "success" : r.status;
+            const meta = ICONS[effectiveStatus] || ICONS.pending;
             const Icon = meta.icon;
             return (
               <li key={r.id} className="flex items-start gap-3">
