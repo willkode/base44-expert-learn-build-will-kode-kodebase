@@ -25,18 +25,18 @@ export default function Hero() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-8 backdrop-blur-sm">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Plan before you build on Base44</span>
+            <span className="text-sm font-medium text-primary">Plan before you build on ForgeBase</span>
           </div>
 
           <h1 className="font-sora font-extrabold text-4xl md:text-6xl lg:text-7xl leading-[1.04] tracking-tight mb-7">
-            Stop wasting Base44 credits
+            Stop wasting ForgeBase credits
             <br />
             <span className="text-gradient-orange">fixing problems you could have avoided.</span>
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Base44 makes it easy to build apps with AI — but a short conversation with AI is not the
-            same thing as a real software plan. Kode Architect gives you a complete Base44-ready
+            ForgeBase makes it easy to build apps with AI — but a short conversation with AI is not the
+            same thing as a real software plan. ForgeBase gives you a complete builder-ready
             blueprint — data model, roles, permissions, page structure, security rules, workflows,
             and copy-paste build prompts. Build with structure. Stop rebuilding the same app three times.
           </p>
@@ -47,7 +47,7 @@ export default function Hero() {
               size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base px-8 h-13 py-6 glow-orange group w-full sm:w-auto transition-transform hover:-translate-y-0.5"
             >
-              Build My Blueprint Free
+              Build My Blueprint
               <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button
