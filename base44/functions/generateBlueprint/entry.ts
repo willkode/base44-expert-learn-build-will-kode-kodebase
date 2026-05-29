@@ -200,6 +200,40 @@ Set "title" to a short build step name, "purpose" to a one-line goal, and "depen
 
 Architecture:\n${prev.appArchitecture}\nEntities:\n${prev.entityPlan}\nPermissions:\n${prev.rolePermissionPlan}\nPages:\n${prev.pagePlan}\nWorkflows:\n${prev.workflowPlan}\nBackend:\n${prev.backendFunctionPlan}\n\n${ctx}`,
   },
+  {
+    name: "Optimization Agent",
+    key: "optimization",
+    schema: {
+      type: "object",
+      properties: {
+        optimizationPrompts: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              category: { type: "string", enum: ["UI Redesign", "Sales Copy", "SEO", "Conversion", "Performance"] },
+              title: { type: "string" },
+              targetArea: { type: "string", description: "Which page or part of the app this targets" },
+              purpose: { type: "string", description: "One sentence on what this improves" },
+              promptText: { type: "string", description: "Complete copy-paste-ready prompt for Base44" },
+            },
+            required: ["category", "title", "targetArea", "purpose", "promptText"],
+          },
+        },
+      },
+      required: ["optimizationPrompts"],
+    },
+    prompt: (ctx, prev) => `You are the Optimization Agent. Produce 8-12 highly-focused, copy-paste-ready Base44 prompts to IMPROVE this specific app AFTER it has been built. These are NOT build prompts — they refine an existing app. Cover:
+- UI Redesign — modernize the look/layout/visual hierarchy of specific real pages from the Page Plan.
+- Sales Copy — rewrite landing/marketing copy to be more conversion- and sales-focused for this app's audience.
+- SEO — improve titles, meta tags, headings, content structure, internal linking.
+- Conversion — improve CTAs, onboarding, signup, pricing.
+- Performance — lazy loading, image optimization where relevant.
+
+Weight toward UI Redesign, Sales Copy, and SEO. Each prompt MUST reference this app's REAL pages and purpose (from the plans below), be specific, and be written as a direct instruction to Base44.
+
+Pages:\n${prev.pagePlan}\nArchitecture:\n${prev.appArchitecture}\nExecutive Summary:\n${prev.executiveSummary}\n\n${ctx}`,
+  },
 ];
 
 const PLAN_BLUEPRINT_LIMITS = { free: 1, pro: 25, agency: -1 };
@@ -312,6 +346,23 @@ async function finalize(base44, projectId, project, accumulated, ownerProfile, u
         expectedResult: t.expectedResult || '',
         auditPrompt: t.auditPrompt || '',
         status: 'pending',
+      }))
+    );
+  }
+
+  const optimizationPrompts = accumulated.optimizationPrompts || [];
+  if (optimizationPrompts.length) {
+    await base44.entities.OptimizationPrompt.bulkCreate(
+      optimizationPrompts.map((p) => ({
+        projectId,
+        blueprintId: blueprint.id,
+        ownerId: project.created_by_id,
+        category: p.category || 'UI Redesign',
+        title: p.title || '',
+        targetArea: p.targetArea || '',
+        purpose: p.purpose || '',
+        promptText: p.promptText || '',
+        status: 'not_used',
       }))
     );
   }

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
-import { Sparkles, Loader2, RefreshCw } from "lucide-react";
+import { useOutletContext, useNavigate } from "react-router-dom";
+import { Sparkles } from "lucide-react";
 import { base44 } from "@/api/base44Client";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import OptimizationPromptCard from "@/components/optimization/OptimizationPromptCard";
@@ -12,8 +10,8 @@ const FILTERS = ["all", "UI Redesign", "Sales Copy", "SEO", "Conversion", "Perfo
 
 export default function OptimizationPrompts() {
   const { project } = useOutletContext();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [running, setRunning] = useState(false);
   const [prompts, setPrompts] = useState([]);
   const [filter, setFilter] = useState("all");
 
@@ -26,20 +24,6 @@ export default function OptimizationPrompts() {
 
   useEffect(loadPrompts, [project.id]);
 
-  const generate = async () => {
-    setRunning(true);
-    try {
-      const res = await base44.functions.invoke("generateOptimizationPrompts", { projectId: project.id });
-      if (res.data?.error) throw new Error(res.data.error);
-      toast.success(`Generated ${res.data.count} optimization prompts`);
-      loadPrompts();
-    } catch (err) {
-      toast.error(err?.response?.data?.error || err.message || "Failed to generate prompts");
-    } finally {
-      setRunning(false);
-    }
-  };
-
   const filtered = prompts.filter((p) => filter === "all" || p.category === filter);
 
   if (loading) return <LoadingState label="Loading optimization prompts..." />;
@@ -49,32 +33,34 @@ export default function OptimizationPrompts() {
       <EmptyState
         icon={Sparkles}
         title="No optimization prompts yet"
-        description={`Generate ready-to-paste prompts to redesign pages, sharpen sales copy, and improve SEO for "${project.projectName}". Requires a generated blueprint.`}
-        actionLabel={running ? "Generating..." : "Generate Optimization Prompts"}
-        onAction={running ? undefined : generate}
+        description={`Optimization prompts are generated together with the blueprint. Generate a blueprint for "${project.projectName}" from the Overview tab to get focused prompts for UI redesign, sales copy, and SEO.`}
+        actionLabel="Go to Overview"
+        onAction={() => navigate(`/projects/${project.id}/overview`)}
       />
     );
   }
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex flex-wrap gap-1.5">
-          {FILTERS.map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`text-sm px-3 py-1.5 rounded-full transition-colors ${
-                filter === f ? "bg-primary text-primary-foreground font-medium" : "bg-secondary text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {f === "all" ? "All" : f}
-            </button>
-          ))}
-        </div>
-        <Button variant="outline" onClick={generate} disabled={running}>
-          {running ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />} Re-generate
-        </Button>
+      <div className="rounded-2xl border border-border bg-card/70 p-6">
+        <h2 className="font-sora font-semibold text-lg">Optimization Prompts</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Focused prompts to redesign pages, sharpen sales copy, and improve SEO — tailored to this app's blueprint.
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-1.5">
+        {FILTERS.map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`text-sm px-3 py-1.5 rounded-full transition-colors ${
+              filter === f ? "bg-primary text-primary-foreground font-medium" : "bg-secondary text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {f === "all" ? "All" : f}
+          </button>
+        ))}
       </div>
 
       {filtered.length === 0 ? (
