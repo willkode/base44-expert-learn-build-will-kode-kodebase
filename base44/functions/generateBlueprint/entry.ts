@@ -327,7 +327,86 @@ function buildContext(intake, profile, project) {
 Return clear, actionable, Base44-specific output.`;
 }
 
-// Persist all final records once every agent has produced output.
+// As each agent finishes, persist its large array output directly into the right
+// entities (keyed by projectId) instead of keeping it in AgentRun.outputData, which
+// has a hard size limit. These records are created incrementally across requests.
+async function persistAgentArrays(base44, projectId, project, accumulated, result) {
+  const ownerId = project.created_by_id;
+
+  if (Array.isArray(result.prompts) && result.prompts.length) {
+    const promptPack = await base44.entities.PromptPack.create({
+      projectId,
+      ownerId,
+      title: `${project.projectName} Prompt Pack`,
+      description: 'Ordered Base44 build prompts generated from the blueprint.',
+      totalPrompts: result.prompts.length,
+      status: 'completed',
+    });
+    await base44.entities.PromptItem.bulkCreate(
+      result.prompts.map((p, i) => ({
+        promptPackId: promptPack.id,
+        projectId,
+        ownerId,
+        promptNumber: p.promptNumber ?? i + 1,
+        title: p.title || `Prompt ${i + 1}`,
+        category: p.category || 'general',
+        promptText: p.promptText || '',
+        purpose: p.purpose || '',
+        dependencies: p.dependencies || '',
+        status: 'not_used',
+      }))
+    );
+  }
+
+  if (Array.isArray(result.findings) && result.findings.length) {
+    await base44.entities.SecurityFinding.bulkCreate(
+      result.findings.map((f) => ({
+        projectId,
+        ownerId,
+        severity: f.severity || 'medium',
+        area: f.area || '',
+        issue: f.issue || '',
+        risk: f.risk || '',
+        recommendation: f.recommendation || '',
+        fixPrompt: f.fixPrompt || '',
+        fixedStatus: 'open',
+      }))
+    );
+  }
+
+  if (Array.isArray(result.tests) && result.tests.length) {
+    await base44.entities.QAItem.bulkCreate(
+      result.tests.map((t) => ({
+        projectId,
+        ownerId,
+        category: t.category || 'general',
+        testName: t.testName || '',
+        description: t.description || '',
+        expectedResult: t.expectedResult || '',
+        auditPrompt: t.auditPrompt || '',
+        status: 'pending',
+      }))
+    );
+  }
+
+  if (Array.isArray(result.optimizationPrompts) && result.optimizationPrompts.length) {
+    await base44.entities.OptimizationPrompt.bulkCreate(
+      result.optimizationPrompts.map((p) => ({
+        projectId,
+        ownerId,
+        category: p.category || 'UI Redesign',
+        title: p.title || '',
+        targetArea: p.targetArea || '',
+        purpose: p.purpose || '',
+        promptText: p.promptText || '',
+        status: 'not_used',
+      }))
+    );
+  }
+}
+
+// Create the Blueprint (markdown fields) once every agent has produced output.
+// Array records were already persisted incrementally by persistAgentArrays.
 async function finalize(base44, projectId, project, accumulated, ownerProfile, user) {
   const blueprint = await base44.entities.Blueprint.create({
     projectId,
@@ -347,84 +426,24 @@ async function finalize(base44, projectId, project, accumulated, ownerProfile, u
     status: 'completed',
   });
 
-  const prompts = accumulated.prompts || [];
-  const promptPack = await base44.entities.PromptPack.create({
-    projectId,
-    blueprintId: blueprint.id,
-    ownerId: project.created_by_id,
-    title: `${project.projectName} Prompt Pack`,
-    description: 'Ordered Base44 build prompts generated from the blueprint.',
-    totalPrompts: prompts.length,
-    status: 'completed',
-  });
-  if (prompts.length) {
-    await base44.entities.PromptItem.bulkCreate(
-      prompts.map((p, i) => ({
-        promptPackId: promptPack.id,
-        projectId,
-        ownerId: project.created_by_id,
-        promptNumber: p.promptNumber ?? i + 1,
-        title: p.title || `Prompt ${i + 1}`,
-        category: p.category || 'general',
-        promptText: p.promptText || '',
-        purpose: p.purpose || '',
-        dependencies: p.dependencies || '',
-        status: 'not_used',
-      }))
-    );
-  }
+  // Link the already-created array records to this blueprint.
+  const [packs, findingRecords, testRecords, optRecords] = await Promise.all([
+    base44.entities.PromptPack.filter({ projectId }),
+    base44.entities.SecurityFinding.filter({ projectId }),
+    base44.entities.QAItem.filter({ projectId }),
+    base44.entities.OptimizationPrompt.filter({ projectId }),
+  ]);
+  const promptPack = packs[0] || null;
+  await Promise.all([
+    ...(promptPack ? [base44.entities.PromptPack.update(promptPack.id, { blueprintId: blueprint.id })] : []),
+    ...findingRecords.filter((f) => !f.blueprintId).map((f) => base44.entities.SecurityFinding.update(f.id, { blueprintId: blueprint.id })),
+    ...testRecords.filter((t) => !t.blueprintId).map((t) => base44.entities.QAItem.update(t.id, { blueprintId: blueprint.id })),
+    ...optRecords.filter((o) => !o.blueprintId).map((o) => base44.entities.OptimizationPrompt.update(o.id, { blueprintId: blueprint.id })),
+  ]);
 
-  const findings = accumulated.findings || [];
-  if (findings.length) {
-    await base44.entities.SecurityFinding.bulkCreate(
-      findings.map((f) => ({
-        projectId,
-        blueprintId: blueprint.id,
-        ownerId: project.created_by_id,
-        severity: f.severity || 'medium',
-        area: f.area || '',
-        issue: f.issue || '',
-        risk: f.risk || '',
-        recommendation: f.recommendation || '',
-        fixPrompt: f.fixPrompt || '',
-        fixedStatus: 'open',
-      }))
-    );
-  }
-
-  const tests = accumulated.tests || [];
-  if (tests.length) {
-    await base44.entities.QAItem.bulkCreate(
-      tests.map((t) => ({
-        projectId,
-        blueprintId: blueprint.id,
-        ownerId: project.created_by_id,
-        category: t.category || 'general',
-        testName: t.testName || '',
-        description: t.description || '',
-        expectedResult: t.expectedResult || '',
-        auditPrompt: t.auditPrompt || '',
-        status: 'pending',
-      }))
-    );
-  }
-
-  const optimizationPrompts = accumulated.optimizationPrompts || [];
-  if (optimizationPrompts.length) {
-    await base44.entities.OptimizationPrompt.bulkCreate(
-      optimizationPrompts.map((p) => ({
-        projectId,
-        blueprintId: blueprint.id,
-        ownerId: project.created_by_id,
-        category: p.category || 'UI Redesign',
-        title: p.title || '',
-        targetArea: p.targetArea || '',
-        purpose: p.purpose || '',
-        promptText: p.promptText || '',
-        status: 'not_used',
-      }))
-    );
-  }
+  const prompts = await base44.entities.PromptItem.filter({ projectId });
+  const findings = findingRecords;
+  const tests = testRecords;
 
   await base44.entities.Project.update(projectId, { status: 'completed' });
 
@@ -511,10 +530,25 @@ Deno.serve(async (req) => {
           }, { status: 403 });
         }
       }
-      // Clear any stale runs from a previous failed attempt.
-      for (const r of existingRuns) {
-        await base44.entities.AgentRun.delete(r.id);
-      }
+      // Clear any stale runs AND partially-persisted records from a previous failed attempt
+      // so a fresh generation does not create duplicates.
+      const [stalePacks, stalePromptItems, staleFindings, staleTests, staleOpts, staleBlueprints] = await Promise.all([
+        base44.entities.PromptPack.filter({ projectId }),
+        base44.entities.PromptItem.filter({ projectId }),
+        base44.entities.SecurityFinding.filter({ projectId }),
+        base44.entities.QAItem.filter({ projectId }),
+        base44.entities.OptimizationPrompt.filter({ projectId }),
+        base44.entities.Blueprint.filter({ projectId }),
+      ]);
+      await Promise.all([
+        ...existingRuns.map((r) => base44.entities.AgentRun.delete(r.id)),
+        ...stalePacks.map((r) => base44.entities.PromptPack.delete(r.id)),
+        ...stalePromptItems.map((r) => base44.entities.PromptItem.delete(r.id)),
+        ...staleFindings.map((r) => base44.entities.SecurityFinding.delete(r.id)),
+        ...staleTests.map((r) => base44.entities.QAItem.delete(r.id)),
+        ...staleOpts.map((r) => base44.entities.OptimizationPrompt.delete(r.id)),
+        ...staleBlueprints.map((r) => base44.entities.Blueprint.delete(r.id)),
+      ]);
       Object.keys(successByAgent).forEach((k) => delete successByAgent[k]);
       await base44.entities.Project.update(projectId, { status: 'generating' });
     }
@@ -548,10 +582,20 @@ Deno.serve(async (req) => {
           model: 'gpt_5_5',
         });
         Object.assign(accumulated, result);
+
+        // Large array outputs (prompt pack, security findings, QA tests, optimization
+        // prompts) can exceed the AgentRun.outputData size limit. Persist them straight
+        // into their own entities now, and keep only the lightweight markdown/summary
+        // context fields in outputData for the next agent in the chain.
+        await persistAgentArrays(base44, projectId, project, accumulated, result);
+        const STRIPPED_KEYS = ['prompts', 'findings', 'tests', 'optimizationPrompts'];
+        const slimResult = { ...result };
+        for (const k of STRIPPED_KEYS) delete slimResult[k];
+
         await base44.entities.AgentRun.update(run.id, {
           status: 'success',
           outputSummary: `${nextAgent.name} completed`,
-          outputData: JSON.stringify(result),
+          outputData: JSON.stringify(slimResult),
         });
       } catch (agentErr) {
         await base44.entities.AgentRun.update(run.id, {
