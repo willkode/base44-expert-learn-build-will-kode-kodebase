@@ -6,6 +6,18 @@ function pct(done, total) {
   return Math.round((done / total) * 100);
 }
 
+export function getLaunchReady(prompts, security, qa) {
+  const promptsTotal = prompts.length;
+  const promptsDone = prompts.filter((p) => p.status === "completed").length;
+  const secTotal = security.length;
+  const secDone = security.filter((s) => s.fixedStatus === "resolved").length;
+  const qaTotal = qa.length;
+  const qaDone = qa.filter((q) => q.status === "passed").length;
+  const totalItems = promptsTotal + secTotal + qaTotal;
+  const totalDone = promptsDone + secDone + qaDone;
+  return pct(totalDone, totalItems);
+}
+
 function MetricCard({ icon: Icon, label, value, sub, accent }) {
   return (
     <div className="rounded-2xl border border-border bg-card/70 p-5">

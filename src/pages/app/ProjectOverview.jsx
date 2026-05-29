@@ -6,7 +6,8 @@ import LoadingState from "@/components/shared/LoadingState";
 import ProjectActions from "@/components/project/ProjectActions";
 import GenerationProgress from "@/components/project/GenerationProgress";
 import ProjectSummary from "@/components/project/ProjectSummary";
-import ProjectMetrics from "@/components/project/ProjectMetrics";
+import ProjectMetrics, { getLaunchReady } from "@/components/project/ProjectMetrics";
+import LaunchAuditBanner from "@/components/project/LaunchAuditBanner";
 import BlueprintProgress from "@/components/project/BlueprintProgress";
 import ProjectActivity from "@/components/project/ProjectActivity";
 import PlanUsageCard from "@/components/plan/PlanUsageCard";
@@ -123,6 +124,10 @@ export default function ProjectOverview() {
       )}
 
       {generating && <GenerationProgress progress={progress} />}
+
+      {blueprint && getLaunchReady(promptItems, security, qa) === 100 && (
+        <LaunchAuditBanner onOrder={() => toast.success("Audit request received — our team will reach out shortly.")} />
+      )}
 
       {blueprint && (
         <ProjectMetrics prompts={promptItems} security={security} qa={qa} />
