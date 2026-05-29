@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import LoadingState from "@/components/shared/LoadingState";
 import ProjectActions from "@/components/project/ProjectActions";
+import GenerationProgress from "@/components/project/GenerationProgress";
 import ProjectSummary from "@/components/project/ProjectSummary";
 import BlueprintProgress from "@/components/project/BlueprintProgress";
 import ProjectActivity from "@/components/project/ProjectActivity";
@@ -67,7 +68,7 @@ export default function ProjectOverview() {
         });
         if (res.data?.error) throw new Error(res.data.error);
         const data = res.data || {};
-        if (data.total) setProgress({ completed: data.completed, total: data.total });
+        if (data.total) setProgress({ completed: data.completed, total: data.total, currentAgent: data.currentAgent });
         done = !!data.done;
       }
       toast.success("Blueprint generated successfully");
@@ -116,6 +117,8 @@ export default function ProjectOverview() {
           onGenerate={handleGenerate}
         />
       )}
+
+      {generating && <GenerationProgress progress={progress} />}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
