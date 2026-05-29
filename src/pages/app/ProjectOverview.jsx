@@ -122,6 +122,7 @@ export default function ProjectOverview() {
         open={celebrate}
         onOpenChange={setCelebrate}
         appName={project.projectName}
+        appUrl={project.appUrl}
       />
 
       {limitReached ? (

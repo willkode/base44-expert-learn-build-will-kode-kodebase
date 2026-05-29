@@ -61,6 +61,7 @@ export default function NewProject() {
         projectName: data.appName,
         appType: data.appType,
         shortDescription: data.shortDescription,
+        appUrl: data.appUrl,
         targetUsers: data.targetAudience,
         platformFocus: "Base44",
         status: "draft",

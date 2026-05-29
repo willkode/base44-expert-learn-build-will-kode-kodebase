@@ -4,7 +4,7 @@
   "properties": {
     "ownerId": {
       "type": "string",
-      "description": "ID of the owning user"
+      "description": "Owner user id"
     },
     "projectName": {
       "type": "string"
@@ -14,6 +14,10 @@
     },
     "shortDescription": {
       "type": "string"
+    },
+    "appUrl": {
+      "type": "string",
+      "description": "The public URL where the app is or will be hosted"
     },
     "targetUsers": {
       "type": "string"
@@ -36,7 +40,8 @@
       "default": "draft"
     },
     "currentStep": {
-      "type": "string"
+      "type": "number",
+      "default": 1
     }
   },
   "required": [

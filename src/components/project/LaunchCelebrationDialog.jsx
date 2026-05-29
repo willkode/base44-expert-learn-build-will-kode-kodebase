@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { PartyPopper, Twitter, Linkedin, Facebook, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 
-export default function LaunchCelebrationDialog({ open, onOpenChange, appName }) {
+export default function LaunchCelebrationDialog({ open, onOpenChange, appName, appUrl }) {
   const name = appName || "my app";
-  const shareText = `I just finished building ${name} with @ForgeBaseAI! 🚀 Planned right, built right, launch ready. #BuiltWithForgeBase`;
-  const shareUrl = "https://forgebase.us";
+  const shareUrl = appUrl?.trim() ? appUrl.trim() : "https://forgebase.us";
+  const shareText = `I just finished building ${name} with @ForgeBaseAI! 🚀 Planned right, built right, launch ready. Check it out: ${shareUrl} #BuiltWithForgeBase`;
   const [copied, setCopied] = React.useState(false);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function LaunchCelebrationDialog({ open, onOpenChange, appName })
         <h2 className="font-sora font-bold text-2xl">100% Launch Ready! 🎉</h2>
         <p className="text-muted-foreground mt-2">
           Congratulations — <span className="text-foreground font-semibold">{name}</span> is fully
-          built, reviewed and ready to ship. Time to tell the world!
+          built, reviewed and ready to ship. Share it with our community to help boost your app!
         </p>
 
         <div className="mt-5 rounded-xl border border-border bg-card/70 p-4 text-left text-sm text-foreground">
