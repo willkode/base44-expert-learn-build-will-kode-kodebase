@@ -5,7 +5,7 @@ import { Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PLANS, PLAN_ORDER } from "@/lib/plans";
 
-const CTAS = { free: "Start Free", pro: "Go Pro", agency: "Start Agency" };
+const CTAS = { free: "Start Solo", pro: "Go Pro", agency: "Start Agency" };
 const tiers = PLAN_ORDER.map((id) => ({
   name: PLANS[id].name,
   price: PLANS[id].price,
@@ -35,7 +35,7 @@ export default function Pricing() {
             Architect once. Build right. Skip the rebuild.
           </h2>
           <p className="text-lg text-muted-foreground">
-            Start free — no credit card. Upgrade when you're ready to ship software that holds up.
+            Start with Solo at $12.99/mo. All tiers include full feature access. Upgrade for more projects.
           </p>
         </motion.div>
 
