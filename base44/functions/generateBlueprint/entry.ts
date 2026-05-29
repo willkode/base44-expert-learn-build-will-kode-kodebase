@@ -170,7 +170,33 @@ const AGENTS = [
       },
       required: ["mvpRoadmap", "prompts"],
     },
-    prompt: (ctx, prev) => `You are the Prompt Engineer Agent. Turn the full architecture into an ordered sequence of Base44-ready build prompts a user can paste one-by-one. Each prompt should build one logical piece (entities, pages, functions, etc.) in dependency order. Also produce an MVP roadmap.\n\nEntities:\n${prev.entityPlan}\nPages:\n${prev.pagePlan}\nBackend:\n${prev.backendFunctionPlan}\n\n${ctx}`,
+    prompt: (ctx, prev) => `You are the Prompt Engineer Agent. Turn the full architecture into an ORDERED sequence of Base44-ready build prompts the user can paste one-by-one. Also produce an MVP roadmap.
+
+ORDERING RULES:
+- The FIRST prompt must be a "Foundation" prompt (design system, layout, routing, auth scaffolding).
+- Then proceed in dependency order through these categories as needed: Foundation, Entities, Authentication, Roles and Permissions, Public Pages, User Dashboard, Admin Dashboard, Workflows, Backend Functions, Integrations, Notifications, Security, QA, Polish.
+- The "category" field of each prompt MUST be exactly one of those category names.
+- The FINAL prompts must be, in this order: a Security review prompt, a QA review prompt, and a UI Polish prompt.
+
+EVERY "promptText" MUST follow this exact markdown structure:
+## 1. Context
+Explain what has already been built or planned.
+## 2. Task
+Tell Base44 exactly what to build.
+## 3. Requirements
+List specific, concrete details (entities, fields, pages, components).
+## 4. Safety Rules
+- Preserve existing logic
+- Do not duplicate pages or entities
+- Use existing patterns and components
+- Add loading, error, and empty states
+- Keep ownership and permissions strict
+## 5. Completion Check
+Tell Base44 exactly what to verify before finishing.
+
+Set "title" to a short build step name, "purpose" to a one-line goal, and "dependencies" to which earlier prompt numbers must be done first.
+
+Architecture:\n${prev.appArchitecture}\nEntities:\n${prev.entityPlan}\nPermissions:\n${prev.rolePermissionPlan}\nPages:\n${prev.pagePlan}\nWorkflows:\n${prev.workflowPlan}\nBackend:\n${prev.backendFunctionPlan}\n\n${ctx}`,
   },
 ];
 
