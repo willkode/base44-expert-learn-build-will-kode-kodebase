@@ -1,37 +1,48 @@
 {
-  "name": "PromptPack",
+  "name": "UserProfile",
   "type": "object",
   "properties": {
-    "projectId": {
+    "userId": {
+      "type": "string",
+      "description": "ID of the linked user"
+    },
+    "fullName": {
       "type": "string"
     },
-    "blueprintId": {
+    "email": {
       "type": "string"
     },
-    "ownerId": {
+    "companyName": {
       "type": "string"
     },
-    "title": {
-      "type": "string"
-    },
-    "description": {
-      "type": "string"
-    },
-    "totalPrompts": {
-      "type": "number",
-      "default": 0
-    },
-    "status": {
+    "role": {
       "type": "string",
       "enum": [
-        "pending",
-        "complete"
+        "user",
+        "admin"
       ],
-      "default": "pending"
+      "default": "user"
+    },
+    "plan": {
+      "type": "string",
+      "enum": [
+        "free",
+        "pro",
+        "agency"
+      ],
+      "default": "free"
+    },
+    "blueprintLimit": {
+      "type": "number",
+      "default": 1
+    },
+    "blueprintsUsed": {
+      "type": "number",
+      "default": 0
     }
   },
   "required": [
-    "projectId"
+    "userId"
   ],
   "rls": {
     "read": {

@@ -1,5 +1,5 @@
 {
-  "name": "PromptPack",
+  "name": "QAItem",
   "type": "object",
   "properties": {
     "projectId": {
@@ -11,23 +11,29 @@
     "ownerId": {
       "type": "string"
     },
-    "title": {
+    "category": {
+      "type": "string"
+    },
+    "testName": {
       "type": "string"
     },
     "description": {
       "type": "string"
     },
-    "totalPrompts": {
-      "type": "number",
-      "default": 0
+    "expectedResult": {
+      "type": "string"
     },
     "status": {
       "type": "string",
       "enum": [
         "pending",
-        "complete"
+        "passed",
+        "failed"
       ],
       "default": "pending"
+    },
+    "notes": {
+      "type": "string"
     }
   },
   "required": [

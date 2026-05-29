@@ -2,25 +2,49 @@
   "name": "Template",
   "type": "object",
   "properties": {
-    "name": {
-      "type": "string",
-      "description": "Template name"
-    },
-    "description": {
-      "type": "string"
-    },
-    "app_type": {
+    "title": {
       "type": "string"
     },
     "category": {
       "type": "string"
     },
-    "is_active": {
+    "description": {
+      "type": "string"
+    },
+    "templateContent": {
+      "type": "string"
+    },
+    "isPublic": {
       "type": "boolean",
-      "default": true
+      "default": false
+    },
+    "createdBy": {
+      "type": "string"
     }
   },
   "required": [
-    "name"
-  ]
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "isPublic": true
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
 }

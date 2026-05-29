@@ -1,33 +1,54 @@
 {
-  "name": "PromptPack",
+  "name": "ProjectIntake",
   "type": "object",
   "properties": {
     "projectId": {
       "type": "string"
     },
-    "blueprintId": {
-      "type": "string"
-    },
     "ownerId": {
       "type": "string"
     },
-    "title": {
+    "appName": {
       "type": "string"
     },
-    "description": {
+    "appDescription": {
       "type": "string"
     },
-    "totalPrompts": {
-      "type": "number",
-      "default": 0
+    "targetAudience": {
+      "type": "string"
     },
-    "status": {
+    "userRoles": {
+      "type": "string"
+    },
+    "mainFeatures": {
+      "type": "string"
+    },
+    "adminNeeds": {
+      "type": "string"
+    },
+    "integrationsNeeded": {
+      "type": "string"
+    },
+    "paymentNeeds": {
+      "type": "string"
+    },
+    "aiFeaturesNeeded": {
+      "type": "string"
+    },
+    "securityLevel": {
       "type": "string",
       "enum": [
-        "pending",
-        "complete"
+        "basic",
+        "standard",
+        "high"
       ],
-      "default": "pending"
+      "default": "standard"
+    },
+    "launchGoal": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
     }
   },
   "required": [

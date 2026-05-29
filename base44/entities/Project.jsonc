@@ -2,65 +2,70 @@
   "name": "Project",
   "type": "object",
   "properties": {
-    "name": {
+    "ownerId": {
       "type": "string",
-      "description": "Project / app name"
+      "description": "ID of the owning user"
     },
-    "idea": {
-      "type": "string",
-      "description": "The raw app idea description"
+    "projectName": {
+      "type": "string"
     },
-    "app_type": {
-      "type": "string",
-      "description": "Type of app (marketplace, SaaS, etc.)"
+    "appType": {
+      "type": "string"
     },
-    "target_users": {
-      "type": "string",
-      "description": "Who the app is for"
+    "shortDescription": {
+      "type": "string"
     },
-    "platform": {
-      "type": "string",
-      "enum": [
-        "base44",
-        "supabase",
-        "firebase",
-        "bubble",
-        "lovable",
-        "bolt",
-        "replit",
-        "custom_react"
-      ],
-      "default": "base44"
+    "targetUsers": {
+      "type": "string"
     },
-    "security_level": {
+    "monetizationModel": {
+      "type": "string"
+    },
+    "platformFocus": {
       "type": "string",
-      "enum": [
-        "basic",
-        "standard",
-        "high"
-      ],
-      "default": "standard"
+      "default": "Base44"
     },
     "status": {
       "type": "string",
       "enum": [
         "draft",
         "generating",
-        "ready",
+        "completed",
         "archived"
       ],
       "default": "draft"
     },
-    "monetization": {
-      "type": "string",
-      "description": "Monetization approach"
-    },
-    "launch_timeline": {
-      "type": "string",
-      "description": "Target launch timeline"
+    "currentStep": {
+      "type": "string"
     }
   },
   "required": [
-    "name"
-  ]
+    "projectName"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
 }

@@ -2,55 +2,50 @@
   "name": "Blueprint",
   "type": "object",
   "properties": {
-    "project_id": {
-      "type": "string",
-      "description": "ID of the related Project"
+    "projectId": {
+      "type": "string"
     },
-    "summary": {
-      "type": "string",
-      "description": "Product breakdown summary"
+    "ownerId": {
+      "type": "string"
     },
-    "entities": {
-      "type": "array",
-      "description": "Generated entity definitions",
-      "items": {
-        "type": "object"
-      }
+    "title": {
+      "type": "string"
     },
-    "roles": {
-      "type": "array",
-      "description": "User roles",
-      "items": {
-        "type": "object"
-      }
+    "executiveSummary": {
+      "type": "string"
     },
-    "permissions": {
-      "type": "array",
-      "description": "Permissions model",
-      "items": {
-        "type": "object"
-      }
+    "appArchitecture": {
+      "type": "string"
     },
-    "pages": {
-      "type": "array",
-      "description": "Page map",
-      "items": {
-        "type": "object"
-      }
+    "entityPlan": {
+      "type": "string"
     },
-    "backend_functions": {
-      "type": "array",
-      "description": "Backend function plan",
-      "items": {
-        "type": "object"
-      }
+    "rolePermissionPlan": {
+      "type": "string"
     },
-    "feature_phases": {
-      "type": "array",
-      "description": "MVP / V1 / V2 phases",
-      "items": {
-        "type": "object"
-      }
+    "pagePlan": {
+      "type": "string"
+    },
+    "workflowPlan": {
+      "type": "string"
+    },
+    "backendFunctionPlan": {
+      "type": "string"
+    },
+    "integrationPlan": {
+      "type": "string"
+    },
+    "securityPlan": {
+      "type": "string"
+    },
+    "qaPlan": {
+      "type": "string"
+    },
+    "mvpRoadmap": {
+      "type": "string"
+    },
+    "versionPlan": {
+      "type": "string"
     },
     "status": {
       "type": "string",
@@ -62,6 +57,32 @@
     }
   },
   "required": [
-    "project_id"
-  ]
+    "projectId"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
 }

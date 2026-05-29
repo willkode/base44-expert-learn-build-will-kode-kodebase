@@ -1,37 +1,37 @@
 {
-  "name": "PromptPack",
+  "name": "AgentRun",
   "type": "object",
   "properties": {
     "projectId": {
       "type": "string"
     },
-    "blueprintId": {
-      "type": "string"
-    },
     "ownerId": {
       "type": "string"
     },
-    "title": {
+    "agentName": {
       "type": "string"
     },
-    "description": {
+    "inputSummary": {
       "type": "string"
     },
-    "totalPrompts": {
-      "type": "number",
-      "default": 0
+    "outputSummary": {
+      "type": "string"
     },
     "status": {
       "type": "string",
       "enum": [
         "pending",
-        "complete"
+        "success",
+        "failed"
       ],
       "default": "pending"
+    },
+    "errorMessage": {
+      "type": "string"
     }
   },
   "required": [
-    "projectId"
+    "agentName"
   ],
   "rls": {
     "read": {

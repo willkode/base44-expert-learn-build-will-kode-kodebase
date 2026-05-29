@@ -1,37 +1,46 @@
 {
-  "name": "PromptPack",
+  "name": "PromptItem",
   "type": "object",
   "properties": {
-    "projectId": {
+    "promptPackId": {
       "type": "string"
     },
-    "blueprintId": {
+    "projectId": {
       "type": "string"
     },
     "ownerId": {
       "type": "string"
     },
+    "promptNumber": {
+      "type": "number"
+    },
     "title": {
       "type": "string"
     },
-    "description": {
+    "category": {
       "type": "string"
     },
-    "totalPrompts": {
-      "type": "number",
-      "default": 0
+    "promptText": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "dependencies": {
+      "type": "string"
     },
     "status": {
       "type": "string",
       "enum": [
-        "pending",
-        "complete"
+        "not_used",
+        "copied",
+        "completed"
       ],
-      "default": "pending"
+      "default": "not_used"
     }
   },
   "required": [
-    "projectId"
+    "promptPackId"
   ],
   "rls": {
     "read": {

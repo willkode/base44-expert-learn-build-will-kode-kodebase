@@ -1,5 +1,5 @@
 {
-  "name": "PromptPack",
+  "name": "SecurityFinding",
   "type": "object",
   "properties": {
     "projectId": {
@@ -11,23 +11,36 @@
     "ownerId": {
       "type": "string"
     },
-    "title": {
-      "type": "string"
-    },
-    "description": {
-      "type": "string"
-    },
-    "totalPrompts": {
-      "type": "number",
-      "default": 0
-    },
-    "status": {
+    "severity": {
       "type": "string",
       "enum": [
-        "pending",
-        "complete"
+        "low",
+        "medium",
+        "high",
+        "critical"
       ],
-      "default": "pending"
+      "default": "medium"
+    },
+    "area": {
+      "type": "string"
+    },
+    "issue": {
+      "type": "string"
+    },
+    "risk": {
+      "type": "string"
+    },
+    "recommendation": {
+      "type": "string"
+    },
+    "fixedStatus": {
+      "type": "string",
+      "enum": [
+        "open",
+        "reviewed",
+        "resolved"
+      ],
+      "default": "open"
     }
   },
   "required": [
