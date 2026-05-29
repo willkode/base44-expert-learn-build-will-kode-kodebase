@@ -23,6 +23,7 @@ export default function ProjectOverview() {
   const [profile, setProfile] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [progress, setProgress] = useState(null);
 
   const loadData = () => {
     Promise.all([
@@ -51,17 +52,29 @@ export default function ProjectOverview() {
 
   const handleGenerate = async () => {
     setGenerating(true);
+    setProgress(null);
     try {
-      const res = await base44.functions.invoke("generateBlueprint", {
-        projectId: project.id,
-        intake,
-        profile,
-      });
-      if (res.data?.error) throw new Error(res.data.error);
+      // Generation runs one agent per request to avoid timeouts.
+      // Keep calling until the backend reports done.
+      let done = false;
+      let safety = 0;
+      while (!done && safety < 20) {
+        safety += 1;
+        const res = await base44.functions.invoke("generateBlueprint", {
+          projectId: project.id,
+          intake,
+          profile,
+        });
+        if (res.data?.error) throw new Error(res.data.error);
+        const data = res.data || {};
+        if (data.total) setProgress({ completed: data.completed, total: data.total });
+        done = !!data.done;
+      }
       toast.success("Blueprint generated successfully");
     } catch (err) {
       toast.error(err?.response?.data?.error || err.message || "Blueprint generation failed");
     } finally {
+      setProgress(null);
       if (reload) reload();
       loadData();
       setGenerating(false);
@@ -99,6 +112,7 @@ export default function ProjectOverview() {
           hasBlueprint={!!blueprint}
           hasPromptPack={!!promptPack}
           generating={generating}
+          progress={progress}
           onGenerate={handleGenerate}
         />
       )}

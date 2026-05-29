@@ -17,6 +17,10 @@
     "outputSummary": {
       "type": "string"
     },
+    "outputData": {
+      "type": "string",
+      "description": "Serialized JSON output of this agent run, used to resume multi-step generation"
+    },
     "status": {
       "type": "string",
       "enum": [

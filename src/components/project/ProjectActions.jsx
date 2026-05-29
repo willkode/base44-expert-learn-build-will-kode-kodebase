@@ -3,14 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { Sparkles, FileText, Wand2, ShieldCheck, ClipboardCheck, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function ProjectActions({ project, hasBlueprint, hasPromptPack, generating, onGenerate }) {
+export default function ProjectActions({ project, hasBlueprint, hasPromptPack, generating, progress, onGenerate }) {
   const navigate = useNavigate();
   const base = `/projects/${project.id}`;
+
+  const generatingLabel = progress?.total
+    ? `Generating ${progress.completed}/${progress.total}...`
+    : "Generating...";
 
   return (
     <div className="flex flex-wrap gap-3">
       <Button onClick={onGenerate} disabled={generating} className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
-        {generating ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Generating...</> : <><Sparkles className="w-4 h-4 mr-2" /> Generate Base44 Blueprint</>}
+        {generating ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> {generatingLabel}</> : <><Sparkles className="w-4 h-4 mr-2" /> Generate Base44 Blueprint</>}
       </Button>
 
       {hasBlueprint && (

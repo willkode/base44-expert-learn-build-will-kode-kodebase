@@ -232,6 +232,112 @@ function buildContext(intake, profile, project) {
 Return clear, actionable, Base44-specific output.`;
 }
 
+// Persist all final records once every agent has produced output.
+async function finalize(base44, projectId, project, accumulated, ownerProfile, user) {
+  const blueprint = await base44.entities.Blueprint.create({
+    projectId,
+    ownerId: project.created_by_id,
+    title: `${project.projectName} Blueprint`,
+    executiveSummary: accumulated.executiveSummary || '',
+    appArchitecture: accumulated.appArchitecture || '',
+    entityPlan: accumulated.entityPlan || '',
+    rolePermissionPlan: accumulated.rolePermissionPlan || '',
+    pagePlan: accumulated.pagePlan || '',
+    workflowPlan: accumulated.workflowPlan || '',
+    backendFunctionPlan: accumulated.backendFunctionPlan || '',
+    integrationPlan: accumulated.integrationPlan || '',
+    securityPlan: accumulated.securityPlan || '',
+    qaPlan: accumulated.qaPlan || '',
+    mvpRoadmap: accumulated.mvpRoadmap || '',
+    status: 'completed',
+  });
+
+  const prompts = accumulated.prompts || [];
+  const promptPack = await base44.entities.PromptPack.create({
+    projectId,
+    blueprintId: blueprint.id,
+    ownerId: project.created_by_id,
+    title: `${project.projectName} Prompt Pack`,
+    description: 'Ordered Base44 build prompts generated from the blueprint.',
+    totalPrompts: prompts.length,
+    status: 'completed',
+  });
+  if (prompts.length) {
+    await base44.entities.PromptItem.bulkCreate(
+      prompts.map((p, i) => ({
+        promptPackId: promptPack.id,
+        projectId,
+        ownerId: project.created_by_id,
+        promptNumber: p.promptNumber ?? i + 1,
+        title: p.title || `Prompt ${i + 1}`,
+        category: p.category || 'general',
+        promptText: p.promptText || '',
+        purpose: p.purpose || '',
+        dependencies: p.dependencies || '',
+        status: 'not_used',
+      }))
+    );
+  }
+
+  const findings = accumulated.findings || [];
+  if (findings.length) {
+    await base44.entities.SecurityFinding.bulkCreate(
+      findings.map((f) => ({
+        projectId,
+        blueprintId: blueprint.id,
+        ownerId: project.created_by_id,
+        severity: f.severity || 'medium',
+        area: f.area || '',
+        issue: f.issue || '',
+        risk: f.risk || '',
+        recommendation: f.recommendation || '',
+        fixedStatus: 'open',
+      }))
+    );
+  }
+
+  const tests = accumulated.tests || [];
+  if (tests.length) {
+    await base44.entities.QAItem.bulkCreate(
+      tests.map((t) => ({
+        projectId,
+        blueprintId: blueprint.id,
+        ownerId: project.created_by_id,
+        category: t.category || 'general',
+        testName: t.testName || '',
+        description: t.description || '',
+        expectedResult: t.expectedResult || '',
+        status: 'pending',
+      }))
+    );
+  }
+
+  await base44.entities.Project.update(projectId, { status: 'completed' });
+
+  if (user.role !== 'admin') {
+    const reset = needsMonthlyReset(ownerProfile?.usagePeriodStart);
+    const priorUsed = reset ? 0 : (ownerProfile?.blueprintsUsed || 0);
+    const usageUpdate = {
+      blueprintsUsed: priorUsed + 1,
+      usagePeriodStart: ownerProfile?.usagePeriodStart && !reset
+        ? ownerProfile.usagePeriodStart
+        : new Date().toISOString(),
+    };
+    if (ownerProfile) {
+      await base44.asServiceRole.entities.UserProfile.update(ownerProfile.id, usageUpdate);
+    } else {
+      await base44.asServiceRole.entities.UserProfile.create({
+        userId: project.created_by_id,
+        plan: 'free',
+        blueprintLimit: 1,
+        ...usageUpdate,
+      });
+    }
+  }
+
+  return { blueprint, promptPack, prompts, findings, tests };
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -260,47 +366,77 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // Plan limit enforcement (skip for admins). Authoritative server-side check.
-    let ownerProfile = (await base44.asServiceRole.entities.UserProfile.filter({ userId: project.created_by_id }, '-created_date', 1))[0] || null;
-    if (user.role !== 'admin') {
-      const planId = ownerProfile?.plan || 'free';
-      const limit = PLAN_BLUEPRINT_LIMITS[planId] ?? 1;
-      let used = ownerProfile?.blueprintsUsed || 0;
-      if (needsMonthlyReset(ownerProfile?.usagePeriodStart)) used = 0;
-      if (limit !== -1 && used >= limit) {
-        return Response.json({
-          error: `You've reached your ${planId} plan limit of ${limit} blueprint${limit === 1 ? '' : 's'}. Upgrade your plan to generate more.`,
-          code: 'PLAN_LIMIT_REACHED',
-          plan: planId,
-          limit,
-          used,
-        }, { status: 403 });
+    // Rebuild progress from existing AgentRun records for this project so this can be
+    // called multiple times — each call runs ONE agent to stay under the function timeout.
+    const existingRuns = await base44.entities.AgentRun.filter({ projectId }, '-created_date', 100);
+    const successByAgent = {};
+    for (const r of existingRuns) {
+      if (r.status === 'success' && r.outputData && !successByAgent[r.agentName]) {
+        successByAgent[r.agentName] = r;
       }
     }
 
-    await base44.entities.Project.update(projectId, { status: 'generating' });
+    // Find the next agent that has not completed yet.
+    const completedCount = AGENTS.filter((a) => successByAgent[a.name]).length;
+
+    // On the very first step, enforce plan limit and flip status to generating.
+    let ownerProfile = (await base44.asServiceRole.entities.UserProfile.filter({ userId: project.created_by_id }, '-created_date', 1))[0] || null;
+    if (completedCount === 0) {
+      if (user.role !== 'admin') {
+        const planId = ownerProfile?.plan || 'free';
+        const limit = PLAN_BLUEPRINT_LIMITS[planId] ?? 1;
+        let used = ownerProfile?.blueprintsUsed || 0;
+        if (needsMonthlyReset(ownerProfile?.usagePeriodStart)) used = 0;
+        if (limit !== -1 && used >= limit) {
+          return Response.json({
+            error: `You've reached your ${planId} plan limit of ${limit} blueprint${limit === 1 ? '' : 's'}. Upgrade your plan to generate more.`,
+            code: 'PLAN_LIMIT_REACHED',
+            plan: planId,
+            limit,
+            used,
+          }, { status: 403 });
+        }
+      }
+      // Clear any stale runs from a previous failed attempt.
+      for (const r of existingRuns) {
+        await base44.entities.AgentRun.delete(r.id);
+      }
+      Object.keys(successByAgent).forEach((k) => delete successByAgent[k]);
+      await base44.entities.Project.update(projectId, { status: 'generating' });
+    }
+
+    // Reassemble accumulated output from prior successful runs.
+    const accumulated = {};
+    for (const agent of AGENTS) {
+      const run = successByAgent[agent.name];
+      if (run?.outputData) {
+        try {
+          Object.assign(accumulated, JSON.parse(run.outputData));
+        } catch (_e) { /* ignore corrupt run */ }
+      }
+    }
 
     const context = buildContext(intake, profile, project);
-    const accumulated = {};
+    const nextAgent = AGENTS.find((a) => !successByAgent[a.name]);
 
-    // Run each specialized agent sequentially, logging an AgentRun per agent.
-    for (const agent of AGENTS) {
+    if (nextAgent) {
       const run = await base44.entities.AgentRun.create({
         projectId,
         ownerId: project.created_by_id,
-        agentName: agent.name,
-        inputSummary: `Generating ${agent.key} for ${project.projectName}`,
+        agentName: nextAgent.name,
+        inputSummary: `Generating ${nextAgent.key} for ${project.projectName}`,
         status: 'pending',
       });
       try {
         const result = await base44.integrations.Core.InvokeLLM({
-          prompt: agent.prompt(context, accumulated),
-          response_json_schema: agent.schema,
+          prompt: nextAgent.prompt(context, accumulated),
+          response_json_schema: nextAgent.schema,
         });
         Object.assign(accumulated, result);
         await base44.entities.AgentRun.update(run.id, {
           status: 'success',
-          outputSummary: `${agent.name} completed`,
+          outputSummary: `${nextAgent.name} completed`,
+          outputData: JSON.stringify(result),
         });
       } catch (agentErr) {
         await base44.entities.AgentRun.update(run.id, {
@@ -308,118 +444,34 @@ Deno.serve(async (req) => {
           errorMessage: String(agentErr?.message || agentErr),
         });
         await base44.entities.Project.update(projectId, { status: 'draft' });
-        return Response.json({ error: `${agent.name} failed: ${agentErr?.message || agentErr}` }, { status: 500 });
+        return Response.json({ error: `${nextAgent.name} failed: ${agentErr?.message || agentErr}` }, { status: 500 });
       }
     }
 
-    // Persist Blueprint
-    const blueprint = await base44.entities.Blueprint.create({
-      projectId,
-      ownerId: project.created_by_id,
-      title: `${project.projectName} Blueprint`,
-      executiveSummary: accumulated.executiveSummary || '',
-      appArchitecture: accumulated.appArchitecture || '',
-      entityPlan: accumulated.entityPlan || '',
-      rolePermissionPlan: accumulated.rolePermissionPlan || '',
-      pagePlan: accumulated.pagePlan || '',
-      workflowPlan: accumulated.workflowPlan || '',
-      backendFunctionPlan: accumulated.backendFunctionPlan || '',
-      integrationPlan: accumulated.integrationPlan || '',
-      securityPlan: accumulated.securityPlan || '',
-      qaPlan: accumulated.qaPlan || '',
-      mvpRoadmap: accumulated.mvpRoadmap || '',
-      status: 'completed',
-    });
+    const doneCount = AGENTS.filter((a) => a.name === nextAgent?.name || successByAgent[a.name]).length;
+    const isComplete = doneCount >= AGENTS.length;
 
-    // Persist PromptPack + PromptItems
-    const prompts = accumulated.prompts || [];
-    const promptPack = await base44.entities.PromptPack.create({
-      projectId,
-      blueprintId: blueprint.id,
-      ownerId: project.created_by_id,
-      title: `${project.projectName} Prompt Pack`,
-      description: 'Ordered Base44 build prompts generated from the blueprint.',
-      totalPrompts: prompts.length,
-      status: 'completed',
-    });
-    if (prompts.length) {
-      await base44.entities.PromptItem.bulkCreate(
-        prompts.map((p, i) => ({
-          promptPackId: promptPack.id,
-          projectId,
-          ownerId: project.created_by_id,
-          promptNumber: p.promptNumber ?? i + 1,
-          title: p.title || `Prompt ${i + 1}`,
-          category: p.category || 'general',
-          promptText: p.promptText || '',
-          purpose: p.purpose || '',
-          dependencies: p.dependencies || '',
-          status: 'not_used',
-        }))
-      );
+    if (!isComplete) {
+      // More agents remain — tell the frontend to call again.
+      return Response.json({
+        success: true,
+        done: false,
+        completed: doneCount,
+        total: AGENTS.length,
+        currentAgent: nextAgent?.name,
+      });
     }
 
-    // Persist SecurityFindings
-    const findings = accumulated.findings || [];
-    if (findings.length) {
-      await base44.entities.SecurityFinding.bulkCreate(
-        findings.map((f) => ({
-          projectId,
-          blueprintId: blueprint.id,
-          ownerId: project.created_by_id,
-          severity: f.severity || 'medium',
-          area: f.area || '',
-          issue: f.issue || '',
-          risk: f.risk || '',
-          recommendation: f.recommendation || '',
-          fixedStatus: 'open',
-        }))
-      );
-    }
-
-    // Persist QAItems
-    const tests = accumulated.tests || [];
-    if (tests.length) {
-      await base44.entities.QAItem.bulkCreate(
-        tests.map((t) => ({
-          projectId,
-          blueprintId: blueprint.id,
-          ownerId: project.created_by_id,
-          category: t.category || 'general',
-          testName: t.testName || '',
-          description: t.description || '',
-          expectedResult: t.expectedResult || '',
-          status: 'pending',
-        }))
-      );
-    }
-
-    await base44.entities.Project.update(projectId, { status: 'completed' });
-
-    // Increment blueprint usage (skip for admins). Reset period if a new month started.
-    if (user.role !== 'admin') {
-      const reset = needsMonthlyReset(ownerProfile?.usagePeriodStart);
-      const priorUsed = reset ? 0 : (ownerProfile?.blueprintsUsed || 0);
-      const usageUpdate = {
-        blueprintsUsed: priorUsed + 1,
-        usagePeriodStart: ownerProfile?.usagePeriodStart && !reset
-          ? ownerProfile.usagePeriodStart
-          : new Date().toISOString(),
-      };
-      if (ownerProfile) {
-        await base44.asServiceRole.entities.UserProfile.update(ownerProfile.id, usageUpdate);
-      } else {
-        await base44.asServiceRole.entities.UserProfile.create({
-          userId: project.created_by_id,
-          plan: 'free',
-          blueprintLimit: 1,
-          ...usageUpdate,
-        });
-      }
-    }
+    // All agents done — persist everything.
+    const { blueprint, promptPack, prompts, findings, tests } = await finalize(
+      base44, projectId, project, accumulated, ownerProfile, user
+    );
 
     return Response.json({
       success: true,
+      done: true,
+      completed: AGENTS.length,
+      total: AGENTS.length,
       blueprintId: blueprint.id,
       promptPackId: promptPack.id,
       result: {
