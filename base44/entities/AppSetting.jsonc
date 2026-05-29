@@ -1,0 +1,49 @@
+{
+  "name": "AppSetting",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "description": "Unique setting key"
+    },
+    "freeBlueprintLimit": {
+      "type": "number",
+      "default": 3
+    },
+    "proBlueprintLimit": {
+      "type": "number",
+      "default": 25
+    },
+    "agencyBlueprintLimit": {
+      "type": "number",
+      "default": 100
+    },
+    "securityReviewEnabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "qaChecklistEnabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "promptPackEnabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "maintenanceMode": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "key"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
