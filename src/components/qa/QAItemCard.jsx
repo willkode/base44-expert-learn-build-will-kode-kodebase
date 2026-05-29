@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { CheckCircle2, XCircle, MessageSquarePlus } from "lucide-react";
+import { CheckCircle2, XCircle, MessageSquarePlus, Sparkles } from "lucide-react";
 
 const STATUS_STYLES = {
   pending: "bg-secondary text-muted-foreground",
@@ -11,8 +12,23 @@ const STATUS_STYLES = {
 };
 
 export default function QAItemCard({ item, onUpdate }) {
+  const { openChatWith } = useOutletContext();
   const [showNotes, setShowNotes] = useState(false);
   const [notes, setNotes] = useState(item.notes || "");
+
+  const askAssistant = () => {
+    const parts = [
+      `I'd like help with this QA checklist task.`,
+      `Category: ${item.category}`,
+      `Test: ${item.testName}`,
+      item.description ? `Description: ${item.description}` : null,
+      item.expectedResult ? `Expected result: ${item.expectedResult}` : null,
+      `Status: ${item.status}`,
+      item.notes ? `Notes: ${item.notes}` : null,
+      `Please explain how to test this and how to fix it if it fails.`,
+    ].filter(Boolean);
+    openChatWith?.(parts.join("\n"));
+  };
 
   const setStatus = async (status) => {
     await base44.entities.QAItem.update(item.id, { status });
@@ -32,9 +48,19 @@ export default function QAItemCard({ item, onUpdate }) {
           <span className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium">{item.category}</span>
           <span className="font-medium text-sm">{item.testName}</span>
         </div>
-        <span className={`text-xs px-2.5 py-1 rounded-full capitalize ${STATUS_STYLES[item.status] || STATUS_STYLES.pending}`}>
-          {item.status}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className={`text-xs px-2.5 py-1 rounded-full capitalize ${STATUS_STYLES[item.status] || STATUS_STYLES.pending}`}>
+            {item.status}
+          </span>
+          <button
+            onClick={askAssistant}
+            className="h-8 w-8 rounded-lg flex items-center justify-center text-primary hover:bg-primary/10 transition-colors"
+            aria-label="Ask the assistant about this task"
+            title="Ask the assistant about this task"
+          >
+            <Sparkles className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {item.description && <p className="text-sm text-foreground/90 mb-1.5">{item.description}</p>}

@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, Sparkles, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ChatMessageBubble from "./ChatMessageBubble";
+import { useChatWidget } from "./ChatWidgetContext";
 
 export default function ProjectChatWidget({ project }) {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen, consumePending, pendingVersion } = useChatWidget();
   const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -53,10 +54,8 @@ export default function ProjectChatWidget({ project }) {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages, open]);
 
-  const handleSend = async () => {
-    const text = input.trim();
+  const sendMessage = async (text) => {
     if (!text || !conversation || sending) return;
-    setInput("");
     setSending(true);
     setMessages((prev) => [...prev, { role: "user", content: text }]);
     await base44.agents.addMessage(conversation, {
@@ -64,6 +63,21 @@ export default function ProjectChatWidget({ project }) {
       content: `Context: I'm working on project "${project.projectName}" (id: ${project.id}). ${text}`,
     });
   };
+
+  const handleSend = async () => {
+    const text = input.trim();
+    if (!text) return;
+    setInput("");
+    await sendMessage(text);
+  };
+
+  // When opened with a pending prompt (e.g. from a QA task), send it once the conversation is ready.
+  useEffect(() => {
+    if (!open || !conversation || sending) return;
+    const pending = consumePending();
+    if (pending) sendMessage(pending);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, conversation, pendingVersion]);
 
   return (
     <>

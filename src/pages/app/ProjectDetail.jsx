@@ -8,6 +8,7 @@ import ErrorState from "@/components/shared/ErrorState";
 import StatusBadge from "@/components/project/StatusBadge";
 import { projectNav } from "@/components/layout/navConfig";
 import ProjectChatWidget from "@/components/chat/ProjectChatWidget";
+import { ChatWidgetProvider, useChatWidget } from "@/components/chat/ChatWidgetContext";
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -68,9 +69,15 @@ export default function ProjectDetail() {
         ))}
       </div>
 
-      <Outlet context={{ user, project, reload: load }} />
-
-      <ProjectChatWidget project={project} />
+      <ChatWidgetProvider>
+        <ProjectOutlet user={user} project={project} reload={load} />
+        <ProjectChatWidget project={project} />
+      </ChatWidgetProvider>
     </div>
   );
+}
+
+function ProjectOutlet({ user, project, reload }) {
+  const { openChatWith } = useChatWidget();
+  return <Outlet context={{ user, project, reload, openChatWith }} />;
 }
