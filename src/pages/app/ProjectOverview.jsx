@@ -7,6 +7,9 @@ import ProjectActions from "@/components/project/ProjectActions";
 import ProjectSummary from "@/components/project/ProjectSummary";
 import BlueprintProgress from "@/components/project/BlueprintProgress";
 import ProjectActivity from "@/components/project/ProjectActivity";
+import PlanUsageCard from "@/components/plan/PlanUsageCard";
+import UpgradeCard from "@/components/plan/UpgradeCard";
+import { getBlueprintUsage } from "@/lib/plans";
 
 export default function ProjectOverview() {
   const { project, reload } = useOutletContext();
@@ -17,6 +20,8 @@ export default function ProjectOverview() {
   const [security, setSecurity] = useState([]);
   const [qa, setQa] = useState([]);
   const [runs, setRuns] = useState([]);
+  const [profile, setProfile] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [generating, setGenerating] = useState(false);
 
   const loadData = () => {
@@ -27,13 +32,17 @@ export default function ProjectOverview() {
       base44.entities.SecurityFinding.filter({ projectId: project.id }),
       base44.entities.QAItem.filter({ projectId: project.id }),
       base44.entities.AgentRun.filter({ projectId: project.id }, "-created_date", 10),
-    ]).then(([i, b, pp, s, q, r]) => {
+      base44.entities.UserProfile.filter({ userId: project.ownerId }, "-created_date", 1),
+      base44.auth.me(),
+    ]).then(([i, b, pp, s, q, r, prof, me]) => {
       setIntake(i[0] || null);
       setBlueprint(b[0] || null);
       setPromptPack(pp[0] || null);
       setSecurity(s);
       setQa(q);
       setRuns(r);
+      setProfile(prof[0] || null);
+      setIsAdmin(me?.role === "admin");
       setLoading(false);
     });
   };
@@ -43,7 +52,6 @@ export default function ProjectOverview() {
   const handleGenerate = async () => {
     setGenerating(true);
     try {
-      const profile = (await base44.entities.UserProfile.filter({ userId: project.ownerId }))[0] || null;
       const res = await base44.functions.invoke("generateBlueprint", {
         projectId: project.id,
         intake,
@@ -62,6 +70,10 @@ export default function ProjectOverview() {
 
   if (loading) return <LoadingState label="Loading project overview..." />;
 
+  const usage = getBlueprintUsage(profile);
+  // Existing blueprint can always be re-viewed; the limit only blocks NEW generation.
+  const limitReached = !isAdmin && !blueprint && usage.reached;
+
   const bp = blueprint || {};
   const steps = [
     { label: "Intake completed", done: !!intake },
@@ -75,19 +87,28 @@ export default function ProjectOverview() {
 
   return (
     <div className="space-y-6">
-      <ProjectActions
-        project={project}
-        hasBlueprint={!!blueprint}
-        hasPromptPack={!!promptPack}
-        generating={generating}
-        onGenerate={handleGenerate}
-      />
+      {limitReached ? (
+        <UpgradeCard
+          title="Blueprint limit reached"
+          description={`Your ${profile?.plan || "free"} plan allows ${usage.limit} blueprint${usage.limit === 1 ? "" : "s"}. Upgrade to generate more.`}
+          suggestedPlan={(profile?.plan || "free") === "free" ? "Pro" : "Agency"}
+        />
+      ) : (
+        <ProjectActions
+          project={project}
+          hasBlueprint={!!blueprint}
+          hasPromptPack={!!promptPack}
+          generating={generating}
+          onGenerate={handleGenerate}
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <ProjectSummary project={project} intake={intake} />
         </div>
         <div className="space-y-6">
+          {!isAdmin && <PlanUsageCard profile={profile} />}
           <BlueprintProgress steps={steps} />
           <ProjectActivity runs={runs} />
         </div>

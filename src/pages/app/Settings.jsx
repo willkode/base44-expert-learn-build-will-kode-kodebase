@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -6,12 +6,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Check } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
+import PlanUsageCard from "@/components/plan/PlanUsageCard";
 
 export default function Settings() {
   const { user } = useOutletContext();
   const [fullName, setFullName] = useState(user?.full_name || "");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    if (user?.id) {
+      base44.entities.UserProfile.filter({ userId: user.id }, "-created_date", 1)
+        .then((rows) => setProfile(rows[0] || { plan: user?.plan || "free" }));
+    }
+  }, [user?.id]);
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -25,6 +34,8 @@ export default function Settings() {
   return (
     <div className="max-w-2xl">
       <PageHeader title="Settings" description="Manage your account and preferences." />
+
+      {profile && <div className="mb-6"><PlanUsageCard profile={profile} /></div>}
 
       <form onSubmit={handleSave} className="rounded-2xl border border-border bg-card/60 p-6 md:p-8 space-y-6">
         <div className="space-y-2">

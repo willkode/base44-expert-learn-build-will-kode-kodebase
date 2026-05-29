@@ -3,48 +3,18 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { PLANS, PLAN_ORDER } from "@/lib/plans";
 
-const tiers = [
-  {
-    name: "Free",
-    price: "$0",
-    period: "",
-    desc: "Generate a basic app blueprint.",
-    features: ["1 project blueprint", "Core architecture & data model", "Basic role map", "Community support"],
-    cta: "Start Free",
-    highlight: false,
-  },
-  {
-    name: "Pro",
-    price: "$39",
-    period: "/mo",
-    desc: "For serious builders & founders.",
-    features: [
-      "Unlimited projects",
-      "Saved blueprints & revision history",
-      "Full security & permissions model",
-      "AI prompt pack exports",
-      "Platform-specific output",
-    ],
-    cta: "Go Pro",
-    highlight: true,
-  },
-  {
-    name: "Agency",
-    price: "$149",
-    period: "/mo",
-    desc: "For teams & client work.",
-    features: [
-      "Everything in Pro",
-      "Client workspaces",
-      "Branded exports & proposals",
-      "Team access",
-      "Priority support",
-    ],
-    cta: "Start Agency",
-    highlight: false,
-  },
-];
+const CTAS = { free: "Start Free", pro: "Go Pro", agency: "Start Agency" };
+const tiers = PLAN_ORDER.map((id) => ({
+  name: PLANS[id].name,
+  price: PLANS[id].price,
+  period: PLANS[id].period,
+  desc: PLANS[id].desc,
+  features: PLANS[id].features,
+  cta: CTAS[id],
+  highlight: id === "pro",
+}));
 
 export default function Pricing() {
   const navigate = useNavigate();
