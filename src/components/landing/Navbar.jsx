@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Hammer, Menu, X } from "lucide-react";
+import { useAuth } from "@/lib/AuthContext";
 
 const links = [
   { label: "How It Works", href: "#how" },
@@ -14,6 +15,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -23,6 +25,7 @@ export default function Navbar() {
 
   const getStarted = () => navigate("/register");
   const signIn = () => navigate("/login");
+  const goDashboard = () => navigate("/dashboard");
 
   return (
     <header
@@ -53,12 +56,25 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
-          <Button variant="ghost" onClick={signIn} className="text-muted-foreground hover:text-foreground">
-            Sign In
-          </Button>
-          <Button onClick={getStarted} className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold transition-transform hover:-translate-y-0.5">
-            Get Started
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <Button variant="ghost" onClick={() => logout()} className="text-muted-foreground hover:text-foreground">
+                Logout
+              </Button>
+              <Button onClick={goDashboard} className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold transition-transform hover:-translate-y-0.5">
+                Dashboard
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" onClick={signIn} className="text-muted-foreground hover:text-foreground">
+                Sign In
+              </Button>
+              <Button onClick={getStarted} className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold transition-transform hover:-translate-y-0.5">
+                Get Started
+              </Button>
+            </>
+          )}
         </div>
 
         <button
@@ -83,12 +99,25 @@ export default function Navbar() {
             </a>
           ))}
           <div className="pt-3 flex flex-col gap-2">
-            <Button variant="outline" onClick={signIn} className="w-full">
-              Sign In
-            </Button>
-            <Button onClick={getStarted} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
-              Get Started
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <Button variant="outline" onClick={() => logout()} className="w-full">
+                  Logout
+                </Button>
+                <Button onClick={goDashboard} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+                  Dashboard
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="outline" onClick={signIn} className="w-full">
+                  Sign In
+                </Button>
+                <Button onClick={getStarted} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+                  Get Started
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}
