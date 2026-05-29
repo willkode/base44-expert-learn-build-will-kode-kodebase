@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
+import { toast } from "sonner";
 import LoadingState from "@/components/shared/LoadingState";
 import ProjectActions from "@/components/project/ProjectActions";
 import ProjectSummary from "@/components/project/ProjectSummary";
@@ -41,17 +42,22 @@ export default function ProjectOverview() {
 
   const handleGenerate = async () => {
     setGenerating(true);
-    await base44.entities.AgentRun.create({
-      projectId: project.id,
-      ownerId: project.ownerId,
-      agentName: "Base44 Architect",
-      inputSummary: `Generate blueprint for ${project.projectName}`,
-      status: "pending",
-    });
-    await base44.entities.Project.update(project.id, { status: "generating" });
-    if (reload) reload();
-    loadData();
-    setGenerating(false);
+    try {
+      const profile = (await base44.entities.UserProfile.filter({ userId: project.ownerId }))[0] || null;
+      const res = await base44.functions.invoke("generateBlueprint", {
+        projectId: project.id,
+        intake,
+        profile,
+      });
+      if (res.data?.error) throw new Error(res.data.error);
+      toast.success("Blueprint generated successfully");
+    } catch (err) {
+      toast.error(err?.response?.data?.error || err.message || "Blueprint generation failed");
+    } finally {
+      if (reload) reload();
+      loadData();
+      setGenerating(false);
+    }
   };
 
   if (loading) return <LoadingState label="Loading project overview..." />;
