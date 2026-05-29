@@ -10,7 +10,7 @@ export default function BlueprintViewer() {
     <EmptyState
       icon={FileText}
       title="No blueprint generated yet"
-      description={`Generate a full Base44 build blueprint for "${project.name}" — entities, roles, permissions, pages, and backend plan.`}
+      description={`Generate a full Base44 build blueprint for "${project.projectName}" — entities, roles, permissions, pages, and backend plan.`}
       actionLabel="Generate Blueprint"
       onAction={() => {}}
     />

@@ -50,11 +50,11 @@ export default function Projects() {
               className="text-left rounded-2xl border border-border bg-card/70 p-5 hover:border-primary/40 transition-colors"
             >
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-sora font-semibold truncate">{p.name}</h3>
+                <h3 className="font-sora font-semibold truncate">{p.projectName}</h3>
                 <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-muted-foreground capitalize shrink-0 ml-2">{p.status}</span>
               </div>
-              <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{p.idea || "No description yet."}</p>
-              <span className="text-xs text-muted-foreground capitalize">{p.platform || "base44"}</span>
+              <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{p.shortDescription || "No description yet."}</p>
+              <span className="text-xs text-muted-foreground capitalize">{p.appType || p.platformFocus || "Base44"}</span>
             </button>
           ))}
         </div>

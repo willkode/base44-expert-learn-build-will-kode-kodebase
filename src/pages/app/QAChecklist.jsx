@@ -10,7 +10,7 @@ export default function QAChecklist() {
     <EmptyState
       icon={ClipboardCheck}
       title="No QA checklist yet"
-      description={`Generate a launch QA checklist for "${project.name}" covering test cases, bug-risk areas, and regression checks.`}
+      description={`Generate a launch QA checklist for "${project.projectName}" covering test cases, bug-risk areas, and regression checks.`}
       actionLabel="Generate QA Checklist"
       onAction={() => {}}
     />

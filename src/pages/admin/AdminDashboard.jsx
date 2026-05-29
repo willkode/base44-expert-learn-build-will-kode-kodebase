@@ -13,7 +13,7 @@ export default function AdminDashboard() {
       base44.entities.User.list("-created_date", 500),
       base44.entities.Project.list("-created_date", 500),
       base44.entities.Blueprint.list("-created_date", 500),
-      base44.entities.AIUsageLog.list("-created_date", 500),
+      base44.entities.AgentRun.list("-created_date", 500),
     ]).then(([users, projects, blueprints, logs]) => {
       setStats({ users: users.length, projects: projects.length, blueprints: blueprints.length, logs: logs.length });
     });

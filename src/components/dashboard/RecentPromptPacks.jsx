@@ -1,45 +1,38 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { Boxes } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Package, ArrowRight } from "lucide-react";
 import EmptyState from "@/components/shared/EmptyState";
+import { Button } from "@/components/ui/button";
 
 export default function RecentPromptPacks({ packs }) {
   const navigate = useNavigate();
 
+  if (packs.length === 0) {
+    return (
+      <EmptyState
+        icon={Package}
+        title="No prompt packs yet"
+        description="Generate a blueprint for a project and your Base44-ready build prompts will appear here."
+      />
+    );
+  }
+
   return (
-    <div className="mb-10">
-      <h2 className="font-sora font-semibold text-lg mb-4">Recent Prompt Packs</h2>
-      {packs.length === 0 ? (
-        <EmptyState
-          icon={Boxes}
-          title="No prompt packs yet"
-          description="Generate a blueprint to create Base44-ready build prompts you can copy straight into Base44."
-        />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {packs.slice(0, 4).map((pack) => (
-            <div key={pack.id} className="rounded-2xl border border-border bg-card/70 p-5 hover:border-primary/40 transition-colors">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <Boxes className="w-4.5 h-4.5 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-sora font-semibold text-sm">{pack.title || "Prompt Pack"}</h3>
-                  <p className="text-xs text-muted-foreground">{pack.totalPrompts || 0} prompts</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">
-                  {format(new Date(pack.created_date), "MMM d, yyyy")}
-                </span>
-                <Button size="sm" variant="outline" onClick={() => navigate(`/projects/${pack.projectId}/prompts`)}>Open</Button>
-              </div>
-            </div>
-          ))}
+    <div className="space-y-3">
+      {packs.map((pk) => (
+        <div key={pk.id} className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-card/70 p-4 hover:border-primary/40 transition-colors">
+          <div className="min-w-0">
+            <h3 className="font-sora font-semibold truncate">{pk.title || "Prompt Pack"}</h3>
+            <p className="text-xs text-muted-foreground">
+              {pk.totalPrompts || 0} prompts · {pk.created_date ? format(new Date(pk.created_date), "MMM d, yyyy") : ""}
+            </p>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => navigate(`/projects/${pk.projectId}/prompts`)} className="shrink-0">
+            Open <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+          </Button>
         </div>
-      )}
+      ))}
     </div>
   );
 }

@@ -10,7 +10,7 @@ export default function PromptPackViewer() {
     <EmptyState
       icon={Wand2}
       title="No prompt pack yet"
-      description={`Generate Base44-ready build prompts for "${project.name}", sequenced and ready to paste.`}
+      description={`Generate Base44-ready build prompts for "${project.projectName}", sequenced and ready to paste.`}
       actionLabel="Generate Prompt Pack"
       onAction={() => {}}
     />

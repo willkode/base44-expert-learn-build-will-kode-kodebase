@@ -18,13 +18,13 @@ export default function AdminBlueprints() {
       <AdminTable
         loading={loading}
         rows={rows}
-        columns={["Project ID", "Status", "Entities", "Created"]}
+        columns={["Title", "Project ID", "Status", "Created"]}
         emptyIcon={Boxes}
         emptyTitle="No blueprints yet"
         renderRow={(b) => [
-          <span className="font-mono text-xs text-muted-foreground">{b.project_id}</span>,
+          <span className="font-medium">{b.title || "Untitled"}</span>,
+          <span className="font-mono text-xs text-muted-foreground">{b.projectId}</span>,
           <span className="capitalize">{b.status}</span>,
-          <span>{(b.entities || []).length}</span>,
           <span className="text-muted-foreground">{b.created_date ? new Date(b.created_date).toLocaleDateString() : "—"}</span>,
         ]}
       />

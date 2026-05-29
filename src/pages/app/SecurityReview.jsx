@@ -10,7 +10,7 @@ export default function SecurityReview() {
     <EmptyState
       icon={ShieldCheck}
       title="No security review yet"
-      description={`Run a security review on "${project.name}" to surface permission gaps, ownership issues, and exposed data risks.`}
+      description={`Run a security review on "${project.projectName}" to surface permission gaps, ownership issues, and exposed data risks.`}
       actionLabel="Run Security Review"
       onAction={() => {}}
     />

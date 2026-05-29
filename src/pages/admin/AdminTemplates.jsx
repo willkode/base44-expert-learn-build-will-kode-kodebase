@@ -18,15 +18,15 @@ export default function AdminTemplates() {
       <AdminTable
         loading={loading}
         rows={rows}
-        columns={["Name", "Category", "App Type", "Active"]}
+        columns={["Title", "Category", "Public", "Created"]}
         emptyIcon={LayoutTemplate}
         emptyTitle="No templates yet"
         emptyDescription="Templates let users start projects from proven architecture patterns."
         renderRow={(t) => [
-          <span className="font-medium">{t.name}</span>,
+          <span className="font-medium">{t.title}</span>,
           <span className="text-muted-foreground">{t.category || "—"}</span>,
-          <span className="text-muted-foreground">{t.app_type || "—"}</span>,
-          <span>{t.is_active ? "Yes" : "No"}</span>,
+          <span>{t.isPublic ? "Yes" : "No"}</span>,
+          <span className="text-muted-foreground">{t.created_date ? new Date(t.created_date).toLocaleDateString() : "—"}</span>,
         ]}
       />
     </div>

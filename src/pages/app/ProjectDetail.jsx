@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Outlet, NavLink, useOutletContext } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Sparkles } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { Button } from "@/components/ui/button";
 import LoadingState from "@/components/shared/LoadingState";
 import ErrorState from "@/components/shared/ErrorState";
 import { projectNav } from "@/components/layout/navConfig";
@@ -39,9 +40,12 @@ export default function ProjectDetail() {
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
-          <h1 className="font-sora font-bold text-2xl md:text-3xl tracking-tight">{project.name}</h1>
-          <p className="text-muted-foreground mt-1 text-sm capitalize">{project.platform} · {project.status}</p>
+          <h1 className="font-sora font-bold text-2xl md:text-3xl tracking-tight">{project.projectName}</h1>
+          <p className="text-muted-foreground mt-1 text-sm capitalize">{project.platformFocus || "Base44"} · {project.appType ? `${project.appType} · ` : ""}{project.status}</p>
         </div>
+        <Button onClick={() => navigate(`/projects/${project.id}/blueprint`)} className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+          <Sparkles className="w-4 h-4 mr-2" /> Generate Base44 Blueprint
+        </Button>
       </div>
 
       <div className="flex gap-1 border-b border-border mb-6 overflow-x-auto">

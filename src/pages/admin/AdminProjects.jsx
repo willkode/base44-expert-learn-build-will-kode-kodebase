@@ -22,10 +22,10 @@ export default function AdminProjects() {
         emptyIcon={FolderKanban}
         emptyTitle="No projects yet"
         renderRow={(p) => [
-          <span className="font-medium">{p.name}</span>,
-          <span className="capitalize text-muted-foreground">{p.platform || "base44"}</span>,
+          <span className="font-medium">{p.projectName}</span>,
+          <span className="capitalize text-muted-foreground">{p.platformFocus || "Base44"}</span>,
           <span className="capitalize">{p.status}</span>,
-          <span className="text-muted-foreground">{p.app_type || "—"}</span>,
+          <span className="text-muted-foreground">{p.appType || "—"}</span>,
         ]}
       />
     </div>
