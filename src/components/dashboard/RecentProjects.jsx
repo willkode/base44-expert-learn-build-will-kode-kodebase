@@ -3,14 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { FolderKanban, ArrowRight } from "lucide-react";
 import EmptyState from "@/components/shared/EmptyState";
+import StatusBadge from "@/components/project/StatusBadge";
 import { Button } from "@/components/ui/button";
-
-const STATUS_STYLES = {
-  draft: "bg-secondary text-muted-foreground",
-  generating: "bg-chart-2/15 text-chart-2",
-  completed: "bg-green-500/15 text-green-400",
-  archived: "bg-secondary text-muted-foreground",
-};
 
 export default function RecentProjects({ projects }) {
   const navigate = useNavigate();
@@ -34,7 +28,7 @@ export default function RecentProjects({ projects }) {
           <div className="min-w-0">
             <div className="flex items-center gap-2.5 mb-1">
               <h3 className="font-sora font-semibold truncate">{p.projectName}</h3>
-              <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${STATUS_STYLES[p.status] || STATUS_STYLES.draft}`}>{p.status}</span>
+              <StatusBadge status={p.status} />
             </div>
             <p className="text-xs text-muted-foreground">
               {p.updated_date ? `Updated ${format(new Date(p.updated_date), "MMM d, yyyy")}` : "Just created"}

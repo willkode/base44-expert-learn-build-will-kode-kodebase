@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/shared/PageHeader";
 import AdminTable from "@/components/admin/AdminTable";
+import StatusBadge from "@/components/project/StatusBadge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -49,7 +50,7 @@ export default function AdminProjects() {
         renderRow={(p) => [
           <span className="font-medium">{p.projectName}</span>,
           <span className="capitalize text-muted-foreground">{p.platformFocus || "Base44"}</span>,
-          <span className="capitalize">{p.status}</span>,
+          <StatusBadge status={p.status} />,
           <span className="text-muted-foreground">{p.appType || "—"}</span>,
           <Button asChild variant="outline" size="sm"><Link to={`/projects/${p.id}/overview`}>Open</Link></Button>,
         ]}

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FolderKanban, FolderPlus } from "lucide-react";
+import { FolderKanban, FolderPlus, ArrowRight } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/shared/PageHeader";
 import EmptyState from "@/components/shared/EmptyState";
 import LoadingState from "@/components/shared/LoadingState";
+import StatusBadge from "@/components/project/StatusBadge";
 import { Button } from "@/components/ui/button";
 
 export default function Projects() {
@@ -42,19 +43,22 @@ export default function Projects() {
           onAction={() => navigate("/projects/new")}
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {projects.map((p) => (
             <button
               key={p.id}
               onClick={() => navigate(`/projects/${p.id}`)}
-              className="text-left rounded-2xl border border-border bg-card/70 p-5 hover:border-primary/40 transition-colors"
+              className="group text-left rounded-2xl border border-border bg-card/70 p-5 hover:border-primary/40 hover:bg-card transition-all flex flex-col"
             >
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-start justify-between gap-2 mb-2.5">
                 <h3 className="font-sora font-semibold truncate">{p.projectName}</h3>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-muted-foreground capitalize shrink-0 ml-2">{p.status}</span>
+                <span className="shrink-0"><StatusBadge status={p.status} /></span>
               </div>
-              <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{p.shortDescription || "No description yet."}</p>
-              <span className="text-xs text-muted-foreground capitalize">{p.appType || p.platformFocus || "Base44"}</span>
+              <p className="text-sm text-muted-foreground line-clamp-2 mb-4 flex-1">{p.shortDescription || "No description yet."}</p>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground capitalize">{p.appType || p.platformFocus || "Base44"}</span>
+                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+              </div>
             </button>
           ))}
         </div>

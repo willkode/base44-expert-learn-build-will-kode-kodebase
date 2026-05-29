@@ -7,9 +7,17 @@ const STYLES = {
   archived: "bg-secondary text-muted-foreground",
 };
 
-export default function StatusBadge({ status }) {
+const DOT = {
+  draft: "bg-muted-foreground",
+  generating: "bg-chart-2 animate-pulse",
+  completed: "bg-green-400",
+  archived: "bg-muted-foreground",
+};
+
+export default function StatusBadge({ status = "draft" }) {
   return (
-    <span className={`text-xs px-2.5 py-1 rounded-full capitalize font-medium ${STYLES[status] || STYLES.draft}`}>
+    <span className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full capitalize font-medium ${STYLES[status] || STYLES.draft}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${DOT[status] || DOT.draft}`} />
       {status}
     </span>
   );
