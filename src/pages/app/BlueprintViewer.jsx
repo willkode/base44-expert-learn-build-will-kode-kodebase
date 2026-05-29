@@ -12,10 +12,12 @@ import BlueprintSection from "@/components/blueprint/BlueprintSection";
 import SecurityFindings from "@/components/blueprint/SecurityFindings";
 import QAChecklistView from "@/components/blueprint/QAChecklistView";
 import ClientReportView from "@/components/blueprint/ClientReportView";
+import MindMap from "@/components/blueprint/MindMap";
 import InfoCard from "@/components/help/InfoCard";
 
 const TABS = [
   { key: "overview", label: "Overview" },
+  { key: "mindmap", label: "Mind Map" },
   { key: "entities", label: "Entity Plan" },
   { key: "permissions", label: "Roles & Permissions" },
   { key: "pages", label: "Page Plan" },
@@ -129,6 +131,10 @@ export default function BlueprintViewer() {
         <TabsContent value="overview" className="mt-5 space-y-5">
           <BlueprintSection title="Executive Summary" content={blueprint.executiveSummary} />
           <BlueprintSection title="App Architecture" content={blueprint.appArchitecture} />
+        </TabsContent>
+
+        <TabsContent value="mindmap" className="mt-5">
+          <MindMap project={project} blueprint={blueprint} />
         </TabsContent>
 
         <TabsContent value="entities" className="mt-5 space-y-5">
