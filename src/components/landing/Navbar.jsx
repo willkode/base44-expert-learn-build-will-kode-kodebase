@@ -40,7 +40,7 @@ export default function Navbar() {
            <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center glow-orange group-hover:scale-105 transition-transform">
              <Hammer className="w-5 h-5 text-primary-foreground" />
            </div>
-           <span className="font-sora font-bold text-lg tracking-tight">ForgeBase</span>
+           <span className="font-sora font-bold text-lg tracking-tight">KodeBase</span>
          </a>
 
         <nav className="hidden md:flex items-center gap-1">

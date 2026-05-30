@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <div className="dark min-h-screen bg-background text-foreground font-inter antialiased overflow-x-hidden">
       <Seo
-        title="ForgeBase — Plan Before You Build"
+        title="KodeBase — Plan Before You Build"
         description={SITE.description}
         path="/"
         type="website"

@@ -10,7 +10,7 @@ export default function Footer() {
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <Hammer className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="font-sora font-bold">ForgeBase</span>
+            <span className="font-sora font-bold">KodeBase</span>
           </div>
           <nav className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
             <a href="#how" className="hover:text-foreground transition-colors">How It Works</a>
@@ -19,7 +19,7 @@ export default function Footer() {
             <a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a>
           </nav>
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} ForgeBase
+            © {new Date().getFullYear()} KodeBase
           </p>
         </div>
       </div>

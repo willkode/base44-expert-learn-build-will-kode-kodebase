@@ -1,9 +1,9 @@
-// Central SEO configuration for ForgeBase.
+// Central SEO configuration for KodeBase.
 export const SITE = {
-  name: "ForgeBase",
-  domain: "https://forgebase.us",
-  email: "hello@forgebase.us",
-  twitter: "@ForgeBaseAI",
+  name: "KodeBase",
+  domain: "https://kodebase.us",
+  email: "hello@kodebase.us",
+  twitter: "@KodeBaseAI",
   ogImage:
     "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/2d2767ff4_generated_image.png",
   logo:
