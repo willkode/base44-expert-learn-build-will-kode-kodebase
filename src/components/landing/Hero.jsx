@@ -25,11 +25,11 @@ export default function Hero() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-8 backdrop-blur-sm">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Plan before you build on ForgeBase</span>
+            <span className="text-sm font-medium text-primary">Plan before you build on KodeBase</span>
           </div>
 
           <h1 className="font-sora font-extrabold text-4xl md:text-6xl lg:text-7xl leading-[1.04] tracking-tight mb-7">
-            Stop wasting ForgeBase credits
+            Stop wasting KodeBase credits
             <br />
             <span className="text-gradient-orange">fixing problems you could have avoided.</span>
           </h1>
