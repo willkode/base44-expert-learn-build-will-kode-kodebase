@@ -1,103 +1,97 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Database, ShieldCheck, LayoutGrid } from "lucide-react";
+import { ArrowRight, Sparkles, Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
+const NEBULA_BG = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/412194915_d32a9ead9_Gemini_Generated_Image_cy4o04cy4o04cy4o.png";
+const WILL_PHOTO = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a75f49248_b2ff656b5_will-kode-hero-profile.png";
 
 export default function Hero() {
   const navigate = useNavigate();
   const getStarted = () => navigate("/register");
 
   return (
-    <section className="relative pt-40 pb-28 overflow-hidden">
-      {/* Layered ambient background */}
-      <div className="absolute inset-0 blueprint-grid opacity-[0.5]" />
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-      <div className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[900px] h-[560px] bg-primary/10 rounded-full blur-[140px]" />
-      <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-background to-transparent" />
+    <section className="relative overflow-hidden min-h-[92vh] flex items-center">
+      {/* Nebula background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${NEBULA_BG})` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-6">
+      <div className="relative w-full max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-8 items-center pt-32 pb-16 lg:pt-24">
+        {/* Left — copy */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-4xl mx-auto text-center"
+          className="max-w-xl"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-8 backdrop-blur-sm">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Plan before you build on KodeBase</span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-7 backdrop-blur-sm">
+            <Sparkles className="w-3.5 h-3.5 text-primary" />
+            <span className="text-xs font-semibold tracking-wide text-primary uppercase">
+              Certified Base44 Expert · Hire a Senior AI Developer
+            </span>
           </div>
 
-          <h1 className="font-sora font-extrabold text-4xl md:text-6xl lg:text-7xl leading-[1.04] tracking-tight mb-7">
-            Stop wasting KodeBase credits
+          <h1 className="font-sora font-extrabold text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight mb-6">
+            The Base44 Expert
             <br />
-            <span className="text-gradient-orange">fixing problems you could have avoided.</span>
+            <span className="text-gradient-orange">Serious Brands Trust</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            ForgeBase makes it easy to build apps with AI — but a short conversation with AI is not the
-            same thing as a real software plan. ForgeBase gives you a complete builder-ready
-            blueprint — data model, roles, permissions, page structure, security rules, workflows,
-            and copy-paste build prompts. Build with structure. Stop rebuilding the same app three times.
+          <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-9">
+            I'm Will Kode — full-stack since 1997, 20+ years building production apps, 15+ years in
+            marketing, and a certified Base44 Expert. I architect, audit, secure, and ship AI-first
+            Apps — the kind that survives real users.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-10">
             <Button
               onClick={getStarted}
               size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base px-8 h-13 py-6 glow-orange group w-full sm:w-auto transition-transform hover:-translate-y-0.5"
+              className="bg-primary hover:bg-red-500 text-primary-foreground font-semibold text-base px-7 py-6 shadow-lg shadow-red-600/30 group transition-transform hover:-translate-y-0.5"
             >
-              Build My Blueprint
+              Hire Me to Build It
               <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button
               onClick={() => document.querySelector("#how")?.scrollIntoView({ behavior: "smooth" })}
               size="lg"
               variant="outline"
-              className="border-border bg-card/50 hover:bg-card text-foreground font-semibold text-base px-8 py-6 w-full sm:w-auto"
+              className="bg-white/5 hover:bg-white/10 text-white border border-white/15 font-semibold text-base px-7 py-6"
             >
-              See How It Works
+              <Play className="w-4 h-4 mr-1" />
+              My App is Broken — Help
             </Button>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-green-500" />
+              Full-stack since 1997
+            </span>
+            <span className="hidden sm:block w-px h-4 bg-border" />
+            <span>Certified Base44 Expert</span>
+            <span className="hidden sm:block w-px h-4 bg-border" />
+            <span>500+ apps shipped</span>
           </div>
         </motion.div>
 
+        {/* Right — photo */}
         <motion.div
-          initial={{ opacity: 0, y: 48 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="relative max-w-4xl mx-auto"
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          className="relative hidden lg:block self-end"
         >
-          {/* Soft glow behind preview */}
-          <div className="absolute -inset-4 bg-primary/5 rounded-[2rem] blur-2xl" />
-          <div className="relative rounded-2xl border border-border bg-card/80 backdrop-blur-xl p-6 md:p-8 shadow-2xl ring-1 ring-white/5">
-            <div className="flex items-center gap-2 mb-6 pb-5 border-b border-border/60">
-              <div className="w-3 h-3 rounded-full bg-destructive/60" />
-              <div className="w-3 h-3 rounded-full bg-primary/60" />
-              <div className="w-3 h-3 rounded-full bg-chart-2/60" />
-              <span className="ml-3 text-xs text-muted-foreground font-mono">build-blueprint.kode</span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {[
-                { icon: Database, title: "Data Model", desc: "9 entities mapped with relations" },
-                { icon: ShieldCheck, title: "Security Model", desc: "Role-based access + ownership rules" },
-                { icon: LayoutGrid, title: "Page Map", desc: "12 pages across user & admin flows" },
-              ].map((c, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 + i * 0.1 }}
-                  className="group rounded-xl border border-border bg-secondary/40 p-5 text-left hover:border-primary/40 hover:bg-secondary/60 transition-all duration-300"
-                >
-                  <div className="w-11 h-11 rounded-lg bg-primary/10 border border-primary/15 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-                    <c.icon className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-sora font-semibold text-sm mb-1">{c.title}</h3>
-                  <p className="text-xs text-muted-foreground">{c.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+          <img
+            src={WILL_PHOTO}
+            alt="Will Kode — Certified Base44 Expert"
+            className="relative z-10 w-full max-w-[560px] ml-auto drop-shadow-2xl"
+          />
         </motion.div>
       </div>
     </section>
