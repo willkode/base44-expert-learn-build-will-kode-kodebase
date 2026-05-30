@@ -37,9 +37,9 @@ export default function Hero() {
           </div>
 
           <h1 className="font-sora font-extrabold text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight mb-6">
-            The Base44 Expert
+            Become a
             <br />
-            <span className="text-gradient-orange">Serious Brands Trust</span>
+            <span className="text-gradient-orange">Base44 Expert</span>
           </h1>
 
           <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-9">
