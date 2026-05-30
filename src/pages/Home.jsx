@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Seo from "@/components/seo/Seo";
+import GlitchPreloader from "@/components/landing/GlitchPreloader";
 import { SITE, softwareApplicationSchema, faqSchema } from "@/lib/seo";
 import { faqs } from "@/components/landing/FAQ";
 import Navbar from "@/components/landing/Navbar";
@@ -18,8 +19,16 @@ import FinalCTA from "@/components/landing/FinalCTA";
 import Footer from "@/components/landing/Footer";
 
 export default function Home() {
+  const [loading, setLoading] = useState(() => !sessionStorage.getItem("kodebasePreloaded"));
+
+  const handleComplete = () => {
+    sessionStorage.setItem("kodebasePreloaded", "1");
+    setLoading(false);
+  };
+
   return (
     <div className="dark min-h-screen bg-background text-foreground font-inter antialiased overflow-x-hidden">
+      {loading && <GlitchPreloader onComplete={handleComplete} />}
       <Seo
         title="KodeBase — Plan Before You Build"
         description={SITE.description}
