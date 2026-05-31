@@ -12,7 +12,7 @@ export default function Hero() {
   const getStarted = () => navigate("/register");
 
   return (
-    <section className="relative overflow-hidden min-h-[90vh] flex items-center">
+    <section className="relative overflow-hidden h-[90vh] flex items-center">
       {/* Nebula background */}
       <div
         className="absolute inset-0 bg-cover bg-center"
