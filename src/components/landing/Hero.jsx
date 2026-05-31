@@ -55,7 +55,7 @@ export default function Hero() {
           <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-9">
             I'm Will Kode — full-stack since 1997, 20+ years building production apps, 15+ years in
             marketing, and a certified Base44 Expert. I architect, audit, secure, and ship AI-first
-            Apps — the kind that survives real users.
+            Apps — and I teach you how. The kind that survives real users.
           </p>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-10">
