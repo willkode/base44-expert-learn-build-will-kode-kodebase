@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Hammer, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 
 const links = [
@@ -37,9 +37,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <a href="#" className="flex items-center gap-2.5 group">
-           <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center glow-orange group-hover:scale-105 transition-transform">
-             <Hammer className="w-5 h-5 text-primary-foreground" />
-           </div>
+           <img src="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/7ac1b8038_7feb47fe7_kode-base-logo-white.png" alt="KodeBase" className="h-9 w-auto group-hover:scale-105 transition-transform" />
            <span className="font-sora font-bold text-lg tracking-tight">KodeBase</span>
          </a>
 
