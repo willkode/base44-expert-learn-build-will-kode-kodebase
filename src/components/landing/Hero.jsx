@@ -31,7 +31,7 @@ export default function Hero() {
           
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-7 backdrop-blur-sm">
             <Sparkles className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs font-semibold tracking-wide text-primary uppercase">CERTIFIED BASE44 EXPERT · Base44 MODERATOR
+            <span className="text-xs font-semibold tracking-wide text-primary uppercase">CERTIFIED BASE44 EXPERT · Base44 MOD + Ambassador
 
             </span>
           </div>
