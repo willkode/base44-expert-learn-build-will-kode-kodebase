@@ -38,7 +38,10 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <a href="#" className="flex items-center gap-2.5 group">
            <img src="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/7ac1b8038_7feb47fe7_kode-base-logo-white.png" alt="KodeBase" className="h-9 w-auto group-hover:scale-105 transition-transform" />
-           <span className="font-sora font-bold text-lg tracking-tight">KodeBase</span>
+           <span className="font-sora font-bold text-lg tracking-tight">
+             <span className="text-white">KODE</span>
+             <span className="text-primary">BASE</span>
+           </span>
          </a>
 
         <nav className="hidden md:flex items-center gap-1">
