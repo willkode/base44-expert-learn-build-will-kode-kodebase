@@ -85,12 +85,12 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="relative hidden lg:block self-end">
+          className="relative hidden lg:block self-end -mr-6 -mb-16">
           
           <img
             src={WILL_PHOTO}
             alt="Will Kode — Certified Base44 Expert"
-            className="relative z-10 w-full max-w-[560px] ml-auto drop-shadow-2xl" />
+            className="relative z-10 w-full max-w-[720px] ml-auto drop-shadow-2xl" />
           
         </motion.div>
       </div>
