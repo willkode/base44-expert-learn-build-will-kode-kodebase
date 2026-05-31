@@ -16,8 +16,8 @@ export default function Hero() {
       {/* Nebula background */}
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${NEBULA_BG})` }}
-      />
+        style={{ backgroundImage: `url(${NEBULA_BG})` }} />
+      
       <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
 
@@ -27,12 +27,12 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-xl"
-        >
+          className="max-w-xl">
+          
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-7 backdrop-blur-sm">
             <Sparkles className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs font-semibold tracking-wide text-primary uppercase">
-              Certified Base44 Expert · Hire a Senior AI Developer
+            <span className="text-xs font-semibold tracking-wide text-primary uppercase">CERTIFIED BASE44 EXPERT · Base44 MOD
+
             </span>
           </div>
 
@@ -52,8 +52,8 @@ export default function Hero() {
             <Button
               onClick={getStarted}
               size="lg"
-              className="bg-primary hover:bg-red-500 text-primary-foreground font-semibold text-base px-7 py-6 shadow-lg shadow-red-600/30 group transition-transform hover:-translate-y-0.5"
-            >
+              className="bg-primary hover:bg-red-500 text-primary-foreground font-semibold text-base px-7 py-6 shadow-lg shadow-red-600/30 group transition-transform hover:-translate-y-0.5">
+              
               Hire Me to Build It
               <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
             </Button>
@@ -61,8 +61,8 @@ export default function Hero() {
               onClick={() => document.querySelector("#how")?.scrollIntoView({ behavior: "smooth" })}
               size="lg"
               variant="outline"
-              className="bg-white/5 hover:bg-white/10 text-white border border-white/15 font-semibold text-base px-7 py-6"
-            >
+              className="bg-white/5 hover:bg-white/10 text-white border border-white/15 font-semibold text-base px-7 py-6">
+              
               <Play className="w-4 h-4 mr-1" />
               My App is Broken — Help
             </Button>
@@ -85,15 +85,15 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="relative hidden lg:block self-end"
-        >
+          className="relative hidden lg:block self-end">
+          
           <img
             src={WILL_PHOTO}
             alt="Will Kode — Certified Base44 Expert"
-            className="relative z-10 w-full max-w-[560px] ml-auto drop-shadow-2xl"
-          />
+            className="relative z-10 w-full max-w-[560px] ml-auto drop-shadow-2xl" />
+          
         </motion.div>
       </div>
-    </section>
-  );
+    </section>);
+
 }
