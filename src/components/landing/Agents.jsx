@@ -25,7 +25,7 @@ export default function Agents() {
         >
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">The AI Architecture Team</span>
           <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-5">
-            One prompt cannot architect a full app. A team can.
+            One prompt cannot architect a full app. <span className="text-gradient-orange">A team can.</span>
           </h2>
           <p className="text-lg text-muted-foreground">
             Kode Architect uses specialized AI agents that each focus on one critical part of your app — working together on one cohesive Base44 build plan.

@@ -27,7 +27,7 @@ export default function Blueprint() {
           >
             <span className="text-sm font-semibold text-primary uppercase tracking-widest">What You Get</span>
             <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-6">
-              A complete app architecture built for AI development
+              <span className="text-gradient-orange">A complete app architecture built for AI development</span>
             </h2>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
               Your blueprint gives Base44 the structure it needs before it starts generating your app.

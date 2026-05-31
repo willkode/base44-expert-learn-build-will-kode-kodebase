@@ -37,7 +37,7 @@ export default function HowItWorks() {
         >
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">How It Works</span>
           <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-5">
-            From rough idea to Base44-ready blueprint in minutes
+            From rough idea to <span className="text-gradient-orange">Base44-ready blueprint in minutes</span>
           </h2>
           <p className="text-lg text-muted-foreground">
             You don't need to know the database structure, the workflows, or the permissions. That's what Kode Architect is for.

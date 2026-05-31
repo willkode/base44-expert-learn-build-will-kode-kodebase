@@ -55,7 +55,7 @@ export default function Workspace() {
         >
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">Inside Your Workspace</span>
           <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-5">
-            Everything to plan, build, and launch — in one project
+            Everything to <span className="text-gradient-orange">plan, build, and launch — in one project</span>
           </h2>
           <p className="text-lg text-muted-foreground">
             Every project gets its own workspace with six dedicated tabs. Move from architecture to
