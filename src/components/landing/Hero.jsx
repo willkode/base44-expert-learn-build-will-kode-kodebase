@@ -12,34 +12,44 @@ export default function Hero() {
   const getStarted = () => navigate("/register");
 
   return (
-    <section className="relative overflow-hidden h-[90vh] flex items-center">
+    <section className="relative overflow-hidden min-h-[90vh] flex items-center">
       {/* Nebula background */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${NEBULA_BG})` }} />
-      
-      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
 
-      <div className="relative w-full max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-8 items-center pt-32 pb-16 lg:pt-24">
+      {/* Profile photo — full-bleed on the right */}
+      <motion.img
+        initial={{ opacity: 0, scale: 1.02 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        src={WILL_PHOTO}
+        alt="Will Kode — Certified Base44 Expert"
+        className="hidden lg:block absolute right-0 bottom-0 h-full w-auto object-cover object-bottom z-0 pointer-events-none" />
+
+      {/* Overlays to keep the left copy readable */}
+      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-transparent z-[1]" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent z-[1]" />
+
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-32 pb-16 lg:pt-24">
         {/* Left — copy */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="max-w-xl">
-          
+
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-7 backdrop-blur-sm">
             <Sparkles className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs font-semibold tracking-wide text-primary uppercase">CERTIFIED BASE44 EXPERT · Base44 MOD + Ambassador
-
+            <span className="text-xs font-semibold tracking-wide text-primary uppercase">
+              CERTIFIED BASE44 EXPERT · HIRE A SENIOR AI DEVELOPER
             </span>
           </div>
 
           <h1 className="font-sora font-extrabold text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight mb-6">
-            Become a
+            The <span className="text-white">Base44 Expert</span>
             <br />
-            <span className="text-gradient-orange">Base44 Expert</span>
+            <span className="text-gradient-orange">Serious Brands Trust</span>
           </h1>
 
           <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-9">
@@ -53,7 +63,7 @@ export default function Hero() {
               onClick={getStarted}
               size="lg"
               className="bg-primary hover:bg-red-500 text-primary-foreground font-semibold text-base px-7 py-6 shadow-lg shadow-red-600/30 group transition-transform hover:-translate-y-0.5">
-              
+
               Hire Me to Build It
               <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
             </Button>
@@ -62,7 +72,7 @@ export default function Hero() {
               size="lg"
               variant="outline"
               className="bg-white/5 hover:bg-white/10 text-white border border-white/15 font-semibold text-base px-7 py-6">
-              
+
               <Play className="w-4 h-4 mr-1" />
               My App is Broken — Help
             </Button>
@@ -78,20 +88,6 @@ export default function Hero() {
             <span className="hidden sm:block w-px h-4 bg-border" />
             <span>500+ apps shipped</span>
           </div>
-        </motion.div>
-
-        {/* Right — photo */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="relative hidden lg:block self-end -mr-6 -mb-16">
-          
-          <img
-            src={WILL_PHOTO}
-            alt="Will Kode — Certified Base44 Expert"
-            className="relative z-10 w-full max-w-[720px] ml-auto drop-shadow-2xl" />
-          
         </motion.div>
       </div>
     </section>);
