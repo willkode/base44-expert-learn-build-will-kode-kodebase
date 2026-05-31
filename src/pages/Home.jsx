@@ -19,10 +19,9 @@ import FinalCTA from "@/components/landing/FinalCTA";
 import Footer from "@/components/landing/Footer";
 
 export default function Home() {
-  const [loading, setLoading] = useState(() => !sessionStorage.getItem("kodebasePreloaded"));
+  const [loading, setLoading] = useState(true);
 
   const handleComplete = () => {
-    sessionStorage.setItem("kodebasePreloaded", "1");
     setLoading(false);
   };
 
