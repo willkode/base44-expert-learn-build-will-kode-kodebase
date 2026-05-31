@@ -47,9 +47,9 @@ export default function Hero() {
           </div>
 
           <h1 className="font-sora font-extrabold text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight mb-6">
-            I Help Base44 Users
+            <span className="whitespace-nowrap">I Help Base44 Users</span>
             <br />
-            <span className="text-gradient-orange">Become Experts</span>
+            <span className="text-gradient-orange whitespace-nowrap">Become Experts</span>
           </h1>
 
           <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-9">
