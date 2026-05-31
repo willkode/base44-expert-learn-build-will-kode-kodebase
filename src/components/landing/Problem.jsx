@@ -26,7 +26,7 @@ export default function Problem() {
             <AlertTriangle className="w-4 h-4 text-destructive" />
             <span className="text-sm font-medium text-destructive">The Problem</span>
           </div>
-          <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mb-5">
+          <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mb-5 text-gradient-orange">
             Conversational AI builds are great — until your app gets complicated.
           </h2>
           <p className="text-lg text-muted-foreground leading-relaxed">
