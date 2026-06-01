@@ -66,15 +66,17 @@ export default function Hero() {
               Start Learning
               <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <Button
-              onClick={() => document.querySelector("#how")?.scrollIntoView({ behavior: "smooth" })}
-              size="lg"
-              variant="outline"
-              className="bg-white/5 hover:bg-white/10 text-white border border-primary font-semibold text-base px-7 py-6">
+            <div className="p-[1.5px] rounded-md bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15]">
+              <Button
+                onClick={() => document.querySelector("#how")?.scrollIntoView({ behavior: "smooth" })}
+                size="lg"
+                variant="outline"
+                className="w-full bg-background hover:bg-white/10 text-white border-0 font-semibold text-base px-7 py-6">
 
-              <LayoutTemplate className="w-4 h-4 mr-1" />
-              View Blue Print Tool
-            </Button>
+                <LayoutTemplate className="w-4 h-4 mr-1" />
+                View Blue Print Tool
+              </Button>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
