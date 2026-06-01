@@ -70,7 +70,10 @@ export default function PromptLibrary() {
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               A curated collection of battle-tested Base44 prompts. Copy, paste, and build faster.
             </p>
-            <div className="mt-7 flex justify-center">
+            <p className="mt-6 text-sm text-muted-foreground">
+              Help support the work I do
+            </p>
+            <div className="mt-3 flex justify-center">
               <a href="https://buymeacoffee.com/willkode" target="_blank" rel="noopener noreferrer">
                 <Button size="lg" className="font-semibold gap-2">
                   <Coffee className="w-5 h-5" />
