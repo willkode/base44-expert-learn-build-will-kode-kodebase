@@ -414,10 +414,18 @@ const BLUEPRINT_MD_FIELDS = [
   'securityPlan', 'qaPlan', 'mvpRoadmap',
 ];
 
+// Entity string fields have a hard size cap. Keep each markdown field comfortably
+// under it so the Blueprint record always saves.
+const MAX_BLUEPRINT_FIELD_CHARS = 40000;
+
 async function persistBlueprintFields(base44, projectId, project, result) {
   const update = {};
   for (const f of BLUEPRINT_MD_FIELDS) {
-    if (typeof result[f] === 'string' && result[f].length) update[f] = result[f];
+    if (typeof result[f] === 'string' && result[f].length) {
+      update[f] = result[f].length > MAX_BLUEPRINT_FIELD_CHARS
+        ? result[f].slice(0, MAX_BLUEPRINT_FIELD_CHARS)
+        : result[f];
+    }
   }
   if (Object.keys(update).length === 0) return;
 
