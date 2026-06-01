@@ -4,6 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Copy, Check, Star } from "lucide-react";
 
+const CATEGORY_IMAGES = {
+  "App Building": "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/e5af6c698_generated_image.png",
+  Workflow: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/3386b9868_generated_image.png",
+  Marketing: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/014929e53_generated_image.png",
+  Optimization: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/e997d740a_generated_image.png",
+  Debugging: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/de50230f2_generated_image.png",
+  "QA & Testing": "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/324b52fa6_generated_image.png",
+};
+const DEFAULT_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/5caf73316_generated_image.png";
+
 export default function PromptCard({ prompt, unlocked, onCopyRequest }) {
   const [copied, setCopied] = useState(false);
 
@@ -27,8 +37,19 @@ export default function PromptCard({ prompt, unlocked, onCopyRequest }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.3 }}
-      className="group relative flex flex-col rounded-2xl border border-border bg-card/70 p-6 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card/70 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300"
     >
+      <div className="relative h-36 overflow-hidden">
+        <img
+          src={CATEGORY_IMAGES[prompt.category] || DEFAULT_IMAGE}
+          alt={prompt.category}
+          loading="lazy"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+      </div>
+
+      <div className="flex flex-col flex-1 p-6">
       <div className="flex items-center justify-between mb-3">
         <Badge variant="secondary" className="text-xs">{prompt.category}</Badge>
         {prompt.featured && (
@@ -66,6 +87,7 @@ export default function PromptCard({ prompt, unlocked, onCopyRequest }) {
           </>
         )}
       </Button>
+      </div>
     </motion.div>
   );
 }
