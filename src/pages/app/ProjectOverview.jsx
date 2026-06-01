@@ -72,6 +72,14 @@ export default function ProjectOverview() {
   const handleGenerate = async () => {
     setGenerating(true);
     setProgress(null);
+    // Clear stale results from the previous blueprint immediately so the
+    // "100% complete" banner/metrics don't linger while the new one generates.
+    setBlueprint(null);
+    setPromptPack(null);
+    setPromptItems([]);
+    setSecurity([]);
+    setQa([]);
+    localStorage.removeItem(`launchCelebrated_${project.id}`);
     try {
       // Generation runs one agent per request to avoid timeouts.
       // Keep calling until the backend reports done.
