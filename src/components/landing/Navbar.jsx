@@ -1,14 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const links = [
   { label: "How It Works", href: "#how" },
   { label: "Agents", href: "#agents" },
   { label: "Blueprint", href: "#blueprint" },
   { label: "Pricing", href: "#pricing" },
+];
+
+const learnLinks = [
+  { label: "Blog", to: "/learn/blog" },
+  { label: "Prompt Library", to: "/learn/prompt-library" },
+  { label: "Agent Skills", to: "/learn/agent-skills" },
+  { label: "SuperAgent", to: "/learn/superagent" },
+  { label: "Videos", to: "/learn/videos" },
+  { label: "Events", to: "/learn/events" },
+  { label: "LLM Guide", to: "/learn/llm-guide" },
 ];
 
 export default function Navbar() {
@@ -54,6 +70,19 @@ export default function Navbar() {
               {l.label}
             </a>
           ))}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50 focus:outline-none">
+              Learn
+              <ChevronDown className="w-4 h-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48">
+              {learnLinks.map((l) => (
+                <DropdownMenuItem key={l.to} asChild>
+                  <Link to={l.to} className="cursor-pointer">{l.label}</Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
@@ -99,6 +128,19 @@ export default function Navbar() {
               {l.label}
             </a>
           ))}
+          <div className="pt-2 pb-1">
+            <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Learn</p>
+            {learnLinks.map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                onClick={() => setOpen(false)}
+                className="block text-sm font-medium text-muted-foreground hover:text-foreground py-2.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
           <div className="pt-3 flex flex-col gap-2">
             {isAuthenticated ? (
               <>

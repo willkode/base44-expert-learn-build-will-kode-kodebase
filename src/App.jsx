@@ -11,6 +11,13 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import Home from '@/pages/Home';
 import Features from '@/pages/Features';
 import Pricing from '@/pages/Pricing';
+import Blog from '@/pages/learn/Blog';
+import PromptLibrary from '@/pages/learn/PromptLibrary';
+import AgentSkills from '@/pages/learn/AgentSkills';
+import SuperAgent from '@/pages/learn/SuperAgent';
+import Videos from '@/pages/learn/Videos';
+import Events from '@/pages/learn/Events';
+import LlmGuide from '@/pages/learn/LlmGuide';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -52,6 +59,13 @@ const AuthenticatedApp = () => {
       <Route element={<PublicLayout />}>
         <Route path="/features" element={<Features />} />
         <Route path="/pricing" element={<Pricing />} />
+        <Route path="/learn/blog" element={<Blog />} />
+        <Route path="/learn/prompt-library" element={<PromptLibrary />} />
+        <Route path="/learn/agent-skills" element={<AgentSkills />} />
+        <Route path="/learn/superagent" element={<SuperAgent />} />
+        <Route path="/learn/videos" element={<Videos />} />
+        <Route path="/learn/events" element={<Events />} />
+        <Route path="/learn/llm-guide" element={<LlmGuide />} />
       </Route>
       <Route path="/" element={<Home />} />
 
