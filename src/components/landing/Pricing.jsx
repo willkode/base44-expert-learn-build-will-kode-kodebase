@@ -32,7 +32,7 @@ export default function Pricing() {
         >
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">Pricing</span>
           <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-5">
-            Architect once. Build right. Skip the rebuild.
+            Architect once. Build right. <span className="text-gradient-orange">Skip the rebuild.</span>
           </h2>
           <p className="text-lg text-muted-foreground">
             Start with Solo at $12.99/mo. All tiers include full feature access. Upgrade for more projects.
