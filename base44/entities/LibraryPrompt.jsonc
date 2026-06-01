@@ -9,6 +9,9 @@
     "category": {
       "type": "string",
       "enum": [
+        "App Building",
+        "Workflow",
+        "Marketing",
         "Architecture",
         "Database",
         "Security",
