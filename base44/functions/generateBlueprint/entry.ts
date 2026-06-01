@@ -3,7 +3,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 // Specialized agent roles. Each gets the project context + relevant prior output.
 const AGENTS = [
   {
-    name: "Base44 Architect Agent",
+    name: "Architect Agent",
     key: "appArchitecture",
     schema: {
       type: "object",
