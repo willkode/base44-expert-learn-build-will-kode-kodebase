@@ -119,7 +119,7 @@ const AGENTS = [
       },
       required: ["securityPlan", "findings"],
     },
-    prompt: (ctx, prev) => `You are the Security Agent. Review the design for risks: exposed data, weak permissions, missing ownership checks, unsafe backend functions, and admin bypasses. Return concrete findings with severity. For EACH finding, also write a "fixPrompt": a complete, copy-paste-ready Base44 prompt the user can paste to fix that specific issue.\n\nPermissions:\n${prev.rolePermissionPlan}\nBackend functions:\n${prev.backendFunctionPlan}\n\n${ctx}`,
+    prompt: (ctx, prev) => `You are the Security Agent. Review the design for risks: exposed data, weak permissions, missing ownership checks, unsafe backend functions, and admin bypasses. Return UP TO 12 concrete findings with severity. For EACH finding, also write a "fixPrompt": a complete, copy-paste-ready Base44 prompt the user can paste to fix that specific issue.\n\nPermissions:\n${prev.rolePermissionPlan}\nBackend functions:\n${prev.backendFunctionPlan}\n\n${ctx}`,
   },
   {
     name: "QA Agent",
@@ -145,7 +145,7 @@ const AGENTS = [
       },
       required: ["qaPlan", "tests"],
     },
-    prompt: (ctx, prev) => `You are the QA Agent. Create testing steps, a launch checklist, edge cases, and regression checks for the app. Return discrete test items. For EACH test item, also write an "auditPrompt": a complete, copy-paste-ready Base44 prompt the user can paste to audit/verify that specific task.\n\nWorkflows:\n${prev.workflowPlan}\nPages:\n${prev.pagePlan}\n\n${ctx}`,
+    prompt: (ctx, prev) => `You are the QA Agent. Create EXACTLY 12 discrete test items covering testing steps, a launch checklist, edge cases, and regression checks for the app. For EACH test item, also write an "auditPrompt": a complete, copy-paste-ready Base44 prompt the user can paste to audit/verify that specific task. Keep each auditPrompt focused and concise (a few short paragraphs).\n\nWorkflows:\n${prev.workflowPlan}\nPages:\n${prev.pagePlan}\n\n${ctx}`,
   },
   {
     name: "Prompt Engineer Agent",
@@ -172,39 +172,29 @@ const AGENTS = [
       },
       required: ["mvpRoadmap", "prompts"],
     },
-    prompt: (ctx, prev) => `You are an EXPERT PROMPT ENGINEER Agent. Turn the full architecture into an ORDERED sequence of Base44-ready build prompts the user can paste one-by-one. Also produce an MVP roadmap. Each prompt must be highly detailed, structured, and expert-level — long, precise, and immediately usable with zero editing. Do NOT write vague or shallow prompts; specify exact entity names, field names and types, page routes, component names, states, and acceptance criteria drawn from the plans below.
+    prompt: (ctx, prev) => `You are an EXPERT PROMPT ENGINEER Agent. Turn the full architecture into an ORDERED sequence of EXACTLY 8 Base44-ready build prompts the user can paste one-by-one. Also produce a short MVP roadmap. Each prompt must be detailed and immediately usable — specify exact entity names, key field names/types, page routes, and acceptance criteria drawn from the plans below. Be concrete but CONCISE; do NOT pad.
 
 ORDERING RULES:
 - The FIRST prompt must be a "Foundation" prompt (design system, layout, routing, auth scaffolding).
-- Then proceed in dependency order through these categories as needed: Foundation, Entities, Authentication, Roles and Permissions, Public Pages, User Dashboard, Admin Dashboard, Workflows, Backend Functions, Integrations, Notifications, Security, QA, Polish.
+- Then proceed in dependency order using these category names: Foundation, Entities, Authentication, Roles and Permissions, Public Pages, User Dashboard, Admin Dashboard, Workflows, Backend Functions, Integrations, Security, QA, Polish.
 - The "category" field of each prompt MUST be exactly one of those category names.
-- The FINAL prompts must be, in this order: a Security review prompt, a QA review prompt, and a UI Polish prompt.
+- The FINAL prompt must be a UI Polish prompt.
 
-EVERY "promptText" MUST follow this EXACT markdown structure and be richly detailed in each section:
-## 1. Context
-Explain precisely what has already been built or planned in prior prompts (reference the relevant entities/pages/functions by name), and where this step fits in the overall build.
-## 2. Objective
-State the single clear outcome of this prompt in 1-2 sentences.
-## 3. Task
-Tell Base44 exactly what to build, step by step. Be explicit and unambiguous.
-## 4. Requirements
-List specific, concrete details:
-- Entities: exact names, every field with its type/enum/default, and relationships.
-- Pages: exact routes and the components/sections each contains.
-- Backend functions / integrations: exact names, inputs, outputs, and auth checks.
-- UI/UX: layout, key components, responsive behavior, and design-system usage.
-## 5. Data & Edge Cases
-Specify validation rules, required vs optional fields, and how to handle empty/loading/error states and permission failures.
-## 6. Safety Rules
-- Preserve existing logic and previously built work
-- Do not duplicate pages, entities, or functions
-- Reuse existing patterns, components, and the established design system
-- Add loading, error, and empty states everywhere
-- Keep ownership checks and role permissions strict
-## 7. Completion Check
-Give a concrete checklist of what Base44 must verify before finishing (e.g. "the X page renders, creating a Y persists with owner scoping, non-admins cannot access Z").
+EVERY "promptText" MUST follow this markdown structure, kept concise (a few sentences per section, not essays):
+## Context
+What was built in prior prompts (reference real entities/pages/functions) and where this step fits.
+## Objective
+The single outcome of this prompt in 1-2 sentences.
+## Task
+Exactly what to build, step by step.
+## Requirements
+Concrete details: entity names + key fields/types, page routes + main components, backend function names + auth checks, key UI/UX.
+## Safety Rules
+Preserve existing work; no duplicates; reuse the design system; add loading/error/empty states; keep ownership/role checks strict.
+## Completion Check
+A short checklist of what to verify before finishing.
 
-Write detailed, expert-level content in EVERY section — no placeholders. Set "title" to a short build step name, "purpose" to a one-line goal, and "dependencies" to which earlier prompt numbers must be done first.
+Set "title" to a short build step name, "purpose" to a one-line goal, and "dependencies" to which earlier prompt numbers must be done first.
 
 Architecture:\n${prev.appArchitecture}\nEntities:\n${prev.entityPlan}\nPermissions:\n${prev.rolePermissionPlan}\nPages:\n${prev.pagePlan}\nWorkflows:\n${prev.workflowPlan}\nBackend:\n${prev.backendFunctionPlan}\n\n${ctx}`,
   },
@@ -231,65 +221,20 @@ Architecture:\n${prev.appArchitecture}\nEntities:\n${prev.entityPlan}\nPermissio
       },
       required: ["optimizationPrompts"],
     },
-    prompt: (ctx, prev) => `You are the Optimization Agent. Produce 8-12 IN-DEPTH, copy-paste-ready Base44 prompts to IMPROVE this specific app AFTER it has been built. These are NOT build prompts — they refine an existing app. Each "promptText" must be long, detailed, structured, and ready to paste with no editing. Do NOT write shallow one-liners.
+    prompt: (ctx, prev) => `You are the Optimization Agent. Produce EXACTLY 6 copy-paste-ready Base44 prompts to IMPROVE this specific app AFTER it has been built. These refine an existing app, not build it. Each "promptText" must be detailed and ready to paste, but CONCISE — no padding.
 
-Cover these categories (weight toward UI Redesign, Sales Copy, and SEO):
-- UI Redesign — full premium redesign of specific REAL pages from the Page Plan.
-- Sales Copy — rewrite landing/marketing copy to be more conversion- and sales-focused.
-- SEO — titles, meta tags, headings, content structure, internal linking.
-- Conversion — CTAs, onboarding, signup, pricing.
-- Performance — lazy loading, image optimization where relevant.
+Cover these categories (weight toward UI Redesign, Sales Copy, and SEO): UI Redesign, Sales Copy, SEO, Conversion, Performance. Every prompt MUST name this app's REAL pages (from the Page Plan below).
 
-Every prompt MUST name this app's REAL pages and purpose (from the plans below).
-
-FORMAT RULES PER CATEGORY:
-
-For every "UI Redesign" prompt, the "promptText" MUST follow this EXACT structure (fill [PAGE] with the real page name and tailor every line to this app):
-"""
-Complete Page Redesign — Premium UI/UX Overhaul
-
-Redesign the "[PAGE]" page from the ground up for both mobile and desktop views.
-
-Critical Rule:
-- Do NOT change, remove, or rewrite any text content, copy, descriptions, service details, or information. Keep every word, stat, testimonial, and data point exactly as-is.
-- Do NOT alter any functionality, logic, links, routes, or behavior. Everything that works today must work identically after the redesign.
-- This is a pure design/UI/UX transformation only. The content and functionality are locked — your job is to make the existing content look and feel dramatically better.
-
-Design Direction:
-- Modern, clean, premium aesthetic — not generic or template-like
-- Friendly yet professional tone throughout
-- Next-level UI/UX that feels intuitive and effortless
-- Unique and creative — avoid default AI/bootstrap looks
-
-Requirements:
-- Fully responsive (mobile-first, scales beautifully to desktop)
-- Rethink and improve the page layout — don't just reskin, restructure if it serves the user better
-- Implement and enhance all relevant features and functions for this page
-- Prioritize clarity, hierarchy, and flow — every element should earn its place
-- Smooth micro-interactions and transitions where appropriate
-- Accessible, fast-loading, and production-ready code
-
-UI/UX Priorities:
-- Strong visual hierarchy with intentional spacing and typography
-- Clear CTAs and user pathways
-- Reduce cognitive load — simplify without losing functionality
-- Consistent design language (colors, type scale, spacing system)
-- Thoughtful empty states, loading states, and edge cases
-
-Tone: Premium but approachable. Think: high-end product that's still easy to use.
-
-Output: Complete, working code — not a mockup or wireframe. Ready to preview in browser. All original content and functionality preserved exactly.
-"""
-
-For "Sales Copy", "SEO", "Conversion", and "Performance" prompts, write equally detailed, multi-section promptText with these sections (tailored to this app):
+For each prompt, the "promptText" must include these concise sections (a few sentences each):
 - A one-line bold goal headline naming the target page/area.
-- "Critical Rule:" — preserve all existing functionality, logic, links, and routes; only change what the category targets.
-- "Context:" — what this page/app does and who it's for.
-- "Requirements:" — a specific bulleted list of concrete changes for that category.
-- "Guidelines:" — best practices for that category.
-- "Output:" — exactly what to deliver, production-ready, with everything else preserved.
+- Critical Rule: preserve all existing functionality, logic, links, routes, and (for non-copy categories) text content; only change what the category targets.
+- Context: what this page/app does and who it's for.
+- Requirements: a specific bulleted list of concrete changes for that category.
+- Output: exactly what to deliver, production-ready, with everything else preserved.
 
-Make each prompt self-contained, specific to this app, and immediately usable.
+For UI Redesign prompts specifically, instruct a full premium responsive redesign of the named page that keeps all content and functionality identical and only transforms the visual design.
+
+Make each prompt self-contained and specific to this app.
 
 Pages:\n${prev.pagePlan}\nArchitecture:\n${prev.appArchitecture}\nExecutive Summary:\n${prev.executiveSummary}\n\n${ctx}`,
   },
@@ -604,6 +549,18 @@ Deno.serve(async (req) => {
     const context = buildContext(intake, profile, project);
     const nextAgent = AGENTS.find((a) => !successByAgent[a.name]);
 
+    // The accumulated markdown grows large across agents. Passing all of it into each
+    // prompt makes the LLM call progressively slower and can push the heavy later agents
+    // (Prompt Engineer, Optimization) past the function timeout — so they never persist.
+    // Cap each context field fed into the prompt to keep every call fast and reliable.
+    const MAX_CONTEXT_FIELD_CHARS = 6000;
+    const promptContext = {};
+    for (const k of Object.keys(accumulated)) {
+      promptContext[k] = typeof accumulated[k] === 'string' && accumulated[k].length > MAX_CONTEXT_FIELD_CHARS
+        ? accumulated[k].slice(0, MAX_CONTEXT_FIELD_CHARS)
+        : accumulated[k];
+    }
+
     if (nextAgent) {
       const run = await base44.entities.AgentRun.create({
         projectId,
@@ -614,7 +571,7 @@ Deno.serve(async (req) => {
       });
       try {
         const result = await base44.integrations.Core.InvokeLLM({
-          prompt: nextAgent.prompt(context, accumulated),
+          prompt: nextAgent.prompt(context, promptContext),
           response_json_schema: nextAgent.schema,
           model: 'gpt_5_5',
         });
@@ -632,10 +589,12 @@ Deno.serve(async (req) => {
         const slimResult = { ...result };
         for (const k of STRIPPED_KEYS) delete slimResult[k];
 
-        // outputData has a hard size limit. Long markdown fields (architecture, plans,
-        // etc.) accumulate across agents and can exceed it. Cap each string field so the
-        // record always saves; the next agent still gets ample context.
-        const MAX_FIELD_CHARS = 12000;
+        // outputData has a hard size limit and only needs to carry THIS agent's output
+        // forward as context for later agents (full markdown lives on the Blueprint
+        // record). slimResult only holds the current agent's fields, but several agents
+        // emit multiple long markdown fields, so cap each one tightly to guarantee the
+        // combined JSON always saves.
+        const MAX_FIELD_CHARS = 5000;
         for (const k of Object.keys(slimResult)) {
           if (typeof slimResult[k] === 'string' && slimResult[k].length > MAX_FIELD_CHARS) {
             slimResult[k] = slimResult[k].slice(0, MAX_FIELD_CHARS);
