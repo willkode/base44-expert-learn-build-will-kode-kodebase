@@ -4,7 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import LoadingState from "@/components/shared/LoadingState";
 import ProjectActions from "@/components/project/ProjectActions";
-import GenerationProgress from "@/components/project/GenerationProgress";
+import GenerationProgressDialog from "@/components/project/GenerationProgressDialog";
 import ProjectSummary from "@/components/project/ProjectSummary";
 import ProjectMetrics, { getLaunchReady } from "@/components/project/ProjectMetrics";
 import LaunchAuditBanner from "@/components/project/LaunchAuditBanner";
@@ -176,7 +176,7 @@ export default function ProjectOverview() {
         />
       )}
 
-      {generating && <GenerationProgress progress={progress} />}
+      <GenerationProgressDialog open={generating} progress={progress} />
 
       {blueprint && getLaunchReady(promptItems, security, qa) === 100 && (
         <LaunchAuditBanner projectId={project.id} onOrder={() => toast.success("Audit request received — our team will reach out shortly.")} />
