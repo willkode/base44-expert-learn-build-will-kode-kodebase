@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
-import { Library } from "lucide-react";
+import { Library, Coffee } from "lucide-react";
 import Seo from "@/components/seo/Seo";
 import { Button } from "@/components/ui/button";
 import PromptCard from "@/components/learn/PromptCard";
@@ -70,6 +70,14 @@ export default function PromptLibrary() {
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               A curated collection of battle-tested Base44 prompts. Copy, paste, and build faster.
             </p>
+            <div className="mt-7 flex justify-center">
+              <a href="https://buymeacoffee.com/willkode" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" className="font-semibold gap-2">
+                  <Coffee className="w-5 h-5" />
+                  Buy me a coffee
+                </Button>
+              </a>
+            </div>
           </motion.div>
         </div>
       </section>
