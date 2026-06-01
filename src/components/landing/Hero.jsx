@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Play } from "lucide-react";
+import { ArrowRight, Sparkles, LayoutTemplate } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const NEBULA_BG = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/412194915_d32a9ead9_Gemini_Generated_Image_cy4o04cy4o04cy4o.png";
@@ -70,9 +70,9 @@ export default function Hero() {
               onClick={() => document.querySelector("#how")?.scrollIntoView({ behavior: "smooth" })}
               size="lg"
               variant="outline"
-              className="bg-white/5 hover:bg-white/10 text-white border border-white/15 font-semibold text-base px-7 py-6">
+              className="bg-white/5 hover:bg-white/10 text-white border border-primary font-semibold text-base px-7 py-6">
 
-              <Play className="w-4 h-4 mr-1" />
+              <LayoutTemplate className="w-4 h-4 mr-1" />
               View Blue Print Tool
             </Button>
           </div>
