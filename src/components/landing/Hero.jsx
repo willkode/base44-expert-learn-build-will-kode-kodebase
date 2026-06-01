@@ -63,7 +63,7 @@ export default function Hero() {
               size="lg"
               className="bg-primary hover:bg-red-500 text-primary-foreground font-semibold text-base px-7 py-6 shadow-lg shadow-red-600/30 group transition-transform hover:-translate-y-0.5">
 
-              Hire Me to Build It
+              Start Learning
               <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button
