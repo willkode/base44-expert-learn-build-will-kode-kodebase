@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, FileText, Video, Calendar, Sparkles, Library, Settings2, Bot } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import {
   DropdownMenu,
@@ -19,14 +19,27 @@ const links = [
 ];
 
 const learnLinks = [
-  { label: "Blog", to: "/learn/blog" },
-  { label: "Prompt Library", to: "/learn/prompt-library" },
-  { label: "Agent Skills", to: "/learn/agent-skills" },
-  { label: "SuperAgent", to: "/learn/superagent" },
-  { label: "Videos", to: "/learn/videos" },
-  { label: "Events", to: "/learn/events" },
-  { label: "LLM Guide", to: "/learn/llm-guide" },
+  { label: "Blog", to: "/learn/blog", icon: FileText, desc: "Articles & tutorials" },
+  { label: "Videos", to: "/learn/videos", icon: Video, desc: "Watch & learn" },
+  { label: "Events", to: "/learn/events", icon: Calendar, desc: "Upcoming live events" },
+  { label: "Agent Skills", to: "/learn/agent-skills", icon: Sparkles, desc: "Expert playbooks the AI uses on demand", badge: "NEW" },
+  { label: "Prompt Library", to: "/learn/prompt-library", icon: Library, desc: "Expert prompts by Will Kode", badge: "NEW" },
+  { label: "AI LLM Guide", to: "/learn/llm-guide", icon: Settings2, desc: "Pick the right model for the job", badge: "NEW" },
+  { label: "SuperAgent", to: "/learn/superagent", icon: Bot, desc: "Base44 AI Agent overview", badge: "B44" },
 ];
+
+function LearnBadge({ badge }) {
+  if (!badge) return null;
+  const styles =
+    badge === "B44"
+      ? "bg-amber-500/90 text-background"
+      : "bg-primary text-primary-foreground";
+  return (
+    <span className={`ml-2 inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-bold leading-none ${styles}`}>
+      {badge}
+    </span>
+  );
+}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -76,12 +89,25 @@ export default function Navbar() {
               Learn
               <ChevronDown className="w-4 h-4" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48">
-              {learnLinks.map((l) => (
-                <DropdownMenuItem key={l.to} asChild>
-                  <Link to={l.to} className="cursor-pointer">{l.label}</Link>
-                </DropdownMenuItem>
-              ))}
+            <DropdownMenuContent align="start" className="w-[34rem] p-3">
+              <div className="grid grid-cols-2 gap-1">
+                {learnLinks.map((l) => (
+                  <DropdownMenuItem key={l.to} asChild className="p-0 focus:bg-transparent">
+                    <Link to={l.to} className="flex items-start gap-3 rounded-lg p-3 hover:bg-secondary/60 transition-colors cursor-pointer">
+                      <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
+                        <l.icon className="h-4 w-4" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="flex items-center font-semibold text-sm text-foreground">
+                          {l.label}
+                          <LearnBadge badge={l.badge} />
+                        </span>
+                        <span className="block text-xs text-muted-foreground leading-snug mt-0.5">{l.desc}</span>
+                      </span>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </nav>
@@ -137,9 +163,15 @@ export default function Navbar() {
                 key={l.to}
                 to={l.to}
                 onClick={() => setOpen(false)}
-                className="block text-sm font-medium text-muted-foreground hover:text-foreground py-2.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
+                className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
               >
-                {l.label}
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
+                  <l.icon className="h-4 w-4" />
+                </span>
+                <span className="flex items-center text-sm font-medium text-muted-foreground">
+                  {l.label}
+                  <LearnBadge badge={l.badge} />
+                </span>
               </Link>
             ))}
           </div>
