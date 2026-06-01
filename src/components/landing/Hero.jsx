@@ -73,7 +73,7 @@ export default function Hero() {
               className="bg-white/5 hover:bg-white/10 text-white border border-white/15 font-semibold text-base px-7 py-6">
 
               <Play className="w-4 h-4 mr-1" />
-              My App is Broken — Help
+              View Blue Print Tool
             </Button>
           </div>
 
