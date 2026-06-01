@@ -56,7 +56,7 @@ export default function ProjectDetail() {
         </div>
         <Button
           asChild
-          className="shrink-0 bg-[#5865F2] hover:bg-[#4752c4] text-white font-semibold"
+          className="shrink-0 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] hover:opacity-90 text-white font-semibold border-0"
         >
           <a href="https://discord.com/invite/cwEv93EwBA" target="_blank" rel="noopener noreferrer">
             <svg viewBox="0 0 24 24" className="w-4 h-4 mr-1" fill="currentColor" aria-hidden="true">
