@@ -1,5 +1,6 @@
 import React from "react";
 import { Hammer } from "lucide-react";
+import SocialLinks from "@/components/landing/SocialLinks";
 
 export default function Footer() {
   return (
@@ -18,6 +19,7 @@ export default function Footer() {
             <a href="#blueprint" className="hover:text-foreground transition-colors">Blueprint</a>
             <a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a>
           </nav>
+          <SocialLinks />
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} KodeBase
           </p>

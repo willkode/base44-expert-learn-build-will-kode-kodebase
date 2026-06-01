@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import SocialLinks from "@/components/landing/SocialLinks";
 
 const links = [
   { label: "How It Works", href: "#how" },
@@ -86,6 +87,7 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
+          <SocialLinks className="mr-1" />
           {isAuthenticated ? (
             <>
               <Button variant="ghost" onClick={() => logout()} className="text-muted-foreground hover:text-foreground">
@@ -140,6 +142,9 @@ export default function Navbar() {
                 {l.label}
               </Link>
             ))}
+          </div>
+          <div className="pt-3 flex justify-center">
+            <SocialLinks />
           </div>
           <div className="pt-3 flex flex-col gap-2">
             {isAuthenticated ? (
