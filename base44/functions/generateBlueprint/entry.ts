@@ -3,7 +3,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 // Specialized agent roles. Each gets the project context + relevant prior output.
 const AGENTS = [
   {
-    name: "Architect Agent",
+    name: "Base44 Architect Agent",
     key: "appArchitecture",
     schema: {
       type: "object",
@@ -416,7 +416,7 @@ const BLUEPRINT_MD_FIELDS = [
 
 // Entity string fields have a hard size cap. Keep each markdown field comfortably
 // under it so the Blueprint record always saves.
-const MAX_BLUEPRINT_FIELD_CHARS = 40000;
+const MAX_BLUEPRINT_FIELD_CHARS = 9000;
 
 async function persistBlueprintFields(base44, projectId, project, result) {
   const update = {};
