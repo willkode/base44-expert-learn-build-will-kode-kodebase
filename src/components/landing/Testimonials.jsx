@@ -41,7 +41,7 @@ export default function Testimonials() {
         >
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">Built For</span>
           <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4">
-            Built for people using AI to build real software
+            Built for people using AI to <span className="text-gradient-orange">build real software</span>
           </h2>
         </motion.div>
 
