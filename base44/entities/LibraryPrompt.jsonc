@@ -1,0 +1,64 @@
+{
+  "name": "LibraryPrompt",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Short title of the prompt"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Architecture",
+        "Database",
+        "Security",
+        "UI Design",
+        "Backend",
+        "QA & Testing",
+        "Optimization",
+        "Debugging",
+        "SEO & Marketing",
+        "General"
+      ],
+      "default": "General",
+      "description": "Category of the prompt"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description of what the prompt does"
+    },
+    "promptText": {
+      "type": "string",
+      "description": "The full prompt text to copy"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Optional tags"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this prompt is featured"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "Sort order"
+    }
+  },
+  "required": [
+    "title",
+    "promptText"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
