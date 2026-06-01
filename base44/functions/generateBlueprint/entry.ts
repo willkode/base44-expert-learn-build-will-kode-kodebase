@@ -405,26 +405,50 @@ async function persistAgentArrays(base44, projectId, project, accumulated, resul
   }
 }
 
-// Create the Blueprint (markdown fields) once every agent has produced output.
-// Array records were already persisted incrementally by persistAgentArrays.
+// The full (untruncated) markdown lives ONLY on the Blueprint record, written
+// incrementally as each agent finishes. AgentRun.outputData holds only a capped
+// copy for the next agent's prompt context (to respect its size limit).
+const BLUEPRINT_MD_FIELDS = [
+  'executiveSummary', 'appArchitecture', 'entityPlan', 'rolePermissionPlan',
+  'pagePlan', 'workflowPlan', 'backendFunctionPlan', 'integrationPlan',
+  'securityPlan', 'qaPlan', 'mvpRoadmap',
+];
+
+async function persistBlueprintFields(base44, projectId, project, result) {
+  const update = {};
+  for (const f of BLUEPRINT_MD_FIELDS) {
+    if (typeof result[f] === 'string' && result[f].length) update[f] = result[f];
+  }
+  if (Object.keys(update).length === 0) return;
+
+  const existing = (await base44.entities.Blueprint.filter({ projectId }, '-created_date', 1))[0];
+  if (existing) {
+    await base44.entities.Blueprint.update(existing.id, update);
+  } else {
+    await base44.entities.Blueprint.create({
+      projectId,
+      ownerId: project.created_by_id,
+      title: `${project.projectName} Blueprint`,
+      status: 'generating',
+      ...update,
+    });
+  }
+}
+
+// Finalize: the Blueprint record already holds all markdown fields (written
+// incrementally). Just mark it complete and link the array records.
 async function finalize(base44, projectId, project, accumulated, ownerProfile, user) {
-  const blueprint = await base44.entities.Blueprint.create({
-    projectId,
-    ownerId: project.created_by_id,
-    title: `${project.projectName} Blueprint`,
-    executiveSummary: accumulated.executiveSummary || '',
-    appArchitecture: accumulated.appArchitecture || '',
-    entityPlan: accumulated.entityPlan || '',
-    rolePermissionPlan: accumulated.rolePermissionPlan || '',
-    pagePlan: accumulated.pagePlan || '',
-    workflowPlan: accumulated.workflowPlan || '',
-    backendFunctionPlan: accumulated.backendFunctionPlan || '',
-    integrationPlan: accumulated.integrationPlan || '',
-    securityPlan: accumulated.securityPlan || '',
-    qaPlan: accumulated.qaPlan || '',
-    mvpRoadmap: accumulated.mvpRoadmap || '',
-    status: 'completed',
-  });
+  let blueprint = (await base44.entities.Blueprint.filter({ projectId }, '-created_date', 1))[0];
+  if (!blueprint) {
+    blueprint = await base44.entities.Blueprint.create({
+      projectId,
+      ownerId: project.created_by_id,
+      title: `${project.projectName} Blueprint`,
+      status: 'completed',
+    });
+  } else {
+    await base44.entities.Blueprint.update(blueprint.id, { status: 'completed' });
+  }
 
   // Link the already-created array records to this blueprint.
   const [packs, findingRecords, testRecords, optRecords] = await Promise.all([
@@ -593,9 +617,22 @@ Deno.serve(async (req) => {
         // into their own entities now, and keep only the lightweight markdown/summary
         // context fields in outputData for the next agent in the chain.
         await persistAgentArrays(base44, projectId, project, accumulated, result);
+        // Write this agent's full markdown straight onto the Blueprint record so nothing
+        // is lost to the outputData size cap below.
+        await persistBlueprintFields(base44, projectId, project, result);
         const STRIPPED_KEYS = ['prompts', 'findings', 'tests', 'optimizationPrompts'];
         const slimResult = { ...result };
         for (const k of STRIPPED_KEYS) delete slimResult[k];
+
+        // outputData has a hard size limit. Long markdown fields (architecture, plans,
+        // etc.) accumulate across agents and can exceed it. Cap each string field so the
+        // record always saves; the next agent still gets ample context.
+        const MAX_FIELD_CHARS = 12000;
+        for (const k of Object.keys(slimResult)) {
+          if (typeof slimResult[k] === 'string' && slimResult[k].length > MAX_FIELD_CHARS) {
+            slimResult[k] = slimResult[k].slice(0, MAX_FIELD_CHARS);
+          }
+        }
 
         await base44.entities.AgentRun.update(run.id, {
           status: 'success',
