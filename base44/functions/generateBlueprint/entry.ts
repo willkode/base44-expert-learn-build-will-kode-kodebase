@@ -479,7 +479,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { projectId, intake, profile } = await req.json();
+    const { projectId, intake, profile, restart } = await req.json();
     if (!projectId) {
       return Response.json({ error: 'projectId is required' }, { status: 400 });
     }
@@ -512,9 +512,14 @@ Deno.serve(async (req) => {
     // Find the next agent that has not completed yet.
     const completedCount = AGENTS.filter((a) => successByAgent[a.name]).length;
 
+    // A "fresh" generation is either: an explicit restart from the UI, OR there are no
+    // prior successful runs at all. On a fresh run we wipe ALL prior records (including
+    // any existing blueprint) so regenerating cleanly overrides the old one.
+    const isFreshStart = restart === true || completedCount === 0;
+
     // On the very first step, enforce plan limit and flip status to generating.
     let ownerProfile = (await base44.asServiceRole.entities.UserProfile.filter({ userId: project.created_by_id }, '-created_date', 1))[0] || null;
-    if (completedCount === 0) {
+    if (isFreshStart) {
       if (user.role !== 'admin') {
         const planId = ownerProfile?.plan || 'free';
         const limit = PLAN_BLUEPRINT_LIMITS[planId] ?? 1;

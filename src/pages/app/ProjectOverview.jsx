@@ -83,6 +83,8 @@ export default function ProjectOverview() {
           projectId: project.id,
           intake,
           profile,
+          // First call starts a fresh cycle and wipes any existing blueprint so it's overridden.
+          restart: safety === 1,
         });
         if (res.data?.error) throw new Error(res.data.error);
         const data = res.data || {};
