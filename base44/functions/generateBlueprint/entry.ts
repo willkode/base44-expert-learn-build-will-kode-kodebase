@@ -573,7 +573,7 @@ Deno.serve(async (req) => {
         const result = await base44.integrations.Core.InvokeLLM({
           prompt: nextAgent.prompt(context, promptContext),
           response_json_schema: nextAgent.schema,
-          model: 'gpt_5_5',
+          model: 'gemini_3_flash',
         });
         Object.assign(accumulated, result);
 
