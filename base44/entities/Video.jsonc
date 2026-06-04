@@ -1,0 +1,44 @@
+{
+  "name": "Video",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Video title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description of the video"
+    },
+    "youtubeUrl": {
+      "type": "string",
+      "description": "Full YouTube video link"
+    },
+    "coverImageUrl": {
+      "type": "string",
+      "description": "Cover/thumbnail image URL"
+    },
+    "category": {
+      "type": "string",
+      "default": "General",
+      "description": "Video category"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "Sort order"
+    }
+  },
+  "required": [
+    "title",
+    "youtubeUrl"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
