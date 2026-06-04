@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { Check, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PLANS, PLAN_ORDER } from "@/lib/plans";
 
@@ -17,7 +17,10 @@ const FREE_TIER = {
     "1 blueprint",
     "Security reviews",
     "QA checklists",
-    "Markdown export",
+  ],
+  lockedFeatures: [
+    "Prompt packs (paid plan)",
+    "Markdown export (paid plan)",
   ],
   cta: "Get started free",
   highlight: false,
@@ -90,6 +93,12 @@ export default function Pricing() {
                   <li key={f} className="flex items-start gap-2.5 text-sm">
                     <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
                     <span className="text-foreground">{f}</span>
+                  </li>
+                ))}
+                {t.lockedFeatures?.map((f) => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm">
+                    <Lock className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
+                    <span className="text-muted-foreground line-through">{f}</span>
                   </li>
                 ))}
               </ul>
