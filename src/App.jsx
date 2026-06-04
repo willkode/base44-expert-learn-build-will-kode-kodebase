@@ -12,6 +12,7 @@ import Home from '@/pages/Home';
 import Features from '@/pages/Features';
 import Pricing from '@/pages/Pricing';
 import Blog from '@/pages/learn/Blog';
+import BlogPost from '@/pages/learn/BlogPost';
 import PromptLibrary from '@/pages/learn/PromptLibrary';
 import AgentSkills from '@/pages/learn/AgentSkills';
 import SuperAgent from '@/pages/learn/SuperAgent';
@@ -61,6 +62,7 @@ const AuthenticatedApp = () => {
         <Route path="/features" element={<Features />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/learn/blog" element={<Blog />} />
+        <Route path="/learn/blog/:slug" element={<BlogPost />} />
         <Route path="/learn/prompt-library" element={<PromptLibrary />} />
         <Route path="/learn/agent-skills" element={<AgentSkills />} />
         <Route path="/learn/superagent" element={<SuperAgent />} />
