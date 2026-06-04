@@ -6,15 +6,36 @@ import { useNavigate } from "react-router-dom";
 import { PLANS, PLAN_ORDER } from "@/lib/plans";
 
 const CTAS = { free: "Start Solo", pro: "Go Pro", agency: "Start Agency" };
-const tiers = PLAN_ORDER.map((id) => ({
-  name: PLANS[id].name,
-  price: PLANS[id].price,
-  period: PLANS[id].period,
-  desc: PLANS[id].desc,
-  features: PLANS[id].features,
-  cta: CTAS[id],
-  highlight: id === "pro",
-}));
+
+const FREE_TIER = {
+  name: "Free",
+  price: "$0",
+  period: "/mo",
+  desc: "Kick the tires for free.",
+  features: [
+    "1 project",
+    "1 blueprint",
+    "Security reviews",
+    "QA checklists",
+    "Markdown export",
+  ],
+  cta: "Get started free",
+  highlight: false,
+};
+
+const PAID_ORDER = PLAN_ORDER.filter((id) => id !== "free" && id !== "agency");
+const tiers = [
+  FREE_TIER,
+  ...PAID_ORDER.map((id) => ({
+    name: PLANS[id].name,
+    price: PLANS[id].price,
+    period: PLANS[id].period,
+    desc: PLANS[id].desc,
+    features: PLANS[id].features,
+    cta: CTAS[id],
+    highlight: id === "pro",
+  })),
+];
 
 export default function Pricing() {
   const navigate = useNavigate();
@@ -39,7 +60,7 @@ export default function Pricing() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
           {tiers.map((t, i) => (
             <motion.div
               key={t.name}
