@@ -15,6 +15,7 @@ import {
   LayoutPanelLeft,
   GraduationCap,
   Sparkles,
+  Video,
 } from "lucide-react";
 
 export const userNav = [
@@ -41,5 +42,6 @@ export const adminNav = [
   { label: "Blueprints", to: "/admin/blueprints", icon: Boxes },
   { label: "AI Usage Logs", to: "/admin/logs", icon: ScrollText },
   { label: "Templates", to: "/admin/templates", icon: LayoutTemplate },
+  { label: "Videos", to: "/admin/videos", icon: Video },
   { label: "System Settings", to: "/admin/settings", icon: Cog },
 ];

@@ -50,6 +50,7 @@ import AdminProjects from '@/pages/admin/AdminProjects';
 import AdminBlueprints from '@/pages/admin/AdminBlueprints';
 import AdminLogs from '@/pages/admin/AdminLogs';
 import AdminTemplates from '@/pages/admin/AdminTemplates';
+import AdminVideos from '@/pages/admin/AdminVideos';
 import AdminSettings from '@/pages/admin/AdminSettings';
 
 const AuthenticatedApp = () => {
@@ -102,6 +103,7 @@ const AuthenticatedApp = () => {
             <Route path="/admin/blueprints" element={<AdminBlueprints />} />
             <Route path="/admin/logs" element={<AdminLogs />} />
             <Route path="/admin/templates" element={<AdminTemplates />} />
+            <Route path="/admin/videos" element={<AdminVideos />} />
             <Route path="/admin/settings" element={<AdminSettings />} />
           </Route>
         </Route>
