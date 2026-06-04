@@ -17,7 +17,7 @@ export const PLANS = {
     features: [
       "1 project",
       "1 blueprint",
-      "Prompt packs (paid plans only)",
+      "Full prompt packs",
       "Security reviews",
       "QA checklists",
       "Markdown export",
