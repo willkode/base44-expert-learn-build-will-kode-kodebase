@@ -28,6 +28,7 @@ export default function ProjectOverview() {
   const [profile, setProfile] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [showProgress, setShowProgress] = useState(false);
   const [progress, setProgress] = useState(null);
   const [celebrate, setCelebrate] = useState(false);
   const [rerunning, setRerunning] = useState(null);
@@ -53,6 +54,8 @@ export default function ProjectOverview() {
       setRuns(r);
       setProfile(prof[0] || null);
       setIsAdmin(me?.role === "admin");
+      // Resume the progress view if generation is still running server-side.
+      if (project.status === "generating") { setGenerating(true); setShowProgress(true); }
       setLoading(false);
     });
   };
@@ -69,8 +72,39 @@ export default function ProjectOverview() {
     setCelebrate(true);
   }, [loading, blueprint, promptItems, security, qa, project.id]);
 
+  // While generation runs server-side, poll the project status + agent runs so the
+  // UI updates progress and detects completion even if the user reloads or leaves.
+  useEffect(() => {
+    if (!generating) return;
+    const interval = setInterval(async () => {
+      try {
+        const [proj, bp, runRecords] = await Promise.all([
+          base44.entities.Project.get(project.id),
+          base44.entities.Blueprint.filter({ projectId: project.id }, "-created_date", 1),
+          base44.entities.AgentRun.filter({ projectId: project.id }, "-created_date", 50),
+        ]);
+        const completed = runRecords.filter((r) => r.status === "success").length;
+        const running = runRecords.find((r) => r.status === "pending");
+        setProgress({ completed, total: 10, currentAgent: running?.agentName });
+
+        if (proj.status === "completed" && bp[0]) {
+          setGenerating(false);
+          toast.success("Blueprint generated successfully");
+          if (reload) reload();
+          loadData();
+        } else if (proj.status === "draft") {
+          setGenerating(false);
+          toast.error("Blueprint generation failed. Please try again.");
+          loadData();
+        }
+      } catch (_e) { /* keep polling */ }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [generating, project.id]);
+
   const handleGenerate = async () => {
     setGenerating(true);
+    setShowProgress(true);
     setProgress(null);
     // Clear stale results from the previous blueprint immediately so the
     // "100% complete" banner/metrics don't linger while the new one generates.
@@ -81,32 +115,19 @@ export default function ProjectOverview() {
     setQa([]);
     localStorage.removeItem(`launchCelebrated_${project.id}`);
     try {
-      // Generation runs one agent per request to avoid timeouts.
-      // Keep calling until the backend reports done.
-      let done = false;
-      let safety = 0;
-      while (!done && safety < 20) {
-        safety += 1;
-        const res = await base44.functions.invoke("generateBlueprint", {
-          projectId: project.id,
-          intake,
-          profile,
-          // First call starts a fresh cycle and wipes any existing blueprint so it's overridden.
-          restart: safety === 1,
-        });
-        if (res.data?.error) throw new Error(res.data.error);
-        const data = res.data || {};
-        if (data.total) setProgress({ completed: data.completed, total: data.total, currentAgent: data.currentAgent });
-        done = !!data.done;
-      }
-      toast.success("Blueprint generated successfully");
+      // Generation now runs fully in the background on the server. We just kick it off;
+      // the polling effect above tracks progress and detects completion.
+      const res = await base44.functions.invoke("generateBlueprint", {
+        projectId: project.id,
+        intake,
+        profile,
+        restart: true,
+      });
+      if (res.data?.error) throw new Error(res.data.error);
+      toast.success("Generation started — this can take up to 30 minutes. You can safely leave this page.");
     } catch (err) {
-      toast.error(err?.response?.data?.error || err.message || "Blueprint generation failed");
-    } finally {
-      setProgress(null);
-      if (reload) reload();
-      loadData();
       setGenerating(false);
+      toast.error(err?.response?.data?.error || err.message || "Could not start blueprint generation");
     }
   };
 
@@ -176,7 +197,7 @@ export default function ProjectOverview() {
         />
       )}
 
-      <GenerationProgressDialog open={generating} progress={progress} />
+      <GenerationProgressDialog open={generating && showProgress} progress={progress} onOpenChange={setShowProgress} />
 
       {blueprint && getLaunchReady(promptItems, security, qa) === 100 && (
         <LaunchAuditBanner projectId={project.id} onOrder={() => toast.success("Audit request received — our team will reach out shortly.")} />

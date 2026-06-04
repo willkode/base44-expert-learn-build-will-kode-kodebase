@@ -448,37 +448,15 @@ async function finalize(base44, projectId, project, accumulated, ownerProfile, u
   return { blueprint, promptPack, prompts, findings, tests };
 }
 
-Deno.serve(async (req) => {
-  try {
-    const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+// Runs the entire agent chain server-side in one long-lived invocation.
+// Used in "background" mode so the browser does not need to drive each step
+// or stay open. Each agent's output is persisted incrementally, so progress
+// survives even if this worker is interrupted.
+async function runChain(base44, project, user, intake, profile, restart) {
+  const projectId = project.id;
 
-    const { projectId, intake, profile, restart } = await req.json();
-    if (!projectId) {
-      return Response.json({ error: 'projectId is required' }, { status: 400 });
-    }
-
-    // Load and authorize the project (owner or admin only)
-    let project = null;
-    try {
-      project = await base44.entities.Project.get(projectId);
-    } catch (_e) {
-      project = null;
-    }
-    if (!project) {
-      return Response.json({ error: 'Project not found' }, { status: 404 });
-    }
-    const isOwner = project.created_by_id === user.id;
-    if (!isOwner && user.role !== 'admin') {
-      return Response.json({ error: 'Forbidden' }, { status: 403 });
-    }
-
-    // Rebuild progress from existing AgentRun records for this project so this can be
-    // called multiple times — each call runs ONE agent to stay under the function timeout.
-    const existingRuns = await base44.entities.AgentRun.filter({ projectId }, '-created_date', 100);
+  // Rebuild progress from existing AgentRun records for this project.
+  const existingRuns = await base44.entities.AgentRun.filter({ projectId }, '-created_date', 100);
     const successByAgent = {};
     for (const r of existingRuns) {
       if (r.status === 'success' && r.outputData && !successByAgent[r.agentName]) {
@@ -503,13 +481,10 @@ Deno.serve(async (req) => {
         let used = ownerProfile?.blueprintsUsed || 0;
         if (needsMonthlyReset(ownerProfile?.usagePeriodStart)) used = 0;
         if (limit !== -1 && used >= limit) {
-          return Response.json({
-            error: `You've reached your ${planId} plan limit of ${limit} blueprint${limit === 1 ? '' : 's'}. Upgrade your plan to generate more.`,
-            code: 'PLAN_LIMIT_REACHED',
-            plan: planId,
-            limit,
-            used,
-          }, { status: 403 });
+          const e = new Error(`You've reached your ${planId} plan limit of ${limit} blueprint${limit === 1 ? '' : 's'}. Upgrade your plan to generate more.`);
+          e.code = 'PLAN_LIMIT_REACHED';
+          e.status = 403;
+          throw e;
         }
       }
       // Clear any stale runs AND partially-persisted records from a previous failed attempt
@@ -547,53 +522,44 @@ Deno.serve(async (req) => {
     }
 
     const context = buildContext(intake, profile, project);
-    const nextAgent = AGENTS.find((a) => !successByAgent[a.name]);
 
-    // The accumulated markdown grows large across agents. Passing all of it into each
-    // prompt makes the LLM call progressively slower and can push the heavy later agents
-    // (Prompt Engineer, Optimization) past the function timeout — so they never persist.
-    // Cap each context field fed into the prompt to keep every call fast and reliable.
-    const MAX_CONTEXT_FIELD_CHARS = 6000;
-    const promptContext = {};
-    for (const k of Object.keys(accumulated)) {
-      promptContext[k] = typeof accumulated[k] === 'string' && accumulated[k].length > MAX_CONTEXT_FIELD_CHARS
-        ? accumulated[k].slice(0, MAX_CONTEXT_FIELD_CHARS)
-        : accumulated[k];
-    }
+    // Process every remaining agent in sequence within this single invocation.
+    // Each agent persists its own output before the next runs, so partial progress
+    // is never lost even if the worker is interrupted.
+    let nextAgent = AGENTS.find((a) => !successByAgent[a.name]);
+    while (nextAgent) {
+      const agent = nextAgent;
 
-    if (nextAgent) {
+      // Cap each accumulated context field fed into the prompt to keep calls fast.
+      const MAX_CONTEXT_FIELD_CHARS = 6000;
+      const promptContext = {};
+      for (const k of Object.keys(accumulated)) {
+        promptContext[k] = typeof accumulated[k] === 'string' && accumulated[k].length > MAX_CONTEXT_FIELD_CHARS
+          ? accumulated[k].slice(0, MAX_CONTEXT_FIELD_CHARS)
+          : accumulated[k];
+      }
+
       const run = await base44.entities.AgentRun.create({
         projectId,
         ownerId: project.created_by_id,
-        agentName: nextAgent.name,
-        inputSummary: `Generating ${nextAgent.key} for ${project.projectName}`,
+        agentName: agent.name,
+        inputSummary: `Generating ${agent.key} for ${project.projectName}`,
         status: 'pending',
       });
       try {
         const result = await base44.integrations.Core.InvokeLLM({
-          prompt: nextAgent.prompt(context, promptContext),
-          response_json_schema: nextAgent.schema,
-          model: 'gemini_3_flash',
+          prompt: agent.prompt(context, promptContext),
+          response_json_schema: agent.schema,
+          model: 'gpt_5_5',
         });
         Object.assign(accumulated, result);
 
-        // Large array outputs (prompt pack, security findings, QA tests, optimization
-        // prompts) can exceed the AgentRun.outputData size limit. Persist them straight
-        // into their own entities now, and keep only the lightweight markdown/summary
-        // context fields in outputData for the next agent in the chain.
         await persistAgentArrays(base44, projectId, project, accumulated, result);
-        // Write this agent's full markdown straight onto the Blueprint record so nothing
-        // is lost to the outputData size cap below.
         await persistBlueprintFields(base44, projectId, project, result);
+
         const STRIPPED_KEYS = ['prompts', 'findings', 'tests', 'optimizationPrompts'];
         const slimResult = { ...result };
         for (const k of STRIPPED_KEYS) delete slimResult[k];
-
-        // outputData has a hard size limit and only needs to carry THIS agent's output
-        // forward as context for later agents (full markdown lives on the Blueprint
-        // record). slimResult only holds the current agent's fields, but several agents
-        // emit multiple long markdown fields, so cap each one tightly to guarantee the
-        // combined JSON always saves.
         const MAX_FIELD_CHARS = 5000;
         for (const k of Object.keys(slimResult)) {
           if (typeof slimResult[k] === 'string' && slimResult[k].length > MAX_FIELD_CHARS) {
@@ -603,61 +569,93 @@ Deno.serve(async (req) => {
 
         await base44.entities.AgentRun.update(run.id, {
           status: 'success',
-          outputSummary: `${nextAgent.name} completed`,
+          outputSummary: `${agent.name} completed`,
           outputData: JSON.stringify(slimResult),
         });
+        successByAgent[agent.name] = run;
       } catch (agentErr) {
         await base44.entities.AgentRun.update(run.id, {
           status: 'failed',
           errorMessage: String(agentErr?.message || agentErr),
         });
         await base44.entities.Project.update(projectId, { status: 'draft' });
-        return Response.json({ error: `${nextAgent.name} failed: ${agentErr?.message || agentErr}` }, { status: 500 });
+        throw new Error(`${agent.name} failed: ${agentErr?.message || agentErr}`);
       }
-    }
 
-    const doneCount = AGENTS.filter((a) => a.name === nextAgent?.name || successByAgent[a.name]).length;
-    const isComplete = doneCount >= AGENTS.length;
-
-    if (!isComplete) {
-      // More agents remain — tell the frontend to call again.
-      return Response.json({
-        success: true,
-        done: false,
-        completed: doneCount,
-        total: AGENTS.length,
-        currentAgent: nextAgent?.name,
-      });
+      nextAgent = AGENTS.find((a) => !successByAgent[a.name]);
     }
 
     // All agents done — persist everything.
-    const { blueprint, promptPack, prompts, findings, tests } = await finalize(
-      base44, projectId, project, accumulated, ownerProfile, user
-    );
+    await finalize(base44, projectId, project, accumulated, ownerProfile, user);
+}
 
-    return Response.json({
-      success: true,
-      done: true,
-      completed: AGENTS.length,
-      total: AGENTS.length,
-      blueprintId: blueprint.id,
-      promptPackId: promptPack.id,
-      result: {
-        executiveSummary: accumulated.executiveSummary,
-        appArchitecture: accumulated.appArchitecture,
-        userRoles: accumulated.userRoles,
-        entities: accumulated.entities,
-        permissions: accumulated.rolePermissionPlan,
-        pages: accumulated.pagePlan,
-        workflows: accumulated.workflowPlan,
-        backendFunctions: accumulated.backendFunctionPlan,
-        integrations: accumulated.integrationPlan,
-        securityReview: findings,
-        qaChecklist: tests,
-        mvpRoadmap: accumulated.mvpRoadmap,
-        promptPack: prompts,
-      },
+Deno.serve(async (req) => {
+  try {
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { projectId, intake, profile, restart } = await req.json();
+    if (!projectId) {
+      return Response.json({ error: 'projectId is required' }, { status: 400 });
+    }
+
+    // Load and authorize the project (owner or admin only).
+    let project = null;
+    try {
+      project = await base44.entities.Project.get(projectId);
+    } catch (_e) {
+      project = null;
+    }
+    if (!project) {
+      return Response.json({ error: 'Project not found' }, { status: 404 });
+    }
+    const isOwner = project.created_by_id === user.id;
+    if (!isOwner && user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Pre-flight: enforce plan limit BEFORE we flip status / kick off the worker,
+    // so the user gets an immediate, clear error.
+    if (user.role !== 'admin') {
+      const ownerProfile = (await base44.asServiceRole.entities.UserProfile.filter({ userId: project.created_by_id }, '-created_date', 1))[0] || null;
+      const existingBlueprint = (await base44.entities.Blueprint.filter({ projectId }, '-created_date', 1))[0] || null;
+      // Re-running on an existing blueprint does not consume a new credit slot here;
+      // the limit is enforced for net-new generations only (restart wipes the old one).
+      if (!existingBlueprint || restart === true) {
+        const planId = ownerProfile?.plan || 'free';
+        const limit = PLAN_BLUEPRINT_LIMITS[planId] ?? 1;
+        let used = ownerProfile?.blueprintsUsed || 0;
+        if (needsMonthlyReset(ownerProfile?.usagePeriodStart)) used = 0;
+        if (limit !== -1 && used >= limit) {
+          return Response.json({
+            error: `You've reached your ${planId} plan limit of ${limit} blueprint${limit === 1 ? '' : 's'}. Upgrade your plan to generate more.`,
+            code: 'PLAN_LIMIT_REACHED',
+            plan: planId,
+            limit,
+            used,
+          }, { status: 403 });
+        }
+      }
+    }
+
+    // Flip the project to "generating" immediately so the UI reflects it on the next poll.
+    await base44.entities.Project.update(projectId, { status: 'generating' });
+
+    // Fire the full agent chain WITHOUT awaiting it. This lets the HTTP request return
+    // right away while the worker keeps running server-side (no browser timeout, the
+    // user can safely leave the page). Progress + completion are tracked via the
+    // Project status and Blueprint record, which the frontend polls.
+    runChain(base44, project, user, intake, profile, restart).catch(async (err) => {
+      try {
+        await base44.entities.Project.update(projectId, { status: 'draft' });
+      } catch (_e) { /* ignore */ }
+      console.error('Blueprint generation failed:', err?.message || err);
     });
+
+    return Response.json({ success: true, started: true, status: 'generating' });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

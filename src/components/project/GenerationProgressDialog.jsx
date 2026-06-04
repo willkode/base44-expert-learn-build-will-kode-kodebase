@@ -17,24 +17,20 @@ const STAGES = [
   "QA checklist",
 ];
 
-export default function GenerationProgressDialog({ open, progress }) {
+export default function GenerationProgressDialog({ open, progress, onOpenChange }) {
   const { completed = 0, total = STAGES.length, currentAgent } = progress || {};
   const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
 
   return (
-    <Dialog open={open}>
-      <DialogContent
-        className="sm:max-w-md bg-card border-border [&>button]:hidden"
-        onPointerDownOutside={(e) => e.preventDefault()}
-        onEscapeKeyDown={(e) => e.preventDefault()}
-      >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md bg-card border-border">
         <DialogHeader>
           <DialogTitle className="font-sora flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-primary" />
             Generating Blueprint
           </DialogTitle>
           <DialogDescription>
-            Our AI architects are building your full app plan. This usually takes a couple of minutes.
+            Our AI architects are building your full app plan. This can take up to 30 minutes — generation runs in the background, so you can safely close this dialog or leave the page and come back later.
           </DialogDescription>
         </DialogHeader>
 
@@ -74,6 +70,10 @@ export default function GenerationProgressDialog({ open, progress }) {
               );
             })}
           </div>
+
+          <p className="text-xs text-muted-foreground border-t border-border pt-3">
+            Running in the background. You can close this and leave the page — we'll keep working and your blueprint will be ready when you return.
+          </p>
         </div>
       </DialogContent>
     </Dialog>
