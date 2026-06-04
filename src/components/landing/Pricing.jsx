@@ -23,7 +23,7 @@ const FREE_TIER = {
   highlight: false,
 };
 
-const PAID_ORDER = PLAN_ORDER.filter((id) => id !== "free" && id !== "agency");
+const PAID_ORDER = PLAN_ORDER.filter((id) => id !== "agency");
 const tiers = [
   FREE_TIER,
   ...PAID_ORDER.map((id) => ({
@@ -60,7 +60,7 @@ export default function Pricing() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {tiers.map((t, i) => (
             <motion.div
               key={t.name}
