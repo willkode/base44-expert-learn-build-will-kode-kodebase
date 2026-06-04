@@ -8,7 +8,7 @@ export const PLANS = {
     desc: "Perfect for solo builders.",
     projectLimit: 1,
     blueprintLimit: 1,
-    promptPack: "full",
+    promptPack: "locked",
     securityReview: true,
     qaChecklist: true,
     markdownExport: true,
@@ -17,7 +17,7 @@ export const PLANS = {
     features: [
       "1 project",
       "1 blueprint",
-      "Full prompt packs",
+      "Prompt packs (paid plans only)",
       "Security reviews",
       "QA checklists",
       "Markdown export",
