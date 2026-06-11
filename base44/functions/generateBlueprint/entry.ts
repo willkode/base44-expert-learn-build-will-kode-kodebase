@@ -472,6 +472,13 @@ async function runChain(base44, project, user, intake, profile, restart) {
     // any existing blueprint) so regenerating cleanly overrides the old one.
     const isFreshStart = restart === true || completedCount === 0;
 
+    // Clean up stale pending runs left behind by an interrupted worker so they
+    // don't linger in the activity feed.
+    if (!isFreshStart) {
+      const stalePending = existingRuns.filter((r) => r.status === 'pending');
+      await Promise.all(stalePending.map((r) => base44.entities.AgentRun.delete(r.id)));
+    }
+
     // On the very first step, enforce plan limit and flip status to generating.
     let ownerProfile = (await base44.asServiceRole.entities.UserProfile.filter({ userId: project.created_by_id }, '-created_date', 1))[0] || null;
     if (isFreshStart) {
@@ -589,15 +596,58 @@ async function runChain(base44, project, user, intake, profile, restart) {
     await finalize(base44, projectId, project, accumulated, ownerProfile, user);
 }
 
+// Shared secret for the watchdog automation (no user auth on scheduled runs).
+const WATCHDOG_KEY = 'wd_9f4k2x8q1z_serplyn_guard';
+// A generation is considered stalled if nothing has been touched for this long.
+const STALL_THRESHOLD_MS = 6 * 60 * 1000;
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    const body = await req.json().catch(() => ({}));
+
+    // Service-role handle used by the chain so it works both for authenticated
+    // user requests and for the unauthenticated watchdog automation.
+    const sb = {
+      entities: base44.asServiceRole.entities,
+      integrations: base44.asServiceRole.integrations,
+      asServiceRole: base44.asServiceRole,
+    };
+
+    // Watchdog mode: invoked by a scheduled automation to resume generations that
+    // stalled because a background worker isolate was interrupted mid-chain.
+    if (body?.watchdog === true) {
+      if (body.watchdogKey !== WATCHDOG_KEY) {
+        return Response.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+      const generating = await sb.entities.Project.filter({ status: 'generating' });
+      const results = [];
+      for (const proj of generating) {
+        const lastRuns = await sb.entities.AgentRun.filter({ projectId: proj.id }, '-updated_date', 1);
+        const lastTouch = new Date(lastRuns[0]?.updated_date || proj.updated_date).getTime();
+        if (Date.now() - lastTouch < STALL_THRESHOLD_MS) {
+          results.push({ projectId: proj.id, skipped: 'still active' });
+          continue;
+        }
+        const projIntake = (await sb.entities.ProjectIntake.filter({ projectId: proj.id }))[0] || null;
+        const projProfile = (await sb.entities.UserProfile.filter({ userId: proj.created_by_id }, '-created_date', 1))[0] || null;
+        const ownerUser = (await sb.entities.User.filter({ id: proj.created_by_id }))[0] || null;
+        try {
+          await runChain(sb, proj, { role: ownerUser?.role || 'user' }, projIntake, projProfile, false);
+          results.push({ projectId: proj.id, resumed: true, completed: true });
+        } catch (err) {
+          results.push({ projectId: proj.id, resumed: true, error: String(err?.message || err) });
+        }
+      }
+      return Response.json({ watchdog: true, results });
+    }
+
     const user = await base44.auth.me();
     if (!user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { projectId, intake, profile, restart } = await req.json();
+    const { projectId, intake, profile, restart } = body;
     if (!projectId) {
       return Response.json({ error: 'projectId is required' }, { status: 400 });
     }
@@ -648,9 +698,9 @@ Deno.serve(async (req) => {
     // right away while the worker keeps running server-side (no browser timeout, the
     // user can safely leave the page). Progress + completion are tracked via the
     // Project status and Blueprint record, which the frontend polls.
-    runChain(base44, project, user, intake, profile, restart).catch(async (err) => {
+    runChain(sb, project, user, intake, profile, restart).catch(async (err) => {
       try {
-        await base44.entities.Project.update(projectId, { status: 'draft' });
+        await sb.entities.Project.update(projectId, { status: 'draft' });
       } catch (_e) { /* ignore */ }
       console.error('Blueprint generation failed:', err?.message || err);
     });
