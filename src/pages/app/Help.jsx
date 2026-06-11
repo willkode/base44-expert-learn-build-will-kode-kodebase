@@ -4,6 +4,7 @@ import {
   ListOrdered, Lock, ClipboardCheck, Rocket,
 } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
+import LatestLibraryPrompt from "@/components/help/LatestLibraryPrompt";
 
 const SECTIONS = [
   {
@@ -91,12 +92,12 @@ const SECTIONS = [
 
 export default function Help() {
   return (
-    <div className="max-w-4xl">
+    <div className="max-w-6xl">
       <PageHeader
         title="Base44 Architecture Basics"
         description="A quick, practical guide to the core concepts behind a well-built Base44 app."
       />
-      <div className="grid gap-5">
+      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {SECTIONS.map((s) => (
           <div key={s.title} className="rounded-2xl border border-border bg-card/60 p-6">
             <div className="flex items-center gap-3 mb-4">
@@ -116,6 +117,7 @@ export default function Help() {
           </div>
         ))}
       </div>
+      <LatestLibraryPrompt />
     </div>
   );
 }
