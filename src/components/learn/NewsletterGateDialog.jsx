@@ -9,7 +9,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Mail, Loader2, CheckCircle2 } from "lucide-react";
+import { Mail, Loader2, CheckCircle2, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function NewsletterGateDialog({ open, onOpenChange, onSubscribed }) {
   const [email, setEmail] = useState("");
@@ -67,8 +68,13 @@ export default function NewsletterGateDialog({ open, onOpenChange, onSubscribed 
               </>
             )}
           </Button>
-        </form>
-      </DialogContent>
+          <Button type="button" variant="secondary" className="w-full font-semibold" asChild>
+            <Link to="/register">
+              Sign up for free <ArrowRight className="w-4 h-4 ml-1" />
+            </Link>
+          </Button>
+          </form>
+          </DialogContent>
     </Dialog>
   );
 }
