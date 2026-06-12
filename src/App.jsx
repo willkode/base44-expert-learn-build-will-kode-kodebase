@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider } from '@/lib/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
+import GoogleAnalytics from './components/analytics/GoogleAnalytics';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
 // Public pages
@@ -161,6 +162,7 @@ function App() {
       <QueryClientProvider client={queryClientInstance}>
         <Router>
           <ScrollToTop />
+          <GoogleAnalytics />
           <AuthenticatedApp />
         </Router>
         <Toaster />
