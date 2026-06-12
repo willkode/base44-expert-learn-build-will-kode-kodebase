@@ -56,6 +56,7 @@ import AdminMarketing from '@/pages/admin/AdminMarketing';
 import EmailMarketingLayout from '@/components/admin/email/EmailMarketingLayout';
 import EmailDashboard from '@/pages/admin/email/EmailDashboard';
 import EmailContacts from '@/pages/admin/email/EmailContacts';
+import EmailContactProfile from '@/pages/admin/email/EmailContactProfile';
 import EmailLists from '@/pages/admin/email/EmailLists';
 import EmailSegments from '@/pages/admin/email/EmailSegments';
 import EmailCampaigns from '@/pages/admin/email/EmailCampaigns';
@@ -124,6 +125,7 @@ const AuthenticatedApp = () => {
             <Route path="/admin/marketing/email" element={<EmailMarketingLayout />}>
               <Route index element={<EmailDashboard />} />
               <Route path="contacts" element={<EmailContacts />} />
+              <Route path="contacts/:id" element={<EmailContactProfile />} />
               <Route path="lists" element={<EmailLists />} />
               <Route path="segments" element={<EmailSegments />} />
               <Route path="campaigns" element={<EmailCampaigns />} />
