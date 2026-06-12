@@ -7,6 +7,14 @@ import { PLANS, PLAN_ORDER } from "@/lib/plans";
 
 const CTAS = { free: "Start Solo", pro: "Go Pro", agency: "Start Agency" };
 
+const ALL_PLANS_INCLUDE = [
+  "Prompt Library",
+  "Agent Skills",
+  "SuperAgent Prompts",
+  "LLM Guides",
+  "Videos & Live Events",
+];
+
 const FREE_TIER = {
   name: "Free",
   price: "$0",
@@ -103,6 +111,17 @@ export default function Pricing() {
                   </li>
                 ))}
               </ul>
+              <div className="border-t border-border pt-5 mb-8">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Free with every plan</p>
+                <ul className="space-y-2">
+                  {ALL_PLANS_INCLUDE.map((f) => (
+                    <li key={f} className="flex items-start gap-2.5 text-sm">
+                      <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                      <span className="text-foreground">{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
               <Button
                 onClick={() => (t.id ? navigate(`/checkout?plan=${t.id}`) : getStarted())}
                 className={`w-full font-semibold ${
