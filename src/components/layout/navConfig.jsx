@@ -16,6 +16,7 @@ import {
   GraduationCap,
   Sparkles,
   Video,
+  Megaphone,
 } from "lucide-react";
 
 export const userNav = [
@@ -43,5 +44,6 @@ export const adminNav = [
   { label: "AI Usage Logs", to: "/admin/logs", icon: ScrollText },
   { label: "Templates", to: "/admin/templates", icon: LayoutTemplate },
   { label: "Videos", to: "/admin/videos", icon: Video },
+  { label: "Marketing", to: "/admin/marketing", icon: Megaphone },
   { label: "System Settings", to: "/admin/settings", icon: Cog },
 ];
