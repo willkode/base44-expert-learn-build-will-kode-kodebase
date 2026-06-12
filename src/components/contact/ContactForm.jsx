@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2, CheckCircle2 } from "lucide-react";
 
 export default function ContactForm() {
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "", website: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "", website: "" });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
@@ -54,9 +54,15 @@ export default function ContactForm() {
           <Input id="contact-email" type="email" value={form.email} onChange={set("email")} placeholder="you@example.com" required />
         </div>
       </div>
-      <div className="space-y-2">
-        <Label htmlFor="contact-subject">Subject</Label>
-        <Input id="contact-subject" value={form.subject} onChange={set("subject")} placeholder="What's this about?" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="space-y-2">
+          <Label htmlFor="contact-phone">Phone <span className="text-muted-foreground font-normal">(optional)</span></Label>
+          <Input id="contact-phone" type="tel" value={form.phone} onChange={set("phone")} placeholder="(555) 123-4567" />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="contact-subject">Subject</Label>
+          <Input id="contact-subject" value={form.subject} onChange={set("subject")} placeholder="What's this about?" />
+        </div>
       </div>
       <div className="space-y-2">
         <Label htmlFor="contact-message">Message</Label>
