@@ -16,6 +16,8 @@ const links = [
   { label: "Agents", href: "#agents" },
   { label: "Blueprint", href: "#blueprint" },
   { label: "Pricing", href: "#pricing" },
+  { label: "Products", to: "/products" },
+  { label: "Contact Me", href: "mailto:hello@kodebase.us" },
 ];
 
 const learnLinks = [
@@ -74,15 +76,25 @@ export default function Navbar() {
          </Link>
 
         <nav className="hidden md:flex items-center gap-1">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="relative px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50"
-            >
-              {l.label}
-            </a>
-          ))}
+           {links.map((l) => (
+             l.to ? (
+               <Link
+                 key={l.to}
+                 to={l.to}
+                 className="relative px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50"
+               >
+                 {l.label}
+               </Link>
+             ) : (
+               <a
+                 key={l.href}
+                 href={l.href}
+                 className="relative px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50"
+               >
+                 {l.label}
+               </a>
+             )
+           ))}
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50 focus:outline-none">
               Learn
@@ -146,15 +158,26 @@ export default function Navbar() {
       {open && (
         <div className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border px-6 py-5 space-y-1">
           {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className="block text-sm font-medium text-muted-foreground hover:text-foreground py-2.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
-            >
-              {l.label}
-            </a>
-          ))}
+             l.to ? (
+               <Link
+                 key={l.to}
+                 to={l.to}
+                 onClick={() => setOpen(false)}
+                 className="block text-sm font-medium text-muted-foreground hover:text-foreground py-2.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
+               >
+                 {l.label}
+               </Link>
+             ) : (
+               <a
+                 key={l.href}
+                 href={l.href}
+                 onClick={() => setOpen(false)}
+                 className="block text-sm font-medium text-muted-foreground hover:text-foreground py-2.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
+               >
+                 {l.label}
+               </a>
+             )
+           ))}
           <div className="pt-2 pb-1">
             <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Learn</p>
             {learnLinks.map((l) => (
