@@ -1,0 +1,104 @@
+{
+  "name": "EmailSend",
+  "type": "object",
+  "properties": {
+    "campaignId": {
+      "type": "string"
+    },
+    "sequenceId": {
+      "type": "string"
+    },
+    "sequenceStepId": {
+      "type": "string"
+    },
+    "contactId": {
+      "type": "string"
+    },
+    "resendEmailId": {
+      "type": "string",
+      "description": "Resend email id \u2014 indexed lookup key for webhooks"
+    },
+    "recipientEmail": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "processing",
+        "sent",
+        "delivered",
+        "opened",
+        "clicked",
+        "bounced",
+        "complained",
+        "failed",
+        "canceled",
+        "suppressed",
+        "unsubscribed"
+      ],
+      "default": "queued"
+    },
+    "scheduledAt": {
+      "type": "string"
+    },
+    "sentAt": {
+      "type": "string"
+    },
+    "deliveredAt": {
+      "type": "string"
+    },
+    "openedAt": {
+      "type": "string"
+    },
+    "clickedAt": {
+      "type": "string"
+    },
+    "bouncedAt": {
+      "type": "string"
+    },
+    "complainedAt": {
+      "type": "string"
+    },
+    "failedAt": {
+      "type": "string"
+    },
+    "failureReason": {
+      "type": "string"
+    },
+    "openCount": {
+      "type": "number",
+      "default": 0
+    },
+    "clickCount": {
+      "type": "number",
+      "default": 0
+    },
+    "lastClickedUrl": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "contactId",
+    "recipientEmail"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

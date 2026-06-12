@@ -1,0 +1,98 @@
+{
+  "name": "EmailSettings",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "description": "Unique settings key, use 'global'"
+    },
+    "resendApiKeyConfigured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether RESEND_API_KEY secret is set (status only \u2014 never the key itself)"
+    },
+    "resendFromEmail": {
+      "type": "string"
+    },
+    "resendFromName": {
+      "type": "string"
+    },
+    "resendReplyToEmail": {
+      "type": "string"
+    },
+    "resendDomain": {
+      "type": "string"
+    },
+    "resendAudienceId": {
+      "type": "string"
+    },
+    "defaultTimezone": {
+      "type": "string",
+      "default": "America/Chicago"
+    },
+    "requireApprovalBeforeSend": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableAiGeneration": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableAutoSending": {
+      "type": "boolean",
+      "default": false
+    },
+    "enableWebhookTracking": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableClickTracking": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableOpenTracking": {
+      "type": "boolean",
+      "default": true
+    },
+    "dailySendLimit": {
+      "type": "number",
+      "default": 2000
+    },
+    "hourlySendLimit": {
+      "type": "number",
+      "default": 500
+    },
+    "defaultFooterText": {
+      "type": "string"
+    },
+    "companyName": {
+      "type": "string"
+    },
+    "companyAddress": {
+      "type": "string"
+    },
+    "unsubscribeEnabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "suppressionEnabled": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "key"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "name": "EmailSequence",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "triggerType": {
+      "type": "string",
+      "enum": [
+        "manual_enroll",
+        "contact_added",
+        "tag_added",
+        "list_joined",
+        "form_submitted",
+        "purchase_completed",
+        "trial_started",
+        "custom_event"
+      ],
+      "default": "manual_enroll"
+    },
+    "triggerConfig": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "paused",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "timezone": {
+      "type": "string",
+      "default": "America/Chicago"
+    },
+    "exitConditions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

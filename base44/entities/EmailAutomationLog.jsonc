@@ -1,0 +1,53 @@
+{
+  "name": "EmailAutomationLog",
+  "type": "object",
+  "properties": {
+    "eventType": {
+      "type": "string",
+      "description": "campaign_sent, sequence_step_sent, contact_suppressed, webhook_received, send_failed, etc."
+    },
+    "relatedCampaignId": {
+      "type": "string"
+    },
+    "relatedSequenceId": {
+      "type": "string"
+    },
+    "relatedContactId": {
+      "type": "string"
+    },
+    "relatedEmailSendId": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "warning",
+        "error"
+      ],
+      "default": "success"
+    },
+    "message": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "eventType"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "name": "EmailList",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "listType": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "imported",
+        "dynamic",
+        "system"
+      ],
+      "default": "manual"
+    },
+    "resendAudienceId": {
+      "type": "string"
+    },
+    "contactCount": {
+      "type": "number",
+      "default": 0
+    },
+    "activeContactCount": {
+      "type": "number",
+      "default": 0
+    },
+    "unsubscribedCount": {
+      "type": "number",
+      "default": 0
+    },
+    "bouncedCount": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

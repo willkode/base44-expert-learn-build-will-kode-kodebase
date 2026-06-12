@@ -1,0 +1,144 @@
+{
+  "name": "EmailCampaign",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "internalDescription": {
+      "type": "string"
+    },
+    "campaignType": {
+      "type": "string",
+      "enum": [
+        "newsletter",
+        "product_launch",
+        "promotion",
+        "announcement",
+        "nurture",
+        "onboarding",
+        "reactivation",
+        "event",
+        "changelog",
+        "custom"
+      ],
+      "default": "newsletter"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "previewText": {
+      "type": "string"
+    },
+    "fromName": {
+      "type": "string"
+    },
+    "fromEmail": {
+      "type": "string"
+    },
+    "replyToEmail": {
+      "type": "string"
+    },
+    "htmlContent": {
+      "type": "string"
+    },
+    "textContent": {
+      "type": "string"
+    },
+    "aiPromptInput": {
+      "type": "string"
+    },
+    "aiModelUsed": {
+      "type": "string"
+    },
+    "selectedListIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "selectedSegmentIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "excludedSegmentIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "sendStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "needs_review",
+        "approved",
+        "scheduled",
+        "sending",
+        "sent",
+        "partially_sent",
+        "failed",
+        "canceled"
+      ],
+      "default": "draft"
+    },
+    "approvalStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "needs_review",
+        "approved",
+        "rejected",
+        "revision_requested"
+      ],
+      "default": "draft"
+    },
+    "scheduledAt": {
+      "type": "string",
+      "description": "ISO timestamp \u2014 indexed lookup key for the scheduled-send processor"
+    },
+    "timezone": {
+      "type": "string",
+      "default": "America/Chicago"
+    },
+    "resendBroadcastId": {
+      "type": "string"
+    },
+    "totalRecipients": {
+      "type": "number",
+      "default": 0
+    },
+    "approvedBy": {
+      "type": "string"
+    },
+    "approvedAt": {
+      "type": "string"
+    },
+    "rejectedReason": {
+      "type": "string"
+    },
+    "revisionNotes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

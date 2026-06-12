@@ -1,0 +1,34 @@
+{
+  "name": "EmailListMembership",
+  "type": "object",
+  "properties": {
+    "listId": {
+      "type": "string",
+      "description": "EmailList id"
+    },
+    "contactId": {
+      "type": "string",
+      "description": "EmailContact id"
+    },
+    "contactEmail": {
+      "type": "string",
+      "description": "Denormalized for fast lookups"
+    }
+  },
+  "required": [
+    "listId",
+    "contactId"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

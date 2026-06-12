@@ -1,0 +1,54 @@
+{
+  "name": "EmailSuppression",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "Suppressed email address (lowercase, lookup key)"
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "unsubscribed",
+        "bounced",
+        "complained",
+        "manually_suppressed",
+        "invalid",
+        "blocked_domain"
+      ],
+      "default": "unsubscribed"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "webhook",
+        "manual",
+        "import",
+        "unsubscribe_page"
+      ],
+      "default": "manual"
+    },
+    "relatedCampaignId": {
+      "type": "string"
+    },
+    "relatedEmailSendId": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "email",
+    "reason"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

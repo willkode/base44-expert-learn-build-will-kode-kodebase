@@ -1,0 +1,64 @@
+{
+  "name": "EmailTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "templateType": {
+      "type": "string",
+      "enum": [
+        "newsletter",
+        "promo",
+        "launch",
+        "educational",
+        "onboarding",
+        "reactivation",
+        "transactional_style",
+        "plain_text",
+        "announcement"
+      ],
+      "default": "newsletter"
+    },
+    "subjectTemplate": {
+      "type": "string"
+    },
+    "previewTextTemplate": {
+      "type": "string"
+    },
+    "htmlTemplate": {
+      "type": "string"
+    },
+    "textTemplate": {
+      "type": "string"
+    },
+    "defaultTone": {
+      "type": "string"
+    },
+    "defaultCallToAction": {
+      "type": "string"
+    },
+    "isGlobal": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

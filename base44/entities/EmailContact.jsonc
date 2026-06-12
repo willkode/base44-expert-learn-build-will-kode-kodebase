@@ -1,0 +1,119 @@
+{
+  "name": "EmailContact",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "Contact email address (lowercase, indexed lookup key)"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "fullName": {
+      "type": "string"
+    },
+    "company": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string",
+      "description": "Where this contact came from (newsletter, import, manual, app_user)"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "customFields": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "subscribed",
+        "unsubscribed",
+        "bounced",
+        "complained",
+        "suppressed",
+        "pending"
+      ],
+      "default": "subscribed"
+    },
+    "consentStatus": {
+      "type": "string",
+      "enum": [
+        "unknown",
+        "opted_in",
+        "imported",
+        "manually_added",
+        "double_opt_in_pending"
+      ],
+      "default": "unknown"
+    },
+    "consentSource": {
+      "type": "string"
+    },
+    "consentTimestamp": {
+      "type": "string"
+    },
+    "lastEmailSentAt": {
+      "type": "string"
+    },
+    "lastOpenedAt": {
+      "type": "string"
+    },
+    "lastClickedAt": {
+      "type": "string"
+    },
+    "totalEmailsSent": {
+      "type": "number",
+      "default": 0
+    },
+    "totalOpens": {
+      "type": "number",
+      "default": 0
+    },
+    "totalClicks": {
+      "type": "number",
+      "default": 0
+    },
+    "resendContactId": {
+      "type": "string"
+    },
+    "resendAudienceIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "unsubscribeToken": {
+      "type": "string",
+      "description": "Random token used in unsubscribe links"
+    }
+  },
+  "required": [
+    "email"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "name": "EmailSequenceEnrollment",
+  "type": "object",
+  "properties": {
+    "sequenceId": {
+      "type": "string"
+    },
+    "contactId": {
+      "type": "string"
+    },
+    "contactEmail": {
+      "type": "string",
+      "description": "Denormalized for suppression checks"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "paused",
+        "exited",
+        "failed",
+        "unsubscribed"
+      ],
+      "default": "active"
+    },
+    "currentStepId": {
+      "type": "string"
+    },
+    "nextSendAt": {
+      "type": "string",
+      "description": "ISO timestamp \u2014 indexed lookup key for the sequence processor"
+    },
+    "enrolledAt": {
+      "type": "string"
+    },
+    "completedAt": {
+      "type": "string"
+    },
+    "exitedReason": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "sequenceId",
+    "contactId"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

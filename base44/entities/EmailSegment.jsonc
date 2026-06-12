@@ -1,0 +1,65 @@
+{
+  "name": "EmailSegment",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "tag, email_domain, source, subscribed_after, opened_campaign, clicked_campaign, not_opened_days, not_clicked_days, custom_field, total_opens_gt, total_clicks_gt, status"
+          },
+          "operator": {
+            "type": "string",
+            "description": "contains, equals, gt, lt, after, before"
+          },
+          "value": {
+            "type": "string"
+          },
+          "customFieldKey": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "ruleLogic": {
+      "type": "string",
+      "enum": [
+        "all",
+        "any"
+      ],
+      "default": "all"
+    },
+    "estimatedContactCount": {
+      "type": "number",
+      "default": 0
+    },
+    "lastCalculatedAt": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

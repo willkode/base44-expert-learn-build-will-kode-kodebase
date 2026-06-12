@@ -1,0 +1,55 @@
+{
+  "name": "EmailEvent",
+  "type": "object",
+  "properties": {
+    "emailSendId": {
+      "type": "string"
+    },
+    "resendEmailId": {
+      "type": "string",
+      "description": "Resend email id \u2014 indexed lookup key"
+    },
+    "eventType": {
+      "type": "string",
+      "description": "email.sent, email.delivered, email.opened, email.clicked, email.bounced, email.complained"
+    },
+    "recipientEmail": {
+      "type": "string"
+    },
+    "campaignId": {
+      "type": "string"
+    },
+    "sequenceId": {
+      "type": "string"
+    },
+    "contactId": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string",
+      "description": "Clicked URL, if event is a click"
+    },
+    "rawPayload": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "occurredAt": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "eventType"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

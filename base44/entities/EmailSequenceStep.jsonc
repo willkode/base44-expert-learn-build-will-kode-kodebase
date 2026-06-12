@@ -1,0 +1,76 @@
+{
+  "name": "EmailSequenceStep",
+  "type": "object",
+  "properties": {
+    "sequenceId": {
+      "type": "string",
+      "description": "EmailSequence id"
+    },
+    "stepOrder": {
+      "type": "number",
+      "default": 1
+    },
+    "delayAmount": {
+      "type": "number",
+      "default": 1
+    },
+    "delayUnit": {
+      "type": "string",
+      "enum": [
+        "minutes",
+        "hours",
+        "days",
+        "weeks"
+      ],
+      "default": "days"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "previewText": {
+      "type": "string"
+    },
+    "htmlContent": {
+      "type": "string"
+    },
+    "textContent": {
+      "type": "string"
+    },
+    "conditionRules": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "sendWindowStart": {
+      "type": "string",
+      "description": "HH:MM local time, optional"
+    },
+    "sendWindowEnd": {
+      "type": "string",
+      "description": "HH:MM local time, optional"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "disabled"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "sequenceId"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
