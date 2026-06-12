@@ -11,7 +11,15 @@
     },
     "planId": {
       "type": "string",
-      "description": "Plan purchased (free, pro, agency)"
+      "description": "Plan purchased (free, pro, agency), if a subscription plan"
+    },
+    "productId": {
+      "type": "string",
+      "description": "Product id, if a one-time product purchase"
+    },
+    "itemName": {
+      "type": "string",
+      "description": "Human-readable name of what was purchased"
     },
     "amountCents": {
       "type": "number"
@@ -40,8 +48,7 @@
     }
   },
   "required": [
-    "userId",
-    "planId"
+    "userId"
   ],
   "rls": {
     "read": {

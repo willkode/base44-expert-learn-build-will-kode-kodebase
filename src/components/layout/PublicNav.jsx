@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 const links = [
   { label: "Features", to: "/features" },
   { label: "Pricing", to: "/pricing" },
+  { label: "Products", to: "/products" },
 ];
 
 export default function PublicNav() {

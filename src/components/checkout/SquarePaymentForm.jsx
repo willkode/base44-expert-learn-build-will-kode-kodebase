@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Loader2, Lock } from "lucide-react";
 
-export default function SquarePaymentForm({ planId, amountLabel, onSuccess }) {
+export default function SquarePaymentForm({ payload, amountLabel, onSuccess }) {
   const cardRef = useRef(null);
   const [ready, setReady] = useState(false);
   const [paying, setPaying] = useState(false);
@@ -66,7 +66,7 @@ export default function SquarePaymentForm({ planId, amountLabel, onSuccess }) {
       }
       const res = await base44.functions.invoke("createSquarePayment", {
         sourceId: result.token,
-        planId,
+        ...payload,
       });
       if (res.data?.error) throw new Error(res.data.error);
       onSuccess(res.data);

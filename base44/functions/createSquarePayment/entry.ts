@@ -13,9 +13,25 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { sourceId, planId } = await req.json();
-    const plan = PLAN_PRICING[planId];
-    if (!sourceId || !plan) return Response.json({ error: 'Invalid payment request.' }, { status: 400 });
+    const { sourceId, planId, productId } = await req.json();
+    if (!sourceId) return Response.json({ error: 'Invalid payment request.' }, { status: 400 });
+
+    // Resolve what is being purchased — amounts always come from the server.
+    let amountCents, itemName, plan = null, product = null;
+    if (planId) {
+      plan = PLAN_PRICING[planId];
+      if (!plan) return Response.json({ error: 'Invalid plan.' }, { status: 400 });
+      amountCents = plan.amountCents;
+      itemName = `ForgeBase ${plan.name} plan`;
+    } else if (productId) {
+      const products = await base44.asServiceRole.entities.Product.filter({ id: productId });
+      product = products[0];
+      if (!product || product.active === false) return Response.json({ error: 'Product not found.' }, { status: 404 });
+      amountCents = product.priceCents;
+      itemName = product.name;
+    } else {
+      return Response.json({ error: 'Invalid payment request.' }, { status: 400 });
+    }
 
     const env = Deno.env.get('SQUARE_ENVIRONMENT') === 'production' ? 'production' : 'sandbox';
     const baseUrl = env === 'production' ? 'https://connect.squareup.com' : 'https://connect.squareupsandbox.com';
@@ -30,9 +46,9 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         source_id: sourceId,
         idempotency_key: crypto.randomUUID(),
-        amount_money: { amount: plan.amountCents, currency: 'USD' },
+        amount_money: { amount: amountCents, currency: 'USD' },
         location_id: Deno.env.get('SQUARE_LOCATION_ID'),
-        note: `ForgeBase ${plan.name} plan — ${user.email}`,
+        note: `${itemName} — ${user.email}`,
         buyer_email_address: user.email,
       }),
     });
@@ -41,8 +57,8 @@ Deno.serve(async (req) => {
     if (!res.ok || body.payment?.status === 'FAILED') {
       const detail = body.errors?.[0]?.detail || 'Payment was declined.';
       await base44.asServiceRole.entities.Payment.create({
-        userId: user.id, userEmail: user.email, planId,
-        amountCents: plan.amountCents, status: 'failed', errorMessage: detail,
+        userId: user.id, userEmail: user.email, planId: planId || undefined, productId: productId || undefined,
+        itemName, amountCents, status: 'failed', errorMessage: detail,
       });
       return Response.json({ error: detail }, { status: 402 });
     }
@@ -51,32 +67,38 @@ Deno.serve(async (req) => {
     await base44.asServiceRole.entities.Payment.create({
       userId: user.id,
       userEmail: user.email,
-      planId,
-      amountCents: plan.amountCents,
+      planId: planId || undefined,
+      productId: productId || undefined,
+      itemName,
+      amountCents,
       currency: 'USD',
       squarePaymentId: payment.id,
       squareReceiptUrl: payment.receipt_url || '',
       status: 'completed',
     });
 
-    // Upgrade the user's profile
-    const profiles = await base44.asServiceRole.entities.UserProfile.filter({ userId: user.id });
-    const planData = {
-      plan: planId,
-      blueprintLimit: plan.blueprintLimit,
-      usagePeriodStart: new Date().toISOString(),
-    };
-    if (profiles.length > 0) {
-      await base44.asServiceRole.entities.UserProfile.update(profiles[0].id, planData);
-    } else {
-      await base44.asServiceRole.entities.UserProfile.create({
-        userId: user.id, email: user.email, fullName: user.full_name, ...planData,
-      });
+    // Plan purchases upgrade the user's profile
+    if (plan) {
+      const profiles = await base44.asServiceRole.entities.UserProfile.filter({ userId: user.id });
+      const planData = {
+        plan: planId,
+        blueprintLimit: plan.blueprintLimit,
+        usagePeriodStart: new Date().toISOString(),
+      };
+      if (profiles.length > 0) {
+        await base44.asServiceRole.entities.UserProfile.update(profiles[0].id, planData);
+      } else {
+        await base44.asServiceRole.entities.UserProfile.create({
+          userId: user.id, email: user.email, fullName: user.full_name, ...planData,
+        });
+      }
     }
 
     return Response.json({
       success: true,
-      planId,
+      planId: planId || null,
+      productId: productId || null,
+      itemName,
       receiptUrl: payment.receipt_url || null,
     });
   } catch (error) {

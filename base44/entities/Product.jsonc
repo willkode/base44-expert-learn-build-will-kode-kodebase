@@ -1,0 +1,87 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "tagline": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "priceCents": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD"
+    },
+    "billingType": {
+      "type": "string",
+      "enum": [
+        "one_time"
+      ],
+      "default": "one_time"
+    },
+    "category": {
+      "type": "string",
+      "default": "Prompt Package"
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "supportNote": {
+      "type": "string"
+    },
+    "badge": {
+      "type": "string"
+    },
+    "externalUrl": {
+      "type": "string",
+      "description": "Original product page for full details"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    },
+    "squareItemId": {
+      "type": "string",
+      "description": "Square catalog ITEM id"
+    },
+    "squareVariationId": {
+      "type": "string",
+      "description": "Square catalog ITEM_VARIATION id"
+    },
+    "squareEnvironment": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "priceCents"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
