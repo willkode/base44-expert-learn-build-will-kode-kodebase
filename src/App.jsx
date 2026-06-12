@@ -18,7 +18,7 @@ import PromptLibrary from '@/pages/learn/PromptLibrary';
 import AgentSkills from '@/pages/learn/AgentSkills';
 import SuperAgent from '@/pages/learn/SuperAgent';
 import Videos from '@/pages/learn/Videos';
-import Events from '@/pages/learn/Events';
+
 import LlmGuide from '@/pages/learn/LlmGuide';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
@@ -85,7 +85,7 @@ const AuthenticatedApp = () => {
         <Route path="/learn/agent-skills" element={<AgentSkills />} />
         <Route path="/learn/superagent" element={<SuperAgent />} />
         <Route path="/learn/videos" element={<Videos />} />
-        <Route path="/learn/events" element={<Events />} />
+
         <Route path="/learn/llm-guide" element={<LlmGuide />} />
       </Route>
       <Route path="/" element={<Home />} />
