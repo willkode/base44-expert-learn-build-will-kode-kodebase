@@ -1,0 +1,47 @@
+{
+  "name": "SquarePlan",
+  "type": "object",
+  "properties": {
+    "planId": {
+      "type": "string",
+      "description": "Internal plan id (free, pro, agency)"
+    },
+    "planName": {
+      "type": "string"
+    },
+    "amountCents": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD"
+    },
+    "cadence": {
+      "type": "string",
+      "default": "MONTHLY"
+    },
+    "squarePlanId": {
+      "type": "string",
+      "description": "Square catalog SUBSCRIPTION_PLAN object id"
+    },
+    "squareVariationId": {
+      "type": "string",
+      "description": "Square catalog SUBSCRIPTION_PLAN_VARIATION object id"
+    },
+    "environment": {
+      "type": "string",
+      "description": "sandbox or production"
+    }
+  },
+  "required": [
+    "planId"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
