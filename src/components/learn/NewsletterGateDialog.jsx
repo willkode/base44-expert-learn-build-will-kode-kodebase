@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Mail, Loader2, CheckCircle2, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { trackNewsletterSignup } from "@/lib/analytics";
 
 export default function NewsletterGateDialog({ open, onOpenChange, onSubscribed }) {
   const [email, setEmail] = useState("");
@@ -31,6 +32,7 @@ export default function NewsletterGateDialog({ open, onOpenChange, onSubscribed 
       await base44.entities.NewsletterSubscriber.create({ email: trimmed, source: "prompt_library" });
     }
     setLoading(false);
+    trackNewsletterSignup("prompt_library");
     onSubscribed(trimmed);
     onOpenChange(false);
     setEmail("");

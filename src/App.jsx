@@ -72,6 +72,7 @@ import EmailResendSettings from '@/pages/admin/email/EmailResendSettings';
 import EmailSuppressionPage from '@/pages/admin/email/EmailSuppressionPage';
 import EmailLogs from '@/pages/admin/email/EmailLogs';
 import AdminSettings from '@/pages/admin/AdminSettings';
+import AdminAnalyticsPlan from '@/pages/admin/AdminAnalyticsPlan';
 
 const AuthenticatedApp = () => {
   return (
@@ -145,6 +146,7 @@ const AuthenticatedApp = () => {
               <Route path="settings" element={<EmailResendSettings />} />
             </Route>
             <Route path="/admin/settings" element={<AdminSettings />} />
+            <Route path="/admin/analytics" element={<AdminAnalyticsPlan />} />
           </Route>
         </Route>
       </Route>

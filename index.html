@@ -28,7 +28,8 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'G-XNVRC522DF');
+      // send_page_view disabled — the React app sends page_view on every route change
+      gtag('config', 'G-XNVRC522DF', { send_page_view: false });
     </script>
   </head>
   <body>

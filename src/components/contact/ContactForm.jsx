@@ -5,14 +5,22 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, CheckCircle2 } from "lucide-react";
+import { trackFormStart, trackFormSubmit, trackFormError, trackLead } from "@/lib/analytics";
 
 export default function ContactForm() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "", website: "" });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
+  const startedRef = React.useRef(false);
 
-  const set = (field) => (e) => setForm({ ...form, [field]: e.target.value });
+  const set = (field) => (e) => {
+    if (!startedRef.current) {
+      startedRef.current = true;
+      trackFormStart("contact_form");
+    }
+    setForm({ ...form, [field]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,11 +30,16 @@ export default function ContactForm() {
       const res = await base44.functions.invoke("submitContactForm", form);
       if (res.data?.error) {
         setError(res.data.error);
+        trackFormError("contact_form", res.data.error);
       } else {
         setSent(true);
+        trackFormSubmit("contact_form");
+        trackLead({ leadType: "contact_request", formName: "contact_form" });
       }
     } catch (err) {
-      setError(err.response?.data?.error || "Something went wrong. Please try again.");
+      const msg = err.response?.data?.error || "Something went wrong. Please try again.";
+      setError(msg);
+      trackFormError("contact_form", msg);
     } finally {
       setSending(false);
     }

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Check, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PLANS, PLAN_ORDER } from "@/lib/plans";
+import { trackPricingPlanClick } from "@/lib/analytics";
 
 const CTAS = { free: "Start Solo", pro: "Go Pro", agency: "Start Agency" };
 
@@ -123,7 +124,10 @@ export default function Pricing() {
                 </ul>
               </div>
               <Button
-                onClick={() => (t.id ? navigate(`/checkout?plan=${t.id}`) : getStarted())}
+                onClick={() => {
+                  trackPricingPlanClick({ planId: t.id || "free", planName: t.name, price: parseFloat(t.price.replace("$", "")) || 0 });
+                  t.id ? navigate(`/checkout?plan=${t.id}`) : getStarted();
+                }}
                 className={`w-full font-semibold ${
                   t.highlight
                     ? "bg-primary hover:bg-primary/90 text-primary-foreground"

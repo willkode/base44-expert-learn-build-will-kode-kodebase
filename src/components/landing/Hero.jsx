@@ -3,13 +3,17 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles, LayoutTemplate } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { trackCTA } from "@/lib/analytics";
 
 const NEBULA_BG = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/412194915_d32a9ead9_Gemini_Generated_Image_cy4o04cy4o04cy4o.png";
 const WILL_PHOTO = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a75f49248_b2ff656b5_will-kode-hero-profile.png";
 
 export default function Hero() {
   const navigate = useNavigate();
-  const getStarted = () => navigate("/register");
+  const getStarted = () => {
+    trackCTA({ text: "Start Learning", location: "hero", destination: "/register" });
+    navigate("/register");
+  };
 
   return (
     <section className="relative overflow-hidden min-h-[90vh] flex items-center">
@@ -68,7 +72,10 @@ export default function Hero() {
             </Button>
             <div className="p-[1.5px] rounded-md bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15]">
               <Button
-                onClick={() => document.querySelector("#how")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() => {
+                  trackCTA({ text: "View Blueprint Tool", location: "hero", destination: "#how" });
+                  document.querySelector("#how")?.scrollIntoView({ behavior: "smooth" });
+                }}
                 size="lg"
                 variant="outline"
                 className="w-full bg-background hover:bg-white/10 text-white border-0 font-semibold text-base px-7 py-6">

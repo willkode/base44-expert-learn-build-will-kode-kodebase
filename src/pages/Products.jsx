@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
 import Seo from "@/components/seo/Seo";
+import { trackSelectItem } from "@/lib/analytics";
 
 export default function Products() {
   const navigate = useNavigate();
@@ -82,7 +83,10 @@ export default function Products() {
                       {p.supportNote && <p className="text-xs text-muted-foreground mt-1">{p.supportNote}</p>}
                     </div>
                     <Button
-                      onClick={() => navigate(`/checkout?product=${p.id}`)}
+                      onClick={() => {
+                        trackSelectItem({ id: p.id, name: p.name, category: p.category, price: p.priceCents / 100 });
+                        navigate(`/checkout?product=${p.id}`);
+                      }}
                       className="font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
                     >
                       Buy Now

@@ -6,6 +6,7 @@ import { PLANS } from "@/lib/plans";
 import { base44 } from "@/api/base44Client";
 import SquarePaymentForm from "@/components/checkout/SquarePaymentForm";
 import LoadingState from "@/components/shared/LoadingState";
+import { trackBeginCheckout, trackPurchase } from "@/lib/analytics";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -25,6 +26,27 @@ export default function Checkout() {
       });
     }
   }, [productId]);
+
+  // GA4: begin_checkout once the item is known
+  useEffect(() => {
+    if (plan) {
+      trackBeginCheckout({ id: planId, name: `${plan.name} plan`, category: "subscription", price: parseFloat(plan.price.replace("$", "")) || 0 });
+    } else if (product) {
+      trackBeginCheckout({ id: product.id, name: product.name, category: product.category, price: product.priceCents / 100 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [planId, product?.id]);
+
+  const handlePaymentSuccess = (data) => {
+    trackPurchase({
+      transactionId: data?.paymentId || data?.squarePaymentId || undefined,
+      id: plan ? planId : product?.id,
+      name: plan ? `${plan.name} plan` : product?.name,
+      category: plan ? "subscription" : product?.category,
+      price: plan ? parseFloat(plan.price.replace("$", "")) || 0 : product ? product.priceCents / 100 : 0,
+    });
+    setDone(data);
+  };
 
   if (loadingProduct) {
     return (
@@ -127,7 +149,7 @@ export default function Checkout() {
             <SquarePaymentForm
               payload={item.payload}
               amountLabel={`${item.priceLabel}${plan ? item.periodLabel : ""}`}
-              onSuccess={setDone}
+              onSuccess={handlePaymentSuccess}
             />
           </div>
         </div>
