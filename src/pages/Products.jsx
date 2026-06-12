@@ -52,8 +52,10 @@ export default function Products() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="rounded-2xl border border-border bg-card/60 overflow-hidden flex flex-col hover:border-primary/40 transition-all duration-300 hover:-translate-y-1"
               >
-                {p.imageUrl && (
+                {p.imageUrl ? (
                   <img src={p.imageUrl} alt={p.name} className="w-full aspect-video object-cover" />
+                ) : (
+                  <img src="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/527ddc0ff_generated_image.png" alt="Premium prompt package" className="w-full aspect-video object-cover" />
                 )}
                 <div className="p-8 flex flex-col flex-1">
                   <div className="flex items-center gap-2 mb-3">
