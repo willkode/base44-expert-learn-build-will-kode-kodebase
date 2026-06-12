@@ -46,12 +46,11 @@ export default function Dashboard() {
         <PageHeader
           title={`Welcome${user?.full_name ? `, ${user.full_name.split(" ")[0]}` : ""}`}
           description="Your AI Base44 architecture workspace."
-          actions={
-            <Button onClick={() => navigate("/projects/new")} className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
-              <FolderPlus className="w-4 h-4 mr-2" /> New Project
-            </Button>
-          }
         />
+        <div className="flex items-center gap-3 shrink-0">
+        <Button onClick={() => navigate("/projects/new")} className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+          <FolderPlus className="w-4 h-4 mr-2" /> New Project
+        </Button>
         <Button
           asChild
           className="shrink-0 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] hover:opacity-90 text-white font-semibold border-0"
@@ -63,6 +62,7 @@ export default function Dashboard() {
             Join our Discord
           </a>
         </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
