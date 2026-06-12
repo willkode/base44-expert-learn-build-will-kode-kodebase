@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, Bot } from "lucide-react";
+import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, Bot, Workflow, Cpu, DraftingCompass } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import {
   DropdownMenu,
@@ -18,9 +18,9 @@ const links = [
 ];
 
 const blueprintToolItems = [
-  { label: "How It Works", href: "#how", desc: "Our platform overview" },
-  { label: "Agents", href: "#agents", desc: "AI capabilities" },
-  { label: "Blueprint", href: "#blueprint", desc: "Architecture generation" },
+  { label: "How It Works", href: "#how", icon: Workflow, desc: "From idea to launch-ready blueprint in minutes" },
+  { label: "Agents", href: "#agents", icon: Cpu, desc: "Specialized AI agents that architect your app" },
+  { label: "Blueprint", href: "#blueprint", icon: DraftingCompass, desc: "See what a complete blueprint includes" },
 ];
 
 const learnLinks = [
@@ -110,13 +110,18 @@ export default function Navbar() {
                Blueprint Tool
                <ChevronDown className="w-4 h-4" />
              </DropdownMenuTrigger>
-             <DropdownMenuContent align="start" className="w-56 p-3">
-               <div className="space-y-1">
+             <DropdownMenuContent align="start" className="w-[34rem] p-3">
+               <div className="grid grid-cols-2 gap-1">
                  {blueprintToolItems.map((item) => (
                    <DropdownMenuItem key={item.href} asChild className="p-0 focus:bg-transparent">
-                     <a href={item.href} onClick={() => setOpen(false)} className="flex flex-col gap-1 rounded-lg p-3 hover:bg-secondary/60 transition-colors cursor-pointer">
-                       <span className="font-semibold text-sm text-foreground">{item.label}</span>
-                       <span className="text-xs text-muted-foreground">{item.desc}</span>
+                     <a href={item.href} onClick={() => setOpen(false)} className="flex items-start gap-3 rounded-lg p-3 hover:bg-secondary/60 transition-colors cursor-pointer">
+                       <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
+                         <item.icon className="h-4 w-4" />
+                       </span>
+                       <span className="min-w-0">
+                         <span className="block font-semibold text-sm text-foreground">{item.label}</span>
+                         <span className="block text-xs text-muted-foreground leading-snug mt-0.5">{item.desc}</span>
+                       </span>
                      </a>
                    </DropdownMenuItem>
                  ))}
@@ -204,9 +209,12 @@ export default function Navbar() {
                  key={item.href}
                  href={item.href}
                  onClick={() => setOpen(false)}
-                 className="block text-sm font-medium text-muted-foreground hover:text-foreground py-2.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
+                 className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
                >
-                 {item.label}
+                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
+                   <item.icon className="h-4 w-4" />
+                 </span>
+                 <span className="text-sm font-medium text-muted-foreground">{item.label}</span>
                </a>
              ))}
             </div>
