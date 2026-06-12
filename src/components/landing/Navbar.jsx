@@ -12,12 +12,15 @@ import {
 import SocialLinks from "@/components/landing/SocialLinks";
 
 const links = [
-  { label: "How It Works", href: "#how" },
-  { label: "Agents", href: "#agents" },
-  { label: "Blueprint", href: "#blueprint" },
   { label: "Pricing", href: "#pricing" },
   { label: "Products", to: "/products" },
   { label: "Contact Me", href: "mailto:hello@kodebase.us" },
+];
+
+const blueprintToolItems = [
+  { label: "How It Works", href: "#how", desc: "Our platform overview" },
+  { label: "Agents", href: "#agents", desc: "AI capabilities" },
+  { label: "Blueprint", href: "#blueprint", desc: "Architecture generation" },
 ];
 
 const learnLinks = [
@@ -94,12 +97,30 @@ export default function Navbar() {
                  {l.label}
                </a>
              )
-           ))}
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50 focus:outline-none">
-              Learn
-              <ChevronDown className="w-4 h-4" />
-            </DropdownMenuTrigger>
+             ))}
+             <DropdownMenu>
+             <DropdownMenuTrigger className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50 focus:outline-none">
+               Blueprint Tool
+               <ChevronDown className="w-4 h-4" />
+             </DropdownMenuTrigger>
+             <DropdownMenuContent align="start" className="w-56 p-3">
+               <div className="space-y-1">
+                 {blueprintToolItems.map((item) => (
+                   <DropdownMenuItem key={item.href} asChild className="p-0 focus:bg-transparent">
+                     <a href={item.href} onClick={() => setOpen(false)} className="flex flex-col gap-1 rounded-lg p-3 hover:bg-secondary/60 transition-colors cursor-pointer">
+                       <span className="font-semibold text-sm text-foreground">{item.label}</span>
+                       <span className="text-xs text-muted-foreground">{item.desc}</span>
+                     </a>
+                   </DropdownMenuItem>
+                 ))}
+               </div>
+             </DropdownMenuContent>
+             </DropdownMenu>
+             <DropdownMenu>
+             <DropdownMenuTrigger className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50 focus:outline-none">
+               Learn
+               <ChevronDown className="w-4 h-4" />
+             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-[34rem] p-3">
               <div className="grid grid-cols-2 gap-1">
                 {learnLinks.map((l) => (
@@ -178,8 +199,21 @@ export default function Navbar() {
                </a>
              )
            ))}
-          <div className="pt-2 pb-1">
-            <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Learn</p>
+           <div className="pt-2 pb-1">
+             <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Blueprint Tool</p>
+             {blueprintToolItems.map((item) => (
+               <a
+                 key={item.href}
+                 href={item.href}
+                 onClick={() => setOpen(false)}
+                 className="block text-sm font-medium text-muted-foreground hover:text-foreground py-2.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
+               >
+                 {item.label}
+               </a>
+             ))}
+           </div>
+           <div className="pt-2 pb-1">
+             <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Learn</p>
             {learnLinks.map((l) => (
               <Link
                 key={l.to}
