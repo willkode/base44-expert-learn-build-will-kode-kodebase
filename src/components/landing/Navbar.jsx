@@ -13,7 +13,7 @@ import SocialLinks from "@/components/landing/SocialLinks";
 
 const links = [
   { label: "Products", to: "/products" },
-  { label: "Contact Me", href: "mailto:hello@kodebase.us" },
+  { label: "Contact Me", to: "/contact" },
 ];
 
 const blueprintToolItems = [
