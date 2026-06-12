@@ -74,22 +74,32 @@ export default function Products() {
                       </li>
                     ))}
                   </ul>
-                  <div className="flex items-end justify-between gap-4">
-                    <div>
-                      <div className="flex items-end gap-1">
-                        <span className="font-sora font-extrabold text-3xl">${(p.priceCents / 100).toFixed(p.priceCents % 100 === 0 ? 0 : 2)}</span>
-                        <span className="text-muted-foreground mb-1 text-sm">one-time</span>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-end justify-between gap-4">
+                      <div>
+                        <div className="flex items-end gap-1">
+                          <span className="font-sora font-extrabold text-3xl">${(p.priceCents / 100).toFixed(p.priceCents % 100 === 0 ? 0 : 2)}</span>
+                          <span className="text-muted-foreground mb-1 text-sm">one-time</span>
+                        </div>
+                        {p.supportNote && <p className="text-xs text-muted-foreground mt-1">{p.supportNote}</p>}
                       </div>
-                      {p.supportNote && <p className="text-xs text-muted-foreground mt-1">{p.supportNote}</p>}
+                      <Button
+                        onClick={() => {
+                          trackSelectItem({ id: p.id, name: p.name, category: p.category, price: p.priceCents / 100 });
+                          navigate(`/checkout?product=${p.id}`);
+                        }}
+                        className="font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
+                      >
+                        Buy Now
+                      </Button>
                     </div>
                     <Button
-                      onClick={() => {
-                        trackSelectItem({ id: p.id, name: p.name, category: p.category, price: p.priceCents / 100 });
-                        navigate(`/checkout?product=${p.id}`);
-                      }}
-                      className="font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
+                      onClick={() => navigate(`/products/${p.slug}`)}
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
                     >
-                      Buy Now
+                      Learn More
                     </Button>
                   </div>
                 </div>
