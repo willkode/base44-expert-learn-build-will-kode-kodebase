@@ -13,6 +13,7 @@ import Home from '@/pages/Home';
 import Features from '@/pages/Features';
 import Pricing from '@/pages/Pricing';
 import Products from '@/pages/Products';
+import ProductDetail from '@/pages/ProductDetail';
 import Contact from '@/pages/Contact';
 import Blog from '@/pages/learn/Blog';
 import BlogPost from '@/pages/learn/BlogPost';
@@ -82,6 +83,7 @@ const AuthenticatedApp = () => {
         <Route path="/features" element={<Features />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/products/:slug" element={<ProductDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/learn/blog" element={<Blog />} />
         <Route path="/learn/blog/:slug" element={<BlogPost />} />
