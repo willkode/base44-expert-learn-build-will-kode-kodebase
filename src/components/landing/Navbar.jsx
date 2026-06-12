@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, Bot, Workflow, Cpu, DraftingCompass } from "lucide-react";
+import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, Bot, Workflow, Cpu, DraftingCompass, Tag } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import {
   DropdownMenu,
@@ -12,7 +12,6 @@ import {
 import SocialLinks from "@/components/landing/SocialLinks";
 
 const links = [
-  { label: "Pricing", href: "#pricing" },
   { label: "Products", to: "/products" },
   { label: "Contact Me", href: "mailto:hello@kodebase.us" },
 ];
@@ -21,6 +20,7 @@ const blueprintToolItems = [
   { label: "How It Works", href: "#how", icon: Workflow, desc: "From idea to launch-ready blueprint in minutes" },
   { label: "Agents", href: "#agents", icon: Cpu, desc: "Specialized AI agents that architect your app" },
   { label: "Blueprint", href: "#blueprint", icon: DraftingCompass, desc: "See what a complete blueprint includes" },
+  { label: "Pricing", href: "#pricing", icon: Tag, desc: "Plans that fit every builder" },
 ];
 
 const learnLinks = [
