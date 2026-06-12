@@ -68,7 +68,7 @@ export default function NewsletterGateDialog({ open, onOpenChange, onSubscribed 
               </>
             )}
           </Button>
-          <Button type="button" variant="secondary" className="w-full font-semibold" asChild>
+          <Button className="w-full font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] hover:opacity-90 text-white border-0" asChild>
             <Link to="/register">
               Sign up for free <ArrowRight className="w-4 h-4 ml-1" />
             </Link>
