@@ -23,6 +23,15 @@ Deno.serve(async (req) => {
 
     if (!res.ok) {
       const errMsg = body?.message || `Resend API returned ${res.status}`;
+      // A send-only restricted key can't list domains, but the key itself is valid.
+      if (/restricted to only send emails/i.test(errMsg)) {
+        await base44.asServiceRole.entities.EmailAutomationLog.create({
+          eventType: 'resend_connection_test',
+          status: 'success',
+          message: 'Resend connection OK (send-only API key — domain status unavailable, use the manual checklist)',
+        });
+        return Response.json({ success: true, configured: true, domains: [], note: 'API key is valid (send-only). Domain status unavailable — use the manual checklist.' });
+      }
       if (settingsId) {
         await base44.asServiceRole.entities.EmailSettings.update(settingsId, { lastError: errMsg });
       }

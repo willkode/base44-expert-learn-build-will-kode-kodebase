@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Send, Plus } from "lucide-react";
+import { Send, Plus, AlertTriangle } from "lucide-react";
+import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import PageHeader from "@/components/shared/PageHeader";
@@ -22,11 +23,15 @@ const STATUS_STYLES = {
 export default function EmailCampaigns() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sendingEnabled, setSendingEnabled] = useState(true);
 
   useEffect(() => {
     base44.entities.EmailCampaign.list("-created_date", 200).then((c) => {
       setRows(c);
       setLoading(false);
+    });
+    base44.functions.invoke("checkResendConfiguration", {}).then((res) => {
+      if (!res.data?.error) setSendingEnabled(!!res.data.sendingEnabled);
     });
   }, []);
 
@@ -41,6 +46,15 @@ export default function EmailCampaigns() {
           </Button>
         }
       />
+      {!sendingEnabled && (
+        <div className="flex items-start gap-2.5 rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4 mb-5">
+          <AlertTriangle className="w-4 h-4 text-yellow-400 mt-0.5 shrink-0" />
+          <p className="text-sm text-yellow-200">
+            Campaign sending is disabled — Resend is not fully configured (API key and from email required).{" "}
+            <Link to="/admin/marketing/email/settings" className="underline font-medium">Configure Resend</Link>
+          </p>
+        </div>
+      )}
       <AdminTable
         loading={loading}
         rows={rows}
