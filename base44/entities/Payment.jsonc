@@ -1,0 +1,68 @@
+{
+  "name": "Payment",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "description": "Paying user id"
+    },
+    "userEmail": {
+      "type": "string"
+    },
+    "planId": {
+      "type": "string",
+      "description": "Plan purchased (free, pro, agency)"
+    },
+    "amountCents": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD"
+    },
+    "squarePaymentId": {
+      "type": "string"
+    },
+    "squareReceiptUrl": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "pending",
+        "failed"
+      ],
+      "default": "pending"
+    },
+    "errorMessage": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "userId",
+    "planId"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "userId": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

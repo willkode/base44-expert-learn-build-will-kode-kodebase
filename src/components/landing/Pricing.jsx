@@ -30,6 +30,7 @@ const PAID_ORDER = PLAN_ORDER.filter((id) => id !== "agency");
 const tiers = [
   FREE_TIER,
   ...PAID_ORDER.map((id) => ({
+    id,
     name: PLANS[id].name,
     price: PLANS[id].price,
     period: PLANS[id].period,
@@ -103,7 +104,7 @@ export default function Pricing() {
                 ))}
               </ul>
               <Button
-                onClick={getStarted}
+                onClick={() => (t.id ? navigate(`/checkout?plan=${t.id}`) : getStarted())}
                 className={`w-full font-semibold ${
                   t.highlight
                     ? "bg-primary hover:bg-primary/90 text-primary-foreground"

@@ -42,6 +42,7 @@ import LaunchAudit from '@/pages/app/LaunchAudit';
 import SecurityReview from '@/pages/app/SecurityReview';
 import QAChecklist from '@/pages/app/QAChecklist';
 import Settings from '@/pages/app/Settings';
+import Checkout from '@/pages/Checkout';
 import Help from '@/pages/app/Help';
 
 // Admin pages
@@ -95,6 +96,7 @@ const AuthenticatedApp = () => {
 
       {/* Authenticated app */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+        <Route path="/checkout" element={<Checkout />} />
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/projects" element={<Projects />} />
