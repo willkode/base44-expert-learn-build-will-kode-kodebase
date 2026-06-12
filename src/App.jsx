@@ -53,6 +53,19 @@ import AdminLogs from '@/pages/admin/AdminLogs';
 import AdminTemplates from '@/pages/admin/AdminTemplates';
 import AdminVideos from '@/pages/admin/AdminVideos';
 import AdminMarketing from '@/pages/admin/AdminMarketing';
+import EmailMarketingLayout from '@/components/admin/email/EmailMarketingLayout';
+import EmailDashboard from '@/pages/admin/email/EmailDashboard';
+import EmailContacts from '@/pages/admin/email/EmailContacts';
+import EmailLists from '@/pages/admin/email/EmailLists';
+import EmailSegments from '@/pages/admin/email/EmailSegments';
+import EmailCampaigns from '@/pages/admin/email/EmailCampaigns';
+import EmailStudio from '@/pages/admin/email/EmailStudio';
+import EmailCalendar from '@/pages/admin/email/EmailCalendar';
+import EmailAutomations from '@/pages/admin/email/EmailAutomations';
+import EmailAnalytics from '@/pages/admin/email/EmailAnalytics';
+import EmailResendSettings from '@/pages/admin/email/EmailResendSettings';
+import EmailSuppressionPage from '@/pages/admin/email/EmailSuppressionPage';
+import EmailLogs from '@/pages/admin/email/EmailLogs';
 import AdminSettings from '@/pages/admin/AdminSettings';
 
 const AuthenticatedApp = () => {
@@ -108,6 +121,20 @@ const AuthenticatedApp = () => {
             <Route path="/admin/templates" element={<AdminTemplates />} />
             <Route path="/admin/videos" element={<AdminVideos />} />
             <Route path="/admin/marketing" element={<AdminMarketing />} />
+            <Route path="/admin/marketing/email" element={<EmailMarketingLayout />}>
+              <Route index element={<EmailDashboard />} />
+              <Route path="contacts" element={<EmailContacts />} />
+              <Route path="lists" element={<EmailLists />} />
+              <Route path="segments" element={<EmailSegments />} />
+              <Route path="campaigns" element={<EmailCampaigns />} />
+              <Route path="studio" element={<EmailStudio />} />
+              <Route path="calendar" element={<EmailCalendar />} />
+              <Route path="automations" element={<EmailAutomations />} />
+              <Route path="analytics" element={<EmailAnalytics />} />
+              <Route path="suppression" element={<EmailSuppressionPage />} />
+              <Route path="logs" element={<EmailLogs />} />
+              <Route path="settings" element={<EmailResendSettings />} />
+            </Route>
             <Route path="/admin/settings" element={<AdminSettings />} />
           </Route>
         </Route>

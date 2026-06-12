@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/shared/PageHeader";
 import MarketingToolCard from "@/components/admin/marketing/MarketingToolCard";
 import { Mail, Share2, PenSquare } from "lucide-react";
@@ -7,8 +8,9 @@ const tools = [
   {
     icon: Mail,
     title: "Email Marketing",
-    description: "Create and send campaigns to your newsletter subscribers and users.",
-    status: "Coming soon",
+    description: "AI campaigns, contacts, segments, automations and analytics powered by Resend.",
+    status: "Live",
+    to: "/admin/marketing/email",
   },
   {
     icon: Share2,
@@ -25,6 +27,7 @@ const tools = [
 ];
 
 export default function AdminMarketing() {
+  const navigate = useNavigate();
   return (
     <div>
       <PageHeader
@@ -32,8 +35,8 @@ export default function AdminMarketing() {
         description="Email, social and content marketing tools for your app."
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {tools.map((tool) => (
-          <MarketingToolCard key={tool.title} {...tool} />
+        {tools.map(({ to, ...tool }) => (
+          <MarketingToolCard key={tool.title} {...tool} onClick={to ? () => navigate(to) : undefined} />
         ))}
       </div>
     </div>
