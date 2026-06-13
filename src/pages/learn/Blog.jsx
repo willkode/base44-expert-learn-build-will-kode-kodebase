@@ -19,8 +19,9 @@ export default function Blog() {
   return (
     <>
       <Seo
-        title="Blog — KodeBase"
-        description="Articles, tutorials, and deep dives on building production-grade apps with Base44."
+        title="Base44 Blog — Tutorials & Build Guides | KodeBase"
+        description="Articles, tutorials, and deep dives on building production-grade apps with Base44 — from data models to launch."
+        path="/learn/blog"
       />
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 blueprint-grid opacity-30" />

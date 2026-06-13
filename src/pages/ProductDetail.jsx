@@ -51,10 +51,11 @@ export default function ProductDetail() {
   return (
     <div className="pt-28 pb-24 px-6">
       <Seo
-        title={`${product.name} — ${product.category}`}
+        title={`${product.name} — ${product.category} | KodeBase`}
         description={product.tagline || product.description}
         path={`/products/${product.slug}`}
         type="product"
+        image={product.imageUrl || undefined}
       />
       <div className="max-w-6xl mx-auto">
         <Link to="/products" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-10">

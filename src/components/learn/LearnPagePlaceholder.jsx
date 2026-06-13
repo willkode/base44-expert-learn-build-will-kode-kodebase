@@ -2,10 +2,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import Seo from "@/components/seo/Seo";
 
-export default function LearnPagePlaceholder({ title, description, icon: Icon }) {
+export default function LearnPagePlaceholder({ title, description, icon: Icon, path }) {
   return (
     <>
-      <Seo title={`${title} — KodeBase`} description={description} />
+      <Seo title={`${title} — KodeBase`} description={description} path={path} noindex />
       <section className="relative min-h-[70vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 blueprint-grid opacity-30" />
         <div className="relative max-w-3xl mx-auto px-6 py-32 text-center">

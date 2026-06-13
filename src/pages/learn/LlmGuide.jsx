@@ -9,8 +9,9 @@ export default function LlmGuide() {
   return (
     <>
       <Seo
-        title="AI LLM Guide — KodeBase"
+        title="Best AI Models for Vibe Coding — LLM Guide | KodeBase"
         description="A practical breakdown of the top AI models for vibe coding — what each one's best at, and exactly when to reach for it."
+        path="/learn/llm-guide"
       />
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 blueprint-grid opacity-30" />

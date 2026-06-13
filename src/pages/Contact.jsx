@@ -3,10 +3,17 @@ import { motion } from "framer-motion";
 import ContactForm from "@/components/contact/ContactForm";
 import SocialLinks from "@/components/landing/SocialLinks";
 import { Mail } from "lucide-react";
+import Seo from "@/components/seo/Seo";
 
 export default function Contact() {
   return (
     <section className="py-24 relative">
+      <Seo
+        title="Contact KodeBase — Get Help Building Your App"
+        description="Questions, feedback, or partnership ideas? Reach the KodeBase team and get a fast, personal reply."
+        path="/contact"
+        image="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/7c583194a_generated_image.png"
+      />
       <div className="max-w-3xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 24 }}

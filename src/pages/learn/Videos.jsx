@@ -15,7 +15,7 @@ export default function Videos() {
 
   return (
     <>
-      <Seo title="Videos — KodeBase" description="Walkthroughs, demos, and step-by-step video guides for mastering Base44." />
+      <Seo title="Base44 Video Tutorials & Walkthroughs | KodeBase" description="Walkthroughs, demos, and step-by-step video guides for mastering Base44 — watch and build along." path="/learn/videos" />
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 blueprint-grid opacity-30" />
         <div className="relative max-w-6xl mx-auto px-6 py-28">

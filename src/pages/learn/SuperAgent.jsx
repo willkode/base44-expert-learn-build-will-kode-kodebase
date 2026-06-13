@@ -14,8 +14,9 @@ export default function SuperAgent() {
   return (
     <>
       <Seo
-        title="Base44 AI Agent — KodeBase"
+        title="Base44 AI Agent Explained — Capabilities & Limits | KodeBase"
         description="A privileged, skill-driven automation operator with cross-app read access and single-app write control. Build powerful workflows with a dumb trigger and a smart handler."
+        path="/learn/superagent"
       />
       <Hero />
       <MentalModel />

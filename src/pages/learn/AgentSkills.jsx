@@ -8,6 +8,7 @@ export default function AgentSkills() {
       title="Agent Skills"
       description="Reusable skills and capabilities to make your AI agents smarter and more reliable."
       icon={Sparkles}
+      path="/learn/agent-skills"
     />
   );
 }

@@ -49,8 +49,9 @@ export default function PromptLibrary() {
   return (
     <>
       <Seo
-        title="Prompt Library — KodeBase"
-        description="A curated collection of battle-tested Base44 prompts you can copy and paste into your builds."
+        title="Free Base44 Prompt Library — Copy & Paste | KodeBase"
+        description="A curated collection of battle-tested Base44 prompts you can copy and paste into your builds. Free, organized by category."
+        path="/learn/prompt-library"
       />
 
       <section className="relative pt-32 pb-12 overflow-hidden">

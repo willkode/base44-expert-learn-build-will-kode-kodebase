@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
 import Seo from "@/components/seo/Seo";
+import { softwareApplicationSchema } from "@/lib/seo";
 import { trackSelectItem } from "@/lib/analytics";
 
 export default function Products() {
@@ -24,10 +25,12 @@ export default function Products() {
   return (
     <div className="pt-28 pb-24 px-6">
       <Seo
-        title="Products — Premium Prompt Packages"
-        description="Professionally engineered prompt packages that build complete systems into your app. One-time fee, free support."
+        title="Prompt Packages — Buy Once, Build Forever | KodeBase"
+        description="Professionally engineered Base44 prompt packages that build complete systems into your app. One-time fee, instant download, free support."
         path="/products"
         type="website"
+        image="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/4615989ef_generated_image.png"
+        jsonLd={[softwareApplicationSchema()]}
       />
       <div className="max-w-7xl mx-auto">
         <div className="max-w-3xl mx-auto text-center mb-16">
