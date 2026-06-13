@@ -70,7 +70,7 @@ export default function ProductProblemSolution() {
               <Icon className="w-6 h-6 text-primary mb-4" />
               <div className="font-sora font-bold text-3xl text-gradient-orange mb-2">{s.stat}</div>
               <p className="text-sm text-foreground/90 leading-relaxed mb-3">{s.label}</p>
-              <p className="text-xs text-muted-foreground hidden">{s.source}</p>
+              
             </motion.div>);
 
         })}
