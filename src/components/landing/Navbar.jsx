@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import SocialLinks from "@/components/landing/SocialLinks";
+import { trackCTA } from "@/lib/analytics";
 
 const links = [
   { label: "Products", to: "/products" },
@@ -57,7 +58,10 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const getStarted = () => navigate("/register");
+  const getStarted = () => {
+    trackCTA({ text: "Get Started", location: "navbar", destination: "/register" });
+    navigate("/register");
+  };
   const signIn = () => navigate("/login");
   const goDashboard = () => navigate("/dashboard");
 

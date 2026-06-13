@@ -53,6 +53,14 @@ export const trackNewsletterSignup = (source) =>
 export const trackSignup = (method) => trackEvent("sign_up", { method });
 export const trackLogin = (method) => trackEvent("login", { method });
 
+// --- Product usage / activation ---
+export const trackProjectCreated = ({ appType, fromPrd } = {}) =>
+  trackEvent("project_created", {
+    app_type: appType || "unknown",
+    from_prd: !!fromPrd,
+    page_path: window.location.pathname,
+  });
+
 // --- Ecommerce (GA4 recommended events) ---
 const itemPayload = ({ id, name, category, price }) => ({
   currency: "USD",

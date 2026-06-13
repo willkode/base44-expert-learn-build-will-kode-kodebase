@@ -12,6 +12,7 @@ import Step3Features from "@/components/wizard/Step3Features";
 import Step4Data from "@/components/wizard/Step4Data";
 import Step5Integrations from "@/components/wizard/Step5Integrations";
 import Step6Security from "@/components/wizard/Step6Security";
+import { trackProjectCreated } from "@/lib/analytics";
 
 const STEP_LABELS = ["App Basics", "Users & Roles", "Core Features", "Data & Workflows", "Integrations", "Security & Launch"];
 
@@ -86,6 +87,7 @@ export default function NewProject() {
         stepData: data,
       });
 
+      trackProjectCreated({ appType: data.appType, fromPrd: prefilled });
       navigate(`/projects/${project.id}`);
     } catch (err) {
       setError("Something went wrong creating your project. Please try again.");

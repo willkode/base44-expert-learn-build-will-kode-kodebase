@@ -7,15 +7,18 @@ const KEY_EVENTS = [
   { name: "purchase", why: "Revenue — plan & product payments via Square checkout. Includes value, currency, transaction_id.", priority: "Primary" },
   { name: "generate_lead", why: "Contact form submissions — your main lead pipeline.", priority: "Primary" },
   { name: "sign_up", why: "Account creation (email or Google) — top of the product funnel.", priority: "Primary" },
+  { name: "project_created", why: "Activation — first project built in the blueprint tool. The key signal a signup became an active user.", priority: "Primary" },
   { name: "begin_checkout", why: "Checkout page reached — measures pricing → payment drop-off.", priority: "Secondary" },
   { name: "newsletter_signup", why: "Email capture from the prompt library gate.", priority: "Secondary" },
 ];
 
 const EVENTS = [
   { name: "page_view", where: "Every route change (SPA-safe, no double counting)", params: "page_path, page_title, page_location" },
-  { name: "cta_click", where: "Hero: Start Learning, View Blueprint Tool", params: "cta_text, cta_location, cta_destination, page_path" },
+  { name: "cta_click", where: "Hero (Start Learning, View Blueprint Tool) + Navbar Get Started", params: "cta_text, cta_location, cta_destination, page_path" },
   { name: "pricing_plan_click", where: "Pricing cards (Free / Solo / Pro)", params: "plan_id, plan_name, price" },
-  { name: "select_item", where: "Products page — Buy Now", params: "items (id, name, category, price), value, currency" },
+  { name: "view_item", where: "Product detail page view", params: "items (id, name, category, price), value, currency" },
+  { name: "select_item", where: "Products page & product detail — Buy Now", params: "items (id, name, category, price), value, currency" },
+  { name: "project_created", where: "New Project wizard — project successfully created", params: "app_type, from_prd, page_path" },
   { name: "begin_checkout", where: "Checkout page load (plan or product)", params: "items, value, currency" },
   { name: "purchase", where: "Successful Square payment", params: "transaction_id, items, value, currency" },
   { name: "form_start", where: "Contact form — first keystroke", params: "form_name, page_path" },
@@ -33,6 +36,7 @@ const FUNNELS = [
   "Products → select_item → begin_checkout → purchase",
   "Contact page → form_start → form_submit → generate_lead",
   "Prompt Library → newsletter_signup → sign_up",
+  "Sign up → New Project wizard → project_created (activation)",
 ];
 
 export default function AdminAnalyticsPlan() {
