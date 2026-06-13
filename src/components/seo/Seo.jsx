@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SITE, canonical } from "@/lib/seo";
+import { getOverride } from "@/lib/seoOverrides";
 
 // Lightweight head manager — no external deps. Sets title, meta, canonical,
 // OG/Twitter tags, and JSON-LD on mount, and restores nothing (SPA pages overwrite each other).
@@ -25,14 +26,27 @@ function setLink(rel, href) {
 }
 
 export default function Seo({
-  title,
-  description = SITE.description,
+  title: titleProp,
+  description: descriptionProp = SITE.description,
   path = "/",
   type = "website",
-  image = SITE.ogImage,
-  noindex = false,
+  image: imageProp = SITE.ogImage,
+  noindex: noindexProp = false,
   jsonLd = [],
 }) {
+  // Admin-defined per-page override (loaded once, cached). Falls back to props.
+  const [override, setOverride] = useState(null);
+  useEffect(() => {
+    let active = true;
+    getOverride(path).then((o) => { if (active) setOverride(o); });
+    return () => { active = false; };
+  }, [path]);
+
+  const title = override?.title || titleProp;
+  const description = override?.description || descriptionProp;
+  const image = override?.ogImage || imageProp;
+  const noindex = override?.noindex ?? noindexProp;
+
   useEffect(() => {
     const fullTitle = title ? `${title}` : SITE.name;
     const url = canonical(path);

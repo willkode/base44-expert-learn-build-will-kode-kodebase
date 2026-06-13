@@ -1,0 +1,47 @@
+{
+  "name": "SeoSetting",
+  "type": "object",
+  "properties": {
+    "path": {
+      "type": "string",
+      "description": "Route path this override applies to, e.g. /products or /learn/blog"
+    },
+    "pageLabel": {
+      "type": "string",
+      "description": "Friendly label shown in the admin list, e.g. Products"
+    },
+    "title": {
+      "type": "string",
+      "description": "Override for the page title / og:title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Override for the meta description / og:description"
+    },
+    "ogImage": {
+      "type": "string",
+      "description": "Override for the og:image / twitter:image URL"
+    },
+    "noindex": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to set robots noindex on this page"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this override is active"
+    }
+  },
+  "required": [
+    "path"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

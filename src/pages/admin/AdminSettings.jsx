@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import SeoSettingsManager from "@/components/admin/SeoSettingsManager";
 
 const KEY = "global";
 const DEFAULTS = {
@@ -101,6 +102,8 @@ export default function AdminSettings() {
             ))}
           </div>
         </div>
+
+        <SeoSettingsManager />
       </div>
     </div>
   );
