@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Check, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Check, CheckCircle2, Loader2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PLANS } from "@/lib/plans";
 import { base44 } from "@/api/base44Client";
-import SquarePaymentForm from "@/components/checkout/SquarePaymentForm";
 import LoadingState from "@/components/shared/LoadingState";
 import { trackBeginCheckout, trackPurchase } from "@/lib/analytics";
 
@@ -13,10 +12,14 @@ export default function Checkout() {
   const urlParams = new URLSearchParams(window.location.search);
   const planId = urlParams.get("plan");
   const productId = urlParams.get("product");
+  const status = urlParams.get("status"); // "success" when returning from Square
   const plan = planId ? PLANS[planId] : null;
   const [product, setProduct] = useState(null);
   const [loadingProduct, setLoadingProduct] = useState(!!productId);
+  const [redirecting, setRedirecting] = useState(false);
+  const [error, setError] = useState(null);
   const [done, setDone] = useState(null);
+  const [confirming, setConfirming] = useState(status === "success");
 
   useEffect(() => {
     if (productId) {
@@ -29,6 +32,7 @@ export default function Checkout() {
 
   // GA4: begin_checkout once the item is known
   useEffect(() => {
+    if (status === "success") return;
     if (plan) {
       trackBeginCheckout({ id: planId, name: `${plan.name} plan`, category: "subscription", price: parseFloat(plan.price.replace("$", "")) || 0 });
     } else if (product) {
@@ -37,25 +41,85 @@ export default function Checkout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planId, product?.id]);
 
-  const handlePaymentSuccess = (data) => {
-    trackPurchase({
-      transactionId: data?.paymentId || data?.squarePaymentId || undefined,
-      id: plan ? planId : product?.id,
-      name: plan ? `${plan.name} plan` : product?.name,
-      category: plan ? "subscription" : product?.category,
-      price: plan ? parseFloat(plan.price.replace("$", "")) || 0 : product ? product.priceCents / 100 : 0,
+  // Returning from Square's hosted checkout — poll for the Payment record the
+  // webhook creates, then route to download/success.
+  useEffect(() => {
+    if (status !== "success") return;
+    let active = true;
+    let attempts = 0;
+
+    const poll = async () => {
+      attempts += 1;
+      try {
+        const me = await base44.auth.me();
+        const query = { userId: me.id, status: "completed" };
+        if (productId) query.productId = productId;
+        else if (planId) query.planId = planId;
+        const payments = await base44.entities.Payment.filter(query, "-created_date", 1);
+        if (!active) return;
+        if (payments.length > 0) {
+          const pay = payments[0];
+          trackPurchase({
+            transactionId: pay.squarePaymentId || undefined,
+            id: plan ? planId : product?.id || productId,
+            name: plan ? `${plan.name} plan` : pay.itemName,
+            category: plan ? "subscription" : product?.category,
+            price: (pay.amountCents || 0) / 100,
+          });
+          if (productId && product?.deliversPdf) {
+            navigate(`/download/${productId}`);
+            return;
+          }
+          setDone(pay);
+          setConfirming(false);
+          return;
+        }
+      } catch (_e) { /* keep polling */ }
+      if (attempts >= 15) {
+        if (active) { setConfirming(false); setError("pending"); }
+        return;
+      }
+      if (active) setTimeout(poll, 2000);
+    };
+    poll();
+    return () => { active = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, product?.id]);
+
+  const startCheckout = async () => {
+    setRedirecting(true);
+    setError(null);
+    const returnUrl = `${window.location.origin}/checkout?${planId ? `plan=${planId}` : `product=${productId}`}&status=success`;
+    const res = await base44.functions.invoke("createSquareCheckoutLink", {
+      planId: planId || undefined,
+      productId: productId || undefined,
+      redirectUrl: returnUrl,
     });
-    if (product && product.deliversPdf) {
-      navigate(`/download/${product.id}`);
-      return;
+    if (res.data?.checkoutUrl) {
+      window.location.href = res.data.checkoutUrl;
+    } else {
+      setRedirecting(false);
+      setError(res.data?.error || "Could not start checkout. Please try again.");
     }
-    setDone(data);
   };
 
   if (loadingProduct) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <LoadingState label="Loading checkout..." />
+      </div>
+    );
+  }
+
+  // Confirming a payment after returning from Square
+  if (confirming) {
+    return (
+      <div className="min-h-screen bg-background blueprint-grid flex items-center justify-center px-6">
+        <div className="max-w-md w-full rounded-2xl border border-border bg-card p-8 text-center">
+          <Loader2 className="w-12 h-12 text-primary mx-auto mb-4 animate-spin" />
+          <h1 className="font-sora font-bold text-2xl mb-2">Confirming your payment…</h1>
+          <p className="text-muted-foreground text-sm">This only takes a moment.</p>
+        </div>
       </div>
     );
   }
@@ -69,7 +133,6 @@ export default function Checkout() {
         features: plan.features,
         backTo: "/pricing",
         backLabel: "Back to pricing",
-        payload: { planId },
       }
     : product
     ? {
@@ -81,7 +144,6 @@ export default function Checkout() {
         supportNote: product.supportNote,
         backTo: "/products",
         backLabel: "Back to products",
-        payload: { productId },
       }
     : null;
 
@@ -109,14 +171,30 @@ export default function Checkout() {
               ? "Your payment went through and your plan is active."
               : "Your payment went through. We'll be in touch with your purchase details — and support is always free."}
           </p>
-          {done.receiptUrl && (
-            <a href={done.receiptUrl} target="_blank" rel="noreferrer" className="block text-sm text-primary hover:underline mb-4">
+          {done.squareReceiptUrl && (
+            <a href={done.squareReceiptUrl} target="_blank" rel="noreferrer" className="block text-sm text-primary hover:underline mb-4">
               View receipt
             </a>
           )}
           <Button onClick={() => navigate("/dashboard")} className="w-full font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90">
             Go to dashboard
           </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Payment didn't reconcile in time after returning from Square
+  if (error === "pending") {
+    return (
+      <div className="min-h-screen bg-background blueprint-grid flex items-center justify-center px-6">
+        <div className="max-w-md w-full rounded-2xl border border-border bg-card p-8 text-center">
+          <CheckCircle2 className="w-14 h-14 text-amber-400 mx-auto mb-4" />
+          <h1 className="font-sora font-bold text-2xl mb-2">Payment received</h1>
+          <p className="text-muted-foreground text-sm mb-6">
+            Thanks! We're still finalizing your purchase. It may take a minute to appear on your account — check your dashboard shortly.
+          </p>
+          <Button onClick={() => navigate("/dashboard")} className="w-full">Go to dashboard</Button>
         </div>
       </div>
     );
@@ -148,13 +226,36 @@ export default function Checkout() {
             </ul>
           </div>
 
-          <div className="rounded-2xl border border-border bg-card p-8">
-            <h2 className="font-sora font-bold text-xl mb-5">Payment details</h2>
-            <SquarePaymentForm
-              payload={item.payload}
-              amountLabel={`${item.priceLabel}${plan ? item.periodLabel : ""}`}
-              onSuccess={handlePaymentSuccess}
-            />
+          <div className="rounded-2xl border border-border bg-card p-8 flex flex-col">
+            <h2 className="font-sora font-bold text-xl mb-2">Secure checkout</h2>
+            <p className="text-sm text-muted-foreground mb-6">
+              You'll be taken to Square's secure, hosted checkout to complete your payment. Your card details never touch our servers.
+            </p>
+
+            <div className="rounded-xl border border-border bg-background/40 p-4 mb-6">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Total due</span>
+                <span className="font-sora font-bold text-lg">{item.priceLabel}{plan ? item.periodLabel : ""}</span>
+              </div>
+            </div>
+
+            {error && error !== "pending" && (
+              <p className="text-sm text-destructive mb-4">{error}</p>
+            )}
+
+            <Button
+              onClick={startCheckout}
+              disabled={redirecting}
+              size="lg"
+              className="w-full mt-auto font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
+            >
+              {redirecting ? (
+                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Redirecting to Square…</>
+              ) : (
+                <>Continue to payment <ExternalLink className="w-4 h-4 ml-2" /></>
+              )}
+            </Button>
+            <p className="text-[11px] text-muted-foreground text-center mt-3">Payments securely processed by Square.</p>
           </div>
         </div>
       </div>

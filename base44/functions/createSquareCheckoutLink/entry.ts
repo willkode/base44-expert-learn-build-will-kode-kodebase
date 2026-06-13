@@ -1,0 +1,97 @@
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+
+// Creates a Square-hosted checkout (Payment Link) and returns its URL.
+// The browser redirects the buyer to Square's hosted page; payment completion
+// is recorded asynchronously by the squarePaymentWebhook function.
+// Amounts are ALWAYS resolved server-side — never trusted from the client.
+const PLAN_PRICING = {
+  free: { amountCents: 1299, name: 'Solo', blueprintLimit: 1 },
+  pro: { amountCents: 3900, name: 'Pro', blueprintLimit: 25 },
+  agency: { amountCents: 14900, name: 'Agency', blueprintLimit: 60 },
+};
+
+Deno.serve(async (req) => {
+  try {
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
+    const { planId, productId, redirectUrl } = await req.json();
+
+    let amountCents, itemName, productIdResolved = null;
+    if (planId) {
+      const plan = PLAN_PRICING[planId];
+      if (!plan) return Response.json({ error: 'Invalid plan.' }, { status: 400 });
+      amountCents = plan.amountCents;
+      itemName = `ForgeBase ${plan.name} plan`;
+    } else if (productId) {
+      const products = await base44.asServiceRole.entities.Product.filter({ id: productId });
+      const product = products[0];
+      if (!product || product.active === false) return Response.json({ error: 'Product not found.' }, { status: 404 });
+      amountCents = product.priceCents;
+      itemName = product.name;
+      productIdResolved = product.id;
+    } else {
+      return Response.json({ error: 'Invalid payment request.' }, { status: 400 });
+    }
+
+    const env = Deno.env.get('SQUARE_ENVIRONMENT') === 'production' ? 'production' : 'sandbox';
+    const baseUrl = env === 'production' ? 'https://connect.squareup.com' : 'https://connect.squareupsandbox.com';
+
+    // metadata is echoed back on the webhook order so we can attribute the payment.
+    // Square rejects empty-string metadata values, so only include set keys.
+    const metadata = {
+      base44UserId: user.id,
+      base44UserEmail: user.email,
+      itemName,
+    };
+    if (planId) metadata.planId = planId;
+    if (productIdResolved) metadata.productId = productIdResolved;
+
+    const res = await fetch(`${baseUrl}/v2/online-checkout/payment-links`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${Deno.env.get('SQUARE_ACCESS_TOKEN')}`,
+        'Content-Type': 'application/json',
+        'Square-Version': '2025-01-23',
+      },
+      body: JSON.stringify({
+        idempotency_key: crypto.randomUUID(),
+        checkout_options: {
+          redirect_url: redirectUrl || undefined,
+          ask_for_shipping_address: false,
+        },
+        pre_populated_data: {
+          buyer_email: user.email,
+        },
+        payment_note: `${itemName} — ${user.email}`,
+        order: {
+          location_id: Deno.env.get('SQUARE_LOCATION_ID'),
+          metadata,
+          line_items: [
+            {
+              name: itemName,
+              quantity: '1',
+              base_price_money: { amount: amountCents, currency: 'USD' },
+            },
+          ],
+        },
+      }),
+    });
+    const body = await res.json();
+
+    if (!res.ok || !body.payment_link?.url) {
+      const detail = body.errors?.[0]?.detail || 'Could not start checkout.';
+      return Response.json({ error: detail }, { status: 502 });
+    }
+
+    return Response.json({
+      success: true,
+      checkoutUrl: body.payment_link.url,
+      paymentLinkId: body.payment_link.id,
+      orderId: body.payment_link.order_id,
+    });
+  } catch (error) {
+    return Response.json({ error: error.message }, { status: 500 });
+  }
+});
