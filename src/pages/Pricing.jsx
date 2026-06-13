@@ -7,7 +7,7 @@ export default function Pricing() {
   return (
     <>
       <Seo
-        title="Pricing — ForgeBase"
+        title="Pricing — KodeBase"
         description="Simple plans from $12.99/mo. Full prompt packs, security reviews, QA checklists, and client-ready exports. Build right the first time."
         path="/pricing"
         type="website"
