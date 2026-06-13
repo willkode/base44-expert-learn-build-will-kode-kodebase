@@ -7,6 +7,7 @@ import LoadingState from "@/components/shared/LoadingState";
 import Seo from "@/components/seo/Seo";
 import ProductDetailHero from "@/components/products/ProductDetailHero";
 import ProductFeatureList from "@/components/products/ProductFeatureList";
+import ProductProblemSolution from "@/components/products/ProductProblemSolution";
 import { trackViewItem, trackSelectItem } from "@/lib/analytics";
 
 export default function ProductDetail() {
@@ -61,6 +62,8 @@ export default function ProductDetail() {
         </Link>
 
         <ProductDetailHero product={product} onBuy={handleBuy} />
+
+        <ProductProblemSolution />
 
         {product.description && (
           <div className="max-w-3xl mx-auto text-center mt-24 mb-16">
