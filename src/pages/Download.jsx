@@ -28,19 +28,28 @@ export default function Download() {
         const p = products[0];
         if (!p) {
           setAccessError("We couldn't find that product.");
-        } else {
-          setProduct(p);
-          // Verify purchase ownership up front so we can show the right state.
+          return;
+        }
+        setProduct(p);
+
+        // The Payment record is written asynchronously by the Square webhook,
+        // which can lag a few seconds behind the post-checkout redirect.
+        // Poll for a completed purchase before showing the "unavailable" state.
+        let found = false;
+        for (let attempt = 0; attempt < 8 && active; attempt++) {
           const payments = await base44.entities.Payment.filter({
             userId: me.id,
             productId,
             status: "completed",
           });
-          if (payments.length === 0) {
-            setAccessError("We couldn't find a completed purchase for this product on your account.");
-          } else {
-            trackEvent("download_page_view", { item_id: productId, item_name: p.name });
-          }
+          if (payments.length > 0) { found = true; break; }
+          await new Promise((r) => setTimeout(r, 2500));
+        }
+        if (!active) return;
+        if (found) {
+          trackEvent("download_page_view", { item_id: productId, item_name: p.name });
+        } else {
+          setAccessError("We couldn't find a completed purchase for this product on your account yet. If you just paid, please wait a moment and refresh.");
         }
       } catch (err) {
         if (active) setAccessError("Something went wrong loading your download.");
