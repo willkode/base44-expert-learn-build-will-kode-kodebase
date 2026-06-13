@@ -70,6 +70,19 @@
     },
     "squareEnvironment": {
       "type": "string"
+    },
+    "deliversPdf": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this product delivers a downloadable PDF after purchase"
+    },
+    "pdfFileUri": {
+      "type": "string",
+      "description": "Private storage URI of the deliverable PDF (paid content)"
+    },
+    "pdfFileName": {
+      "type": "string",
+      "description": "Friendly file name shown on download, e.g. prompt-pack.pdf"
     }
   },
   "required": [

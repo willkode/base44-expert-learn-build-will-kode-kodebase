@@ -45,6 +45,10 @@ export default function Checkout() {
       category: plan ? "subscription" : product?.category,
       price: plan ? parseFloat(plan.price.replace("$", "")) || 0 : product ? product.priceCents / 100 : 0,
     });
+    if (product && product.deliversPdf) {
+      navigate(`/download/${product.id}`);
+      return;
+    }
     setDone(data);
   };
 
