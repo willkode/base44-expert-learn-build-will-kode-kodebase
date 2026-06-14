@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
+import NewsletterPopup from "@/components/newsletter/NewsletterPopup";
 
 export default function PublicLayout() {
   return (
@@ -11,6 +12,7 @@ export default function PublicLayout() {
         <Outlet />
       </main>
       <Footer />
+      <NewsletterPopup />
     </div>
   );
 }
