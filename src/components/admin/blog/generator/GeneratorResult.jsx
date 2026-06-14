@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import {
-  CheckCircle2, AlertTriangle, ExternalLink, Save, ThumbsUp, Send, Image as ImageIcon,
+  CheckCircle2, AlertTriangle, ExternalLink, Save, ThumbsUp, Send, Image as ImageIcon, Pencil,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,6 +61,7 @@ export default function GeneratorResult({ post: initial, generated, onReset }) {
         <Button variant="outline" size="sm" onClick={submitReview} disabled={saving} className="gap-1.5"><Send className="w-4 h-4" /> Submit for approval</Button>
         <Button variant="outline" size="sm" onClick={approve} disabled={saving} className="gap-1.5"><ThumbsUp className="w-4 h-4" /> Approve</Button>
         <Button size="sm" onClick={publish} disabled={saving || post.approvalStatus !== "approved"} className="gap-1.5"><CheckCircle2 className="w-4 h-4" /> Publish</Button>
+        <Button asChild variant="outline" size="sm" className="gap-1.5"><Link to={`/admin/marketing/blog/posts/${post.id}/edit`}><Pencil className="w-4 h-4" /> Open in editor</Link></Button>
         <Button variant="ghost" size="sm" onClick={onReset}>New</Button>
       </div>
 

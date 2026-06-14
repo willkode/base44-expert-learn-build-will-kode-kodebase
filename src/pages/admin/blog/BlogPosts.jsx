@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { FileText, Plus, ExternalLink, Sparkles } from "lucide-react";
+import { FileText, Plus, ExternalLink, Sparkles, Pencil } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import AdminTable from "@/components/admin/AdminTable";
 import { Button } from "@/components/ui/button";
@@ -44,7 +44,7 @@ export default function BlogPosts() {
               <Link to="/admin/marketing/blog/generator"><Sparkles className="w-4 h-4" /> Generate</Link>
             </Button>
             <Button asChild className="gap-2">
-              <Link to="/admin/marketing/blog/generator"><Plus className="w-4 h-4" /> New post</Link>
+              <Link to="/admin/marketing/blog/posts/new"><Plus className="w-4 h-4" /> New post</Link>
             </Button>
           </div>
         }
@@ -79,6 +79,9 @@ export default function BlogPosts() {
             <span className="text-xs text-muted-foreground capitalize">{(p.postType || "blog_post").replace(/_/g, " ")}</span>,
             <span className="text-xs text-muted-foreground">{typeof p.seoScore === "number" ? p.seoScore : "—"}</span>,
             <div className="flex items-center gap-1">
+              <Link to={`/admin/marketing/blog/posts/${p.id}/edit`}>
+                <Button variant="ghost" size="icon" title="Edit post"><Pencil className="w-4 h-4" /></Button>
+              </Link>
               {p.slug && (
                 <a href={`/learn/blog/${p.slug}`} target="_blank" rel="noopener noreferrer">
                   <Button variant="ghost" size="icon" title="View post"><ExternalLink className="w-4 h-4" /></Button>
