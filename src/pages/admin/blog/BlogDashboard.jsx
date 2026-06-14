@@ -9,6 +9,7 @@ import {
 import PageHeader from "@/components/shared/PageHeader";
 import LoadingState from "@/components/shared/LoadingState";
 import StatCard from "@/components/shared/StatCard";
+import BlogSetupGuide from "@/components/admin/blog/setup/BlogSetupGuide";
 
 const quickActions = [
   { label: "Generate Blog Post", to: "/admin/marketing/blog/generator", icon: Sparkles },
@@ -57,6 +58,8 @@ export default function BlogDashboard() {
         title="Blog"
         description="Overview of your content pipeline, SEO health, and scheduled publishing."
       />
+
+      <BlogSetupGuide />
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         <StatCard icon={FileText} label="Total Posts" value={posts.length} />
