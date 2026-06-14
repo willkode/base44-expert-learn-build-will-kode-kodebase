@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
-import ReactMarkdown from "react-markdown";
 import { ArrowLeft, Copy, Check, Star } from "lucide-react";
 import Seo from "@/components/seo/Seo";
+import BlogContent from "@/components/learn/BlogContent";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import LoadingState from "@/components/shared/LoadingState";
@@ -71,58 +71,55 @@ export default function PromptPostDetail() {
         }}
       />
 
-      <article className="pt-28 pb-24 max-w-3xl mx-auto px-6">
-        <Link to="/learn/prompt-library" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-8">
-          <ArrowLeft className="w-4 h-4" /> Prompt Library
-        </Link>
+      <article className="relative">
+        <div className="absolute inset-0 blueprint-grid opacity-20" />
+        <div className="relative max-w-3xl mx-auto px-6 pt-28 pb-24">
+          <Link to="/learn/prompt-library" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-10">
+            <ArrowLeft className="w-4 h-4" /> Back to Prompt Library
+          </Link>
 
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-          <div className="flex items-center gap-2 mb-4">
-            <Badge variant="secondary" className="text-xs">{prompt.category}</Badge>
-            {prompt.featured && (
-              <span className="inline-flex items-center gap-1 text-xs text-primary font-medium">
-                <Star className="w-3 h-3 fill-primary" /> Featured
-              </span>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+            <div className="flex items-center gap-3 text-xs mb-5">
+              <span className="px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium">{prompt.category}</span>
+              {prompt.featured && (
+                <span className="inline-flex items-center gap-1 text-primary font-medium">
+                  <Star className="w-3.5 h-3.5 fill-primary" /> Featured
+                </span>
+              )}
+            </div>
+
+            <h1 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight leading-tight mb-5">{prompt.title}</h1>
+            {prompt.description && (
+              <p className="text-lg text-muted-foreground leading-relaxed mb-8">{prompt.description}</p>
             )}
-          </div>
 
-          <h1 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-4">{prompt.title}</h1>
-          {prompt.description && (
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">{prompt.description}</p>
-          )}
+            {prompt.imageUrl && (
+              <img src={prompt.imageUrl} alt={prompt.title} className="w-full aspect-[16/9] object-cover rounded-2xl border border-border mb-10" />
+            )}
 
-          {prompt.imageUrl && (
-            <div className="rounded-2xl overflow-hidden border border-border mb-10">
-              <img src={prompt.imageUrl} alt={prompt.title} className="w-full object-cover" />
+            {prompt.guide && <BlogContent content={prompt.guide} />}
+
+            <div className="rounded-2xl border border-border bg-card/70 overflow-hidden mt-10 glow-orange">
+              <div className="flex items-center justify-between px-5 py-3 border-b border-border">
+                <span className="text-sm font-semibold font-sora">The prompt</span>
+                <Button onClick={copyPrompt} variant="outline" size="sm" className="font-semibold">
+                  {copied ? <><Check className="w-4 h-4 mr-1 text-green-500" /> Copied</> : <><Copy className="w-4 h-4 mr-1" /> Copy prompt</>}
+                </Button>
+              </div>
+              <pre className="text-sm text-muted-foreground p-5 overflow-x-auto whitespace-pre-wrap font-inter leading-relaxed">
+                {prompt.promptText}
+              </pre>
             </div>
-          )}
 
-          {prompt.guide && (
-            <div className="prose prose-invert prose-sm md:prose-base max-w-none mb-10 prose-headings:font-sora prose-a:text-primary">
-              <ReactMarkdown>{prompt.guide}</ReactMarkdown>
-            </div>
-          )}
-
-          <div className="rounded-2xl border border-border bg-card/70 overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-3 border-b border-border">
-              <span className="text-sm font-semibold font-sora">The prompt</span>
-              <Button onClick={copyPrompt} variant="outline" size="sm" className="font-semibold">
-                {copied ? <><Check className="w-4 h-4 mr-1 text-green-500" /> Copied</> : <><Copy className="w-4 h-4 mr-1" /> Copy prompt</>}
-              </Button>
-            </div>
-            <pre className="text-sm text-muted-foreground p-5 overflow-x-auto whitespace-pre-wrap font-inter leading-relaxed">
-              {prompt.promptText}
-            </pre>
-          </div>
-
-          {prompt.tags?.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-8">
-              {prompt.tags.map((t) => (
-                <Badge key={t} variant="outline" className="text-xs">#{t}</Badge>
-              ))}
-            </div>
-          )}
-        </motion.div>
+            {prompt.tags?.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-8">
+                {prompt.tags.map((t) => (
+                  <Badge key={t} variant="outline" className="text-xs">#{t}</Badge>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        </div>
       </article>
     </>
   );
