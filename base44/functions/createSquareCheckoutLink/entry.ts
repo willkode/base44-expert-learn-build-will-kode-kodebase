@@ -16,10 +16,19 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { planId, productId, redirectUrl } = await req.json();
+    const { planId, productId, donationCents, redirectUrl } = await req.json();
 
-    let amountCents, itemName, productIdResolved = null;
-    if (planId) {
+    let amountCents, itemName, productIdResolved = null, isDonation = false;
+    if (donationCents != null) {
+      // Donations: amount is chosen by the supporter but bounded server-side.
+      const cents = Math.round(Number(donationCents));
+      if (!Number.isFinite(cents) || cents < 100 || cents > 50000) {
+        return Response.json({ error: 'Donation must be between $1 and $500.' }, { status: 400 });
+      }
+      amountCents = cents;
+      itemName = 'Buy Me a Coffee — Support';
+      isDonation = true;
+    } else if (planId) {
       const plan = PLAN_PRICING[planId];
       if (!plan) return Response.json({ error: 'Invalid plan.' }, { status: 400 });
       amountCents = plan.amountCents;
@@ -47,6 +56,7 @@ Deno.serve(async (req) => {
     };
     if (planId) metadata.planId = planId;
     if (productIdResolved) metadata.productId = productIdResolved;
+    if (isDonation) metadata.donation = 'true';
 
     const res = await fetch(`${baseUrl}/v2/online-checkout/payment-links`, {
       method: 'POST',

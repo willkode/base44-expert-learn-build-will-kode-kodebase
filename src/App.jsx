@@ -49,6 +49,7 @@ import QAChecklist from '@/pages/app/QAChecklist';
 import Settings from '@/pages/app/Settings';
 import Checkout from '@/pages/Checkout';
 import Download from '@/pages/Download';
+import BuyMeACoffee from '@/pages/BuyMeACoffee';
 import Help from '@/pages/app/Help';
 
 // Admin pages
@@ -109,6 +110,7 @@ const AuthenticatedApp = () => {
       {/* Authenticated app */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/coffee" element={<BuyMeACoffee />} />
         <Route path="/download/:productId" element={<Download />} />
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
