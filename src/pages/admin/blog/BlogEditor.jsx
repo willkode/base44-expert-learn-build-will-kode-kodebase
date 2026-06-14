@@ -17,6 +17,7 @@ import MarkdownEditor from "@/components/admin/blog/editor/MarkdownEditor";
 import SeoFields from "@/components/admin/blog/editor/SeoFields";
 import EditorSidebar from "@/components/admin/blog/editor/EditorSidebar";
 import SeoScorePanel from "@/components/admin/blog/editor/SeoScorePanel";
+import InternalLinksPanel from "@/components/admin/blog/editor/InternalLinksPanel";
 import {
   DesktopPreview, MobilePreview, SearchPreview, SocialPreview, TocPreview,
 } from "@/components/admin/blog/editor/EditorPreviews";
@@ -284,6 +285,10 @@ export default function BlogEditor() {
             content={post.content}
             onFieldFixed={onFieldFixed}
             onAnalysis={setSeoAnalysis}
+          />
+          <InternalLinksPanel
+            postId={savedId}
+            onApplied={(updated) => updated?.content != null && setPost((p) => ({ ...p, content: updated.content }))}
           />
           <EditorSidebar
             post={post}
