@@ -18,7 +18,11 @@ const DEFAULT_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c
 export default function PromptCard({ prompt, unlocked, onCopyRequest }) {
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = () => {
+  const handleCopy = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (!unlocked) {
       onCopyRequest(() => doCopy());
       return;
@@ -40,6 +44,13 @@ export default function PromptCard({ prompt, unlocked, onCopyRequest }) {
       transition={{ duration: 0.3 }}
       className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card/70 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300"
     >
+      {prompt.slug && (
+        <Link
+          to={`/learn/prompt-library/${prompt.slug}`}
+          className="absolute inset-0 z-10"
+          aria-label={`Read guide: ${prompt.title}`}
+        />
+      )}
       <div className="relative h-36 overflow-hidden">
         <img
           src={prompt.imageUrl || CATEGORY_IMAGES[prompt.category] || DEFAULT_IMAGE}
@@ -72,7 +83,7 @@ export default function PromptCard({ prompt, unlocked, onCopyRequest }) {
         <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-card/90 to-transparent rounded-b-lg" />
       </div>
 
-      <div className="mt-4 flex gap-2">
+      <div className="relative z-20 mt-4 flex gap-2">
         <Button
           onClick={handleCopy}
           variant="outline"
