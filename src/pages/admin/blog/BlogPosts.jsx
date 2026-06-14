@@ -7,6 +7,8 @@ import AdminTable from "@/components/admin/AdminTable";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import ScheduleActions from "@/components/admin/blog/scheduling/ScheduleActions";
+import { formatScheduled } from "@/lib/blogSchedule";
 
 const STATUS_VARIANT = {
   published: "default",
@@ -28,6 +30,9 @@ export default function BlogPosts() {
       setLoading(false);
     });
   }, []);
+
+  const applyUpdate = (updated) =>
+    setPosts((prev) => prev.map((p) => (p.id === updated.id ? { ...p, ...updated } : p)));
 
   const filtered = posts.filter((p) =>
     p.title?.toLowerCase().includes(search.toLowerCase())
@@ -55,7 +60,7 @@ export default function BlogPosts() {
       </div>
 
       <AdminTable
-        columns={["", "Title", "Status", "Type", "SEO", "Actions"]}
+        columns={["", "Title", "Status", "Schedule", "SEO", "Actions"]}
         rows={filtered}
         loading={loading}
         emptyIcon={FileText}
@@ -76,7 +81,16 @@ export default function BlogPosts() {
             <Badge variant={STATUS_VARIANT[status] || "outline"} className="text-xs capitalize">
               {status.replace(/_/g, " ")}
             </Badge>,
-            <span className="text-xs text-muted-foreground capitalize">{(p.postType || "blog_post").replace(/_/g, " ")}</span>,
+            ["approved", "scheduled", "failed", "needs_review", "draft"].includes(status) ? (
+              <ScheduleActions
+                post={{ id: p.id, status, scheduledAt: p.scheduledAt, scheduledTimezone: p.scheduledTimezone }}
+                onChange={applyUpdate}
+              />
+            ) : status === "published" ? (
+              <span className="text-xs text-green-500">{p.publishedAt ? formatScheduled(p.publishedAt) : "Published"}</span>
+            ) : (
+              <span className="text-xs text-muted-foreground">—</span>
+            ),
             <span className="text-xs text-muted-foreground">{typeof p.seoScore === "number" ? p.seoScore : "—"}</span>,
             <div className="flex items-center gap-1">
               <Link to={`/admin/marketing/blog/posts/${p.id}/edit`}>
