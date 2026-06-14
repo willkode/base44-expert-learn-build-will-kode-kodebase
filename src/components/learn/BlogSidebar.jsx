@@ -1,10 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { Mail, ArrowRight } from "lucide-react";
+import { Mail, ArrowRight, Coffee } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { trackEvent, trackNewsletterSignup } from "@/lib/analytics";
+
+const COFFEE_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/d6f4b2d9f_generated_image.png";
+
+function CoffeeBox() {
+  return (
+    <div className="rounded-2xl border border-border bg-card/70 overflow-hidden">
+      <img src={COFFEE_IMAGE} alt="Buy me a coffee" className="w-full aspect-[16/9] object-cover" />
+      <div className="p-6">
+        <h3 className="font-sora font-bold text-base mb-1.5">Enjoying the content?</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+          These guides and prompts are free. If they help your builds, a coffee keeps the work going.
+        </p>
+        <Button
+          asChild
+          className="w-full font-semibold gap-2 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] hover:opacity-90 text-white border-0"
+        >
+          <Link to="/coffee" onClick={() => trackEvent("cta_buy_me_a_coffee", { location: "blog_sidebar" })}>
+            <Coffee className="w-4 h-4" /> Buy me a coffee
+          </Link>
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 function NewsletterBox() {
   const [email, setEmail] = useState("");
@@ -105,6 +129,7 @@ export default function BlogSidebar({ currentSlug, category }) {
   return (
     <aside className="space-y-6 lg:sticky lg:top-24">
       <NewsletterBox />
+      <CoffeeBox />
       <RelatedPosts currentSlug={currentSlug} category={category} />
     </aside>
   );
