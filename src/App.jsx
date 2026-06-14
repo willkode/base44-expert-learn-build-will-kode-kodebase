@@ -18,6 +18,7 @@ import Contact from '@/pages/Contact';
 import Blog from '@/pages/learn/Blog';
 import BlogPost from '@/pages/learn/BlogPost';
 import PromptLibrary from '@/pages/learn/PromptLibrary';
+import PromptPostDetail from '@/pages/learn/PromptPostDetail';
 import AgentSkills from '@/pages/learn/AgentSkills';
 import SuperAgent from '@/pages/learn/SuperAgent';
 import Videos from '@/pages/learn/Videos';
@@ -59,6 +60,7 @@ import AdminLogs from '@/pages/admin/AdminLogs';
 import AdminTemplates from '@/pages/admin/AdminTemplates';
 import AdminVideos from '@/pages/admin/AdminVideos';
 import AdminMarketing from '@/pages/admin/AdminMarketing';
+import AdminPromptLibrary from '@/pages/admin/AdminPromptLibrary';
 import EmailMarketingLayout from '@/components/admin/email/EmailMarketingLayout';
 import EmailDashboard from '@/pages/admin/email/EmailDashboard';
 import EmailContacts from '@/pages/admin/email/EmailContacts';
@@ -89,6 +91,7 @@ const AuthenticatedApp = () => {
         <Route path="/learn/blog" element={<Blog />} />
         <Route path="/learn/blog/:slug" element={<BlogPost />} />
         <Route path="/learn/prompt-library" element={<PromptLibrary />} />
+        <Route path="/learn/prompt-library/:slug" element={<PromptPostDetail />} />
         <Route path="/learn/agent-skills" element={<AgentSkills />} />
         <Route path="/learn/superagent" element={<SuperAgent />} />
         <Route path="/learn/videos" element={<Videos />} />
@@ -134,6 +137,7 @@ const AuthenticatedApp = () => {
             <Route path="/admin/templates" element={<AdminTemplates />} />
             <Route path="/admin/videos" element={<AdminVideos />} />
             <Route path="/admin/marketing" element={<AdminMarketing />} />
+            <Route path="/admin/marketing/prompt-library" element={<AdminPromptLibrary />} />
             <Route path="/admin/marketing/email" element={<EmailMarketingLayout />}>
               <Route index element={<EmailDashboard />} />
               <Route path="contacts" element={<EmailContacts />} />

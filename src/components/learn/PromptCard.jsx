@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Check, Star } from "lucide-react";
+import { Copy, Check, Star, ArrowRight } from "lucide-react";
 
 const CATEGORY_IMAGES = {
   "App Building": "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/e5af6c698_generated_image.png",
@@ -41,7 +42,7 @@ export default function PromptCard({ prompt, unlocked, onCopyRequest }) {
     >
       <div className="relative h-36 overflow-hidden">
         <img
-          src={CATEGORY_IMAGES[prompt.category] || DEFAULT_IMAGE}
+          src={prompt.imageUrl || CATEGORY_IMAGES[prompt.category] || DEFAULT_IMAGE}
           alt={prompt.category}
           loading="lazy"
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -71,22 +72,31 @@ export default function PromptCard({ prompt, unlocked, onCopyRequest }) {
         <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-card/90 to-transparent rounded-b-lg" />
       </div>
 
-      <Button
-        onClick={handleCopy}
-        variant="outline"
-        size="sm"
-        className="mt-4 w-full font-semibold"
-      >
-        {copied ? (
-          <>
-            <Check className="w-4 h-4 mr-1 text-green-500" /> Copied
-          </>
-        ) : (
-          <>
-            <Copy className="w-4 h-4 mr-1" /> Copy prompt
-          </>
+      <div className="mt-4 flex gap-2">
+        <Button
+          onClick={handleCopy}
+          variant="outline"
+          size="sm"
+          className="flex-1 font-semibold"
+        >
+          {copied ? (
+            <>
+              <Check className="w-4 h-4 mr-1 text-green-500" /> Copied
+            </>
+          ) : (
+            <>
+              <Copy className="w-4 h-4 mr-1" /> Copy prompt
+            </>
+          )}
+        </Button>
+        {prompt.slug && (
+          <Button asChild variant="ghost" size="sm" className="font-semibold">
+            <Link to={`/learn/prompt-library/${prompt.slug}`}>
+              Guide <ArrowRight className="w-4 h-4 ml-1" />
+            </Link>
+          </Button>
         )}
-      </Button>
+      </div>
       </div>
     </motion.div>
   );

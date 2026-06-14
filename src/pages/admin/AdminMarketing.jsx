@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/shared/PageHeader";
 import MarketingToolCard from "@/components/admin/marketing/MarketingToolCard";
-import { Mail, Share2, PenSquare } from "lucide-react";
+import { Mail, Share2, PenSquare, Library } from "lucide-react";
 
 const tools = [
   {
@@ -11,6 +11,13 @@ const tools = [
     description: "AI campaigns, contacts, segments, automations and analytics powered by Resend.",
     status: "Live",
     to: "/admin/marketing/email",
+  },
+  {
+    icon: Library,
+    title: "Prompt Library",
+    description: "Create AI-optimized prompt posts with auto-generated featured images and SEO.",
+    status: "Live",
+    to: "/admin/marketing/prompt-library",
   },
   {
     icon: Share2,

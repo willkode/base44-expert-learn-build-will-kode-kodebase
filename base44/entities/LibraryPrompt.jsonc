@@ -6,6 +6,10 @@
       "type": "string",
       "description": "Short title of the prompt"
     },
+    "slug": {
+      "type": "string",
+      "description": "URL-friendly unique slug for the prompt post page"
+    },
     "category": {
       "type": "string",
       "enum": [
@@ -30,9 +34,25 @@
       "type": "string",
       "description": "Short description of what the prompt does"
     },
+    "guide": {
+      "type": "string",
+      "description": "The prompt guide / how-to context in markdown, shown on the post page"
+    },
     "promptText": {
       "type": "string",
       "description": "The full prompt text to copy"
+    },
+    "imageUrl": {
+      "type": "string",
+      "description": "AI-generated featured image URL"
+    },
+    "seoTitle": {
+      "type": "string",
+      "description": "Optimized SEO/og title"
+    },
+    "seoDescription": {
+      "type": "string",
+      "description": "Optimized SEO/og meta description"
     },
     "tags": {
       "type": "array",
