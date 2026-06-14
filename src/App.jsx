@@ -62,6 +62,19 @@ import AdminTemplates from '@/pages/admin/AdminTemplates';
 import AdminVideos from '@/pages/admin/AdminVideos';
 import AdminMarketing from '@/pages/admin/AdminMarketing';
 import AdminPromptLibrary from '@/pages/admin/AdminPromptLibrary';
+import BlogMarketingLayout from '@/components/admin/blog/BlogMarketingLayout';
+import BlogDashboard from '@/pages/admin/blog/BlogDashboard';
+import BlogPosts from '@/pages/admin/blog/BlogPosts';
+import BlogGenerator from '@/pages/admin/blog/BlogGenerator';
+import BlogCalendar from '@/pages/admin/blog/BlogCalendar';
+import BlogPlans from '@/pages/admin/blog/BlogPlans';
+import BlogKeywords from '@/pages/admin/blog/BlogKeywords';
+import BlogTaxonomy from '@/pages/admin/blog/BlogTaxonomy';
+import BlogInternalLinking from '@/pages/admin/blog/BlogInternalLinking';
+import BlogRefresh from '@/pages/admin/blog/BlogRefresh';
+import BlogAnalytics from '@/pages/admin/blog/BlogAnalytics';
+import BlogLogs from '@/pages/admin/blog/BlogLogs';
+import BlogSettings from '@/pages/admin/blog/BlogSettings';
 import EmailMarketingLayout from '@/components/admin/email/EmailMarketingLayout';
 import EmailDashboard from '@/pages/admin/email/EmailDashboard';
 import EmailContacts from '@/pages/admin/email/EmailContacts';
@@ -140,6 +153,20 @@ const AuthenticatedApp = () => {
             <Route path="/admin/videos" element={<AdminVideos />} />
             <Route path="/admin/marketing" element={<AdminMarketing />} />
             <Route path="/admin/marketing/prompt-library" element={<AdminPromptLibrary />} />
+            <Route path="/admin/marketing/blog" element={<BlogMarketingLayout />}>
+              <Route index element={<BlogDashboard />} />
+              <Route path="posts" element={<BlogPosts />} />
+              <Route path="generator" element={<BlogGenerator />} />
+              <Route path="calendar" element={<BlogCalendar />} />
+              <Route path="plans" element={<BlogPlans />} />
+              <Route path="keywords" element={<BlogKeywords />} />
+              <Route path="taxonomy" element={<BlogTaxonomy />} />
+              <Route path="internal-linking" element={<BlogInternalLinking />} />
+              <Route path="refresh" element={<BlogRefresh />} />
+              <Route path="analytics" element={<BlogAnalytics />} />
+              <Route path="logs" element={<BlogLogs />} />
+              <Route path="settings" element={<BlogSettings />} />
+            </Route>
             <Route path="/admin/marketing/email" element={<EmailMarketingLayout />}>
               <Route index element={<EmailDashboard />} />
               <Route path="contacts" element={<EmailContacts />} />

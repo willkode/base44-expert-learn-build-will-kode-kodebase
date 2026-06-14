@@ -28,8 +28,9 @@ const tools = [
   {
     icon: PenSquare,
     title: "Auto Blog",
-    description: "Automatically generate and publish SEO-optimized blog posts.",
-    status: "Coming soon",
+    description: "AI-generated, SEO-optimized blog posts with scheduling, calendar, keywords and analytics.",
+    status: "Live",
+    to: "/admin/marketing/blog",
   },
 ];
 
