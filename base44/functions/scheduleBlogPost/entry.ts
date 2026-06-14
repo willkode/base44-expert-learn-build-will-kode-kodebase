@@ -21,6 +21,12 @@ Deno.serve(async (req) => {
     if (!post) return Response.json({ success: false, error: 'Post not found' }, { status: 404 });
     if (post.status === 'published') return Response.json({ success: false, error: 'Post is already published.' }, { status: 400 });
 
+    // Approval gate: when approval is required, only approved posts can be scheduled.
+    const settings = (await base44.asServiceRole.entities.BlogSettings.filter({ key: 'global' }))[0];
+    if (settings?.requireApprovalBeforePublish && post.approvalStatus !== 'approved') {
+      return Response.json({ success: false, error: 'This post must be approved before it can be scheduled.' }, { status: 400 });
+    }
+
     if (!post.title || !post.slug || !SLUG_RE.test(post.slug)) {
       return Response.json({ success: false, error: 'Post needs a valid title and slug before scheduling.' }, { status: 400 });
     }

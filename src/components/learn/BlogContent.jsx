@@ -1,7 +1,13 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 
-export default function BlogContent({ content }) {
+function isInternalHref(href = "") {
+  if (href.startsWith("/")) return true;
+  if (typeof window !== "undefined" && href.startsWith(window.location.origin)) return true;
+  return false;
+}
+
+export default function BlogContent({ content, onLinkClick }) {
   if (!content || !content.trim()) {
     return <p className="text-muted-foreground italic">No content yet.</p>;
   }
@@ -16,8 +22,15 @@ export default function BlogContent({ content }) {
         ul: ({ children }) => <ul className="my-4 ml-6 list-disc space-y-2 text-muted-foreground">{children}</ul>,
         ol: ({ children }) => <ol className="my-4 ml-6 list-decimal space-y-2 text-muted-foreground">{children}</ol>,
         li: ({ children }) => <li className="leading-7">{children}</li>,
-        a: ({ children, ...props }) => (
-          <a {...props} target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-2">
+        a: ({ children, href, ...props }) => (
+          <a
+            {...props}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline underline-offset-2"
+            onClick={() => { if (onLinkClick && isInternalHref(href)) onLinkClick(); }}
+          >
             {children}
           </a>
         ),

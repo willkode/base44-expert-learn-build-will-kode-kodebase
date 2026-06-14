@@ -67,6 +67,7 @@ import AdminPromptLibrary from '@/pages/admin/AdminPromptLibrary';
 import BlogMarketingLayout from '@/components/admin/blog/BlogMarketingLayout';
 import BlogDashboard from '@/pages/admin/blog/BlogDashboard';
 import BlogPosts from '@/pages/admin/blog/BlogPosts';
+import BlogApprovals from '@/pages/admin/blog/BlogApprovals';
 import BlogEditor from '@/pages/admin/blog/BlogEditor';
 import BlogGenerator from '@/pages/admin/blog/BlogGenerator';
 import BlogCalendar from '@/pages/admin/blog/BlogCalendar';
@@ -161,6 +162,7 @@ const AuthenticatedApp = () => {
             <Route path="/admin/marketing/blog" element={<BlogMarketingLayout />}>
               <Route index element={<BlogDashboard />} />
               <Route path="posts" element={<BlogPosts />} />
+              <Route path="approvals" element={<BlogApprovals />} />
               <Route path="posts/new" element={<BlogEditor />} />
               <Route path="posts/:id/edit" element={<BlogEditor />} />
               <Route path="generator" element={<BlogGenerator />} />

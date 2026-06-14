@@ -19,6 +19,8 @@ Deno.serve(async (req) => {
 
     const nowMs = Date.now();
     const nowIso = new Date(nowMs).toISOString();
+    const settings = (await base44.asServiceRole.entities.BlogSettings.filter({ key: 'global' }))[0];
+    const requireApproval = !!settings?.requireApprovalBeforePublish;
     const scheduled = await base44.asServiceRole.entities.BlogPost.filter({ status: 'scheduled' }, 'scheduledAt', 100);
 
     const due = scheduled.filter((p) => {
@@ -36,6 +38,19 @@ Deno.serve(async (req) => {
       try {
         // Claim the post with a lock to prevent double publishing.
         await base44.asServiceRole.entities.BlogPost.update(p.id, { publishLockAt: nowIso });
+
+        // Approval gate: never auto-publish unapproved posts when approval is required.
+        if (requireApproval && p.approvalStatus !== 'approved') {
+          await base44.asServiceRole.entities.BlogPost.update(p.id, { status: 'failed', publishLockAt: null, lastUpdatedAt: nowIso });
+          await base44.asServiceRole.entities.BlogAutomationLog.create({
+            eventType: 'publish',
+            relatedPostId: p.id,
+            status: 'error',
+            message: `Auto-publish blocked for "${p.title}": post is not approved.`,
+          });
+          failed.push(p.id);
+          continue;
+        }
 
         if (!p.title || !p.slug || !SLUG_RE.test(p.slug) || !p.content || p.content.trim().length < 50) {
           await base44.asServiceRole.entities.BlogPost.update(p.id, {

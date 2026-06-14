@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import ScheduleActions from "@/components/admin/blog/scheduling/ScheduleActions";
 import { formatScheduled } from "@/lib/blogSchedule";
+import { ApprovalBadge } from "@/components/admin/blog/approval/approvalConfig";
 
 const STATUS_VARIANT = {
   published: "default",
@@ -60,7 +61,7 @@ export default function BlogPosts() {
       </div>
 
       <AdminTable
-        columns={["", "Title", "Status", "Schedule", "SEO", "Actions"]}
+        columns={["", "Title", "Status", "Approval", "Schedule", "SEO", "Actions"]}
         rows={filtered}
         loading={loading}
         emptyIcon={FileText}
@@ -81,6 +82,7 @@ export default function BlogPosts() {
             <Badge variant={STATUS_VARIANT[status] || "outline"} className="text-xs capitalize">
               {status.replace(/_/g, " ")}
             </Badge>,
+            <ApprovalBadge status={p.approvalStatus || "draft"} />,
             ["approved", "scheduled", "failed", "needs_review", "draft"].includes(status) ? (
               <ScheduleActions
                 post={{ id: p.id, status, scheduledAt: p.scheduledAt, scheduledTimezone: p.scheduledTimezone }}

@@ -7,6 +7,7 @@ import {
   Search,
   Tags,
   Link2,
+  ShieldCheck,
   RefreshCw,
   BarChart3,
   Cog,
@@ -16,6 +17,7 @@ import {
 export const blogNav = [
   { label: "Dashboard", to: "/admin/marketing/blog", icon: LayoutDashboard, end: true },
   { label: "Posts", to: "/admin/marketing/blog/posts", icon: FileText },
+  { label: "Approvals", to: "/admin/marketing/blog/approvals", icon: ShieldCheck },
   { label: "AI Generator", to: "/admin/marketing/blog/generator", icon: Sparkles },
   { label: "Calendar", to: "/admin/marketing/blog/calendar", icon: CalendarDays },
   { label: "Content Plans", to: "/admin/marketing/blog/plans", icon: ClipboardList },

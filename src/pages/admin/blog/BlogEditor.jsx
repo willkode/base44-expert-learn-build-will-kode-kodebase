@@ -16,6 +16,9 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import MarkdownEditor from "@/components/admin/blog/editor/MarkdownEditor";
 import SeoFields from "@/components/admin/blog/editor/SeoFields";
 import EditorSidebar from "@/components/admin/blog/editor/EditorSidebar";
+import ApprovalActions from "@/components/admin/blog/approval/ApprovalActions";
+import ApprovalMeta from "@/components/admin/blog/approval/ApprovalMeta";
+import { ApprovalBadge } from "@/components/admin/blog/approval/approvalConfig";
 import SeoScorePanel from "@/components/admin/blog/editor/SeoScorePanel";
 import InternalLinksPanel from "@/components/admin/blog/editor/InternalLinksPanel";
 import {
@@ -280,6 +283,19 @@ export default function BlogEditor() {
         </div>
 
         <div className="space-y-5">
+          {savedId && (
+            <div className="rounded-2xl border border-border bg-card p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold">Approval</span>
+                <ApprovalBadge status={post.approvalStatus || "draft"} />
+              </div>
+              <ApprovalMeta post={post} compact />
+              <ApprovalActions
+                post={{ id: savedId, approvalStatus: post.approvalStatus }}
+                onChange={(saved) => setPost((p) => ({ ...p, ...saved }))}
+              />
+            </div>
+          )}
           <SeoScorePanel
             postId={savedId}
             content={post.content}

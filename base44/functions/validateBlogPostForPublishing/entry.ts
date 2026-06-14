@@ -25,6 +25,15 @@ Deno.serve(async (req) => {
     }
 
     const status = intendedStatus || post.status;
+
+    // Approval gate: surface as a blocking error so the UI explains what's blocking publishing.
+    if (['scheduled', 'published'].includes(status)) {
+      const settings = (await base44.asServiceRole.entities.BlogSettings.filter({ key: 'global' }))[0];
+      if (settings?.requireApprovalBeforePublish && post.approvalStatus !== 'approved') {
+        errors.push('This post must be approved before it can be scheduled or published.');
+      }
+    }
+
     const needsContent = ['approved', 'scheduled', 'published'].includes(status);
     if (needsContent && (!post.content || post.content.trim().length < 50)) {
       errors.push('Content is required before approval or publishing.');

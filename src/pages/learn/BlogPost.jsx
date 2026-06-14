@@ -12,7 +12,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import LoadingState from "@/components/shared/LoadingState";
 import { isPublishedPost } from "@/lib/blogPublic";
-import { trackEvent } from "@/lib/analytics";
+import { trackBlogView, trackBlogClick } from "@/lib/blogTracking";
+import useBlogScrollTracking from "@/hooks/useBlogScrollTracking";
 
 const toSlug = (s) => (s || "").toLowerCase().replace(/\s+/g, "-");
 
@@ -49,9 +50,12 @@ export default function BlogPost() {
       setPost(visible);
       setSettings(s[0] || {});
       setLoading(false);
-      if (visible) trackEvent("view_blog_post", { post_title: visible.title, slug: visible.slug });
+      if (visible) trackBlogView(visible.slug);
     });
   }, [slug]);
+
+  // Scroll-depth + time-on-page tracking (only for genuinely published posts).
+  useBlogScrollTracking(post?.slug, !!post);
 
   const toc = useMemo(() => buildToc(post?.content), [post]);
   const showToc = !!(settings?.showTableOfContents && toc.length);
@@ -197,7 +201,7 @@ export default function BlogPost() {
                 </nav>
               )}
 
-              <BlogContent content={post.content} />
+              <BlogContent content={post.content} onLinkClick={() => trackBlogClick(post.slug, "internal_link")} />
 
               {/* Tags */}
               {tags.length > 0 && (
@@ -221,7 +225,7 @@ export default function BlogPost() {
                   size="lg"
                   className="font-semibold gap-2 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] hover:opacity-90 text-white border-0"
                 >
-                  <Link to="/pricing" onClick={() => trackEvent("cta_blog_post", { post_title: post.title })}>
+                  <Link to="/pricing" onClick={() => trackBlogClick(post.slug, "cta")}>
                     Get started free
                   </Link>
                 </Button>

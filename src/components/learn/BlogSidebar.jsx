@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { trackEvent, trackNewsletterSignup } from "@/lib/analytics";
 import { isPublishedPost } from "@/lib/blogPublic";
+import { trackBlogClick } from "@/lib/blogTracking";
 
 const COFFEE_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/d6f4b2d9f_generated_image.png";
 
@@ -106,7 +107,10 @@ function RelatedPosts({ currentSlug, variant = "blog" }) {
             <Link
               key={p.id}
               to={`${basePath}/${p.slug}`}
-              onClick={() => trackEvent("select_related_post", { post_title: p.title })}
+              onClick={() => {
+                trackEvent("select_related_post", { post_title: p.title });
+                if (!isPrompt && currentSlug) trackBlogClick(currentSlug, "related_post");
+              }}
               className="group flex gap-3 items-start"
             >
               <div className="w-14 h-14 rounded-lg overflow-hidden bg-secondary shrink-0">
