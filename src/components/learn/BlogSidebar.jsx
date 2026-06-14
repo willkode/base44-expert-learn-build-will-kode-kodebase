@@ -77,46 +77,55 @@ function NewsletterBox() {
   );
 }
 
-function RelatedPosts({ currentSlug, category }) {
+function RelatedPosts({ currentSlug, variant = "blog" }) {
   const [posts, setPosts] = useState([]);
+  const isPrompt = variant === "prompt";
 
   useEffect(() => {
-    base44.entities.BlogPost.filter({ published: true }, "-publishedAt", 6).then((d) => {
+    const loader = isPrompt
+      ? base44.entities.LibraryPrompt.list("-order", 6)
+      : base44.entities.BlogPost.filter({ published: true }, "-publishedAt", 6);
+    loader.then((d) => {
       setPosts(d.filter((p) => p.slug !== currentSlug).slice(0, 4));
     });
-  }, [currentSlug]);
+  }, [currentSlug, isPrompt]);
 
   if (posts.length === 0) return null;
 
+  const basePath = isPrompt ? "/learn/prompt-library" : "/learn/blog";
+
   return (
     <div className="rounded-2xl border border-border bg-card/70 p-6">
-      <h3 className="font-sora font-bold text-base mb-4">More articles</h3>
+      <h3 className="font-sora font-bold text-base mb-4">{isPrompt ? "More prompts" : "More articles"}</h3>
       <div className="space-y-4">
-        {posts.map((p) => (
-          <Link
-            key={p.id}
-            to={`/learn/blog/${p.slug}`}
-            onClick={() => trackEvent("select_related_post", { post_title: p.title })}
-            className="group flex gap-3 items-start"
-          >
-            <div className="w-14 h-14 rounded-lg overflow-hidden bg-secondary shrink-0">
-              {p.coverImageUrl ? (
-                <img src={p.coverImageUrl} alt={p.title} className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full blueprint-grid opacity-40" />
-              )}
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm font-medium leading-snug line-clamp-2 group-hover:text-primary transition-colors">
-                {p.title}
-              </p>
-              {p.category && <span className="text-xs text-muted-foreground">{p.category}</span>}
-            </div>
-          </Link>
-        ))}
+        {posts.map((p) => {
+          const image = p.coverImageUrl || p.imageUrl;
+          return (
+            <Link
+              key={p.id}
+              to={`${basePath}/${p.slug}`}
+              onClick={() => trackEvent("select_related_post", { post_title: p.title })}
+              className="group flex gap-3 items-start"
+            >
+              <div className="w-14 h-14 rounded-lg overflow-hidden bg-secondary shrink-0">
+                {image ? (
+                  <img src={image} alt={p.title} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full blueprint-grid opacity-40" />
+                )}
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-medium leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                  {p.title}
+                </p>
+                {p.category && <span className="text-xs text-muted-foreground">{p.category}</span>}
+              </div>
+            </Link>
+          );
+        })}
       </div>
       <Link
-        to="/learn/blog"
+        to={basePath}
         className="inline-flex items-center gap-1 text-sm text-primary font-medium mt-5 hover:gap-2 transition-all"
       >
         View all <ArrowRight className="w-3.5 h-3.5" />
@@ -125,12 +134,12 @@ function RelatedPosts({ currentSlug, category }) {
   );
 }
 
-export default function BlogSidebar({ currentSlug, category }) {
+export default function BlogSidebar({ currentSlug, variant = "blog" }) {
   return (
     <aside className="space-y-6 lg:sticky lg:top-24">
       <NewsletterBox />
       <CoffeeBox />
-      <RelatedPosts currentSlug={currentSlug} category={category} />
+      <RelatedPosts currentSlug={currentSlug} variant={variant} />
     </aside>
   );
 }

@@ -138,7 +138,7 @@ export default function PromptPostDetail() {
               </div>
             </div>
 
-            <BlogSidebar currentSlug={prompt.slug} category={prompt.category} />
+            <BlogSidebar currentSlug={prompt.slug} variant="prompt" />
           </div>
         </div>
       </article>
