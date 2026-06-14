@@ -1,0 +1,65 @@
+{
+  "name": "BlogContentRefreshRecommendation",
+  "type": "object",
+  "properties": {
+    "blogPostId": {
+      "type": "string",
+      "description": "Post the recommendation applies to (indexed lookup key)"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "recommendationType": {
+      "type": "string",
+      "enum": [
+        "update_title",
+        "update_meta",
+        "add_section",
+        "improve_intro",
+        "add_internal_links",
+        "refresh_stats",
+        "expand_content",
+        "improve_cta",
+        "fix_decay"
+      ],
+      "default": "expand_content"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    },
+    "suggestedChanges": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "in_progress",
+        "applied",
+        "dismissed"
+      ],
+      "default": "open"
+    }
+  },
+  "required": [
+    "blogPostId"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

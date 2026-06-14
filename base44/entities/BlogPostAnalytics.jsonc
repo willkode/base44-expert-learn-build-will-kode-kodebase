@@ -1,0 +1,76 @@
+{
+  "name": "BlogPostAnalytics",
+  "type": "object",
+  "properties": {
+    "blogPostId": {
+      "type": "string",
+      "description": "Linked BlogPost id (indexed lookup key)"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "The day this analytics snapshot covers"
+    },
+    "pageviews": {
+      "type": "number",
+      "default": 0
+    },
+    "uniqueVisitors": {
+      "type": "number",
+      "default": 0
+    },
+    "averageTimeOnPage": {
+      "type": "number",
+      "default": 0,
+      "description": "Seconds"
+    },
+    "bounceRate": {
+      "type": "number",
+      "default": 0
+    },
+    "scrollDepth": {
+      "type": "number",
+      "default": 0
+    },
+    "clicks": {
+      "type": "number",
+      "default": 0
+    },
+    "conversions": {
+      "type": "number",
+      "default": 0
+    },
+    "searchImpressions": {
+      "type": "number"
+    },
+    "searchClicks": {
+      "type": "number"
+    },
+    "averagePosition": {
+      "type": "number"
+    },
+    "clickThroughRate": {
+      "type": "number"
+    },
+    "sourceBreakdown": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "blogPostId",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "name": "BlogContentPlan",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "goal": {
+      "type": "string",
+      "enum": [
+        "traffic",
+        "leads",
+        "authority",
+        "product_education",
+        "launch",
+        "support",
+        "seo_cluster"
+      ],
+      "default": "traffic"
+    },
+    "targetAudience": {
+      "type": "string"
+    },
+    "topicClusterId": {
+      "type": "string"
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "contentMix": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Map of post_type -> count/ratio"
+    },
+    "startDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "endDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "paused",
+        "completed",
+        "archived"
+      ],
+      "default": "draft"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

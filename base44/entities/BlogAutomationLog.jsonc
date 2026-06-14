@@ -1,0 +1,47 @@
+{
+  "name": "BlogAutomationLog",
+  "type": "object",
+  "properties": {
+    "eventType": {
+      "type": "string",
+      "description": "e.g. generate, schedule, publish, analytics_sync, refresh_scan"
+    },
+    "relatedPostId": {
+      "type": "string"
+    },
+    "relatedPlanId": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "warning",
+        "error"
+      ],
+      "default": "success"
+    },
+    "message": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "eventType"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

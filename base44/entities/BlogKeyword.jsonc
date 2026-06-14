@@ -1,0 +1,74 @@
+{
+  "name": "BlogKeyword",
+  "type": "object",
+  "properties": {
+    "keyword": {
+      "type": "string",
+      "description": "Target keyword phrase (indexed lookup key)"
+    },
+    "searchIntent": {
+      "type": "string",
+      "enum": [
+        "informational",
+        "commercial",
+        "transactional",
+        "navigational",
+        "local"
+      ],
+      "default": "informational"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    },
+    "difficulty": {
+      "type": "number",
+      "description": "Optional keyword difficulty score"
+    },
+    "volume": {
+      "type": "number",
+      "description": "Optional monthly search volume"
+    },
+    "currentRank": {
+      "type": "number",
+      "description": "Optional current ranking position"
+    },
+    "targetUrl": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "idea",
+        "planned",
+        "in_progress",
+        "used",
+        "ignored"
+      ],
+      "default": "idea"
+    }
+  },
+  "required": [
+    "keyword"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

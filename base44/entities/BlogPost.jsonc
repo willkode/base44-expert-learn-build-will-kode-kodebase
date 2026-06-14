@@ -16,16 +16,16 @@
     },
     "coverImageUrl": {
       "type": "string",
-      "description": "Cover image URL"
+      "description": "Cover / featured image URL (public listing + hero)"
     },
     "category": {
       "type": "string",
       "default": "General",
-      "description": "Post category"
+      "description": "Legacy free-text category label (kept for back-compat)"
     },
     "author": {
       "type": "string",
-      "description": "Author name"
+      "description": "Author name (legacy field, kept for back-compat)"
     },
     "readMinutes": {
       "type": "number",
@@ -39,7 +39,7 @@
     "published": {
       "type": "boolean",
       "default": true,
-      "description": "Whether the post is publicly visible"
+      "description": "Legacy public-visibility flag (kept for back-compat; true when status is published)"
     },
     "publishedAt": {
       "type": "string",
@@ -50,6 +50,171 @@
       "type": "number",
       "default": 0,
       "description": "Sort order"
+    },
+    "contentHtml": {
+      "type": "string",
+      "description": "Rendered HTML version of the content"
+    },
+    "contentPlainText": {
+      "type": "string",
+      "description": "Plain-text version used for previews and word counts"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "needs_review",
+        "approved",
+        "scheduled",
+        "publishing",
+        "published",
+        "failed",
+        "archived"
+      ],
+      "default": "draft",
+      "description": "Lifecycle status of the post"
+    },
+    "approvalStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "needs_review",
+        "approved",
+        "rejected",
+        "revision_requested"
+      ],
+      "default": "draft"
+    },
+    "postType": {
+      "type": "string",
+      "enum": [
+        "blog_post",
+        "guide",
+        "tutorial",
+        "case_study",
+        "news",
+        "comparison",
+        "listicle",
+        "announcement",
+        "changelog",
+        "pillar_page"
+      ],
+      "default": "blog_post"
+    },
+    "targetKeyword": {
+      "type": "string",
+      "description": "Primary SEO keyword this post targets"
+    },
+    "secondaryKeywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "searchIntent": {
+      "type": "string",
+      "enum": [
+        "informational",
+        "commercial",
+        "transactional",
+        "navigational",
+        "local"
+      ],
+      "default": "informational"
+    },
+    "topicClusterId": {
+      "type": "string",
+      "description": "Linked BlogTopicCluster id"
+    },
+    "categoryId": {
+      "type": "string",
+      "description": "Linked BlogCategory id"
+    },
+    "tagIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "authorBio": {
+      "type": "string"
+    },
+    "authorAvatarUrl": {
+      "type": "string"
+    },
+    "featuredImageAlt": {
+      "type": "string"
+    },
+    "featuredImagePrompt": {
+      "type": "string",
+      "description": "AI prompt used to generate the featured image"
+    },
+    "metaTitle": {
+      "type": "string"
+    },
+    "metaDescription": {
+      "type": "string"
+    },
+    "canonicalUrl": {
+      "type": "string"
+    },
+    "ogTitle": {
+      "type": "string"
+    },
+    "ogDescription": {
+      "type": "string"
+    },
+    "ogImageUrl": {
+      "type": "string"
+    },
+    "twitterTitle": {
+      "type": "string"
+    },
+    "twitterDescription": {
+      "type": "string"
+    },
+    "twitterImageUrl": {
+      "type": "string"
+    },
+    "wordCount": {
+      "type": "number",
+      "default": 0
+    },
+    "seoScore": {
+      "type": "number",
+      "description": "0-100 SEO score"
+    },
+    "readabilityScore": {
+      "type": "number",
+      "description": "0-100 readability score"
+    },
+    "aiGenerationInput": {
+      "type": "string",
+      "description": "The raw topic/brief used to generate the post"
+    },
+    "aiModelUsed": {
+      "type": "string"
+    },
+    "scheduledAt": {
+      "type": "string",
+      "description": "ISO timestamp for scheduled publishing (indexed lookup key)"
+    },
+    "lastUpdatedAt": {
+      "type": "string"
+    },
+    "approvedBy": {
+      "type": "string"
+    },
+    "approvedAt": {
+      "type": "string"
+    },
+    "rejectedReason": {
+      "type": "string"
+    },
+    "revisionNotes": {
+      "type": "string"
     }
   },
   "required": [

@@ -1,0 +1,129 @@
+{
+  "name": "BlogSettings",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "default": "global",
+      "description": "Singleton settings key, use 'global'"
+    },
+    "blogEnabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "blogName": {
+      "type": "string",
+      "default": "Blog"
+    },
+    "blogDescription": {
+      "type": "string"
+    },
+    "defaultAuthorName": {
+      "type": "string",
+      "default": "KodeBase Team"
+    },
+    "defaultAuthorBio": {
+      "type": "string"
+    },
+    "defaultAuthorAvatarUrl": {
+      "type": "string"
+    },
+    "defaultLanguage": {
+      "type": "string",
+      "default": "en"
+    },
+    "defaultTimezone": {
+      "type": "string",
+      "default": "America/Chicago"
+    },
+    "defaultPostStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "needs_review",
+        "approved",
+        "scheduled",
+        "published"
+      ],
+      "default": "draft"
+    },
+    "requireApprovalBeforePublish": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableAiGeneration": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableAiImageGeneration": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableAutoPublishing": {
+      "type": "boolean",
+      "default": false
+    },
+    "enableSeoScoring": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableInternalLinking": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableContentRefreshRecommendations": {
+      "type": "boolean",
+      "default": true
+    },
+    "defaultFeaturedImageStyle": {
+      "type": "string",
+      "default": "Dark tech aesthetic: deep navy background, orange-to-amber gradient accents, minimal flat vector, blueprint grid, soft glows."
+    },
+    "defaultMetaTitleTemplate": {
+      "type": "string",
+      "default": "{{title}} | KodeBase"
+    },
+    "defaultMetaDescriptionTemplate": {
+      "type": "string",
+      "default": "{{excerpt}}"
+    },
+    "defaultCanonicalUrlBase": {
+      "type": "string"
+    },
+    "postsPerPage": {
+      "type": "number",
+      "default": 12
+    },
+    "showAuthorBox": {
+      "type": "boolean",
+      "default": true
+    },
+    "showRelatedPosts": {
+      "type": "boolean",
+      "default": true
+    },
+    "showTableOfContents": {
+      "type": "boolean",
+      "default": false
+    },
+    "allowComments": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "key"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

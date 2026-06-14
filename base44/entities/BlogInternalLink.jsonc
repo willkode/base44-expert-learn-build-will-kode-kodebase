@@ -1,0 +1,46 @@
+{
+  "name": "BlogInternalLink",
+  "type": "object",
+  "properties": {
+    "sourcePostId": {
+      "type": "string",
+      "description": "Post containing the link (indexed lookup key)"
+    },
+    "targetPostId": {
+      "type": "string",
+      "description": "Post being linked to"
+    },
+    "anchorText": {
+      "type": "string"
+    },
+    "contextSnippet": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "suggested",
+        "approved",
+        "applied",
+        "rejected"
+      ],
+      "default": "suggested"
+    }
+  },
+  "required": [
+    "sourcePostId",
+    "targetPostId"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
