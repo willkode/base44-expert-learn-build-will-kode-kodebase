@@ -23,7 +23,7 @@ export const userNav = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
   { label: "New Project", to: "/projects/new", icon: FolderPlus, action: "newProject" },
   { label: "Projects", to: "/projects", icon: FolderKanban },
-  { label: "Learn", to: "/help", icon: GraduationCap },
+  { label: "Resources/Learn", to: "/help", icon: GraduationCap },
   { label: "Settings", to: "/settings", icon: Settings },
 ];
 
