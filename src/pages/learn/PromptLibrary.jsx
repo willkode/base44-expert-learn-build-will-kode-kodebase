@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
 import { Library, Coffee } from "lucide-react";
@@ -75,12 +76,12 @@ export default function PromptLibrary() {
               Help support the work I do
             </p>
             <div className="mt-3 flex justify-center gap-3">
-              <a href="https://buymeacoffee.com/willkode" target="_blank" rel="noopener noreferrer">
-                <Button size="lg" className="font-semibold gap-2">
+              <Button asChild size="lg" className="font-semibold gap-2">
+                <Link to="/coffee">
                   <Coffee className="w-5 h-5" />
                   Buy me a coffee
-                </Button>
-              </a>
+                </Link>
+              </Button>
               <Button
                 asChild
                 size="lg"
