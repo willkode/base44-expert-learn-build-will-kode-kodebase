@@ -47,6 +47,109 @@
       "type": "string",
       "format": "date"
     },
+    "frequency": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "twice_weekly",
+        "weekly",
+        "biweekly",
+        "monthly"
+      ],
+      "default": "weekly",
+      "description": "Publishing frequency used to space out suggested publish dates"
+    },
+    "defaultCategoryId": {
+      "type": "string",
+      "description": "Default BlogCategory id applied to generated posts"
+    },
+    "defaultTagIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "desiredTone": {
+      "type": "string"
+    },
+    "articleLength": {
+      "type": "string",
+      "enum": [
+        "short",
+        "medium",
+        "long",
+        "comprehensive"
+      ],
+      "default": "long"
+    },
+    "requireApproval": {
+      "type": "boolean",
+      "default": true
+    },
+    "generateImages": {
+      "type": "boolean",
+      "default": true
+    },
+    "customInstructions": {
+      "type": "string"
+    },
+    "strategySummary": {
+      "type": "string",
+      "description": "AI-generated summary of the content strategy"
+    },
+    "plannedPosts": {
+      "type": "array",
+      "description": "AI-generated post ideas with assigned keywords, intent, type, and scheduled dates",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "angle": {
+            "type": "string"
+          },
+          "targetKeyword": {
+            "type": "string"
+          },
+          "secondaryKeywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "searchIntent": {
+            "type": "string"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "suggestedCategory": {
+            "type": "string"
+          },
+          "suggestedTags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "priority": {
+            "type": "string"
+          },
+          "scheduledDate": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdPostId": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
     "status": {
       "type": "string",
       "enum": [
