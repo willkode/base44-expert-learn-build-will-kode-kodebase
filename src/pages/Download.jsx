@@ -64,6 +64,9 @@ export default function Download() {
     const res = await base44.functions.invoke("getProductDownload", { productId });
     if (res.data?.error) { setAccessError(res.data.error); return; }
     trackEvent("file_download", { item_id: productId, item_name: product?.name });
+    if (/ai drift control/i.test(product?.name || "")) {
+      trackEvent("drift_control_pdf_download", { item_id: productId, item_name: product?.name });
+    }
     const link = document.createElement("a");
     link.href = res.data.downloadUrl;
     link.download = res.data.fileName;
