@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Copy, Check, Star } from "lucide-react";
 import Seo from "@/components/seo/Seo";
 import BlogContent from "@/components/learn/BlogContent";
+import BlogSidebar from "@/components/learn/BlogSidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import LoadingState from "@/components/shared/LoadingState";
@@ -73,12 +74,18 @@ export default function PromptPostDetail() {
 
       <article className="relative">
         <div className="absolute inset-0 blueprint-grid opacity-20" />
-        <div className="relative max-w-3xl mx-auto px-6 pt-28 pb-24">
+        <div className="relative max-w-6xl mx-auto px-6 pt-28 pb-24">
           <Link to="/learn/prompt-library" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-10">
             <ArrowLeft className="w-4 h-4" /> Back to Prompt Library
           </Link>
 
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+          {/* Title header */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="max-w-3xl mb-10"
+          >
             <div className="flex items-center gap-3 text-xs mb-5">
               <span className="px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium">{prompt.category}</span>
               {prompt.featured && (
@@ -88,37 +95,51 @@ export default function PromptPostDetail() {
               )}
             </div>
 
-            <h1 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight leading-tight mb-5">{prompt.title}</h1>
+            <h1 className="font-sora font-extrabold text-3xl md:text-5xl tracking-tight leading-[1.1] mb-5">{prompt.title}</h1>
             {prompt.description && (
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8">{prompt.description}</p>
+              <p className="text-lg text-muted-foreground leading-relaxed">{prompt.description}</p>
             )}
+          </motion.div>
 
-            {prompt.imageUrl && (
-              <img src={prompt.imageUrl} alt={prompt.title} className="w-full aspect-[16/9] object-cover rounded-2xl border border-border mb-10" />
-            )}
+          {/* Two-column: content + sticky sidebar */}
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-10 lg:gap-14">
+            <div className="min-w-0">
+              {prompt.imageUrl && (
+                <img src={prompt.imageUrl} alt={prompt.title} className="w-full aspect-[16/9] object-cover rounded-2xl border border-border mb-10" />
+              )}
 
-            {prompt.guide && <BlogContent content={prompt.guide} />}
+              {prompt.guide && (
+                <div className="rounded-2xl border border-border bg-card/40 p-6 md:p-8 mb-10">
+                  <h2 className="font-sora font-bold text-lg mb-4 flex items-center gap-2">
+                    <span className="w-1 h-5 rounded-full bg-gradient-to-b from-[#f87171] via-[#fb923c] to-[#facc15]" />
+                    How to use this prompt
+                  </h2>
+                  <BlogContent content={prompt.guide} />
+                </div>
+              )}
 
-            <div className="rounded-2xl border border-border bg-card/70 overflow-hidden mt-10 glow-orange">
-              <div className="flex items-center justify-between px-5 py-3 border-b border-border">
-                <span className="text-sm font-semibold font-sora">The prompt</span>
-                <Button onClick={copyPrompt} variant="outline" size="sm" className="font-semibold">
-                  {copied ? <><Check className="w-4 h-4 mr-1 text-green-500" /> Copied</> : <><Copy className="w-4 h-4 mr-1" /> Copy prompt</>}
-                </Button>
+              <div className="rounded-2xl border border-border bg-card/70 overflow-hidden glow-orange">
+                <div className="flex items-center justify-between px-5 py-3 border-b border-border">
+                  <span className="text-sm font-semibold font-sora">The prompt</span>
+                  <Button onClick={copyPrompt} variant="outline" size="sm" className="font-semibold">
+                    {copied ? <><Check className="w-4 h-4 mr-1 text-green-500" /> Copied</> : <><Copy className="w-4 h-4 mr-1" /> Copy prompt</>}
+                  </Button>
+                </div>
+                <pre className="text-sm text-muted-foreground p-5 overflow-x-auto whitespace-pre-wrap font-inter leading-relaxed max-h-[480px]">
+                  {prompt.promptText}
+                </pre>
               </div>
-              <pre className="text-sm text-muted-foreground p-5 overflow-x-auto whitespace-pre-wrap font-inter leading-relaxed">
-                {prompt.promptText}
-              </pre>
-            </div>
 
-            {prompt.tags?.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-8">
-                {prompt.tags.map((t) => (
+              <div className="mt-10 pt-8 border-t border-border flex flex-wrap items-center gap-2">
+                <Badge variant="secondary" className="text-xs">{prompt.category}</Badge>
+                {prompt.tags?.map((t) => (
                   <Badge key={t} variant="outline" className="text-xs">#{t}</Badge>
                 ))}
               </div>
-            )}
-          </motion.div>
+            </div>
+
+            <BlogSidebar currentSlug={prompt.slug} category={prompt.category} />
+          </div>
         </div>
       </article>
     </>
