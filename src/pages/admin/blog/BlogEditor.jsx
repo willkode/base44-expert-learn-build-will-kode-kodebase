@@ -16,6 +16,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import MarkdownEditor from "@/components/admin/blog/editor/MarkdownEditor";
 import SeoFields from "@/components/admin/blog/editor/SeoFields";
 import EditorSidebar from "@/components/admin/blog/editor/EditorSidebar";
+import SeoScorePanel from "@/components/admin/blog/editor/SeoScorePanel";
 import {
   DesktopPreview, MobilePreview, SearchPreview, SocialPreview, TocPreview,
 } from "@/components/admin/blog/editor/EditorPreviews";
@@ -46,6 +47,7 @@ export default function BlogEditor() {
   const [slugTouched, setSlugTouched] = useState(!isNew);
   const [slugError, setSlugError] = useState("");
   const [validation, setValidation] = useState(null);
+  const [seoAnalysis, setSeoAnalysis] = useState(null);
   const [lastSaved, setLastSaved] = useState(null);
   const dirty = useRef(false);
   const autosaveTimer = useRef(null);
@@ -98,6 +100,11 @@ export default function BlogEditor() {
       if (!silent) toast.error("Fix the slug before saving");
       return null;
     }
+    // Block publishing while critical SEO issues remain (manual saves only).
+    if (!silent && ["published", "scheduled"].includes(post.status) && seoAnalysis?.critical_issues?.length) {
+      toast.error("Resolve the critical SEO issues before publishing");
+      return null;
+    }
     setSaving(true);
     const payload = buildPayload();
     try {
@@ -127,7 +134,13 @@ export default function BlogEditor() {
     } finally {
       setSaving(false);
     }
-  }, [post, savedId, slugTouched, buildPayload, isNew]);
+  }, [post, savedId, slugTouched, buildPayload, isNew, seoAnalysis]);
+
+  // Apply an AI SEO fix returned by the panel into the local post state.
+  const onFieldFixed = useCallback((field, value) => {
+    dirty.current = true;
+    setPost((p) => ({ ...p, [field]: value }));
+  }, []);
 
   // Autosave: 4s after the last edit, only for already-saved posts.
   useEffect(() => {
@@ -265,16 +278,24 @@ export default function BlogEditor() {
           </Tabs>
         </div>
 
-        <EditorSidebar
-          post={post}
-          set={set}
-          categories={categories}
-          tagsText={tagsText}
-          onTagsText={(v) => { dirty.current = true; setTagsText(v); }}
-          wordCount={wordCount}
-          readMinutes={readMinutes}
-          validation={validation}
-        />
+        <div className="space-y-5">
+          <SeoScorePanel
+            postId={savedId}
+            content={post.content}
+            onFieldFixed={onFieldFixed}
+            onAnalysis={setSeoAnalysis}
+          />
+          <EditorSidebar
+            post={post}
+            set={set}
+            categories={categories}
+            tagsText={tagsText}
+            onTagsText={(v) => { dirty.current = true; setTagsText(v); }}
+            wordCount={wordCount}
+            readMinutes={readMinutes}
+            validation={validation}
+          />
+        </div>
       </div>
     </div>
   );

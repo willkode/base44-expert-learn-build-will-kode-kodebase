@@ -151,6 +151,11 @@
       "type": "string",
       "description": "AI prompt used to generate the featured image"
     },
+    "imageProviderMeta": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Metadata about how the featured image was generated (provider, model, style, aspect ratio, prompt)"
+    },
     "metaTitle": {
       "type": "string"
     },
