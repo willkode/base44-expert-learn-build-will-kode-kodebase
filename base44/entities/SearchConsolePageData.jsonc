@@ -1,0 +1,61 @@
+{
+  "name": "SearchConsolePageData",
+  "type": "object",
+  "properties": {
+    "siteUrl": {
+      "type": "string",
+      "description": "GSC property this row belongs to"
+    },
+    "pageUrl": {
+      "type": "string",
+      "description": "Full page URL from Search Console (indexed lookup key)"
+    },
+    "blogPostId": {
+      "type": "string",
+      "description": "Matched BlogPost id, if this page maps to a known blog post"
+    },
+    "blogPostSlug": {
+      "type": "string",
+      "description": "Matched BlogPost slug, if resolved"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "The day this snapshot covers"
+    },
+    "clicks": {
+      "type": "number",
+      "default": 0
+    },
+    "impressions": {
+      "type": "number",
+      "default": 0
+    },
+    "ctr": {
+      "type": "number",
+      "default": 0,
+      "description": "Click-through rate (0-1)"
+    },
+    "position": {
+      "type": "number",
+      "default": 0,
+      "description": "Average position"
+    }
+  },
+  "required": [
+    "pageUrl",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "SearchConsoleProperty",
+  "type": "object",
+  "properties": {
+    "siteUrl": {
+      "type": "string",
+      "description": "GSC property identifier (siteUrl), e.g. https://kodebase.com/ or sc-domain:kodebase.com"
+    },
+    "permissionLevel": {
+      "type": "string",
+      "description": "Permission level returned by GSC, e.g. siteOwner, siteFullUser"
+    },
+    "propertyType": {
+      "type": "string",
+      "enum": [
+        "domain",
+        "url_prefix"
+      ],
+      "default": "url_prefix"
+    }
+  },
+  "required": [
+    "siteUrl"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

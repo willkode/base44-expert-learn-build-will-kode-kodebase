@@ -75,7 +75,7 @@ import BlogPlans from '@/pages/admin/blog/BlogPlans';
 import BlogKeywords from '@/pages/admin/blog/BlogKeywords';
 import BlogTaxonomy from '@/pages/admin/blog/BlogTaxonomy';
 import BlogInternalLinking from '@/pages/admin/blog/BlogInternalLinking';
-import BlogRefresh from '@/pages/admin/blog/BlogRefresh';
+import BlogRefresh from '@/pages/admin/blog/BlogRefresh.jsx';
 import BlogAnalytics from '@/pages/admin/blog/BlogAnalytics';
 import BlogLogs from '@/pages/admin/blog/BlogLogs';
 import BlogSettings from '@/pages/admin/blog/BlogSettings';

@@ -1,0 +1,66 @@
+{
+  "name": "SearchConsoleConnection",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "default": "global",
+      "description": "Singleton connection key, use 'global'"
+    },
+    "connected": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the Google Search Console OAuth connector is authorized"
+    },
+    "connectedEmail": {
+      "type": "string",
+      "description": "Email of the Google account that authorized the connection"
+    },
+    "selectedSiteUrl": {
+      "type": "string",
+      "description": "The active GSC property (siteUrl) used for blog SEO tracking, e.g. https://kodebase.com/ or sc-domain:kodebase.com"
+    },
+    "selectedSiteLabel": {
+      "type": "string",
+      "description": "Friendly label for the selected property"
+    },
+    "lastSyncedAt": {
+      "type": "string",
+      "description": "ISO timestamp of the last successful Search Console data sync"
+    },
+    "lastSyncStatus": {
+      "type": "string",
+      "enum": [
+        "never",
+        "success",
+        "partial",
+        "error"
+      ],
+      "default": "never"
+    },
+    "lastSyncMessage": {
+      "type": "string",
+      "description": "Human-readable result/error of the last sync"
+    },
+    "lastSyncRowCount": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of rows pulled on the last sync"
+    }
+  },
+  "required": [
+    "key"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
