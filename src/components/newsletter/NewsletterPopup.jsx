@@ -39,11 +39,16 @@ export default function NewsletterPopup() {
       return;
     }
     setLoading(true);
-    const existing = await base44.entities.NewsletterSubscriber.filter({ email: trimmed });
-    if (existing.length === 0) {
-      await base44.entities.NewsletterSubscriber.create({ email: trimmed, source: "popup" });
-    }
+    const res = await base44.functions.invoke("subscribeNewsletter", {
+      email: trimmed,
+      firstName: firstName.trim(),
+      source: "popup",
+    });
     setLoading(false);
+    if (res.data?.error) {
+      setError(res.data.error);
+      return;
+    }
     trackNewsletterSignup("popup");
     localStorage.setItem(STORAGE_KEY, "subscribed");
     setDone(true);

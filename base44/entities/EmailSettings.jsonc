@@ -26,6 +26,10 @@
     "resendAudienceId": {
       "type": "string"
     },
+    "resendSegmentId": {
+      "type": "string",
+      "description": "Resend Segment id to assign newsletter subscribers to (replaces deprecated Audiences)"
+    },
     "webhookConfigured": {
       "type": "boolean",
       "default": false
