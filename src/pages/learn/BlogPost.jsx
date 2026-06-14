@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Clock, CalendarDays, RefreshCw } from "lucide-react";
 import { format } from "date-fns";
-import { base44 } from "@/api/base44Client";
 import Seo from "@/components/seo/Seo";
 import { SITE, canonical } from "@/lib/seo";
 import BlogContent from "@/components/learn/BlogContent";
@@ -11,7 +10,7 @@ import BlogShare from "@/components/learn/BlogShare";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import LoadingState from "@/components/shared/LoadingState";
-import { isPublishedPost } from "@/lib/blogPublic";
+import { fetchPublishedPost } from "@/lib/blogPublic";
 import { trackBlogView, trackBlogClick } from "@/lib/blogTracking";
 import useBlogScrollTracking from "@/hooks/useBlogScrollTracking";
 
@@ -40,17 +39,12 @@ export default function BlogPost() {
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([
-      base44.entities.BlogPost.filter({ slug }, "", 1),
-      base44.entities.BlogSettings.filter({ key: "global" }, "", 1).catch(() => []),
-    ]).then(([rows, s]) => {
-      const found = rows[0] || null;
-      // Security: only expose genuinely published posts publicly.
-      const visible = isPublishedPost(found) ? found : null;
-      setPost(visible);
-      setSettings(s[0] || {});
+    // Security: getPublicBlog (service role) only ever returns published posts.
+    fetchPublishedPost(slug).then(({ post: found, settings: s }) => {
+      setPost(found);
+      setSettings(s || {});
       setLoading(false);
-      if (visible) trackBlogView(visible.slug);
+      if (found) trackBlogView(found.slug);
     });
   }, [slug]);
 
