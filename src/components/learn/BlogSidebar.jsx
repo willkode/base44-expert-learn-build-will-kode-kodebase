@@ -5,6 +5,7 @@ import { Mail, ArrowRight, Coffee } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { trackEvent, trackNewsletterSignup } from "@/lib/analytics";
+import { isPublishedPost } from "@/lib/blogPublic";
 
 const COFFEE_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/d6f4b2d9f_generated_image.png";
 
@@ -84,9 +85,10 @@ function RelatedPosts({ currentSlug, variant = "blog" }) {
   useEffect(() => {
     const loader = isPrompt
       ? base44.entities.LibraryPrompt.list("-order", 6)
-      : base44.entities.BlogPost.filter({ published: true }, "-publishedAt", 6);
+      : base44.entities.BlogPost.list("-publishedAt", 20);
     loader.then((d) => {
-      setPosts(d.filter((p) => p.slug !== currentSlug).slice(0, 4));
+      const cleaned = isPrompt ? d : d.filter(isPublishedPost);
+      setPosts(cleaned.filter((p) => p.slug !== currentSlug).slice(0, 4));
     });
   }, [currentSlug, isPrompt]);
 

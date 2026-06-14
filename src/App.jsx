@@ -17,6 +17,8 @@ import ProductDetail from '@/pages/ProductDetail';
 import Contact from '@/pages/Contact';
 import Blog from '@/pages/learn/Blog';
 import BlogPost from '@/pages/learn/BlogPost';
+import BlogCategory from '@/pages/learn/BlogCategory';
+import BlogTag from '@/pages/learn/BlogTag';
 import PromptLibrary from '@/pages/learn/PromptLibrary';
 import PromptPostDetail from '@/pages/learn/PromptPostDetail';
 import AgentSkills from '@/pages/learn/AgentSkills';
@@ -103,6 +105,8 @@ const AuthenticatedApp = () => {
         <Route path="/products/:slug" element={<ProductDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/learn/blog" element={<Blog />} />
+        <Route path="/learn/blog/category/:slug" element={<BlogCategory />} />
+        <Route path="/learn/blog/tag/:slug" element={<BlogTag />} />
         <Route path="/learn/blog/:slug" element={<BlogPost />} />
         <Route path="/learn/prompt-library" element={<PromptLibrary />} />
         <Route path="/learn/prompt-library/:slug" element={<PromptPostDetail />} />

@@ -18,6 +18,11 @@
     "blogDescription": {
       "type": "string"
     },
+    "publicBlogRoute": {
+      "type": "string",
+      "default": "/learn/blog",
+      "description": "Base public route for the blog"
+    },
     "defaultAuthorName": {
       "type": "string",
       "default": "KodeBase Team"
@@ -26,6 +31,15 @@
       "type": "string"
     },
     "defaultAuthorAvatarUrl": {
+      "type": "string"
+    },
+    "defaultAuthorWebsite": {
+      "type": "string"
+    },
+    "defaultAuthorTwitter": {
+      "type": "string"
+    },
+    "defaultAuthorLinkedin": {
       "type": "string"
     },
     "defaultLanguage": {
@@ -51,6 +65,18 @@
       "type": "boolean",
       "default": true
     },
+    "enableScheduledPublishing": {
+      "type": "boolean",
+      "default": true
+    },
+    "allowManualPublish": {
+      "type": "boolean",
+      "default": true
+    },
+    "notifyOnPublish": {
+      "type": "boolean",
+      "default": false
+    },
     "enableAiGeneration": {
       "type": "boolean",
       "default": true
@@ -75,6 +101,56 @@
       "type": "boolean",
       "default": true
     },
+    "enableKeywordTracking": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableSitemapUpdates": {
+      "type": "boolean",
+      "default": true
+    },
+    "defaultArticleTone": {
+      "type": "string",
+      "default": "Professional, helpful, and authoritative"
+    },
+    "defaultArticleLength": {
+      "type": "string",
+      "enum": [
+        "short",
+        "medium",
+        "long",
+        "comprehensive"
+      ],
+      "default": "long"
+    },
+    "defaultContentStructure": {
+      "type": "string",
+      "description": "Default outline/structure guidance for AI articles"
+    },
+    "defaultCta": {
+      "type": "string",
+      "description": "Default call-to-action block for generated posts"
+    },
+    "defaultBrandVoice": {
+      "type": "string",
+      "description": "Brand voice guidance for AI generation"
+    },
+    "bannedWords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Words/phrases AI should avoid"
+    },
+    "preferredWords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Words/phrases AI should prefer"
+    },
     "defaultFeaturedImageStyle": {
       "type": "string",
       "default": "Dark tech aesthetic: deep navy background, orange-to-amber gradient accents, minimal flat vector, blueprint grid, soft glows."
@@ -89,6 +165,20 @@
     },
     "defaultCanonicalUrlBase": {
       "type": "string"
+    },
+    "defaultOgImageUrl": {
+      "type": "string"
+    },
+    "defaultTwitterImageUrl": {
+      "type": "string"
+    },
+    "defaultCategoryFallback": {
+      "type": "string",
+      "default": "General"
+    },
+    "noindexDraftsAndPreviews": {
+      "type": "boolean",
+      "default": true
     },
     "postsPerPage": {
       "type": "number",
