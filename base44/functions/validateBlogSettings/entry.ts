@@ -34,6 +34,26 @@ export function validate(input) {
     warnings.push('Auto-publishing is on while approval is required — posts will still wait for approval.');
   }
 
+  // Word-count sanity
+  const minW = Number(input.minWordCount), maxW = Number(input.maxWordCount);
+  if (input.minWordCount != null && minW < 0) errors.push('Minimum word count cannot be negative.');
+  if (input.minWordCount != null && input.maxWordCount != null && maxW > 0 && minW > maxW) {
+    errors.push('Minimum word count cannot be greater than maximum word count.');
+  }
+  const minSeo = Number(input.minSeoScoreToPublish);
+  if (input.requireSeoScoreBeforePublish && !(minSeo >= 0 && minSeo <= 100)) {
+    errors.push('Minimum SEO score to publish must be between 0 and 100.');
+  }
+  for (const f of ['maxAiPostsPerDay', 'maxAiImagesPerDay', 'maxRefreshFixesPerDay', 'maxRepurposingPerDay', 'maxContentPlanPostsPerGeneration']) {
+    if (input[f] != null) {
+      const v = Number(input[f]);
+      if (!Number.isInteger(v) || v < 0) errors.push(`${f} must be a whole number of 0 or more.`);
+    }
+  }
+  if (input.notificationEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(input.notificationEmail))) {
+    errors.push('Notification email is not a valid email address.');
+  }
+
   return { valid: errors.length === 0, errors, warnings };
 }
 

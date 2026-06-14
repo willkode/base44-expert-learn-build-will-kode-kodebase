@@ -25,13 +25,61 @@ Deno.serve(async (req) => {
     }
 
     const status = intendedStatus || post.status;
+    const goingLive = ['scheduled', 'published'].includes(status);
+
+    // Load settings once for all publish-safety gates.
+    const settings = (await base44.asServiceRole.entities.BlogSettings.filter({ key: 'global' }))[0] || {};
 
     // Approval gate: surface as a blocking error so the UI explains what's blocking publishing.
-    if (['scheduled', 'published'].includes(status)) {
-      const settings = (await base44.asServiceRole.entities.BlogSettings.filter({ key: 'global' }))[0];
-      if (settings?.requireApprovalBeforePublish && post.approvalStatus !== 'approved') {
-        errors.push('This post must be approved before it can be scheduled or published.');
+    if (goingLive && settings.requireApprovalBeforePublish && post.approvalStatus !== 'approved') {
+      errors.push('This post must be approved before it can be scheduled or published.');
+    }
+
+    // Configurable publishing-safety gates (only block when the admin enabled them).
+    if (goingLive) {
+      if (settings.requireFeaturedImageBeforePublish && !post.coverImageUrl)
+        errors.push('A featured image is required before publishing (enabled in Blog Settings).');
+      if (settings.requireMetaTitleBeforePublish && !post.metaTitle)
+        errors.push('A meta title is required before publishing (enabled in Blog Settings).');
+      if (settings.requireMetaDescriptionBeforePublish && !post.metaDescription)
+        errors.push('A meta description is required before publishing (enabled in Blog Settings).');
+      if (settings.requireCategoryBeforePublish && !post.category && !post.categoryId)
+        errors.push('A category is required before publishing (enabled in Blog Settings).');
+      if (settings.requireCta && post.content && !/\b(get started|sign up|try|download|learn more|subscribe|contact)\b/i.test(post.content))
+        errors.push('A call-to-action is required before publishing (enabled in Blog Settings).');
+      if (settings.requireFaq && post.content && !/##\s*faq/i.test(post.content))
+        errors.push('An FAQ section is required before publishing (enabled in Blog Settings).');
+
+      if (settings.requireSeoScoreBeforePublish) {
+        const min = Number(settings.minSeoScoreToPublish ?? 60);
+        if (typeof post.seoScore !== 'number') errors.push(`Run an SEO analysis before publishing (minimum score ${min} required).`);
+        else if (post.seoScore < min) errors.push(`SEO score ${post.seoScore} is below the required minimum of ${min}.`);
       }
+
+      // Placeholder text block
+      if (settings.blockPlaceholderText && post.content && /(lorem ipsum|todo:|tk tk|\bTKTK\b|\[placeholder\]|xxxx)/i.test(post.content))
+        errors.push('Content contains placeholder text — remove it before publishing.');
+
+      // Duplicate target keyword block
+      if (settings.blockDuplicateTargetKeywords && post.targetKeyword) {
+        const others = await base44.asServiceRole.entities.BlogPost.filter({ targetKeyword: post.targetKeyword, status: 'published' });
+        if (others.find((m) => m.id !== post.id))
+          errors.push(`Another published post already targets the keyword "${post.targetKeyword}".`);
+      }
+    }
+
+    // Word-count bounds (recommendation, non-blocking)
+    const wc = post.wordCount || (post.contentPlainText ? post.contentPlainText.split(/\s+/).filter(Boolean).length : 0);
+    if (wc && settings.minWordCount && wc < Number(settings.minWordCount))
+      recommendations.push(`Post is ${wc} words — below the ${settings.minWordCount}-word minimum.`);
+    if (wc && settings.maxWordCount && wc > Number(settings.maxWordCount))
+      recommendations.push(`Post is ${wc} words — above the ${settings.maxWordCount}-word maximum.`);
+
+    // Keyword cannibalization warning (non-blocking)
+    if (settings.warnKeywordCannibalization && post.targetKeyword && !settings.blockDuplicateTargetKeywords) {
+      const others = await base44.asServiceRole.entities.BlogPost.filter({ targetKeyword: post.targetKeyword });
+      if (others.find((m) => m.id !== post.id))
+        recommendations.push(`Another post targets "${post.targetKeyword}" — possible keyword cannibalization.`);
     }
 
     const needsContent = ['approved', 'scheduled', 'published'].includes(status);

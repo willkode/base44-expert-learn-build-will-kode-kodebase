@@ -78,7 +78,7 @@ import BlogInternalLinking from '@/pages/admin/blog/BlogInternalLinking';
 import BlogRefresh from '@/pages/admin/blog/BlogRefresh.jsx';
 import BlogAnalytics from '@/pages/admin/blog/BlogAnalytics';
 import BlogLogs from '@/pages/admin/blog/BlogLogs';
-import BlogSettings from '@/pages/admin/blog/BlogSettings';
+import BlogSettings from '@/pages/admin/blog/BlogSettings.jsx';
 import EmailMarketingLayout from '@/components/admin/email/EmailMarketingLayout';
 import EmailDashboard from '@/pages/admin/email/EmailDashboard';
 import EmailContacts from '@/pages/admin/email/EmailContacts';

@@ -11,6 +11,11 @@
       "type": "boolean",
       "default": true
     },
+    "enablePublicBlogPages": {
+      "type": "boolean",
+      "default": true,
+      "description": "When off, public blog routes are hidden even if the blog is enabled"
+    },
     "blogName": {
       "type": "string",
       "default": "Blog"
@@ -101,6 +106,16 @@
       "type": "boolean",
       "default": true
     },
+    "enableAnalyticsTracking": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether first-party blog analytics tracking is active"
+    },
+    "enableBlogRepurposing": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether AI repurposing of posts into other formats is allowed"
+    },
     "enableKeywordTracking": {
       "type": "boolean",
       "default": true
@@ -108,6 +123,72 @@
     "enableSitemapUpdates": {
       "type": "boolean",
       "default": true
+    },
+    "requireSeoScoreBeforePublish": {
+      "type": "boolean",
+      "default": false,
+      "description": "Block publishing until a minimum SEO score is reached"
+    },
+    "minSeoScoreToPublish": {
+      "type": "number",
+      "default": 60,
+      "description": "Minimum SEO score required to publish when SEO gate is enabled"
+    },
+    "requireFeaturedImageBeforePublish": {
+      "type": "boolean",
+      "default": false
+    },
+    "requireMetaTitleBeforePublish": {
+      "type": "boolean",
+      "default": false
+    },
+    "requireMetaDescriptionBeforePublish": {
+      "type": "boolean",
+      "default": false
+    },
+    "requireCategoryBeforePublish": {
+      "type": "boolean",
+      "default": false
+    },
+    "blockDuplicateTargetKeywords": {
+      "type": "boolean",
+      "default": false,
+      "description": "Prevent two published posts from targeting the same primary keyword"
+    },
+    "warnKeywordCannibalization": {
+      "type": "boolean",
+      "default": true,
+      "description": "Warn (non-blocking) when posts may compete for the same keyword"
+    },
+    "blockPlaceholderText": {
+      "type": "boolean",
+      "default": true,
+      "description": "Block publishing content containing placeholder text like lorem ipsum or TODO"
+    },
+    "warnUnsupportedClaims": {
+      "type": "boolean",
+      "default": false,
+      "description": "Warn when content contains absolute/unsupported claims"
+    },
+    "maxAiPostsPerDay": {
+      "type": "number",
+      "default": 10
+    },
+    "maxAiImagesPerDay": {
+      "type": "number",
+      "default": 20
+    },
+    "maxRefreshFixesPerDay": {
+      "type": "number",
+      "default": 15
+    },
+    "maxRepurposingPerDay": {
+      "type": "number",
+      "default": 10
+    },
+    "maxContentPlanPostsPerGeneration": {
+      "type": "number",
+      "default": 20
     },
     "defaultArticleTone": {
       "type": "string",
@@ -122,6 +203,30 @@
         "comprehensive"
       ],
       "default": "long"
+    },
+    "minWordCount": {
+      "type": "number",
+      "default": 600
+    },
+    "maxWordCount": {
+      "type": "number",
+      "default": 3000
+    },
+    "requireCta": {
+      "type": "boolean",
+      "default": false
+    },
+    "requireFaq": {
+      "type": "boolean",
+      "default": false
+    },
+    "requireInternalLinks": {
+      "type": "boolean",
+      "default": false
+    },
+    "requireHumanReview": {
+      "type": "boolean",
+      "default": true
     },
     "defaultContentStructure": {
       "type": "string",
@@ -150,6 +255,95 @@
       },
       "default": [],
       "description": "Words/phrases AI should prefer"
+    },
+    "requiredBrandTerms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Brand terms that should appear in generated content"
+    },
+    "notifyOnNeedsReview": {
+      "type": "boolean",
+      "default": true
+    },
+    "notifyOnApproved": {
+      "type": "boolean",
+      "default": false
+    },
+    "notifyOnPublishingFailed": {
+      "type": "boolean",
+      "default": true
+    },
+    "notifyOnRefreshRecommended": {
+      "type": "boolean",
+      "default": false
+    },
+    "notifyOnLowSeoScore": {
+      "type": "boolean",
+      "default": false
+    },
+    "notificationEmail": {
+      "type": "string",
+      "description": "Email address that receives blog admin notifications"
+    },
+    "permCreatePosts": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "editor",
+        "any"
+      ],
+      "default": "admin"
+    },
+    "permEditPosts": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "editor",
+        "any"
+      ],
+      "default": "admin"
+    },
+    "permApprovePosts": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "editor"
+      ],
+      "default": "admin"
+    },
+    "permPublishPosts": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "editor"
+      ],
+      "default": "admin"
+    },
+    "permManageSettings": {
+      "type": "string",
+      "enum": [
+        "admin"
+      ],
+      "default": "admin"
+    },
+    "permViewAnalytics": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "editor"
+      ],
+      "default": "admin"
+    },
+    "permUseAiGeneration": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "editor"
+      ],
+      "default": "admin"
     },
     "defaultFeaturedImageStyle": {
       "type": "string",

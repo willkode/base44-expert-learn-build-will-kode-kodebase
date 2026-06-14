@@ -13,7 +13,9 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import PublishReadiness from "./PublishReadiness";
+import BlogErrorAlert from "@/components/admin/blog/errors/BlogErrorAlert";
 import { trackEvent } from "@/lib/analytics";
+import { mapBlogError } from "@/lib/blogErrors";
 import { formatScheduled, localTimezone } from "@/lib/blogSchedule";
 
 // Reusable scheduling/publishing controls for a single post.
@@ -23,6 +25,7 @@ export default function ScheduleActions({ post, onChange, validation, validating
   const [confirmPublish, setConfirmPublish] = useState(false);
   const [when, setWhen] = useState(post.scheduledAt ? post.scheduledAt.slice(0, 16) : "");
   const [busy, setBusy] = useState(false);
+  const [friendlyError, setFriendlyError] = useState(null);
 
   const tz = localTimezone();
   const blocked = (validation?.errors?.length || 0) > 0;
@@ -31,6 +34,7 @@ export default function ScheduleActions({ post, onChange, validation, validating
 
   const call = async (fn, payload, successMsg, event) => {
     setBusy(true);
+    setFriendlyError(null);
     try {
       const res = await base44.functions.invoke(fn, payload);
       if (res.data?.success) {
@@ -39,10 +43,10 @@ export default function ScheduleActions({ post, onChange, validation, validating
         onChange?.(res.data.post);
         return true;
       }
-      toast.error(res.data?.error || "Action failed");
+      setFriendlyError(mapBlogError(res.data?.error || "Action failed"));
       return false;
     } catch (err) {
-      toast.error(err?.response?.data?.error || "Action failed");
+      setFriendlyError(mapBlogError(err));
       return false;
     } finally {
       setBusy(false);
@@ -121,6 +125,14 @@ export default function ScheduleActions({ post, onChange, validation, validating
               <p className="text-sm font-medium mb-2">Publish readiness</p>
               <PublishReadiness validation={validation} loading={validating} />
             </div>
+            {friendlyError && (
+              <BlogErrorAlert
+                error={friendlyError}
+                ctx={{ postId: post.id }}
+                onDismiss={() => setFriendlyError(null)}
+                busy={busy}
+              />
+            )}
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setScheduleOpen(false)}>Cancel</Button>
@@ -145,6 +157,14 @@ export default function ScheduleActions({ post, onChange, validation, validating
             <p className="text-sm font-medium mb-2">Publish readiness</p>
             <PublishReadiness validation={validation} loading={validating} />
           </div>
+          {friendlyError && (
+            <BlogErrorAlert
+              error={friendlyError}
+              ctx={{ postId: post.id, onRetryPublish: publishNow }}
+              onDismiss={() => setFriendlyError(null)}
+              busy={busy}
+            />
+          )}
           <AlertDialogFooter>
             <AlertDialogCancel disabled={busy}>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={(e) => { e.preventDefault(); publishNow(); }} disabled={busy || blocked}>
