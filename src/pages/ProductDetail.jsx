@@ -10,6 +10,7 @@ import ProductFeatureList from "@/components/products/ProductFeatureList";
 import ProductProblemSolution from "@/components/products/ProductProblemSolution";
 import MarketingEngineProDetails from "@/components/products/MarketingEngineProDetails";
 import AutoBloggingDetails from "@/components/products/AutoBloggingDetails";
+import ResendEmailDetails from "@/components/products/ResendEmailDetails";
 import { trackViewItem, trackSelectItem } from "@/lib/analytics";
 
 export default function ProductDetail() {
@@ -71,6 +72,8 @@ export default function ProductDetail() {
         {product.slug === "kode-marketing-engine-pro" && <MarketingEngineProDetails />}
 
         {product.slug === "ai-auto-blogging-system" && <AutoBloggingDetails />}
+
+        {product.slug === "resend-email-marketing-system" && <ResendEmailDetails />}
 
         {product.description && (
           <div className="max-w-3xl mx-auto text-center mt-24 mb-16">
