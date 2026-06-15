@@ -13,6 +13,7 @@ import AutoBloggingDetails from "@/components/products/AutoBloggingDetails";
 import ResendEmailDetails from "@/components/products/ResendEmailDetails";
 import TwilioSmsDetails from "@/components/products/TwilioSmsDetails";
 import SocialMediaDetails from "@/components/products/SocialMediaDetails";
+import SecurityLockdownDetails from "@/components/products/SecurityLockdownDetails";
 import { trackViewItem, trackSelectItem } from "@/lib/analytics";
 
 export default function ProductDetail() {
@@ -80,6 +81,8 @@ export default function ProductDetail() {
         {product.slug === "twilio-sms-marketing-system" && <TwilioSmsDetails />}
 
         {product.slug === "social-media-marketing-system" && <SocialMediaDetails />}
+
+        {product.slug === "security-lockdown-pro" && <SecurityLockdownDetails />}
 
         {product.description && (
           <div className="max-w-3xl mx-auto text-center mt-24 mb-16">
