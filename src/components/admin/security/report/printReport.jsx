@@ -1,11 +1,13 @@
-// Opens a clean, print-friendly window for the Security Audit Report.
-// Uses the plain-text model rendered into light, paper-style HTML so it prints well.
+// Builds a clean, print-friendly HTML document for the Security Audit Report,
+// and provides print + download helpers. Download uses a Blob so it works inside
+// sandboxed preview iframes where window.open pop-ups are blocked.
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
 }
 
-export function printReport(model) {
+// Build the full standalone HTML document for the report.
+export function buildReportHtml(model, { autoPrint = false } = {}) {
   const sev = model.bySeverity;
   const issueRows = model.issues
     .map(
@@ -53,7 +55,7 @@ export function printReport(model) {
     ul { margin:6px 0; padding-left:20px; }
     @media print { body { margin: 0; } }
   </style></head>
-  <body onload="window.print()">
+  <body${autoPrint ? ' onload="window.print()"' : ""}>
     <h1>Security Audit Report</h1>
     <p class="muted">Generated ${esc(new Date().toLocaleString())}</p>
 
@@ -103,6 +105,38 @@ export function printReport(model) {
     <div class="disclaimer">This report is a practical app-level security review and does not replace a full third-party penetration test, infrastructure audit, legal compliance review, or enterprise security assessment.</div>
   </body></html>`;
 
+  return html;
+}
+
+function reportFileName(model) {
+  const d = new Date();
+  const stamp = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  return `security-audit-report-${stamp}.html`;
+}
+
+// Download the report as a self-contained HTML file. Works inside sandboxed
+// iframes (no pop-up needed). Returns true on success.
+export function downloadReport(model) {
+  try {
+    const html = buildReportHtml(model, { autoPrint: false });
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = reportFileName(model);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// Open a print-friendly window. May be blocked by pop-up blockers / sandboxed iframes.
+export function printReport(model) {
+  const html = buildReportHtml(model, { autoPrint: true });
   const w = window.open("", "_blank", "width=900,height=1000");
   if (!w) return false;
   w.document.open();

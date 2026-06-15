@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import { FileText, Sparkles, Copy, Check, Printer } from "lucide-react";
+import React, { useState, useMemo, useEffect } from "react";
+import { FileText, Sparkles, Copy, Check, Printer, Download } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import EmptyState from "@/components/shared/EmptyState";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { trackEvent } from "@/lib/analytics";
 import { formatDate } from "@/components/admin/security/securityConfig";
 import { buildReportModel, reportToPlainText } from "@/components/admin/security/report/reportBuilder";
-import { printReport } from "@/components/admin/security/report/printReport";
+import { printReport, downloadReport } from "@/components/admin/security/report/printReport";
 import { copyToClipboard } from "@/components/admin/security/issues/issueActions";
 import ReportDocument from "@/components/admin/security/report/ReportDocument";
 
@@ -26,6 +26,12 @@ export default function ReportTab({ latestScan, issues, scans = [], registry = [
   const [model, setModel] = useState(null);
   const [copied, setCopied] = useState(false);
   const [showFallback, setShowFallback] = useState(false);
+
+  // Keep a valid scan selected when scans load/refresh (e.g. right after a new scan completes).
+  useEffect(() => {
+    const stillValid = scanId && reportableScans.some((s) => s.id === scanId);
+    if (!stillValid && defaultScanId) setScanId(defaultScanId);
+  }, [defaultScanId, reportableScans, scanId]);
 
   if (reportableScans.length === 0) {
     return (
@@ -64,10 +70,29 @@ export default function ReportTab({ latestScan, issues, scans = [], registry = [
     }
   };
 
+  const handleDownload = () => {
+    if (!model) return;
+    const ok = downloadReport(model);
+    if (ok) {
+      trackEvent("security_report_downloaded", { scan_id: selectedScan?.id, score: model.score });
+      toast({ title: "Report downloaded", description: "Saved as an HTML file you can open or print to PDF." });
+    } else {
+      toast({ title: "Download failed", description: "Could not generate the file. Use Copy Report instead.", variant: "destructive" });
+    }
+  };
+
   const handlePrint = () => {
     if (!model) return;
     const ok = printReport(model);
-    if (!ok) toast({ title: "Pop-up blocked", description: "Allow pop-ups to open the print view.", variant: "destructive" });
+    if (!ok) {
+      // Pop-ups are blocked (common in embedded previews) — fall back to a file download.
+      const dl = downloadReport(model);
+      toast(
+        dl
+          ? { title: "Opened as download", description: "Pop-ups were blocked, so the report was downloaded instead. Open it and print to PDF." }
+          : { title: "Print unavailable", description: "Allow pop-ups, or use Download / Copy Report.", variant: "destructive" }
+      );
+    }
   };
 
   return (
@@ -95,12 +120,15 @@ export default function ReportTab({ latestScan, issues, scans = [], registry = [
           </Button>
           {model && (
             <>
+              <Button onClick={handleDownload} className="gap-2">
+                <Download className="w-4 h-4" /> Download Report
+              </Button>
               <Button onClick={handleCopy} variant="outline" className="gap-2">
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 {copied ? "Copied" : "Copy Report"}
               </Button>
               <Button onClick={handlePrint} variant="outline" className="gap-2">
-                <Printer className="w-4 h-4" /> Print / Export
+                <Printer className="w-4 h-4" /> Print to PDF
               </Button>
             </>
           )}
