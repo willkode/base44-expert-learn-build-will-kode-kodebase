@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Send, Plus, AlertTriangle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Send, Plus, AlertTriangle, Pencil } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { toast } from "sonner";
 import PageHeader from "@/components/shared/PageHeader";
 import AdminTable from "@/components/admin/AdminTable";
 import { Button } from "@/components/ui/button";
@@ -21,6 +20,7 @@ const STATUS_STYLES = {
 };
 
 export default function EmailCampaigns() {
+  const navigate = useNavigate();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sendingEnabled, setSendingEnabled] = useState(true);
@@ -41,7 +41,7 @@ export default function EmailCampaigns() {
         title="Campaigns"
         description="Create, approve, schedule and send email campaigns."
         actions={
-          <Button onClick={() => toast.info("Campaign builder coming next — use Email Studio to draft content")}>
+          <Button onClick={() => navigate("/admin/marketing/email/studio")}>
             <Plus className="w-4 h-4 mr-2" /> New Campaign
           </Button>
         }
@@ -58,7 +58,7 @@ export default function EmailCampaigns() {
       <AdminTable
         loading={loading}
         rows={rows}
-        columns={["Name", "Type", "Subject", "Status", "Recipients", "Scheduled", "Created"]}
+        columns={["Name", "Type", "Subject", "Status", "Recipients", "Scheduled", "Created", ""]}
         emptyIcon={Send}
         emptyTitle="No campaigns yet"
         emptyDescription="Create your first campaign or generate one with AI in the Email Studio."
@@ -70,6 +70,9 @@ export default function EmailCampaigns() {
           <span>{c.totalRecipients || 0}</span>,
           <span className="text-muted-foreground">{c.scheduledAt ? new Date(c.scheduledAt).toLocaleString() : "—"}</span>,
           <span className="text-muted-foreground">{new Date(c.created_date).toLocaleDateString()}</span>,
+          <Button variant="outline" size="sm" onClick={() => navigate(`/admin/marketing/email/studio?id=${c.id}`)}>
+            <Pencil className="w-3.5 h-3.5 mr-1.5" /> Edit
+          </Button>,
         ]}
       />
     </div>

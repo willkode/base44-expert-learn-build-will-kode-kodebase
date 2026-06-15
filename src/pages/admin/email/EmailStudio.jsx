@@ -22,6 +22,7 @@ const EMPTY_DRAFT = {
 
 export default function EmailStudio() {
   const navigate = useNavigate();
+  const campaignId = new URLSearchParams(window.location.search).get("id");
   const [draft, setDraft] = useState(EMPTY_DRAFT);
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -33,7 +34,25 @@ export default function EmailStudio() {
     base44.functions.invoke("checkResendConfiguration", {}).then((res) => {
       if (!res.data?.error) setSendingEnabled(!!res.data.sendingEnabled);
     });
-  }, []);
+    if (campaignId) {
+      base44.entities.EmailCampaign.list("-created_date", 500).then((all) => {
+        const c = all.find((x) => x.id === campaignId);
+        if (c) {
+          setDraft({
+            name: c.name || "",
+            subject: c.subject || "",
+            previewText: c.previewText || "",
+            htmlContent: c.htmlContent || "",
+            textContent: c.textContent || "",
+            campaignType: c.campaignType || "newsletter",
+            aiPromptInput: c.aiPromptInput || "",
+          });
+        } else {
+          toast.error("Campaign not found.");
+        }
+      });
+    }
+  }, [campaignId]);
 
   const handleGenerate = async ({ prompt, tone, campaignType }) => {
     setGenerating(true);
@@ -63,7 +82,7 @@ export default function EmailStudio() {
       return;
     }
     setSaving(true);
-    const campaign = await base44.entities.EmailCampaign.create({
+    const payload = {
       name: draft.name || draft.subject || "Untitled draft",
       campaignType: draft.campaignType,
       subject: draft.subject,
@@ -71,20 +90,22 @@ export default function EmailStudio() {
       htmlContent: draft.htmlContent,
       textContent: draft.textContent,
       aiPromptInput: draft.aiPromptInput,
-      sendStatus: "draft",
-      approvalStatus: "draft",
-    });
+    };
+    if (campaignId) {
+      await base44.entities.EmailCampaign.update(campaignId, payload);
+    } else {
+      await base44.entities.EmailCampaign.create({ ...payload, sendStatus: "draft", approvalStatus: "draft" });
+    }
     setSaving(false);
-    base44.analytics.track({ eventName: "email_studio_draft_saved" });
-    toast.success("Saved as campaign draft.");
+    base44.analytics.track({ eventName: "email_studio_draft_saved", properties: { editing: !!campaignId } });
+    toast.success(campaignId ? "Campaign updated." : "Saved as campaign draft.");
     navigate("/admin/marketing/email/campaigns");
-    return campaign;
   };
 
   return (
     <div>
       <PageHeader
-        title="Email Studio"
+        title={campaignId ? "Edit Campaign" : "Email Studio"}
         description="Generate, edit, preview, test and approve emails with AI."
         actions={
           <div className="flex gap-2">
