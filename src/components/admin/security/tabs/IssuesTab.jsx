@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, Route as RouteIcon, Copy, Check } from "lucide-react";
 import EmptyState from "@/components/shared/EmptyState";
 import SecurityBadge from "@/components/admin/security/SecurityBadge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -7,6 +7,24 @@ import { SEVERITY_STYLES, ISSUE_STATUS_STYLES, SEVERITY_ORDER, formatDate } from
 
 const STATUS_OPTIONS = ["All", "Open", "In Progress", "Fixed", "Needs Retest", "Ignored", "False Positive"];
 const SEVERITY_OPTIONS = ["All", ...SEVERITY_ORDER];
+
+function FixPromptButton({ fixPrompt }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    await navigator.clipboard.writeText(fixPrompt);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <button
+      onClick={copy}
+      className="mt-3 inline-flex items-center gap-1.5 rounded-md border border-border bg-secondary px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+    >
+      {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+      {copied ? "Copied fix prompt" : "Copy fix prompt"}
+    </button>
+  );
+}
 
 export default function IssuesTab({ issues }) {
   const [severity, setSeverity] = useState("All");
@@ -51,9 +69,14 @@ export default function IssuesTab({ issues }) {
         <div className="space-y-3">
           {filtered.map((issue) => (
             <div key={issue.id} className="rounded-xl border border-border bg-card/70 p-5">
-              <div className="flex items-start gap-3 mb-2">
+              <div className="flex items-start gap-2 mb-2 flex-wrap">
                 <SecurityBadge label={issue.severity} styleMap={SEVERITY_STYLES} />
                 <SecurityBadge label={issue.status} styleMap={ISSUE_STATUS_STYLES} />
+                {issue.affected_route && (
+                  <span className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+                    <RouteIcon className="w-3 h-3" /> Route · {issue.affected_route}
+                  </span>
+                )}
                 <span className="text-xs text-muted-foreground ml-auto">{formatDate(issue.created_date)}</span>
               </div>
               <h4 className="font-sora font-semibold text-base mb-1">{issue.title || "Untitled issue"}</h4>
@@ -69,6 +92,7 @@ export default function IssuesTab({ issues }) {
                   <span className="text-foreground/80 font-medium">Recommended fix: </span>{issue.recommended_fix}
                 </p>
               )}
+              {issue.fix_prompt && <FixPromptButton fixPrompt={issue.fix_prompt} />}
             </div>
           ))}
         </div>
