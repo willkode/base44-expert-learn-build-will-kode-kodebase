@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, Bot, Workflow, Cpu, DraftingCompass, Tag } from "lucide-react";
+import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, Bot, DraftingCompass } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import {
   DropdownMenu,
@@ -17,11 +17,8 @@ const links = [
   { label: "Contact Me", to: "/contact" },
 ];
 
-const blueprintToolItems = [
-  { label: "How It Works", href: "#how", icon: Workflow, desc: "From idea to launch-ready blueprint in minutes" },
-  { label: "Agents", href: "#agents", icon: Cpu, desc: "Specialized AI agents that architect your app" },
-  { label: "Blueprint", href: "#blueprint", icon: DraftingCompass, desc: "See what a complete blueprint includes" },
-  { label: "Pricing", href: "#pricing", icon: Tag, desc: "Plans that fit every builder" },
+const toolItems = [
+  { label: "App Blueprint", to: "/tools/blueprint", icon: DraftingCompass, desc: "Plan your entire app before you build it", badge: "NEW" },
 ];
 
 const learnLinks = [
@@ -111,22 +108,25 @@ export default function Navbar() {
           </DropdownMenu>
           <DropdownMenu>
              <DropdownMenuTrigger className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50 focus:outline-none">
-               Blueprint Tool
+               Tools
                <ChevronDown className="w-4 h-4" />
              </DropdownMenuTrigger>
              <DropdownMenuContent align="start" className="w-[34rem] p-3">
                <div className="grid grid-cols-2 gap-1">
-                 {blueprintToolItems.map((item) => (
-                   <DropdownMenuItem key={item.href} asChild className="p-0 focus:bg-transparent">
-                     <a href={item.href} onClick={() => setOpen(false)} className="flex items-start gap-3 rounded-lg p-3 hover:bg-secondary/60 transition-colors cursor-pointer">
+                 {toolItems.map((item) => (
+                   <DropdownMenuItem key={item.to} asChild className="p-0 focus:bg-transparent">
+                     <Link to={item.to} className="flex items-start gap-3 rounded-lg p-3 hover:bg-secondary/60 transition-colors cursor-pointer">
                        <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
                          <item.icon className="h-4 w-4" />
                        </span>
                        <span className="min-w-0">
-                         <span className="block font-semibold text-sm text-foreground">{item.label}</span>
+                         <span className="flex items-center font-semibold text-sm text-foreground">
+                           {item.label}
+                           <LearnBadge badge={item.badge} />
+                         </span>
                          <span className="block text-xs text-muted-foreground leading-snug mt-0.5">{item.desc}</span>
                        </span>
-                     </a>
+                     </Link>
                    </DropdownMenuItem>
                  ))}
                </div>
@@ -207,19 +207,22 @@ export default function Navbar() {
             ))}
             </div>
             <div className="pt-2 pb-1">
-             <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Blueprint Tool</p>
-             {blueprintToolItems.map((item) => (
-               <a
-                 key={item.href}
-                 href={item.href}
+             <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Tools</p>
+             {toolItems.map((item) => (
+               <Link
+                 key={item.to}
+                 to={item.to}
                  onClick={() => setOpen(false)}
                  className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
                >
                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
                    <item.icon className="h-4 w-4" />
                  </span>
-                 <span className="text-sm font-medium text-muted-foreground">{item.label}</span>
-               </a>
+                 <span className="flex items-center text-sm font-medium text-muted-foreground">
+                   {item.label}
+                   <LearnBadge badge={item.badge} />
+                 </span>
+               </Link>
              ))}
             </div>
             {links.map((l) => (
