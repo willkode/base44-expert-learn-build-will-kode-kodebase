@@ -11,6 +11,7 @@ import DeliverabilityCard from "@/components/admin/email/settings/Deliverability
 import ComplianceCard from "@/components/admin/email/settings/ComplianceCard";
 import LimitsCard from "@/components/admin/email/settings/LimitsCard";
 import TestEmailCard from "@/components/admin/email/settings/TestEmailCard";
+import ResendSyncCard from "@/components/admin/email/settings/ResendSyncCard";
 
 export default function EmailResendSettings() {
   const [settings, setSettings] = useState(null);
@@ -83,6 +84,7 @@ export default function EmailResendSettings() {
         <DeliverabilityCard settings={settings} set={set} domains={domains} />
         <ComplianceCard settings={settings} set={set} />
         <LimitsCard settings={settings} set={set} />
+        <ResendSyncCard settings={settings} set={set} onSaveAudience={save} sendingEnabled={!!status?.sendingEnabled} />
         <TestEmailCard sendingEnabled={!!status?.sendingEnabled} onSent={loadStatus} />
       </div>
     </div>

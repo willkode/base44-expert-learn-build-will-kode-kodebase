@@ -3,7 +3,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 // Whitelist of fields admins may update. API keys are NEVER accepted here —
 // the Resend key lives only in backend secret storage.
 const ALLOWED_FIELDS = [
-  'resendFromEmail', 'resendFromName', 'resendReplyToEmail', 'resendDomain',
+  'resendFromEmail', 'resendFromName', 'resendReplyToEmail', 'resendDomain', 'resendAudienceId',
   'domainVerified', 'spfConfigured', 'dkimConfigured', 'dmarcConfigured', 'trackingConfigured',
   'defaultTimezone', 'requireApprovalBeforeSend', 'enableAiGeneration', 'enableAutoSending',
   'enableWebhookTracking', 'enableClickTracking', 'enableOpenTracking',
