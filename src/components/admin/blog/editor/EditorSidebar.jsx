@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { POST_STATUSES, POST_TYPES, SEARCH_INTENTS } from "@/lib/blogEditor";
 
-export default function EditorSidebar({ post, set, categories, tagsText, onTagsText, onRecommendTaxonomy, wordCount, readMinutes, validation }) {
+export default function EditorSidebar({ post, set, categories, tagsText, onTagsText, onRecommendTaxonomy, onCategoriesChanged, wordCount, readMinutes, validation }) {
   const [recommending, setRecommending] = useState(false);
 
   const canRecommend = !!(post.title?.trim() || post.content?.trim());
@@ -22,7 +22,11 @@ export default function EditorSidebar({ post, set, categories, tagsText, onTagsT
     setRecommending(true);
     try {
       const rec = await onRecommendTaxonomy();
-      // Apply category.
+      // If a new category was created, refresh the dropdown options first so it can be selected.
+      if (rec.categoryCreated && onCategoriesChanged) {
+        await onCategoriesChanged();
+      }
+      // Apply (auto-select) the category.
       if (rec.category) {
         if (rec.categoryId) set("categoryId", rec.categoryId);
         set("category", rec.category);
@@ -37,9 +41,9 @@ export default function EditorSidebar({ post, set, categories, tagsText, onTagsT
       });
       onTagsText(merged.join(", "));
       toast.success(
-        rec.categoryIsNew && rec.category
-          ? `Suggested new category "${rec.category}" + ${rec.tags?.length || 0} tags`
-          : `Applied category + ${rec.tags?.length || 0} tags`
+        rec.categoryCreated
+          ? `Created & selected category "${rec.category}" + ${rec.tags?.length || 0} tags`
+          : `Selected "${rec.category}" + ${rec.tags?.length || 0} tags`
       );
     } catch (err) {
       toast.error(err?.message || "Recommendation failed");

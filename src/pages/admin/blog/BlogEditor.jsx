@@ -57,9 +57,14 @@ export default function BlogEditor() {
   const dirty = useRef(false);
   const autosaveTimer = useRef(null);
 
+  const reloadCategories = useCallback(
+    () => base44.entities.BlogCategory.list("displayOrder", 200).then(setCategories),
+    []
+  );
+
   // Load categories + existing post
   useEffect(() => {
-    base44.entities.BlogCategory.list("displayOrder", 200).then(setCategories);
+    reloadCategories();
     if (isNew) return;
     base44.entities.BlogPost.filter({ id }).then((rows) => {
       if (rows[0]) {
@@ -71,7 +76,7 @@ export default function BlogEditor() {
       }
       setLoading(false);
     });
-  }, [id, isNew, navigate]);
+  }, [id, isNew, navigate, reloadCategories]);
 
   const set = useCallback((k, v) => {
     dirty.current = true;
@@ -323,6 +328,7 @@ export default function BlogEditor() {
             tagsText={tagsText}
             onTagsText={(v) => { dirty.current = true; setTagsText(v); }}
             onRecommendTaxonomy={recommendTaxonomy}
+            onCategoriesChanged={reloadCategories}
             wordCount={wordCount}
             readMinutes={readMinutes}
             validation={validation}
