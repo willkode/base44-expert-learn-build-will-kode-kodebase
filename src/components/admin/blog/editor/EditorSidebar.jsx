@@ -1,15 +1,53 @@
-import React from "react";
-import { AlertTriangle, CheckCircle2, Clock, FileText, Timer } from "lucide-react";
+import React, { useState } from "react";
+import { toast } from "sonner";
+import { AlertTriangle, CheckCircle2, Clock, FileText, Timer, Sparkles, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { POST_STATUSES, POST_TYPES, SEARCH_INTENTS } from "@/lib/blogEditor";
 
-export default function EditorSidebar({ post, set, categories, tagsText, onTagsText, wordCount, readMinutes, validation }) {
+export default function EditorSidebar({ post, set, categories, tagsText, onTagsText, onRecommendTaxonomy, wordCount, readMinutes, validation }) {
+  const [recommending, setRecommending] = useState(false);
+
+  const canRecommend = !!(post.title?.trim() || post.content?.trim());
+
+  const recommend = async () => {
+    if (!onRecommendTaxonomy) return;
+    if (!canRecommend) { toast.error("Add a title or content first"); return; }
+    setRecommending(true);
+    try {
+      const rec = await onRecommendTaxonomy();
+      // Apply category.
+      if (rec.category) {
+        if (rec.categoryId) set("categoryId", rec.categoryId);
+        set("category", rec.category);
+      }
+      // Merge recommended tags with existing ones (de-duped).
+      const current = (tagsText || "").split(",").map((t) => t.trim()).filter(Boolean);
+      const seen = new Set(current.map((t) => t.toLowerCase()));
+      const merged = [...current];
+      (rec.tags || []).forEach((t) => {
+        const clean = String(t).trim();
+        if (clean && !seen.has(clean.toLowerCase())) { seen.add(clean.toLowerCase()); merged.push(clean); }
+      });
+      onTagsText(merged.join(", "));
+      toast.success(
+        rec.categoryIsNew && rec.category
+          ? `Suggested new category "${rec.category}" + ${rec.tags?.length || 0} tags`
+          : `Applied category + ${rec.tags?.length || 0} tags`
+      );
+    } catch (err) {
+      toast.error(err?.message || "Recommendation failed");
+    } finally {
+      setRecommending(false);
+    }
+  };
+
   return (
     <div className="space-y-5">
       {/* Stats */}
@@ -59,7 +97,21 @@ export default function EditorSidebar({ post, set, categories, tagsText, onTagsT
 
       {/* Taxonomy */}
       <div className="rounded-xl border border-border bg-card/60 p-4 space-y-4">
-        <p className="text-sm font-medium">Organization</p>
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-sm font-medium">Organization</p>
+          {onRecommendTaxonomy && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={recommend}
+              disabled={recommending || !canRecommend}
+              className="gap-1.5 h-7 px-2.5 text-xs"
+            >
+              {recommending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+              AI recommend
+            </Button>
+          )}
+        </div>
         <div>
           <Label className="text-xs text-muted-foreground mb-1.5 block">Category</Label>
           {categories.length > 0 ? (

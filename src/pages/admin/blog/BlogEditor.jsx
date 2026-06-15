@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import MarkdownEditor from "@/components/admin/blog/editor/MarkdownEditor";
+import FeaturedImagePanel from "@/components/admin/blog/editor/FeaturedImagePanel";
 import SeoFields from "@/components/admin/blog/editor/SeoFields";
 import EditorSidebar from "@/components/admin/blog/editor/EditorSidebar";
 import ApprovalActions from "@/components/admin/blog/approval/ApprovalActions";
@@ -140,6 +141,22 @@ export default function BlogEditor() {
     }
   }, [post, savedId, slugTouched, buildPayload, isNew, seoAnalysis]);
 
+  // AI recommend a category + tags from the current post content.
+  const recommendTaxonomy = useCallback(async () => {
+    const tags = tagsText.split(",").map((t) => t.trim()).filter(Boolean);
+    const res = await base44.functions.invoke("recommendBlogTaxonomy", {
+      title: post.title,
+      excerpt: post.excerpt,
+      content: post.content,
+      targetKeyword: post.targetKeyword,
+      existingTags: tags,
+    });
+    if (!res.data?.success) {
+      throw new Error(res.data?.error || "Recommendation failed");
+    }
+    return res.data;
+  }, [post.title, post.excerpt, post.content, post.targetKeyword, tagsText]);
+
   // Apply an AI SEO fix returned by the panel into the local post state.
   const onFieldFixed = useCallback((field, value) => {
     dirty.current = true;
@@ -252,14 +269,7 @@ export default function BlogEditor() {
                 <Label className="mb-1.5 block">Excerpt</Label>
                 <Textarea value={post.excerpt} onChange={(e) => set("excerpt", e.target.value)} className="h-16" placeholder="Short summary shown on listings" />
               </div>
-              <div>
-                <Label className="mb-1.5 block">Featured image URL</Label>
-                <Input value={post.coverImageUrl} onChange={(e) => set("coverImageUrl", e.target.value)} placeholder="https://..." />
-              </div>
-              <div>
-                <Label className="mb-1.5 block">Featured image alt text</Label>
-                <Input value={post.featuredImageAlt} onChange={(e) => set("featuredImageAlt", e.target.value)} placeholder="Describe the image" />
-              </div>
+              <FeaturedImagePanel post={post} set={set} savedId={savedId} />
               <div>
                 <Label className="mb-1.5 block">Content</Label>
                 <MarkdownEditor value={post.content} onChange={(v) => set("content", v)} />
@@ -312,6 +322,7 @@ export default function BlogEditor() {
             categories={categories}
             tagsText={tagsText}
             onTagsText={(v) => { dirty.current = true; setTagsText(v); }}
+            onRecommendTaxonomy={recommendTaxonomy}
             wordCount={wordCount}
             readMinutes={readMinutes}
             validation={validation}
