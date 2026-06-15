@@ -10,6 +10,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 
 // Public pages
 import Home from '@/pages/Home';
+import BlueprintTool from '@/pages/tools/Blueprint';
 import Features from '@/pages/Features';
 import Pricing from '@/pages/Pricing';
 import Products from '@/pages/Products';
@@ -119,6 +120,7 @@ const AuthenticatedApp = () => {
         <Route path="/learn/llm-guide" element={<LlmGuide />} />
       </Route>
       <Route path="/" element={<Home />} />
+      <Route path="/tools/blueprint" element={<BlueprintTool />} />
 
       {/* Auth pages */}
       <Route path="/login" element={<Login />} />
