@@ -66,6 +66,12 @@ export default function IssuesTab({ issues }) {
             {STATUS_OPTIONS.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
           </SelectContent>
         </Select>
+        <Select value={category} onValueChange={setCategory}>
+          <SelectTrigger className="w-48"><SelectValue placeholder="Category" /></SelectTrigger>
+          <SelectContent>
+            {CATEGORY_OPTIONS.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+          </SelectContent>
+        </Select>
         <span className="text-sm text-muted-foreground ml-auto">{filtered.length} of {issues.length}</span>
       </div>
 
@@ -81,6 +87,11 @@ export default function IssuesTab({ issues }) {
                 {issue.affected_route && (
                   <span className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
                     <RouteIcon className="w-3 h-3" /> Route · {issue.affected_route}
+                  </span>
+                )}
+                {issue.affected_entity && (
+                  <span className="inline-flex items-center gap-1 rounded-md border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-xs font-semibold text-amber-400">
+                    <Database className="w-3 h-3" /> Entity · {issue.affected_entity}
                   </span>
                 )}
                 <span className="text-xs text-muted-foreground ml-auto">{formatDate(issue.created_date)}</span>
