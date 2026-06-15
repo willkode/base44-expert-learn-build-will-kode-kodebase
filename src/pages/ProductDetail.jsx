@@ -64,7 +64,7 @@ export default function ProductDetail() {
 
         <ProductDetailHero product={product} onBuy={handleBuy} />
 
-        <ProductProblemSolution />
+        {product.slug === "ai-drift-control-system" && <ProductProblemSolution />}
 
         {product.description && (
           <div className="max-w-3xl mx-auto text-center mt-24 mb-16">
