@@ -42,10 +42,21 @@ function MetricCard({ icon: Icon, label, value, accent }) {
   );
 }
 
+const CATEGORY_GROUPS = [
+  { key: "entity", label: "Entity Exposure", cats: ["Entity Exposure", "Public Data Leak", "User Data Isolation"] },
+  { key: "route", label: "Route Protection", cats: ["Route Protection", "Admin Lockdown"] },
+  { key: "role", label: "Roles & Actions", cats: ["Role-Based Access", "Dangerous Action", "Premium Access"] },
+];
+
 export default function OverviewTab({ scans, issues, latestScan, counts, onScanNow, scanning, scanState }) {
   const hasScans = scans.length > 0;
   const recentIssues = issues.slice(0, 6);
   const recentScans = scans.slice(0, 5);
+  const openIssues = issues.filter((i) => i.status === "Open");
+  const groupCounts = CATEGORY_GROUPS.map((g) => ({
+    ...g,
+    count: openIssues.filter((i) => g.cats.includes(i.category)).length,
+  }));
 
   return (
     <div className="space-y-8">
@@ -88,6 +99,22 @@ export default function OverviewTab({ scans, issues, latestScan, counts, onScanN
         <MetricCard icon={AlertTriangle} label="Medium" value={counts.medium} accent="text-amber-400" />
         <MetricCard icon={AlertTriangle} label="Low" value={counts.low} accent="text-blue-400" />
         <MetricCard icon={CheckCircle2} label="Fixed" value={counts.fixed} accent="text-green-400" />
+      </div>
+
+      {/* Issues by area */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {groupCounts.map((g) => (
+          <div key={g.key} className="rounded-2xl border border-border bg-card/70 p-5 flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">{g.label}</p>
+              <p className={`font-sora font-bold text-2xl ${g.count > 0 ? "text-orange-400" : "text-green-400"}`}>{g.count}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">open issue{g.count === 1 ? "" : "s"}</p>
+            </div>
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+              {g.key === "entity" ? <ShieldAlert className="w-5 h-5 text-primary" /> : g.key === "route" ? <ScanLine className="w-5 h-5 text-primary" /> : <ShieldCheck className="w-5 h-5 text-primary" />}
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">

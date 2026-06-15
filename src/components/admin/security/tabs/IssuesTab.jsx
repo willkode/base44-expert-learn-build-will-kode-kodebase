@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ShieldCheck, Route as RouteIcon, Copy, Check } from "lucide-react";
+import { ShieldCheck, Route as RouteIcon, Database, Copy, Check } from "lucide-react";
 import EmptyState from "@/components/shared/EmptyState";
 import SecurityBadge from "@/components/admin/security/SecurityBadge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -7,6 +7,10 @@ import { SEVERITY_STYLES, ISSUE_STATUS_STYLES, SEVERITY_ORDER, formatDate } from
 
 const STATUS_OPTIONS = ["All", "Open", "In Progress", "Fixed", "Needs Retest", "Ignored", "False Positive"];
 const SEVERITY_OPTIONS = ["All", ...SEVERITY_ORDER];
+const CATEGORY_OPTIONS = [
+  "All", "Route Protection", "Admin Lockdown", "Entity Exposure", "Public Data Leak",
+  "User Data Isolation", "Role-Based Access", "Dangerous Action", "Premium Access", "Configuration", "General",
+];
 
 function FixPromptButton({ fixPrompt }) {
   const [copied, setCopied] = useState(false);
@@ -29,10 +33,12 @@ function FixPromptButton({ fixPrompt }) {
 export default function IssuesTab({ issues }) {
   const [severity, setSeverity] = useState("All");
   const [status, setStatus] = useState("All");
+  const [category, setCategory] = useState("All");
 
   const filtered = issues
     .filter((i) => severity === "All" || i.severity === severity)
     .filter((i) => status === "All" || i.status === status)
+    .filter((i) => category === "All" || i.category === category)
     .sort((a, b) => SEVERITY_ORDER.indexOf(a.severity) - SEVERITY_ORDER.indexOf(b.severity));
 
   if (issues.length === 0) {

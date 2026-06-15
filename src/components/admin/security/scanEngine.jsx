@@ -65,6 +65,55 @@ function buildFixPrompt({ title, severity, risk, fix, implementation, testing })
   ].join("\n\n");
 }
 
+// Role / data-isolation fix prompt in the exact format required by the spec.
+function buildRoleFixPrompt({ title, severity, risk, fix }) {
+  return [
+    "Fix this Base44 security issue.",
+    `Issue:\n${title}`,
+    `Severity:\n${severity}`,
+    `Risk:\n${risk}`,
+    `Required Fix:\n${fix}`,
+    [
+      "Instructions:",
+      "1. Review the affected role/entity/feature/action.",
+      "2. Confirm who should be allowed to view, create, edit, delete, or manage it.",
+      "3. Add or verify access checks using the authenticated user, owner field, role, plan, or admin status.",
+      "4. Ensure users cannot access records they do not own unless intentionally shared.",
+      "5. Hide restricted navigation and buttons from unauthorized users.",
+      "6. Prevent unauthorized actions even if the user reaches the route directly.",
+      "7. Do not change unrelated UI, copy, layout, entities, or business logic.",
+      "8. Test as logged-out user, regular user, second regular user, premium user if relevant, and admin.",
+    ].join("\n"),
+    [
+      "Return:",
+      "- What was changed",
+      "- What access rule was added",
+      "- What roles were tested",
+      "- What data isolation was verified",
+      "- Any remaining risks",
+    ].join("\n"),
+  ].join("\n\n");
+}
+
+// Entity name keywords that imply private / user-owned data.
+const OWNER_SCOPED_NAME_WORDS = [
+  "message", "messages", "chat", "file", "document", "project", "contract",
+  "contact", "customer", "lead", "supportticket", "ticket", "invoice", "transaction",
+];
+
+// Retest steps for role / data-isolation issues.
+const DATA_RETEST = [
+  "Test as a logged-out user.",
+  "Test as a regular authenticated user.",
+  "Test as a second regular user (confirm no cross-user data access).",
+  "Test as a premium user if the feature is plan-gated.",
+  "Test as an admin.",
+].join("\n");
+
+function nameSuggestsOwned(n) {
+  return OWNER_SCOPED_NAME_WORDS.some((w) => n.includes(w));
+}
+
 function issue(partial) {
   return {
     issue_id: `iss_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
@@ -394,7 +443,44 @@ function checkEntities(entities, addCheck) {
         risk_summary: "User data isolation is undefined.",
         potential_impact: "Users could read each other's records.",
         recommended_fix: "Add owner scoping (created_by_id) or admin-only RLS.",
-        fix_prompt: buildFixPrompt({ title: `Sensitive entity "${name}" missing owner scope`, severity: "High", risk: "Cross-user data access.", fix: "Add owner-scoped RLS.", implementation: `Scope ${name} reads/writes to created_by_id (or admin).`, testing: base.retest_steps }) });
+        retest_steps: DATA_RETEST,
+        fix_prompt: buildRoleFixPrompt({ title: `Sensitive entity "${name}" is missing owner scoping`, severity: "High", risk: "Without owner scoping, one user may read or modify another user's sensitive records.", fix: "Add owner-scoped RLS on " + name + " (e.g. created_by_id == user.id) or restrict to admin." }) });
+    }
+
+    // CRITICAL — user-owned private data marked public readable/writable
+    if (!failed && nameSuggestsOwned(n) && (e.is_public_readable || e.is_public_writable)) {
+      flag({ ...base, category: "User Data Isolation", severity: "Critical",
+        title: `User-owned entity "${name}" appears public`,
+        description: `${name} typically holds user-owned private data but is marked publicly ${e.is_public_writable ? "writable" : "readable"}.`,
+        risk_summary: "Another user's private data may be publicly accessible.",
+        potential_impact: "Any visitor could read or alter another user's private records.",
+        recommended_fix: "Scope access to the record owner (or admin) and remove public access.",
+        retest_steps: DATA_RETEST,
+        fix_prompt: buildRoleFixPrompt({ title: `User-owned entity "${name}" appears public`, severity: "Critical", risk: "Private, user-owned data is exposed to the public, allowing access to other users' records.", fix: "Remove public read/write on " + name + " and scope access to the owner (created_by_id) or admin role." }) });
+    }
+
+    // HIGH — owner-suggesting entity not owner-scoped or role-restricted
+    if (!failed && nameSuggestsOwned(n) && !e.is_owner_scoped && !e.is_admin_only) {
+      flag({ ...base, category: "User Data Isolation", severity: "High",
+        title: `Entity "${name}" is not owner-scoped or role-restricted`,
+        description: `${name} (messages/files/projects/contracts/contacts/tickets style data) is not owner-scoped, admin-only, or otherwise restricted.`,
+        risk_summary: "Shared user data lacks clear ownership/role restriction.",
+        potential_impact: "Users may access records belonging to other users.",
+        recommended_fix: "Scope to the owner (created_by_id), or add a role restriction if the data is intentionally shared.",
+        retest_steps: DATA_RETEST,
+        fix_prompt: buildRoleFixPrompt({ title: `Entity "${name}" is not owner-scoped or role-restricted`, severity: "High", risk: "Records may be readable by users who do not own them.", fix: "Add owner scoping on " + name + " (created_by_id), or a clear role restriction if the data is intentionally shared." }) });
+    }
+
+    // MEDIUM — entity ownership/access classification unclear
+    if (!failed && !e.is_owner_scoped && !e.is_admin_only && !e.is_public_readable && !e.is_public_writable && !e.is_sensitive_data) {
+      flag({ ...base, category: "User Data Isolation", severity: "Medium",
+        title: `Entity "${name}" has unclear data ownership`,
+        description: `${name} has no ownership, admin, public, or sensitivity classification set.`,
+        risk_summary: "Entity ownership is unclear and needs review.",
+        potential_impact: "Access intent is ambiguous and may be enforced inconsistently.",
+        recommended_fix: "Classify the entity: owner-scoped, role-restricted, admin-only, or intentionally public.",
+        retest_steps: DATA_RETEST,
+        fix_prompt: buildRoleFixPrompt({ title: `Entity "${name}" has unclear data ownership`, severity: "Medium", risk: "Ambiguous ownership can lead to inconsistent access enforcement.", fix: "Set a clear access classification for " + name + " and align its RLS accordingly." }) });
     }
 
     if (!failed && userBillingNames.includes(n) && !e.is_sensitive_data) {
@@ -416,6 +502,42 @@ function checkEntities(entities, addCheck) {
     });
   }
 
+  return issues;
+}
+
+// ---- Features displaying user-specific data ----
+function checkFeatures(features, addCheck) {
+  const issues = [];
+  const userDataWords = ["dashboard", "profile", "account", "messages", "inbox", "files", "projects", "billing", "payment", "orders", "settings"];
+  for (const f of features) {
+    const fn = f.name || f.action_name || "(unnamed feature)";
+    const blob = lower(`${fn} ${f.description || ""} ${f.related_route || ""} ${f.related_entity || ""}`);
+    const showsUserData = userDataWords.some((w) => blob.includes(w));
+    const tiedToAuth = f.is_authenticated_only || f.is_admin_only || f.is_owner_scoped || f.requires_admin || f.requires_owner || f.is_premium_only;
+    const flagged = showsUserData && !tiedToAuth && !f.is_public;
+    if (flagged) {
+      issues.push(issue({
+        category: "Role-Based Access", severity: "Medium",
+        title: `Feature "${fn}" displays user-specific data without access binding`,
+        description: `${fn} appears to surface user-specific data but is not tied to an authenticated user, owner, role, or admin.`,
+        location: `Feature registry: ${fn}`,
+        affected_route: f.related_route,
+        affected_entity: f.related_entity,
+        risk_summary: "User-specific feature is not bound to authenticated access.",
+        potential_impact: "The feature may show one user's data to another, or render without login.",
+        recommended_fix: "Bind the feature to the authenticated user (owner/role/admin) and hide it from unauthorized users.",
+        retest_steps: DATA_RETEST,
+        fix_prompt: buildRoleFixPrompt({ title: `Feature "${fn}" displays user-specific data without access binding`, severity: "Medium", risk: "A user-specific feature without access binding can leak data across users.", fix: "Tie " + fn + " to the authenticated user (owner field / role / admin) and hide its UI from unauthorized users." }),
+      }));
+    }
+    addCheck({
+      check_name: `Feature access: ${fn}`,
+      category: "Role-Based Access",
+      status: flagged ? "Failed" : "Passed",
+      result_summary: flagged ? "Feature may surface user data without access binding." : "Feature access binding looks consistent.",
+      severity_if_failed: "Medium",
+    });
+  }
   return issues;
 }
 
@@ -474,14 +596,51 @@ function checkRoles(roles, actions, addCheck) {
         fix_prompt: buildFixPrompt({ title: `Non-admin role "${rn}" has admin access`, severity: "High", risk: "Privilege escalation.", fix: "Disable can access admin.", implementation: `Toggle "can access admin" off for ${rn}.`, testing: base.retest_steps }) });
     }
 
-    if (!failed && !r.is_admin_role && r.can_manage_security) {
-      flag({ ...base, severity: "High",
+    // CRITICAL — non-admin can manage users / security
+    if (!failed && !r.is_admin_role && r.can_manage_users) {
+      flag({ ...base, severity: "Critical",
+        title: `User management allowed for non-admin role "${rn}"`,
+        description: `${rn} is not an admin role but can manage users.`,
+        risk_summary: "Privilege escalation: non-admins can manage user accounts.",
+        potential_impact: "A non-admin could view, edit, promote, or delete other users.",
+        recommended_fix: "Restrict user management to admin roles.",
+        retest_steps: DATA_RETEST,
+        fix_prompt: buildRoleFixPrompt({ title: `User management allowed for non-admin role "${rn}"`, severity: "Critical", risk: "Non-admins managing users is a role-escalation path.", fix: "Disable user management for " + rn + " and gate all user-management actions behind an admin check." }) });
+    } else if (!failed && !r.is_admin_role && r.can_manage_security) {
+      flag({ ...base, severity: "Critical",
         title: `Security management allowed for non-admin role "${rn}"`,
         description: `${rn} is not an admin role but can manage security.`,
-        risk_summary: "Security controls exposed to non-admins.",
-        potential_impact: "Non-admins could alter security configuration.",
+        risk_summary: "Privilege escalation: security controls exposed to non-admins.",
+        potential_impact: "Non-admins could alter security configuration or suppress findings.",
         recommended_fix: "Restrict security management to admin roles.",
-        fix_prompt: buildFixPrompt({ title: `Non-admin role "${rn}" manages security`, severity: "High", risk: "Security controls exposed.", fix: "Disable can manage security.", implementation: `Toggle "can manage security" off for ${rn}.`, testing: base.retest_steps }) });
+        retest_steps: DATA_RETEST,
+        fix_prompt: buildRoleFixPrompt({ title: `Security management allowed for non-admin role "${rn}"`, severity: "Critical", risk: "Non-admins managing security is a role-escalation path.", fix: "Disable security management for " + rn + " and gate it behind an admin check." }) });
+    }
+
+    // High — non-admin can view billing (admin billing features)
+    if (!failed && !r.is_admin_role && r.can_view_billing) {
+      flag({ ...base, severity: "High",
+        title: `Billing access allowed for non-admin role "${rn}"`,
+        description: `${rn} is not an admin role but can view billing data.`,
+        risk_summary: "Financial data exposed to non-admins.",
+        potential_impact: "Non-admins could view billing/revenue information intended for admins.",
+        recommended_fix: "Restrict billing visibility to admin roles (or the data owner).",
+        retest_steps: DATA_RETEST,
+        fix_prompt: buildRoleFixPrompt({ title: `Billing access allowed for non-admin role "${rn}"`, severity: "High", risk: "Billing/revenue data may be visible to users who should not see it.", fix: "Restrict billing views for " + rn + " to admins, or scope to the paying user only." }) });
+    }
+
+    // Medium — role defined but no expected permissions configured
+    const hasAnyPerm = r.is_admin_role || r.can_access_admin || r.can_manage_users ||
+      r.can_view_billing || r.can_manage_security;
+    if (!failed && !hasAnyPerm && r.expected_access !== "Public") {
+      flag({ ...base, severity: "Medium",
+        title: `Role "${rn}" has no defined permissions`,
+        description: `${rn} exists but no expected permissions (admin, user management, billing, security, admin access) are defined.`,
+        risk_summary: "Role permission matrix is incomplete.",
+        potential_impact: "Without a defined permission set, this role's access cannot be verified.",
+        recommended_fix: "Define what this role can do, or remove it if unused.",
+        retest_steps: DATA_RETEST,
+        fix_prompt: buildRoleFixPrompt({ title: `Role "${rn}" has no defined permissions`, severity: "Medium", risk: "An undefined role permission matrix makes access impossible to verify.", fix: "Document and configure the expected permissions for " + rn + ", or remove the role if it is unused." }) });
     }
 
     addCheck({
@@ -531,7 +690,8 @@ export function runRegistryScan(registry) {
   const routes = registry.filter((i) => i.item_type === "Route");
   const entities = registry.filter((i) => i.item_type === "Entity");
   const roles = registry.filter((i) => i.item_type === "Role");
-  const actions = registry.filter((i) => i.item_type === "Action" || i.item_type === "Feature");
+  const actions = registry.filter((i) => i.item_type === "Action");
+  const features = registry.filter((i) => i.item_type === "Feature");
 
   const checks = [];
   const addCheck = (c) => checks.push(c);
@@ -540,6 +700,7 @@ export function runRegistryScan(registry) {
     ...checkRoutes(routes, addCheck),
     ...checkEntities(entities, addCheck),
     ...checkRoles(roles, actions, addCheck),
+    ...checkFeatures(features, addCheck),
   ];
 
   const score = computeScore(issues);
