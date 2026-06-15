@@ -169,7 +169,7 @@ export default function SecurityDashboard() {
         </TabsContent>
 
         <TabsContent value="issues">
-          <IssuesTab issues={issues} />
+          <IssuesTab issues={issues} scans={scans} onChanged={load} />
         </TabsContent>
 
         <TabsContent value="history">
