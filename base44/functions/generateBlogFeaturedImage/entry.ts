@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-// Admin-only AI featured image generation for blog posts.
+// Admin-only AI featured image generation for blog posts. (redeploy)
 // Builds a brand/style-aware prompt, generates an image via the active provider,
 // stores the URL + provider metadata + accessible alt text on the BlogPost, and logs the event.
 //
