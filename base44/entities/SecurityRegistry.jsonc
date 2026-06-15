@@ -20,6 +20,9 @@
     "name": {
       "type": "string"
     },
+    "description": {
+      "type": "string"
+    },
     "path": {
       "type": "string"
     },
@@ -57,6 +60,87 @@
     "is_premium_only": {
       "type": "boolean",
       "default": false
+    },
+    "is_sensitive_data": {
+      "type": "boolean",
+      "default": false,
+      "description": "Entity: holds sensitive/personal data"
+    },
+    "is_public_readable": {
+      "type": "boolean",
+      "default": false,
+      "description": "Entity: readable without authentication"
+    },
+    "is_public_writable": {
+      "type": "boolean",
+      "default": false,
+      "description": "Entity: writable without authentication"
+    },
+    "is_owner_scoped": {
+      "type": "boolean",
+      "default": false,
+      "description": "Entity: records are scoped to their owner"
+    },
+    "is_admin_role": {
+      "type": "boolean",
+      "default": false,
+      "description": "Role: is an administrator role"
+    },
+    "can_access_admin": {
+      "type": "boolean",
+      "default": false,
+      "description": "Role: can access admin areas"
+    },
+    "can_manage_users": {
+      "type": "boolean",
+      "default": false,
+      "description": "Role: can manage other users"
+    },
+    "can_view_billing": {
+      "type": "boolean",
+      "default": false,
+      "description": "Role: can view billing data"
+    },
+    "can_manage_security": {
+      "type": "boolean",
+      "default": false,
+      "description": "Role: can manage security settings"
+    },
+    "action_name": {
+      "type": "string",
+      "description": "Action: human-friendly name of the sensitive action"
+    },
+    "related_route": {
+      "type": "string",
+      "description": "Action: route the action lives on"
+    },
+    "related_entity": {
+      "type": "string",
+      "description": "Action: entity the action affects"
+    },
+    "expected_role": {
+      "type": "string",
+      "description": "Action: minimum role expected to perform the action"
+    },
+    "is_dangerous_action": {
+      "type": "boolean",
+      "default": false,
+      "description": "Action: destructive or high-impact action"
+    },
+    "requires_admin": {
+      "type": "boolean",
+      "default": false,
+      "description": "Action: requires an admin role"
+    },
+    "requires_owner": {
+      "type": "boolean",
+      "default": false,
+      "description": "Action: requires record ownership"
+    },
+    "requires_premium": {
+      "type": "boolean",
+      "default": false,
+      "description": "Action: requires a premium plan"
     },
     "notes": {
       "type": "string"

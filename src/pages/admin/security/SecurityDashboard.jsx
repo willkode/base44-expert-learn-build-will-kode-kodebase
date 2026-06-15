@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Route as RouteIcon, Boxes, Users } from "lucide-react";
+import { Route as RouteIcon, Boxes, Users, Zap } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useToast } from "@/components/ui/use-toast";
 import PageHeader from "@/components/shared/PageHeader";
@@ -9,7 +9,8 @@ import { trackEvent } from "@/lib/analytics";
 import OverviewTab from "@/components/admin/security/tabs/OverviewTab";
 import IssuesTab from "@/components/admin/security/tabs/IssuesTab";
 import ScanHistoryTab from "@/components/admin/security/tabs/ScanHistoryTab";
-import RegistryTab from "@/components/admin/security/tabs/RegistryTab";
+import RegistryManager from "@/components/admin/security/registry/RegistryManager";
+import RegistrySetupToolbar from "@/components/admin/security/registry/RegistrySetupToolbar";
 import SettingsTab from "@/components/admin/security/tabs/SettingsTab";
 import ReportTab from "@/components/admin/security/tabs/ReportTab";
 
@@ -92,11 +93,13 @@ export default function SecurityDashboard() {
       <Tabs defaultValue="overview" className="mt-6">
         <TabsList className="flex flex-wrap h-auto gap-1 mb-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="setup">Setup</TabsTrigger>
           <TabsTrigger value="issues">Issues</TabsTrigger>
           <TabsTrigger value="history">Scan History</TabsTrigger>
           <TabsTrigger value="routes">Routes</TabsTrigger>
           <TabsTrigger value="entities">Entities</TabsTrigger>
           <TabsTrigger value="roles">Roles</TabsTrigger>
+          <TabsTrigger value="actions">Actions</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
           <TabsTrigger value="report">Report</TabsTrigger>
         </TabsList>
@@ -112,6 +115,10 @@ export default function SecurityDashboard() {
           />
         </TabsContent>
 
+        <TabsContent value="setup">
+          <RegistrySetupToolbar items={registry} onChanged={load} />
+        </TabsContent>
+
         <TabsContent value="issues">
           <IssuesTab issues={issues} />
         </TabsContent>
@@ -121,32 +128,46 @@ export default function SecurityDashboard() {
         </TabsContent>
 
         <TabsContent value="routes">
-          <RegistryTab
+          <RegistryManager
             items={registry}
             itemType="Route"
             icon={RouteIcon}
             emptyTitle="No routes registered"
-            emptyDescription="Registered routes will appear here so the scanner can evaluate their expected access levels."
+            emptyDescription="Add the routes the scanner should evaluate, or auto-generate a starter set from the Setup tab."
+            onChanged={load}
           />
         </TabsContent>
 
         <TabsContent value="entities">
-          <RegistryTab
+          <RegistryManager
             items={registry}
             itemType="Entity"
             icon={Boxes}
             emptyTitle="No entities registered"
-            emptyDescription="Registered entities will appear here so the scanner can evaluate data exposure."
+            emptyDescription="Add the entities the scanner should evaluate for data exposure, or auto-generate a starter set from the Setup tab."
+            onChanged={load}
           />
         </TabsContent>
 
         <TabsContent value="roles">
-          <RegistryTab
+          <RegistryManager
             items={registry}
             itemType="Role"
             icon={Users}
             emptyTitle="No roles registered"
-            emptyDescription="Registered roles will appear here so the scanner can evaluate role-based access."
+            emptyDescription="Add the roles the scanner should evaluate for access control, or auto-generate a starter set from the Setup tab."
+            onChanged={load}
+          />
+        </TabsContent>
+
+        <TabsContent value="actions">
+          <RegistryManager
+            items={registry}
+            itemType="Action"
+            icon={Zap}
+            emptyTitle="No actions registered"
+            emptyDescription="Add sensitive features and dangerous actions the scanner should evaluate, or auto-generate a starter set from the Setup tab."
+            onChanged={load}
           />
         </TabsContent>
 
