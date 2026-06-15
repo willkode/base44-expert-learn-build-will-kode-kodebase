@@ -1,0 +1,77 @@
+{
+  "name": "SecurityCheck",
+  "type": "object",
+  "properties": {
+    "check_id": {
+      "type": "string",
+      "description": "Unique human-friendly check identifier"
+    },
+    "scan_id": {
+      "type": "string",
+      "description": "Id of the SecurityScan this check belongs to"
+    },
+    "check_name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Route Protection",
+        "Admin Lockdown",
+        "Entity Exposure",
+        "API Exposure",
+        "User Data Isolation",
+        "Role-Based Access",
+        "Premium Access",
+        "Public Data Leak",
+        "Dangerous Action",
+        "Configuration",
+        "General"
+      ],
+      "default": "General"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Passed",
+        "Failed",
+        "Warning",
+        "Skipped"
+      ],
+      "default": "Skipped"
+    },
+    "result_summary": {
+      "type": "string"
+    },
+    "details": {
+      "type": "string"
+    },
+    "severity_if_failed": {
+      "type": "string",
+      "enum": [
+        "Critical",
+        "High",
+        "Medium",
+        "Low",
+        "Info"
+      ],
+      "default": "Medium"
+    },
+    "related_issue_id": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "name": "SecurityScan",
+  "type": "object",
+  "properties": {
+    "scan_id": {
+      "type": "string",
+      "description": "Unique human-friendly scan identifier"
+    },
+    "started_at": {
+      "type": "string",
+      "description": "ISO timestamp when the scan started"
+    },
+    "completed_at": {
+      "type": "string",
+      "description": "ISO timestamp when the scan completed"
+    },
+    "started_by": {
+      "type": "string",
+      "description": "Email or id of the admin who started the scan"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Not Started",
+        "Running",
+        "Completed",
+        "Failed",
+        "Needs Review"
+      ],
+      "default": "Not Started"
+    },
+    "overall_score": {
+      "type": "number",
+      "description": "0-100 overall security score"
+    },
+    "critical_count": {
+      "type": "number",
+      "default": 0
+    },
+    "high_count": {
+      "type": "number",
+      "default": 0
+    },
+    "medium_count": {
+      "type": "number",
+      "default": 0
+    },
+    "low_count": {
+      "type": "number",
+      "default": 0
+    },
+    "passed_checks": {
+      "type": "number",
+      "default": 0
+    },
+    "failed_checks": {
+      "type": "number",
+      "default": 0
+    },
+    "total_checks": {
+      "type": "number",
+      "default": 0
+    },
+    "summary": {
+      "type": "string",
+      "description": "Human-readable summary of the scan results"
+    },
+    "scan_type": {
+      "type": "string",
+      "enum": [
+        "Manual",
+        "Scheduled",
+        "Retest"
+      ],
+      "default": "Manual"
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

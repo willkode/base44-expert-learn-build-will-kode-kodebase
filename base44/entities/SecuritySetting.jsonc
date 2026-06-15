@@ -1,0 +1,68 @@
+{
+  "name": "SecuritySetting",
+  "type": "object",
+  "properties": {
+    "setting_id": {
+      "type": "string",
+      "default": "global",
+      "description": "Singleton settings key, use 'global'"
+    },
+    "scan_frequency": {
+      "type": "string",
+      "enum": [
+        "Manual",
+        "Daily",
+        "Weekly",
+        "Monthly"
+      ],
+      "default": "Manual"
+    },
+    "notify_admins": {
+      "type": "boolean",
+      "default": true
+    },
+    "critical_alert_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "ignored_routes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "ignored_entities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "required_admin_roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "admin"
+      ]
+    },
+    "last_scan_at": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

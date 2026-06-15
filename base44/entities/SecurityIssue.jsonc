@@ -1,0 +1,111 @@
+{
+  "name": "SecurityIssue",
+  "type": "object",
+  "properties": {
+    "issue_id": {
+      "type": "string",
+      "description": "Unique human-friendly issue identifier"
+    },
+    "scan_id": {
+      "type": "string",
+      "description": "Id of the SecurityScan this issue belongs to"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "Critical",
+        "High",
+        "Medium",
+        "Low",
+        "Info"
+      ],
+      "default": "Medium"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Route Protection",
+        "Admin Lockdown",
+        "Entity Exposure",
+        "API Exposure",
+        "User Data Isolation",
+        "Role-Based Access",
+        "Premium Access",
+        "Public Data Leak",
+        "Dangerous Action",
+        "Configuration",
+        "General"
+      ],
+      "default": "General"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "description": "Where the issue was found (file, page, function)"
+    },
+    "affected_route": {
+      "type": "string"
+    },
+    "affected_entity": {
+      "type": "string"
+    },
+    "affected_role": {
+      "type": "string"
+    },
+    "risk_summary": {
+      "type": "string"
+    },
+    "potential_impact": {
+      "type": "string"
+    },
+    "recommended_fix": {
+      "type": "string"
+    },
+    "fix_prompt": {
+      "type": "string",
+      "description": "Copy-paste prompt an admin can use to fix the issue"
+    },
+    "retest_steps": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Open",
+        "In Progress",
+        "Fixed",
+        "Needs Retest",
+        "Ignored",
+        "False Positive"
+      ],
+      "default": "Open"
+    },
+    "admin_notes": {
+      "type": "string"
+    },
+    "false_positive_reason": {
+      "type": "string"
+    },
+    "resolved_at": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

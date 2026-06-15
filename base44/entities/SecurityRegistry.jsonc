@@ -1,0 +1,78 @@
+{
+  "name": "SecurityRegistry",
+  "type": "object",
+  "properties": {
+    "registry_id": {
+      "type": "string",
+      "description": "Unique human-friendly registry identifier"
+    },
+    "item_type": {
+      "type": "string",
+      "enum": [
+        "Route",
+        "Entity",
+        "Role",
+        "Feature",
+        "Action"
+      ],
+      "default": "Route"
+    },
+    "name": {
+      "type": "string"
+    },
+    "path": {
+      "type": "string"
+    },
+    "entity_name": {
+      "type": "string"
+    },
+    "role_name": {
+      "type": "string"
+    },
+    "expected_access": {
+      "type": "string",
+      "enum": [
+        "Public",
+        "Authenticated",
+        "Owner Only",
+        "Role Restricted",
+        "Admin Only",
+        "Premium Only",
+        "Internal Only"
+      ],
+      "default": "Authenticated"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_admin_only": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_authenticated_only": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_premium_only": {
+      "type": "boolean",
+      "default": false
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
