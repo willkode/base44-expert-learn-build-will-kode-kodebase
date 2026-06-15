@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Save, Send, AlertTriangle, Loader2 } from "lucide-react";
+import { Save, Send, AlertTriangle, Loader2, Users } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
@@ -9,6 +9,7 @@ import StudioGenerator from "@/components/admin/email/studio/StudioGenerator";
 import StudioEditor from "@/components/admin/email/studio/StudioEditor";
 import StudioPreview from "@/components/admin/email/studio/StudioPreview";
 import TestSendDialog from "@/components/admin/email/studio/TestSendDialog";
+import SendToAllDialog from "@/components/admin/email/studio/SendToAllDialog";
 
 const EMPTY_DRAFT = {
   name: "",
@@ -28,6 +29,7 @@ export default function EmailStudio() {
   const [saving, setSaving] = useState(false);
   const [sendingEnabled, setSendingEnabled] = useState(true);
   const [testOpen, setTestOpen] = useState(false);
+  const [sendAllOpen, setSendAllOpen] = useState(false);
 
   useEffect(() => {
     base44.analytics.track({ eventName: "email_studio_viewed" });
@@ -112,6 +114,9 @@ export default function EmailStudio() {
             <Button variant="outline" disabled={!sendingEnabled || !draft.subject} onClick={() => setTestOpen(true)}>
               <Send className="w-4 h-4 mr-2" /> Test send
             </Button>
+            <Button variant="outline" disabled={!sendingEnabled || !draft.subject} onClick={() => setSendAllOpen(true)}>
+              <Users className="w-4 h-4 mr-2" /> Send to all
+            </Button>
             <Button disabled={saving} onClick={handleSaveDraft}>
               {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
               Save as draft
@@ -142,6 +147,7 @@ export default function EmailStudio() {
       </div>
 
       <TestSendDialog open={testOpen} onOpenChange={setTestOpen} draft={draft} />
+      <SendToAllDialog open={sendAllOpen} onOpenChange={setSendAllOpen} draft={draft} campaignId={campaignId} />
     </div>
   );
 }
