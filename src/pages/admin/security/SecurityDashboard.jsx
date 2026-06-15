@@ -1,15 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Route as RouteIcon, Boxes, Users, Zap, ShieldAlert, Loader2 } from "lucide-react";
+import { Route as RouteIcon, Boxes, Users, Zap } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useToast } from "@/components/ui/use-toast";
 import PageHeader from "@/components/shared/PageHeader";
 import LoadingState from "@/components/shared/LoadingState";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { trackEvent } from "@/lib/analytics";
 import { runRegistryScan, SCAN_DISCLAIMER } from "@/components/admin/security/scanEngine";
-import { runEmergencyReview } from "@/components/admin/security/emergencyEngine";
-import EmergencyLockdownSummary from "@/components/admin/security/emergency/EmergencyLockdownSummary";
 import OverviewTab from "@/components/admin/security/tabs/OverviewTab";
 import IssuesTab from "@/components/admin/security/tabs/IssuesTab";
 import ScanHistoryTab from "@/components/admin/security/tabs/ScanHistoryTab";
@@ -17,6 +14,8 @@ import RegistryManager from "@/components/admin/security/registry/RegistryManage
 import RegistrySetupToolbar from "@/components/admin/security/registry/RegistrySetupToolbar";
 import SettingsTab from "@/components/admin/security/tabs/SettingsTab";
 import ReportTab from "@/components/admin/security/tabs/ReportTab";
+import NotificationBell from "@/components/admin/security/notifications/NotificationBell";
+import { notifyScanStarted, notifyScanCompleted, notifyScanFailed } from "@/components/admin/security/notifications/notificationActions";
 
 const OPEN_STATUSES = ["Open", "In Progress", "Needs Retest"];
 
@@ -29,21 +28,21 @@ export default function SecurityDashboard() {
   const [issues, setIssues] = useState([]);
   const [registry, setRegistry] = useState([]);
   const [setting, setSetting] = useState(null);
-  const [emergencyRunning, setEmergencyRunning] = useState(false);
-  const [emergencyResult, setEmergencyResult] = useState(null);
-  const [emergencyOpen, setEmergencyOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
   const load = useCallback(async () => {
-    const [scanList, issueList, registryList, settingList] = await Promise.all([
+    const [scanList, issueList, registryList, settingList, notificationList] = await Promise.all([
       base44.entities.SecurityScan.list("-created_date", 100),
       base44.entities.SecurityIssue.list("-created_date", 200),
       base44.entities.SecurityRegistry.list("-created_date", 200),
       base44.entities.SecuritySetting.filter({ setting_id: "global" }),
+      base44.entities.SecurityNotification.list("-created_date", 50),
     ]);
     setScans(scanList);
     setIssues(issueList);
     setRegistry(registryList);
     setSetting(settingList[0] || null);
+    setNotifications(notificationList);
     setLoading(false);
   }, []);
 
@@ -79,6 +78,7 @@ export default function SecurityDashboard() {
       status: "Running",
       scan_type: "Manual",
     });
+    await notifyScanStarted(scan, "Manual");
 
     try {
       // 2. Analyze the registry → checks + issues + score.
@@ -117,6 +117,9 @@ export default function SecurityDashboard() {
         await base44.entities.SecuritySetting.update(setting.id, { last_scan_at: startedAt });
       }
 
+      // 5. Generate in-app notifications (scan complete, critical/high, score thresholds).
+      await notifyScanCompleted({ scan, score, counts, label, setting });
+
       trackEvent("security_scan_completed", { score, issues: issues.length });
       await load();
       setScanState("complete");
@@ -127,76 +130,12 @@ export default function SecurityDashboard() {
         completed_at: new Date().toISOString(),
         summary: `Scan failed: ${err.message}`,
       });
+      await notifyScanFailed({ scan, error: err.message, setting });
       await load();
       setScanState("failed");
       toast({ title: "Scan failed", description: err.message, variant: "destructive" });
     } finally {
       setScanning(false);
-    }
-  };
-
-  const handleEmergencyReview = async () => {
-    setEmergencyRunning(true);
-    trackEvent("security_emergency_review_started", {});
-    const me = await base44.auth.me();
-    const startedAt = new Date().toISOString();
-
-    // 1. Create a Manual scan record for the emergency review.
-    const scan = await base44.entities.SecurityScan.create({
-      scan_id: `emrg_${Date.now()}`,
-      started_at: startedAt,
-      started_by: me?.email || "admin",
-      status: "Running",
-      scan_type: "Manual",
-    });
-
-    try {
-      // 2. Run the urgent-focused review against the registry.
-      const registryList = await base44.entities.SecurityRegistry.list("-created_date", 500);
-      const result = runEmergencyReview(registryList);
-      const { checks, urgentIssues, score, summary } = result;
-
-      // 3. Persist checks and the urgent issues found.
-      if (checks.length > 0) {
-        await base44.entities.SecurityCheck.bulkCreate(
-          checks.map((c) => ({ ...c, scan_id: scan.id, check_id: `chk_${Date.now()}_${Math.random().toString(36).slice(2, 7)}` }))
-        );
-      }
-      if (urgentIssues.length > 0) {
-        await base44.entities.SecurityIssue.bulkCreate(urgentIssues.map((i) => ({ ...i, scan_id: scan.id })));
-      }
-
-      const passed = checks.filter((c) => c.status === "Passed").length;
-      const failed = checks.filter((c) => c.status === "Failed").length;
-
-      // 4. Mark the scan Completed with an emergency summary.
-      await base44.entities.SecurityScan.update(scan.id, {
-        status: "Completed",
-        completed_at: new Date().toISOString(),
-        overall_score: score,
-        critical_count: summary.criticalCount,
-        high_count: summary.highCount,
-        total_checks: checks.length,
-        passed_checks: passed,
-        failed_checks: failed,
-        summary: `Emergency Lockdown Review: ${summary.criticalCount} critical, ${summary.highCount} high, ${summary.totalUrgent} urgent issue${summary.totalUrgent === 1 ? "" : "s"}. Score ${score}/100. ${SCAN_DISCLAIMER}`,
-      });
-
-      trackEvent("security_emergency_review_completed", { critical: summary.criticalCount, high: summary.highCount });
-      setEmergencyResult(result);
-      setEmergencyOpen(true);
-      await load();
-      toast({ title: "Emergency review complete", description: `${summary.totalUrgent} urgent issue${summary.totalUrgent === 1 ? "" : "s"} found.` });
-    } catch (err) {
-      await base44.entities.SecurityScan.update(scan.id, {
-        status: "Failed",
-        completed_at: new Date().toISOString(),
-        summary: `Emergency review failed: ${err.message}`,
-      });
-      await load();
-      toast({ title: "Emergency review failed", description: err.message, variant: "destructive" });
-    } finally {
-      setEmergencyRunning(false);
     }
   };
 
@@ -208,29 +147,6 @@ export default function SecurityDashboard() {
         title="Security Lockdown Pro"
         description="Admin-only security monitoring across your app's routes, entities, and roles."
       />
-
-      {/* Emergency Lockdown Review */}
-      <div className="mt-5 rounded-2xl border border-red-500/30 bg-red-500/10 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0">
-            <ShieldAlert className="w-5 h-5 text-red-400" />
-          </div>
-          <div>
-            <p className="font-sora font-semibold">Emergency Lockdown Review</p>
-            <p className="text-sm text-muted-foreground max-w-xl">
-              Believe private data or admin tools may be exposed? Run an urgent review of high-risk routes, entities, and roles, and get emergency fix prompts to copy.
-            </p>
-          </div>
-        </div>
-        <button
-          onClick={handleEmergencyReview}
-          disabled={emergencyRunning}
-          className="inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold bg-red-500 hover:bg-red-600 text-white disabled:opacity-80 transition-colors shrink-0"
-        >
-          {emergencyRunning ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldAlert className="w-4 h-4" />}
-          {emergencyRunning ? "Reviewing..." : "Emergency Lockdown Review"}
-        </button>
-      </div>
 
       <Tabs defaultValue="overview" className="mt-6">
         <TabsList className="flex flex-wrap h-auto gap-1 mb-6">
@@ -322,19 +238,6 @@ export default function SecurityDashboard() {
           <ReportTab latestScan={latestScan} issues={issues} counts={counts} />
         </TabsContent>
       </Tabs>
-
-      <Dialog open={emergencyOpen} onOpenChange={setEmergencyOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 font-sora">
-              <ShieldAlert className="w-5 h-5 text-red-400" /> Emergency Lockdown Summary
-            </DialogTitle>
-          </DialogHeader>
-          {emergencyResult && (
-            <EmergencyLockdownSummary result={emergencyResult} onClose={() => setEmergencyOpen(false)} />
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

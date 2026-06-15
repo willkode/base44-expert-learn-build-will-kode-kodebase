@@ -34,6 +34,23 @@ export default function IssuesTab({ issues, scans = [], onChanged }) {
 
   const openIssue = (issue) => { setActive(issue); setDrawerOpen(true); };
 
+  const openCount = issues.filter((i) => OPEN_RETEST_STATUSES.includes(i.status)).length;
+
+  const handleRetestOpen = async () => {
+    if (openCount === 0) {
+      toast({ title: "Nothing to retest", description: "There are no open, in-progress, or needs-retest issues." });
+      return;
+    }
+    setRetesting(true);
+    try {
+      const res = await retestOpenIssues(issues);
+      onChanged?.();
+      toast({ title: "Retest complete", description: `${res.tested} retested — ${res.passed} passed, ${res.failed} still failing. Score ${res.score}/100.` });
+    } finally {
+      setRetesting(false);
+    }
+  };
+
   // Keep the drawer's data fresh after a refresh.
   const activeIssue = active ? issues.find((i) => i.id === active.id) || active : null;
 
