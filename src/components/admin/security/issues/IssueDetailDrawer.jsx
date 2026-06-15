@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Route as RouteIcon, Database, Users as UsersIcon, MapPin, AlertTriangle, ShieldAlert, ClipboardCheck, StickyNote, RefreshCw, ListChecks } from "lucide-react";
+import { Route as RouteIcon, Database, Users as UsersIcon, MapPin, AlertTriangle, ShieldAlert, ClipboardCheck, StickyNote } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -8,10 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/components/ui/use-toast";
 import SecurityBadge from "@/components/admin/security/SecurityBadge";
 import CopyFixPromptButton from "@/components/admin/security/issues/CopyFixPromptButton";
-import RetestDialog from "@/components/admin/security/issues/RetestDialog";
 import { SEVERITY_STYLES, ISSUE_STATUS_STYLES, formatDate } from "@/components/admin/security/securityConfig";
 import { updateIssueStatus } from "@/components/admin/security/issues/issueActions";
-import { getRetestChecklist } from "@/components/admin/security/retestEngine";
+import { notifyIssueFixed, notifyIssueNeedsRetest } from "@/components/admin/security/notifications/notificationActions";
 
 const STATUS_OPTIONS = ["Open", "In Progress", "Fixed", "Needs Retest", "Ignored", "False Positive"];
 
@@ -46,7 +45,6 @@ export default function IssueDetailDrawer({ issue, open, onOpenChange, onChanged
   const [status, setStatus] = useState("Open");
   const [fpReason, setFpReason] = useState("");
   const [saving, setSaving] = useState(false);
-  const [retestOpen, setRetestOpen] = useState(false);
 
   useEffect(() => {
     if (issue) {
@@ -78,6 +76,9 @@ export default function IssueDetailDrawer({ issue, open, onOpenChange, onChanged
     try {
       const extra = status === "False Positive" ? { false_positive_reason: fpReason } : {};
       await updateIssueStatus(issue, status, extra);
+      const setting = (await base44.entities.SecuritySetting.filter({ setting_id: "global" }))[0] || null;
+      if (status === "Fixed") await notifyIssueFixed({ issue, setting });
+      if (status === "Needs Retest") await notifyIssueNeedsRetest({ issue });
       onChanged?.();
       if (status === "Fixed") {
         toast({ title: "Marked as fixed", description: "Run a retest to confirm — set status to Needs Retest if a retest is required." });
@@ -103,13 +104,8 @@ export default function IssueDetailDrawer({ issue, open, onOpenChange, onChanged
             <h3 className="font-sora font-bold text-xl">{issue.title || "Untitled issue"}</h3>
           </div>
 
-          {/* Retest + Copy fix prompt — prominent */}
-          <div className="flex flex-wrap items-center gap-3">
-            <Button onClick={() => setRetestOpen(true)} variant="outline" className="gap-2">
-              <RefreshCw className="w-4 h-4" /> Retest Issue
-            </Button>
-            {issue.fix_prompt && <CopyFixPromptButton fixPrompt={issue.fix_prompt} />}
-          </div>
+          {/* Copy fix prompt — prominent */}
+          {issue.fix_prompt && <CopyFixPromptButton fixPrompt={issue.fix_prompt} />}
 
           {/* Details */}
           {issue.description && <p className="text-sm text-muted-foreground">{issue.description}</p>}
@@ -149,18 +145,6 @@ export default function IssueDetailDrawer({ issue, open, onOpenChange, onChanged
             </Section>
           )}
 
-          {/* Manual retest checklist */}
-          <Section icon={ListChecks} title="Manual retest checklist">
-            <ul className="space-y-1.5">
-              {getRetestChecklist(issue).map((step, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                  {step}
-                </li>
-              ))}
-            </ul>
-          </Section>
-
           {/* Status workflow */}
           <Section icon={ShieldAlert} title="Status">
             <Select value={status} onValueChange={setStatus}>
@@ -199,7 +183,6 @@ export default function IssueDetailDrawer({ issue, open, onOpenChange, onChanged
           </div>
         </div>
       </SheetContent>
-      <RetestDialog issue={issue} open={retestOpen} onOpenChange={setRetestOpen} onChanged={onChanged} />
     </Sheet>
   );
 }
