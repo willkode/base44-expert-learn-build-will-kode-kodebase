@@ -4,6 +4,7 @@ import EmptyState from "@/components/shared/EmptyState";
 import SecurityBadge from "@/components/admin/security/SecurityBadge";
 import { SEVERITY_STYLES, ISSUE_STATUS_STYLES, SCAN_STATUS_STYLES, scoreColor, formatDate } from "@/components/admin/security/securityConfig";
 import { scoreLabel } from "@/components/admin/security/scanEngine";
+import ScoreBanner from "@/components/admin/security/notifications/ScoreBanner";
 
 function ScanButton({ onScanNow, scanning, scanState }) {
   const map = {
@@ -60,6 +61,9 @@ export default function OverviewTab({ scans, issues, latestScan, counts, onScanN
 
   return (
     <div className="space-y-8">
+      {/* Score-based alert banner */}
+      <ScoreBanner score={latestScan?.overall_score} />
+
       {/* Top row: score + scan action */}
       <div className="grid lg:grid-cols-3 gap-5">
         <div className="lg:col-span-2 rounded-2xl border border-border bg-card/70 p-6 flex items-center justify-between gap-6">

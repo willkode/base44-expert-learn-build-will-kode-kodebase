@@ -7,6 +7,7 @@ import LoadingState from "@/components/shared/LoadingState";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { trackEvent } from "@/lib/analytics";
 import { runRegistryScan, SCAN_DISCLAIMER } from "@/components/admin/security/scanEngine";
+import { retestOpenIssues } from "@/components/admin/security/issues/issueActions";
 import OverviewTab from "@/components/admin/security/tabs/OverviewTab";
 import IssuesTab from "@/components/admin/security/tabs/IssuesTab";
 import ScanHistoryTab from "@/components/admin/security/tabs/ScanHistoryTab";
@@ -14,8 +15,6 @@ import RegistryManager from "@/components/admin/security/registry/RegistryManage
 import RegistrySetupToolbar from "@/components/admin/security/registry/RegistrySetupToolbar";
 import SettingsTab from "@/components/admin/security/tabs/SettingsTab";
 import ReportTab from "@/components/admin/security/tabs/ReportTab";
-import NotificationBell from "@/components/admin/security/notifications/NotificationBell";
-import { notifyScanStarted, notifyScanCompleted, notifyScanFailed } from "@/components/admin/security/notifications/notificationActions";
 
 const OPEN_STATUSES = ["Open", "In Progress", "Needs Retest"];
 
@@ -23,26 +22,24 @@ export default function SecurityDashboard() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [scanning, setScanning] = useState(false);
+  const [retesting, setRetesting] = useState(false);
   const [scanState, setScanState] = useState("ready"); // ready | running | complete | failed
   const [scans, setScans] = useState([]);
   const [issues, setIssues] = useState([]);
   const [registry, setRegistry] = useState([]);
   const [setting, setSetting] = useState(null);
-  const [notifications, setNotifications] = useState([]);
 
   const load = useCallback(async () => {
-    const [scanList, issueList, registryList, settingList, notificationList] = await Promise.all([
+    const [scanList, issueList, registryList, settingList] = await Promise.all([
       base44.entities.SecurityScan.list("-created_date", 100),
       base44.entities.SecurityIssue.list("-created_date", 200),
       base44.entities.SecurityRegistry.list("-created_date", 200),
       base44.entities.SecuritySetting.filter({ setting_id: "global" }),
-      base44.entities.SecurityNotification.list("-created_date", 50),
     ]);
     setScans(scanList);
     setIssues(issueList);
     setRegistry(registryList);
     setSetting(settingList[0] || null);
-    setNotifications(notificationList);
     setLoading(false);
   }, []);
 
@@ -78,7 +75,6 @@ export default function SecurityDashboard() {
       status: "Running",
       scan_type: "Manual",
     });
-    await notifyScanStarted(scan, "Manual");
 
     try {
       // 2. Analyze the registry → checks + issues + score.
@@ -117,9 +113,6 @@ export default function SecurityDashboard() {
         await base44.entities.SecuritySetting.update(setting.id, { last_scan_at: startedAt });
       }
 
-      // 5. Generate in-app notifications (scan complete, critical/high, score thresholds).
-      await notifyScanCompleted({ scan, score, counts, label, setting });
-
       trackEvent("security_scan_completed", { score, issues: issues.length });
       await load();
       setScanState("complete");
@@ -130,12 +123,30 @@ export default function SecurityDashboard() {
         completed_at: new Date().toISOString(),
         summary: `Scan failed: ${err.message}`,
       });
-      await notifyScanFailed({ scan, error: err.message, setting });
       await load();
       setScanState("failed");
       toast({ title: "Scan failed", description: err.message, variant: "destructive" });
     } finally {
       setScanning(false);
+    }
+  };
+
+  const handleRetestOpen = async () => {
+    if (counts.open === 0) {
+      toast({ title: "Nothing to retest", description: "There are no open, in-progress, or needs-retest issues." });
+      return;
+    }
+    setRetesting(true);
+    trackEvent("security_retest_open_started", { open: counts.open });
+    try {
+      const res = await retestOpenIssues(issues);
+      await load();
+      trackEvent("security_retest_open_completed", { passed: res.passed, failed: res.failed, score: res.score });
+      toast({ title: "Retest complete", description: `${res.tested} retested — ${res.passed} passed, ${res.failed} still failing. Score ${res.score}/100.` });
+    } catch (err) {
+      toast({ title: "Retest failed", description: err.message, variant: "destructive" });
+    } finally {
+      setRetesting(false);
     }
   };
 
@@ -171,6 +182,8 @@ export default function SecurityDashboard() {
             onScanNow={handleScanNow}
             scanning={scanning}
             scanState={scanState}
+            onRetestOpen={handleRetestOpen}
+            retesting={retesting}
           />
         </TabsContent>
 

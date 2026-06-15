@@ -115,6 +115,10 @@ export default function IssuesTab({ issues, scans = [], onChanged }) {
 
       <div className="flex items-center justify-between">
         <span className="text-sm text-muted-foreground">{filtered.length} of {issues.length} issues</span>
+        <Button variant="outline" size="sm" onClick={handleRetestOpen} disabled={retesting} className="gap-2">
+          <RefreshCw className={`w-4 h-4 ${retesting ? "animate-spin" : ""}`} />
+          {retesting ? "Retesting..." : `Retest Open Issues (${openCount})`}
+        </Button>
       </div>
 
       {filtered.length === 0 ? (

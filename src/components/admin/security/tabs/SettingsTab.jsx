@@ -15,6 +15,10 @@ export default function SettingsTab({ setting, onSaved }) {
     scan_frequency: setting?.scan_frequency || "Manual",
     notify_admins: setting?.notify_admins ?? true,
     critical_alert_enabled: setting?.critical_alert_enabled ?? true,
+    high_alert_enabled: setting?.high_alert_enabled ?? true,
+    notify_on_scan_complete: setting?.notify_on_scan_complete ?? true,
+    notify_on_scan_failure: setting?.notify_on_scan_failure ?? true,
+    notify_on_issue_fixed: setting?.notify_on_issue_fixed ?? true,
   });
   const [saving, setSaving] = useState(false);
 
@@ -57,9 +61,41 @@ export default function SettingsTab({ setting, onSaved }) {
         <div className="flex items-center justify-between border-t border-border pt-5">
           <div>
             <Label>Critical alerts</Label>
-            <p className="text-xs text-muted-foreground mt-1">Send an immediate alert when a critical issue is found.</p>
+            <p className="text-xs text-muted-foreground mt-1">Send an in-app alert when a critical issue is found.</p>
           </div>
           <Switch checked={form.critical_alert_enabled} onCheckedChange={(v) => set("critical_alert_enabled", v)} />
+        </div>
+
+        <div className="flex items-center justify-between border-t border-border pt-5">
+          <div>
+            <Label>High issue alerts</Label>
+            <p className="text-xs text-muted-foreground mt-1">Send an in-app alert when a high-severity issue is found.</p>
+          </div>
+          <Switch checked={form.high_alert_enabled} onCheckedChange={(v) => set("high_alert_enabled", v)} />
+        </div>
+
+        <div className="flex items-center justify-between border-t border-border pt-5">
+          <div>
+            <Label>Notify on scan completion</Label>
+            <p className="text-xs text-muted-foreground mt-1">Create a notification each time a scan completes.</p>
+          </div>
+          <Switch checked={form.notify_on_scan_complete} onCheckedChange={(v) => set("notify_on_scan_complete", v)} />
+        </div>
+
+        <div className="flex items-center justify-between border-t border-border pt-5">
+          <div>
+            <Label>Notify on scan failure</Label>
+            <p className="text-xs text-muted-foreground mt-1">Create a notification when a scan fails to complete.</p>
+          </div>
+          <Switch checked={form.notify_on_scan_failure} onCheckedChange={(v) => set("notify_on_scan_failure", v)} />
+        </div>
+
+        <div className="flex items-center justify-between border-t border-border pt-5">
+          <div>
+            <Label>Notify when issue marked fixed</Label>
+            <p className="text-xs text-muted-foreground mt-1">Create a notification when an issue is marked as fixed.</p>
+          </div>
+          <Switch checked={form.notify_on_issue_fixed} onCheckedChange={(v) => set("notify_on_issue_fixed", v)} />
         </div>
 
         {setting?.last_scan_at && (
