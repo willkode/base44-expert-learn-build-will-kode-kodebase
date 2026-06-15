@@ -6,6 +6,7 @@ import PageHeader from "@/components/shared/PageHeader";
 import LoadingState from "@/components/shared/LoadingState";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { trackEvent } from "@/lib/analytics";
+import { runRegistryScan, SCAN_DISCLAIMER } from "@/components/admin/security/scanEngine";
 import OverviewTab from "@/components/admin/security/tabs/OverviewTab";
 import IssuesTab from "@/components/admin/security/tabs/IssuesTab";
 import ScanHistoryTab from "@/components/admin/security/tabs/ScanHistoryTab";
@@ -20,6 +21,7 @@ export default function SecurityDashboard() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [scanning, setScanning] = useState(false);
+  const [scanState, setScanState] = useState("ready"); // ready | running | complete | failed
   const [scans, setScans] = useState([]);
   const [issues, setIssues] = useState([]);
   const [registry, setRegistry] = useState([]);
@@ -58,27 +60,73 @@ export default function SecurityDashboard() {
 
   const handleScanNow = async () => {
     setScanning(true);
+    setScanState("running");
     trackEvent("security_scan_started", { scan_type: "Manual" });
     const me = await base44.auth.me();
     const startedAt = new Date().toISOString();
-    await base44.entities.SecurityScan.create({
+
+    // 1. Create a Running scan record.
+    const scan = await base44.entities.SecurityScan.create({
       scan_id: `scan_${Date.now()}`,
       started_at: startedAt,
-      completed_at: new Date().toISOString(),
       started_by: me?.email || "admin",
-      status: "Needs Review",
+      status: "Running",
       scan_type: "Manual",
-      total_checks: 0,
-      passed_checks: 0,
-      failed_checks: 0,
-      summary: "Scan recorded. The scanning engine will populate checks and issues.",
     });
-    if (setting?.id) {
-      await base44.entities.SecuritySetting.update(setting.id, { last_scan_at: startedAt });
+
+    try {
+      // 2. Analyze the registry → checks + issues + score.
+      const registryList = await base44.entities.SecurityRegistry.list("-created_date", 500);
+      const { checks, issues, score, label, counts } = runRegistryScan(registryList);
+
+      // 3. Persist checks and issues linked to this scan.
+      if (checks.length > 0) {
+        await base44.entities.SecurityCheck.bulkCreate(
+          checks.map((c) => ({ ...c, scan_id: scan.id, check_id: `chk_${Date.now()}_${Math.random().toString(36).slice(2, 7)}` }))
+        );
+      }
+      if (issues.length > 0) {
+        await base44.entities.SecurityIssue.bulkCreate(issues.map((i) => ({ ...i, scan_id: scan.id })));
+      }
+
+      const passed = checks.filter((c) => c.status === "Passed").length;
+      const failed = checks.filter((c) => c.status === "Failed").length;
+
+      // 4. Mark the scan Completed with score + summary.
+      await base44.entities.SecurityScan.update(scan.id, {
+        status: "Completed",
+        completed_at: new Date().toISOString(),
+        overall_score: score,
+        critical_count: counts.critical,
+        high_count: counts.high,
+        medium_count: counts.medium,
+        low_count: counts.low,
+        total_checks: checks.length,
+        passed_checks: passed,
+        failed_checks: failed,
+        summary: `Security score: ${score}/100 (${label}). ${issues.length} issue${issues.length === 1 ? "" : "s"} across ${checks.length} checks. ${SCAN_DISCLAIMER}`,
+      });
+
+      if (setting?.id) {
+        await base44.entities.SecuritySetting.update(setting.id, { last_scan_at: startedAt });
+      }
+
+      trackEvent("security_scan_completed", { score, issues: issues.length });
+      await load();
+      setScanState("complete");
+      toast({ title: "Scan complete", description: `Score ${score}/100 — ${label}. ${issues.length} issue${issues.length === 1 ? "" : "s"} found.` });
+    } catch (err) {
+      await base44.entities.SecurityScan.update(scan.id, {
+        status: "Failed",
+        completed_at: new Date().toISOString(),
+        summary: `Scan failed: ${err.message}`,
+      });
+      await load();
+      setScanState("failed");
+      toast({ title: "Scan failed", description: err.message, variant: "destructive" });
+    } finally {
+      setScanning(false);
     }
-    await load();
-    setScanning(false);
-    toast({ title: "Scan recorded", description: "A new security scan run was created." });
   };
 
   if (loading) return <LoadingState label="Loading security dashboard..." />;
@@ -112,6 +160,7 @@ export default function SecurityDashboard() {
             counts={counts}
             onScanNow={handleScanNow}
             scanning={scanning}
+            scanState={scanState}
           />
         </TabsContent>
 

@@ -1,8 +1,30 @@
 import React from "react";
-import { ShieldCheck, ShieldAlert, AlertTriangle, AlertOctagon, CheckCircle2, RefreshCw, ScanLine, History, ListChecks } from "lucide-react";
+import { ShieldCheck, ShieldAlert, AlertTriangle, AlertOctagon, CheckCircle2, RefreshCw, ScanLine, History, ListChecks, XCircle } from "lucide-react";
 import EmptyState from "@/components/shared/EmptyState";
 import SecurityBadge from "@/components/admin/security/SecurityBadge";
 import { SEVERITY_STYLES, ISSUE_STATUS_STYLES, SCAN_STATUS_STYLES, scoreColor, formatDate } from "@/components/admin/security/securityConfig";
+import { scoreLabel } from "@/components/admin/security/scanEngine";
+
+function ScanButton({ onScanNow, scanning, scanState }) {
+  const map = {
+    ready: { label: "Run Security Scan", icon: ScanLine, cls: "bg-primary hover:bg-primary/90 text-primary-foreground" },
+    running: { label: "Scanning App Security...", icon: RefreshCw, spin: true, cls: "bg-primary text-primary-foreground" },
+    complete: { label: "Scan Complete", icon: CheckCircle2, cls: "bg-green-500/90 hover:bg-green-500 text-white" },
+    failed: { label: "Scan Failed — View Details", icon: XCircle, cls: "bg-red-500/90 hover:bg-red-500 text-white" },
+  };
+  const s = scanning ? map.running : (map[scanState] || map.ready);
+  const Icon = s.icon;
+  return (
+    <button
+      onClick={onScanNow}
+      disabled={scanning}
+      className={`inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold disabled:opacity-80 transition-colors ${s.cls}`}
+    >
+      <Icon className={`w-4 h-4 ${s.spin ? "animate-spin" : ""}`} />
+      {s.label}
+    </button>
+  );
+}
 
 function MetricCard({ icon: Icon, label, value, accent }) {
   return (
@@ -20,7 +42,7 @@ function MetricCard({ icon: Icon, label, value, accent }) {
   );
 }
 
-export default function OverviewTab({ scans, issues, latestScan, counts, onScanNow, scanning }) {
+export default function OverviewTab({ scans, issues, latestScan, counts, onScanNow, scanning, scanState }) {
   const hasScans = scans.length > 0;
   const recentIssues = issues.slice(0, 6);
   const recentScans = scans.slice(0, 5);
@@ -38,6 +60,11 @@ export default function OverviewTab({ scans, issues, latestScan, counts, onScanN
               </span>
               {latestScan?.overall_score != null && <span className="text-muted-foreground mb-1.5">/ 100</span>}
             </div>
+            {latestScan?.overall_score != null && (
+              <p className={`text-sm font-semibold mt-1 ${scoreColor(latestScan.overall_score)}`}>
+                {scoreLabel(latestScan.overall_score)}
+              </p>
+            )}
             <p className="text-xs text-muted-foreground mt-2">
               Last scan: {latestScan ? formatDate(latestScan.completed_at || latestScan.started_at) : "Never"}
             </p>
@@ -49,14 +76,7 @@ export default function OverviewTab({ scans, issues, latestScan, counts, onScanN
 
         <div className="rounded-2xl border border-border bg-card/70 p-6 flex flex-col justify-center items-start">
           <p className="text-sm text-muted-foreground mb-3">Run a fresh security scan across routes, entities, and roles.</p>
-          <button
-            onClick={onScanNow}
-            disabled={scanning}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60 transition-colors"
-          >
-            {scanning ? <RefreshCw className="w-4 h-4 animate-spin" /> : <ScanLine className="w-4 h-4" />}
-            {scanning ? "Scanning…" : "Scan Now"}
-          </button>
+          <ScanButton onScanNow={onScanNow} scanning={scanning} scanState={scanState} />
         </div>
       </div>
 
