@@ -248,7 +248,7 @@ export default function SecurityDashboard() {
         </TabsContent>
 
         <TabsContent value="report">
-          <ReportTab latestScan={latestScan} issues={issues} counts={counts} />
+          <ReportTab latestScan={latestScan} issues={issues} scans={scans} registry={registry} counts={counts} />
         </TabsContent>
       </Tabs>
     </div>
