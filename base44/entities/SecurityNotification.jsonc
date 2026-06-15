@@ -1,0 +1,71 @@
+{
+  "name": "SecurityNotification",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Short notification headline"
+    },
+    "message": {
+      "type": "string",
+      "description": "Full notification message body"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "scan_started",
+        "scan_completed",
+        "scan_failed",
+        "critical_issue",
+        "high_issue",
+        "issue_fixed",
+        "issue_needs_retest",
+        "score_below_60",
+        "score_below_40"
+      ],
+      "default": "scan_completed",
+      "description": "Notification trigger type"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "Critical",
+        "High",
+        "Medium",
+        "Low",
+        "Info"
+      ],
+      "default": "Info",
+      "description": "Visual severity of the notification"
+    },
+    "scan_id": {
+      "type": "string",
+      "description": "Related SecurityScan id, if applicable"
+    },
+    "issue_id": {
+      "type": "string",
+      "description": "Related SecurityIssue id, if applicable"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether an admin has read this notification"
+    }
+  },
+  "required": [
+    "title",
+    "message"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

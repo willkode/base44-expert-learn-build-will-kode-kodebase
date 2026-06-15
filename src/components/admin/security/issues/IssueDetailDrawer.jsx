@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Route as RouteIcon, Database, Users as UsersIcon, MapPin, AlertTriangle, ShieldAlert, ClipboardCheck, StickyNote } from "lucide-react";
+import { Route as RouteIcon, Database, Users as UsersIcon, MapPin, AlertTriangle, ShieldAlert, ClipboardCheck, StickyNote, RefreshCw, ListChecks } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -8,8 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/components/ui/use-toast";
 import SecurityBadge from "@/components/admin/security/SecurityBadge";
 import CopyFixPromptButton from "@/components/admin/security/issues/CopyFixPromptButton";
+import RetestDialog from "@/components/admin/security/issues/RetestDialog";
 import { SEVERITY_STYLES, ISSUE_STATUS_STYLES, formatDate } from "@/components/admin/security/securityConfig";
 import { updateIssueStatus } from "@/components/admin/security/issues/issueActions";
+import { getRetestChecklist } from "@/components/admin/security/retestEngine";
 
 const STATUS_OPTIONS = ["Open", "In Progress", "Fixed", "Needs Retest", "Ignored", "False Positive"];
 
@@ -44,6 +46,7 @@ export default function IssueDetailDrawer({ issue, open, onOpenChange, onChanged
   const [status, setStatus] = useState("Open");
   const [fpReason, setFpReason] = useState("");
   const [saving, setSaving] = useState(false);
+  const [retestOpen, setRetestOpen] = useState(false);
 
   useEffect(() => {
     if (issue) {
@@ -100,8 +103,13 @@ export default function IssueDetailDrawer({ issue, open, onOpenChange, onChanged
             <h3 className="font-sora font-bold text-xl">{issue.title || "Untitled issue"}</h3>
           </div>
 
-          {/* Copy fix prompt — prominent */}
-          {issue.fix_prompt && <CopyFixPromptButton fixPrompt={issue.fix_prompt} />}
+          {/* Retest + Copy fix prompt — prominent */}
+          <div className="flex flex-wrap items-center gap-3">
+            <Button onClick={() => setRetestOpen(true)} variant="outline" className="gap-2">
+              <RefreshCw className="w-4 h-4" /> Retest Issue
+            </Button>
+            {issue.fix_prompt && <CopyFixPromptButton fixPrompt={issue.fix_prompt} />}
+          </div>
 
           {/* Details */}
           {issue.description && <p className="text-sm text-muted-foreground">{issue.description}</p>}
@@ -141,6 +149,18 @@ export default function IssueDetailDrawer({ issue, open, onOpenChange, onChanged
             </Section>
           )}
 
+          {/* Manual retest checklist */}
+          <Section icon={ListChecks} title="Manual retest checklist">
+            <ul className="space-y-1.5">
+              {getRetestChecklist(issue).map((step, idx) => (
+                <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                  {step}
+                </li>
+              ))}
+            </ul>
+          </Section>
+
           {/* Status workflow */}
           <Section icon={ShieldAlert} title="Status">
             <Select value={status} onValueChange={setStatus}>
@@ -179,6 +199,7 @@ export default function IssueDetailDrawer({ issue, open, onOpenChange, onChanged
           </div>
         </div>
       </SheetContent>
+      <RetestDialog issue={issue} open={retestOpen} onOpenChange={setRetestOpen} onChanged={onChanged} />
     </Sheet>
   );
 }

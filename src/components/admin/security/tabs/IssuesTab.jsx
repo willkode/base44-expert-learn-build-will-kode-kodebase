@@ -1,13 +1,18 @@
 import React, { useState, useMemo } from "react";
-import { ShieldCheck, Search, Route as RouteIcon, Database } from "lucide-react";
+import { ShieldCheck, Search, Route as RouteIcon, Database, RefreshCw } from "lucide-react";
 import EmptyState from "@/components/shared/EmptyState";
 import SecurityBadge from "@/components/admin/security/SecurityBadge";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useToast } from "@/components/ui/use-toast";
 import { SEVERITY_STYLES, ISSUE_STATUS_STYLES, SEVERITY_ORDER, formatDate } from "@/components/admin/security/securityConfig";
 import IssueRowActions from "@/components/admin/security/issues/IssueRowActions";
 import IssueDetailDrawer from "@/components/admin/security/issues/IssueDetailDrawer";
+import { retestOpenIssues } from "@/components/admin/security/issues/issueActions";
+
+const OPEN_RETEST_STATUSES = ["Open", "In Progress", "Needs Retest"];
 
 const STATUS_OPTIONS = ["All", "Open", "In Progress", "Fixed", "Needs Retest", "Ignored", "False Positive"];
 const SEVERITY_OPTIONS = ["All", ...SEVERITY_ORDER];
@@ -17,6 +22,8 @@ const CATEGORY_OPTIONS = [
 ];
 
 export default function IssuesTab({ issues, scans = [], onChanged }) {
+  const { toast } = useToast();
+  const [retesting, setRetesting] = useState(false);
   const [severity, setSeverity] = useState("All");
   const [status, setStatus] = useState("All");
   const [category, setCategory] = useState("All");

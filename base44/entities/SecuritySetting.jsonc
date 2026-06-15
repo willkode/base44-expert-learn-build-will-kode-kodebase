@@ -25,6 +25,26 @@
       "type": "boolean",
       "default": true
     },
+    "high_alert_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Send an in-app alert when a high-severity issue is found"
+    },
+    "notify_on_scan_complete": {
+      "type": "boolean",
+      "default": true,
+      "description": "Create a notification when a scan completes"
+    },
+    "notify_on_scan_failure": {
+      "type": "boolean",
+      "default": true,
+      "description": "Create a notification when a scan fails"
+    },
+    "notify_on_issue_fixed": {
+      "type": "boolean",
+      "default": true,
+      "description": "Create a notification when an issue is marked fixed"
+    },
     "ignored_routes": {
       "type": "array",
       "items": {
