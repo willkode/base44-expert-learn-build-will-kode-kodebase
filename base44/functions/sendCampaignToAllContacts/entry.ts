@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-// Sends a campaign email to every subscribed contact via Resend.
-// Appends an unsubscribe footer, paces requests to respect rate limits, and logs each send.
+// Sends a campaign email to every subscribed contact via Resend's batch endpoint.
+// Appends a per-contact unsubscribe footer, sends in batches of 100, and logs each send.
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -30,6 +30,7 @@ Deno.serve(async (req) => {
       ? `${settings.resendFromName} <${settings.resendFromEmail}>`
       : settings.resendFromEmail;
     const appUrl = Deno.env.get('APP_PUBLIC_URL') || '';
+    const now = () => new Date().toISOString();
 
     // Load all subscribed contacts (paginated).
     const contacts = [];
@@ -46,11 +47,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No subscribed contacts to send to.' }, { status: 400 });
     }
 
-    let sent = 0;
-    let failed = 0;
-    const now = () => new Date().toISOString();
-
-    for (const contact of contacts) {
+    const buildPayload = (contact) => {
       const unsubUrl = appUrl && contact.unsubscribeToken
         ? `${appUrl}/unsubscribe?token=${contact.unsubscribeToken}`
         : '';
@@ -58,48 +55,63 @@ Deno.serve(async (req) => {
         ? `<div style="text-align:center;color:#64748b;font-size:12px;padding:16px;">You're receiving this because you subscribed. <a href="${unsubUrl}" style="color:#94a3b8;">Unsubscribe</a></div>`
         : '';
       const footerText = unsubUrl ? `\n\nUnsubscribe: ${unsubUrl}` : '';
-
       const payload = { from, to: [contact.email], subject };
       if (html_content) payload.html = html_content + footerHtml;
       if (text_content) payload.text = text_content + footerText;
       if (settings.resendReplyToEmail) payload.reply_to = settings.resendReplyToEmail;
+      return payload;
+    };
 
+    let sent = 0;
+    let failed = 0;
+    const batchSize = 100; // Resend batch endpoint limit.
+
+    for (let i = 0; i < contacts.length; i += batchSize) {
+      const chunk = contacts.slice(i, i + batchSize);
+      const emails = chunk.map(buildPayload);
+
+      let results = [];
+      let batchOk = false;
       try {
-        const res = await fetch('https://api.resend.com/emails', {
+        const res = await fetch('https://api.resend.com/emails/batch', {
           method: 'POST',
           headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          body: JSON.stringify(emails),
         });
         const body = await res.json();
-        if (res.ok) {
-          sent++;
-          await base44.asServiceRole.entities.EmailSend.create({
-            campaignId: campaign_id || 'broadcast',
-            contactId: contact.id,
-            recipientEmail: contact.email,
-            subject,
-            status: 'sent',
-            sentAt: now(),
-            resendEmailId: body?.id,
-          });
-        } else {
-          failed++;
-          await base44.asServiceRole.entities.EmailSend.create({
-            campaignId: campaign_id || 'broadcast',
-            contactId: contact.id,
-            recipientEmail: contact.email,
-            subject,
-            status: 'failed',
-            failedAt: now(),
-            failureReason: body?.message || `Resend returned ${res.status}`,
-          });
+        if (res.ok && Array.isArray(body?.data)) {
+          batchOk = true;
+          results = body.data;
         }
-      } catch (e) {
-        failed++;
+      } catch (_e) {
+        batchOk = false;
       }
 
-      // Pace requests to stay under Resend rate limits (~2/sec).
-      await new Promise((r) => setTimeout(r, 600));
+      const sendRecords = chunk.map((contact, idx) => {
+        const ok = batchOk && results[idx]?.id;
+        if (ok) sent++; else failed++;
+        return ok
+          ? {
+              campaignId: campaign_id || 'broadcast',
+              contactId: contact.id,
+              recipientEmail: contact.email,
+              subject,
+              status: 'sent',
+              sentAt: now(),
+              resendEmailId: results[idx].id,
+            }
+          : {
+              campaignId: campaign_id || 'broadcast',
+              contactId: contact.id,
+              recipientEmail: contact.email,
+              subject,
+              status: 'failed',
+              failedAt: now(),
+              failureReason: 'Batch send failed',
+            };
+      });
+
+      await base44.asServiceRole.entities.EmailSend.bulkCreate(sendRecords);
     }
 
     if (campaign_id) {
