@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-const platforms = ["Base44", "Supabase", "Firebase", "Bubble", "Lovable", "Bolt", "Replit", "Custom React"];
+const platforms = ["Base44", "Supabase", "Firebase", "Bubble", "Lovable", "Bolt", "Replit", "Emergent", "Custom React"];
 
 export default function Platforms() {
   return (
