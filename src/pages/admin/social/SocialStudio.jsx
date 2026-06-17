@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Sparkles, Wand2, Hash, Image as ImageIcon, Send, Check, X } from "lucide-react";
+import { toast } from "sonner";
+import { Sparkles, RefreshCw, Save, Send, Check, Loader2 } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import LoadingState from "@/components/shared/LoadingState";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { PLATFORMS } from "@/components/admin/social/socialConfig";
-import { PREVIEW_MAP } from "@/components/admin/social/PlatformPreviews";
+import StudioGeneratorForm from "@/components/admin/social/studio/StudioGeneratorForm";
+import PlatformVariantEditor from "@/components/admin/social/studio/PlatformVariantEditor";
+import GlobalAssetsPanel from "@/components/admin/social/studio/GlobalAssetsPanel";
+import { EMPTY_STUDIO_FORM } from "@/components/admin/social/studio/studioConfig";
+import { saveStudioPosts } from "@/components/admin/social/studio/studioSave";
 import { trackEvent } from "@/lib/analytics";
-
-const COMING_SOON = "AI generation is set up in the next step.";
 
 export default function SocialStudio() {
   const [loading, setLoading] = useState(true);
   const [campaigns, setCampaigns] = useState([]);
-  const [brief, setBrief] = useState("");
-  const [selected, setSelected] = useState(["twitter", "linkedin"]);
-  const [draft, setDraft] = useState({ content: "", hashtags: [], image_url: "", platform_variants: {} });
+  const [form, setForm] = useState(EMPTY_STUDIO_FORM);
+  const [result, setResult] = useState(null);
+  const [selectedIndexes, setSelectedIndexes] = useState({});
+  const [generating, setGenerating] = useState(false);
+  const [regenerating, setRegenerating] = useState(null); // "all" | platform key | asset target
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     trackEvent("admin_social_studio_view");
@@ -29,109 +30,206 @@ export default function SocialStudio() {
     });
   }, []);
 
+  const selectedCampaign = campaigns.find((c) => c.id === form.campaign_id) || null;
+
+  const callGenerate = async (overrides = {}) => {
+    const res = await base44.functions.invoke("generateSocialContent", {
+      campaign_id: form.campaign_id || undefined,
+      selected_platforms: form.selected_platforms,
+      topic: form.topic,
+      content_type: form.content_type,
+      tone: form.tone,
+      number_of_variations: form.number_of_variations,
+      include_hashtags: form.include_hashtags,
+      include_image_prompt: form.include_image_prompt,
+      include_call_to_action: form.include_call_to_action,
+      custom_instructions: form.custom_instructions,
+      source_text: form.source_text,
+      ...overrides,
+    });
+    if (res?.data?.error) throw new Error(res.data.error);
+    return res.data.result;
+  };
+
+  const handleGenerate = async () => {
+    setGenerating(true);
+    try {
+      const r = await callGenerate();
+      setResult(r);
+      // Default-select first variant per platform.
+      const defaults = {};
+      Object.keys(r.platform_variants || {}).forEach((p) => { defaults[p] = 0; });
+      setSelectedIndexes(defaults);
+      trackEvent("admin_social_content_generated", { platforms: form.selected_platforms.join(",") });
+      toast.success("Content generated.");
+    } catch (e) {
+      toast.error(e.message || "Generation failed.");
+    }
+    setGenerating(false);
+  };
+
+  const handleRegenerateAll = async () => {
+    setRegenerating("all");
+    try {
+      const r = await callGenerate();
+      setResult(r);
+      const defaults = {};
+      Object.keys(r.platform_variants || {}).forEach((p) => { defaults[p] = 0; });
+      setSelectedIndexes(defaults);
+      toast.success("Regenerated all content.");
+    } catch (e) {
+      toast.error(e.message || "Regeneration failed.");
+    }
+    setRegenerating(null);
+  };
+
+  const handleRegeneratePlatform = async (platform) => {
+    setRegenerating(platform);
+    try {
+      const r = await callGenerate({ only_platforms: [platform], regenerate_target: platform });
+      setResult((prev) => ({
+        ...prev,
+        platform_variants: { ...prev.platform_variants, [platform]: r.platform_variants?.[platform] || [] },
+      }));
+      setSelectedIndexes((prev) => ({ ...prev, [platform]: 0 }));
+      toast.success(`Regenerated ${platform} content.`);
+    } catch (e) {
+      toast.error(e.message || "Regeneration failed.");
+    }
+    setRegenerating(null);
+  };
+
+  const handleRegenerateAsset = async (target) => {
+    setRegenerating(target);
+    try {
+      const r = await callGenerate({ regenerate_target: target });
+      setResult((prev) => {
+        const next = { ...prev };
+        if (target === "hashtags") next.global_hashtags = r.global_hashtags || prev.global_hashtags;
+        if (target === "cta") next.cta = r.cta || prev.cta;
+        if (target === "image_prompt") {
+          next.image_prompt = r.image_prompt || prev.image_prompt;
+          next.image_alt_text = r.image_alt_text || prev.image_alt_text;
+        }
+        return next;
+      });
+      toast.success("Regenerated.");
+    } catch (e) {
+      toast.error(e.message || "Regeneration failed.");
+    }
+    setRegenerating(null);
+  };
+
+  const handleVariantChange = (platform, variants) => {
+    setResult((prev) => ({
+      ...prev,
+      platform_variants: { ...prev.platform_variants, [platform]: variants },
+    }));
+  };
+
+  const handleSelect = (platform, idx) => {
+    setSelectedIndexes((prev) => ({ ...prev, [platform]: idx }));
+  };
+
+  const doSave = async (approvalStatus, successMsg) => {
+    setSaving(true);
+    try {
+      const user = await base44.auth.me();
+      const created = await saveStudioPosts({
+        result,
+        selectedIndexes,
+        form,
+        campaign: selectedCampaign,
+        user,
+        approvalStatus,
+      });
+      trackEvent("admin_social_content_saved", { approval_status: approvalStatus, count: created.length });
+      toast.success(`${successMsg} (${created.length} post${created.length === 1 ? "" : "s"})`);
+    } catch (e) {
+      toast.error(e.message || "Save failed.");
+    }
+    setSaving(false);
+  };
+
   if (loading) return <LoadingState label="Loading content studio..." />;
 
-  const togglePlatform = (key) =>
-    setSelected((prev) => (prev.includes(key) ? prev.filter((p) => p !== key) : [...prev, key]));
-
-  const post = { ...draft, content: draft.content || brief, selected_platforms: selected };
+  const platformKeys = result ? Object.keys(result.platform_variants || {}) : [];
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Content Studio"
-        description="Generate AI posts, tailor platform variants, and preview before approval."
+        description="Generate platform-specific posts, refine every field, and send for approval."
+        actions={
+          result && (
+            <Button variant="outline" onClick={handleRegenerateAll} disabled={!!regenerating}>
+              {regenerating === "all" ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-1.5" />}
+              Regenerate all
+            </Button>
+          )
+        }
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Composer */}
-        <div className="space-y-5">
-          <div className="rounded-2xl border border-border bg-card/60 p-5 space-y-4">
-            <div>
-              <Label className="mb-1.5 block">Campaign (optional)</Label>
-              <select className="w-full h-9 rounded-md border border-input bg-transparent px-3 text-sm">
-                <option value="">No campaign</option>
-                {campaigns.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-            </div>
-
-            <div>
-              <Label className="mb-1.5 block">What's this post about?</Label>
-              <Textarea
-                rows={4}
-                value={brief}
-                onChange={(e) => setBrief(e.target.value)}
-                placeholder="Describe your topic, announcement, or offer..."
-              />
-            </div>
-
-            <div>
-              <Label className="mb-2 block">Platforms</Label>
-              <div className="flex flex-wrap gap-2">
-                {PLATFORMS.map(({ key, label, icon: Icon }) => (
-                  <button
-                    key={key}
-                    onClick={() => togglePlatform(key)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm transition-colors ${
-                      selected.includes(key)
-                        ? "border-primary/50 bg-primary/10 text-primary"
-                        : "border-border text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" /> {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <Button variant="outline" disabled title={COMING_SOON}><Wand2 className="w-4 h-4 mr-1.5" /> Generate Post</Button>
-              <Button variant="outline" disabled title={COMING_SOON}><Hash className="w-4 h-4 mr-1.5" /> Hashtags</Button>
-              <Button variant="outline" disabled title={COMING_SOON}><ImageIcon className="w-4 h-4 mr-1.5" /> Image Prompt</Button>
-              <Button variant="outline" disabled title={COMING_SOON}><Sparkles className="w-4 h-4 mr-1.5" /> Generate Image</Button>
-            </div>
-            <p className="text-xs text-muted-foreground">{COMING_SOON}</p>
-          </div>
-
-          <div className="rounded-2xl border border-border bg-card/60 p-5 space-y-4">
-            <Label className="block">Post content</Label>
-            <Textarea
-              rows={5}
-              value={draft.content}
-              onChange={(e) => setDraft((d) => ({ ...d, content: e.target.value }))}
-              placeholder="Edit the post content here..."
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
+        {/* Left: generator + shared assets */}
+        <div className="xl:col-span-2 space-y-6">
+          <StudioGeneratorForm
+            form={form}
+            setForm={setForm}
+            campaigns={campaigns}
+            onGenerate={handleGenerate}
+            generating={generating}
+          />
+          {result && (
+            <GlobalAssetsPanel
+              result={result}
+              onChange={setResult}
+              onRegenerate={handleRegenerateAsset}
+              regenerating={regenerating}
             />
-            <div>
-              <Label className="mb-1.5 block">Image URL</Label>
-              <Input
-                value={draft.image_url}
-                onChange={(e) => setDraft((d) => ({ ...d, image_url: e.target.value }))}
-                placeholder="https://..."
-              />
-            </div>
-            <div className="flex flex-wrap gap-2 pt-1">
-              <Button disabled title={COMING_SOON}><Send className="w-4 h-4 mr-1.5" /> Submit for Approval</Button>
-              <Button variant="outline" disabled title={COMING_SOON}><Check className="w-4 h-4 mr-1.5" /> Approve</Button>
-              <Button variant="outline" disabled title={COMING_SOON}><X className="w-4 h-4 mr-1.5" /> Reject</Button>
-            </div>
-          </div>
+          )}
         </div>
 
-        {/* Previews */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <h2 className="font-sora font-semibold">Platform Previews</h2>
-            <Badge variant="secondary" className="text-xs">{selected.length} selected</Badge>
-          </div>
-          {selected.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-6 text-center rounded-2xl border border-dashed border-border">
-              Select at least one platform to preview.
-            </p>
+        {/* Right: per-platform variants */}
+        <div className="xl:col-span-3 space-y-4">
+          {!result ? (
+            <div className="rounded-2xl border border-dashed border-border bg-card/40 flex flex-col items-center justify-center text-center py-20 px-6">
+              <div className="w-14 h-14 rounded-2xl bg-secondary flex items-center justify-center mb-5">
+                <Sparkles className="w-7 h-7 text-muted-foreground" />
+              </div>
+              <h3 className="font-sora font-semibold text-lg mb-2">No content yet</h3>
+              <p className="text-sm text-muted-foreground max-w-sm">
+                Fill in a topic, pick your platforms, and hit Generate to create tailored variants for each network.
+              </p>
+            </div>
           ) : (
-            selected.map((key) => {
-              const Preview = PREVIEW_MAP[key];
-              return Preview ? <Preview key={key} post={post} /> : null;
-            })
+            <>
+              {platformKeys.map((platform) => (
+                <PlatformVariantEditor
+                  key={platform}
+                  platform={platform}
+                  variants={result.platform_variants[platform]}
+                  selectedIndex={selectedIndexes[platform]}
+                  onSelect={handleSelect}
+                  onChange={handleVariantChange}
+                  onRegenerate={handleRegeneratePlatform}
+                  regenerating={regenerating === platform}
+                />
+              ))}
+
+              <div className="sticky bottom-0 rounded-2xl border border-border bg-card/95 backdrop-blur p-4 flex flex-wrap gap-2">
+                <Button onClick={() => doSave("draft", "Saved as draft")} disabled={saving} variant="outline">
+                  {saving ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Save className="w-4 h-4 mr-1.5" />}
+                  Save as draft
+                </Button>
+                <Button onClick={() => doSave("needs_review", "Submitted for approval")} disabled={saving}>
+                  <Send className="w-4 h-4 mr-1.5" /> Submit for approval
+                </Button>
+                <Button onClick={() => doSave("approved", "Approved")} disabled={saving} variant="outline">
+                  <Check className="w-4 h-4 mr-1.5" /> Approve now
+                </Button>
+              </div>
+            </>
           )}
         </div>
       </div>
