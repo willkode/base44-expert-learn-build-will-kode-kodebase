@@ -43,6 +43,29 @@
     "landing_page_url": {
       "type": "string"
     },
+    "key_message": {
+      "type": "string",
+      "description": "Core message threaded through every post in the campaign"
+    },
+    "content_themes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Recurring content themes/angles for the campaign"
+    },
+    "posting_frequency": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "few_times_week",
+        "weekly",
+        "biweekly",
+        "monthly"
+      ],
+      "default": "weekly"
+    },
     "default_platforms": {
       "type": "array",
       "items": {

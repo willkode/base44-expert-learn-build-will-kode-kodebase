@@ -22,11 +22,19 @@
     "audience": {
       "type": "string"
     },
+    "pain_points": {
+      "type": "string",
+      "description": "Customer pain points the brand solves"
+    },
     "products_services": {
       "type": "string"
     },
     "tone_of_voice": {
       "type": "string"
+    },
+    "preferred_tone": {
+      "type": "string",
+      "description": "Preferred tone key (professional, casual, bold, educational, witty, direct, community_focused, sales_driven)"
     },
     "banned_words": {
       "type": "array",
@@ -74,6 +82,14 @@
         "type": "string"
       },
       "default": []
+    },
+    "facebook_content_style": {
+      "type": "string",
+      "description": "Guidance for Facebook Page content style"
+    },
+    "instagram_style": {
+      "type": "string",
+      "description": "Guidance for Instagram visual and caption style"
     }
   },
   "required": [],

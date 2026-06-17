@@ -96,7 +96,9 @@ import EmailSuppressionPage from '@/pages/admin/email/EmailSuppressionPage';
 import EmailLogs from '@/pages/admin/email/EmailLogs';
 import SocialMarketingLayout from '@/components/admin/social/SocialMarketingLayout';
 import SocialDashboard from '@/pages/admin/social/SocialDashboard';
+import SocialBrandProfile from '@/pages/admin/social/SocialBrandProfile';
 import SocialCampaigns from '@/pages/admin/social/SocialCampaigns';
+import SocialCampaignDetail from '@/pages/admin/social/SocialCampaignDetail';
 import SocialStudio from '@/pages/admin/social/SocialStudio';
 import SocialCalendar from '@/pages/admin/social/SocialCalendar';
 import SocialConnections from '@/pages/admin/social/SocialConnections';
@@ -204,7 +206,9 @@ const AuthenticatedApp = () => {
             </Route>
             <Route path="/admin/marketing/social" element={<SocialMarketingLayout />}>
               <Route index element={<SocialDashboard />} />
+              <Route path="brand" element={<SocialBrandProfile />} />
               <Route path="campaigns" element={<SocialCampaigns />} />
+              <Route path="campaigns/:id" element={<SocialCampaignDetail />} />
               <Route path="studio" element={<SocialStudio />} />
               <Route path="calendar" element={<SocialCalendar />} />
               <Route path="connections" element={<SocialConnections />} />

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { Megaphone, Plus, BarChart3, Pause, Play, Archive } from "lucide-react";
+import { Megaphone, Plus, Eye, Pencil, Archive, Play } from "lucide-react";
+import { toast } from "sonner";
 import PageHeader from "@/components/shared/PageHeader";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
@@ -9,20 +11,46 @@ import { Button } from "@/components/ui/button";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { PLATFORM_MAP, CAMPAIGN_STATUS_STYLES, prettyLabel, formatDateTime } from "@/components/admin/social/socialConfig";
+import { PLATFORM_MAP, CAMPAIGN_STATUS_STYLES, formatDateTime } from "@/components/admin/social/socialConfig";
+import { GOAL_LABELS } from "@/components/admin/social/campaign/campaignConfig";
+import { prettyLabel } from "@/components/admin/social/socialConfig";
+import CampaignFormDialog from "@/components/admin/social/campaign/CampaignFormDialog";
 import { trackEvent } from "@/lib/analytics";
 
 export default function SocialCampaigns() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [campaigns, setCampaigns] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editing, setEditing] = useState(null);
 
-  useEffect(() => {
-    trackEvent("admin_social_campaigns_view");
+  const load = () => {
     base44.entities.SocialCampaign.list("-created_date", 200).then((c) => {
       setCampaigns(c);
       setLoading(false);
     });
+  };
+
+  useEffect(() => {
+    trackEvent("admin_social_campaigns_view");
+    load();
   }, []);
+
+  const openNew = () => {
+    setEditing(null);
+    setDialogOpen(true);
+  };
+  const openEdit = (c) => {
+    setEditing(c);
+    setDialogOpen(true);
+  };
+
+  const setStatus = async (c, status) => {
+    await base44.entities.SocialCampaign.update(c.id, { status });
+    trackEvent("admin_social_campaign_status_changed", { status });
+    toast.success(`Campaign ${status === "archived" ? "archived" : "reactivated"}.`);
+    load();
+  };
 
   if (loading) return <LoadingState label="Loading campaigns..." />;
 
@@ -31,14 +59,16 @@ export default function SocialCampaigns() {
       <PageHeader
         title="Social Campaigns"
         description="Organize posts into goal-driven marketing campaigns."
-        actions={<Button disabled title="Campaign creation comes next."><Plus className="w-4 h-4 mr-1.5" /> New Campaign</Button>}
+        actions={<Button onClick={openNew}><Plus className="w-4 h-4 mr-1.5" /> New Campaign</Button>}
       />
 
       {campaigns.length === 0 ? (
         <EmptyState
           icon={Megaphone}
           title="No campaigns yet"
-          description="Group your social posts under campaigns to track goals and performance. Campaign creation is wired up in the next step."
+          description="Group your social posts under campaigns to track goals and performance. Create your first campaign to get started."
+          actionLabel="New Campaign"
+          onAction={openNew}
         />
       ) : (
         <div className="rounded-2xl border border-border bg-card/60 overflow-hidden">
@@ -55,9 +85,9 @@ export default function SocialCampaigns() {
             </TableHeader>
             <TableBody>
               {campaigns.map((c) => (
-                <TableRow key={c.id}>
+                <TableRow key={c.id} className="cursor-pointer" onClick={() => navigate(`/admin/marketing/social/campaigns/${c.id}`)}>
                   <TableCell className="font-medium">{c.name}</TableCell>
-                  <TableCell className="text-muted-foreground">{prettyLabel(c.goal)}</TableCell>
+                  <TableCell className="text-muted-foreground">{GOAL_LABELS[c.goal] || prettyLabel(c.goal)}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1.5">
                       {(c.default_platforms || []).map((p) => {
@@ -70,13 +100,23 @@ export default function SocialCampaigns() {
                   <TableCell className="text-muted-foreground text-xs">
                     {c.start_date ? formatDateTime(c.start_date) : "—"}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                     <div className="flex items-center justify-end gap-1">
-                      <Button variant="ghost" size="icon" disabled title="Analytics"><BarChart3 className="w-4 h-4" /></Button>
-                      <Button variant="ghost" size="icon" disabled title={c.status === "paused" ? "Resume" : "Pause"}>
-                        {c.status === "paused" ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
+                      <Button variant="ghost" size="icon" title="View" onClick={() => navigate(`/admin/marketing/social/campaigns/${c.id}`)}>
+                        <Eye className="w-4 h-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" disabled title="Archive"><Archive className="w-4 h-4" /></Button>
+                      <Button variant="ghost" size="icon" title="Edit" onClick={() => openEdit(c)}>
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      {c.status === "archived" ? (
+                        <Button variant="ghost" size="icon" title="Reactivate" onClick={() => setStatus(c, "active")}>
+                          <Play className="w-4 h-4" />
+                        </Button>
+                      ) : (
+                        <Button variant="ghost" size="icon" title="Archive" onClick={() => setStatus(c, "archived")}>
+                          <Archive className="w-4 h-4" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
@@ -85,6 +125,13 @@ export default function SocialCampaigns() {
           </Table>
         </div>
       )}
+
+      <CampaignFormDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        campaign={editing}
+        onSaved={() => load()}
+      />
     </div>
   );
 }

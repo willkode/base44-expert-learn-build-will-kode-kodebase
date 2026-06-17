@@ -6,10 +6,12 @@ import {
   Plug,
   BarChart3,
   ScrollText,
+  Palette,
 } from "lucide-react";
 
 export const socialNav = [
   { label: "Dashboard", to: "/admin/marketing/social", icon: LayoutDashboard, end: true },
+  { label: "Brand Profile", to: "/admin/marketing/social/brand", icon: Palette },
   { label: "Campaigns", to: "/admin/marketing/social/campaigns", icon: Megaphone },
   { label: "Content Studio", to: "/admin/marketing/social/studio", icon: Sparkles },
   { label: "Calendar", to: "/admin/marketing/social/calendar", icon: CalendarDays },
