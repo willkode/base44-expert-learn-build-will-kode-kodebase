@@ -12,6 +12,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import Home from '@/pages/Home';
 import BlueprintTool from '@/pages/tools/Blueprint';
 import PromptEngine from '@/pages/tools/PromptEngine';
+import PromptGenerator from '@/pages/tools/PromptGenerator';
 import Features from '@/pages/Features';
 import Pricing from '@/pages/Pricing';
 import Products from '@/pages/Products';
@@ -135,6 +136,7 @@ const AuthenticatedApp = () => {
       </Route>
       <Route path="/" element={<Home />} />
       <Route path="/tools/blueprint" element={<BlueprintTool />} />
+      <Route path="/tools/prompt-generator" element={<PromptGenerator />} />
 
       {/* Auth pages */}
       <Route path="/login" element={<Login />} />
