@@ -23,7 +23,8 @@ const tools = [
     icon: Share2,
     title: "Social Media Marketing",
     description: "Plan, generate and schedule posts across your social channels.",
-    status: "Coming soon",
+    status: "Live",
+    to: "/admin/marketing/social",
   },
   {
     icon: PenSquare,
