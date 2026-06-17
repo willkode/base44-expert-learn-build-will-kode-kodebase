@@ -21,6 +21,19 @@
         "role": "admin"
       }
     },
-    "write": {}
+    "write": {
+      "$and": [
+        {
+          "created_by_id": {
+            "$ne": "anonymous"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
   }
 }
