@@ -15,6 +15,7 @@ import {
   PLATFORM_MAP, CONNECTION_STATUS_STYLES, JOB_STATUS_STYLES, prettyLabel, formatDateTime,
 } from "@/components/admin/social/socialConfig";
 import SocialAlertBanner from "@/components/admin/social/notifications/SocialAlertBanner";
+import AdminRecoveryTools from "@/components/admin/social/recovery/AdminRecoveryTools";
 
 const quickActions = [
   { label: "Create Post", to: "/admin/marketing/social/studio", icon: PenSquare },
@@ -189,6 +190,8 @@ export default function SocialDashboard() {
           )}
         </section>
       </div>
+
+      <AdminRecoveryTools />
 
       <section className="rounded-2xl border border-border bg-card/60 p-5">
         <h2 className="font-sora font-semibold mb-4">Connected Accounts</h2>

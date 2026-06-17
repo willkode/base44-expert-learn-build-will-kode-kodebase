@@ -1,17 +1,29 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { RefreshCw, XCircle, ExternalLink, AlertTriangle, Loader2, PlugZap, FileText } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { XCircle, ExternalLink, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StatusBadge from "@/components/admin/social/StatusBadge";
 import { PLATFORM_MAP, JOB_STATUS_STYLES, formatDateTime } from "@/components/admin/social/socialConfig";
-import { errorInfo } from "./publishingConfig";
+import SocialErrorCard from "@/components/admin/social/errors/SocialErrorCard";
 
 export default function ScheduledPostRow({ job, post, onRetry, onCancel, busyId }) {
+  const navigate = useNavigate();
   const P = PLATFORM_MAP[job.platform];
   const busy = busyId === job.id;
   const isFailed = job.status === "failed";
   const canCancel = ["queued", "failed", "processing"].includes(job.status);
-  const info = isFailed && job.error_code ? errorInfo(job.error_code) : null;
+
+  // Wire the error card's in-app actions to this row's handlers; navigation
+  // actions (reconnect, viewLogs, support, connect*) are handled by the card.
+  const handleErrorAction = (key) => {
+    if (key === "retry") { onRetry(job); return true; }
+    if (key === "edit" || key === "reschedule") {
+      if (post?.id) navigate(`/admin/marketing/social/studio?post=${post.id}`);
+      else navigate("/admin/marketing/social/approvals");
+      return true;
+    }
+    return false;
+  };
 
   return (
     <div className="rounded-xl border border-border bg-background/40 p-3.5">
@@ -27,14 +39,16 @@ export default function ScheduledPostRow({ job, post, onRetry, onCancel, busyId 
       </div>
 
       {isFailed && (
-        <div className="mt-3 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2">
-          <p className="flex items-center gap-1.5 text-xs font-medium text-red-400">
-            <AlertTriangle className="w-3.5 h-3.5" /> {info?.label || "Failed"}
-          </p>
-          {(info?.hint || job.error_message) && (
-            <p className="text-xs text-muted-foreground mt-0.5">{job.error_message || info?.hint}</p>
-          )}
-          <p className="text-[11px] text-muted-foreground mt-1">
+        <div className="mt-3">
+          <SocialErrorCard
+            code={job.error_code}
+            message={job.error_message}
+            platform={P?.label || job.platform}
+            busy={busy ? "retry" : null}
+            onAction={handleErrorAction}
+            compact
+          />
+          <p className="text-[11px] text-muted-foreground mt-1.5">
             Attempt {job.attempt_count || 0}/{job.max_attempts || 3}
           </p>
         </div>
@@ -46,31 +60,13 @@ export default function ScheduledPostRow({ job, post, onRetry, onCancel, busyId 
         </a>
       )}
 
-      <div className="flex flex-wrap items-center gap-2 mt-3">
-        {isFailed && info?.retry !== false && (
-          <Button size="sm" variant="outline" onClick={() => onRetry(job)} disabled={busy}>
-            {busy ? <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5 mr-1" />}
-            Retry
-          </Button>
-        )}
-        {isFailed && info?.reconnect && (
-          <Link to="/admin/marketing/social/connections">
-            <Button size="sm" variant="outline" className="text-amber-400 hover:text-amber-300">
-              <PlugZap className="w-3.5 h-3.5 mr-1" /> Reconnect account
-            </Button>
-          </Link>
-        )}
-        {canCancel && (
+      {canCancel && (
+        <div className="flex flex-wrap items-center gap-2 mt-3">
           <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-300" onClick={() => onCancel(job)} disabled={busy}>
             <XCircle className="w-3.5 h-3.5 mr-1" /> Cancel
           </Button>
-        )}
-        {isFailed && (
-          <Link to="/admin/marketing/social/logs" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
-            <FileText className="w-3 h-3" /> View log
-          </Link>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
