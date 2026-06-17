@@ -39,11 +39,24 @@
     "key"
   ],
   "rls": {
-    "read": {},
-    "write": {
+    "read": {
       "user_condition": {
         "role": "admin"
       }
+    },
+    "write": {
+      "$and": [
+        {
+          "created_by_id": {
+            "$ne": "anonymous"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     }
   }
 }
