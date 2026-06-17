@@ -58,6 +58,7 @@ Deno.serve(async (req) => {
     const userId = metadata.base44UserId;
     const planId = metadata.planId || null;
     const productId = metadata.productId || null;
+    const promptSessionId = metadata.promptSessionId || null;
     const itemName = metadata.itemName || 'Purchase';
     const amountCents = payment.amount_money?.amount || 0;
 
@@ -71,6 +72,7 @@ Deno.serve(async (req) => {
       userEmail: metadata.base44UserEmail || '',
       planId: planId || undefined,
       productId: productId || undefined,
+      promptSessionId: promptSessionId || undefined,
       itemName,
       amountCents,
       currency: 'USD',
@@ -78,6 +80,17 @@ Deno.serve(async (req) => {
       squareReceiptUrl: payment.receipt_url || '',
       status: 'completed',
     });
+
+    // Prompt Engine: unlock the prompt pack for this session.
+    if (promptSessionId) {
+      const sessions = await base44.asServiceRole.entities.PromptGeneratorSession.filter({ id: promptSessionId });
+      if (sessions[0]) {
+        await base44.asServiceRole.entities.PromptGeneratorSession.update(promptSessionId, {
+          unlocked: true,
+          unlocked_at: new Date().toISOString(),
+        });
+      }
+    }
 
     // Plan purchases upgrade the user's profile.
     const PLAN_LIMITS = { free: 1, pro: 25, agency: 60 };

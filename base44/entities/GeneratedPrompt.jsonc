@@ -1,0 +1,96 @@
+{
+  "name": "GeneratedPrompt",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Linked PromptGeneratorSession id (indexed lookup key)"
+    },
+    "blueprint_id": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Owning user id"
+    },
+    "order_number": {
+      "type": "number",
+      "default": 1
+    },
+    "title": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "description": "Foundation, Entities, Authentication, Roles and Permissions, Public Pages, User Dashboard, Admin Dashboard, Workflows, Backend Functions, Integrations, Security, QA, Polish"
+    },
+    "prompt_group": {
+      "type": "string",
+      "enum": [
+        "build",
+        "qa",
+        "security",
+        "polish"
+      ],
+      "default": "build",
+      "description": "Which tab/group this prompt belongs to"
+    },
+    "objective": {
+      "type": "string"
+    },
+    "prompt_body": {
+      "type": "string",
+      "description": "The full copy-paste-ready prompt text"
+    },
+    "acceptance_criteria": {
+      "type": "string"
+    },
+    "dependencies": {
+      "type": "string"
+    },
+    "estimated_complexity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    },
+    "used": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user has marked this prompt as used"
+    }
+  },
+  "required": [
+    "session_id",
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

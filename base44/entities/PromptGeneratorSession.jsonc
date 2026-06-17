@@ -1,0 +1,88 @@
+{
+  "name": "PromptGeneratorSession",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Owning user id"
+    },
+    "title": {
+      "type": "string",
+      "description": "Short human-friendly session title"
+    },
+    "app_name": {
+      "type": "string"
+    },
+    "raw_idea": {
+      "type": "string",
+      "description": "The user's original app idea description"
+    },
+    "current_stage": {
+      "type": "string",
+      "enum": [
+        "discovery",
+        "blueprint_ready",
+        "approved",
+        "generating",
+        "prompts_ready"
+      ],
+      "default": "discovery",
+      "description": "Where the session is in the flow"
+    },
+    "completion_score": {
+      "type": "number",
+      "default": 0,
+      "description": "0-100 estimate of how complete the blueprint is"
+    },
+    "blueprint_status": {
+      "type": "string",
+      "enum": [
+        "empty",
+        "in_progress",
+        "ready",
+        "approved"
+      ],
+      "default": "empty"
+    },
+    "generated_prompt_count": {
+      "type": "number",
+      "default": 0
+    },
+    "unlocked": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user has paid to unlock the full prompt pack for this session"
+    },
+    "unlocked_at": {
+      "type": "string",
+      "description": "ISO timestamp when the pack was unlocked"
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "name": "AppBlueprint",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Linked PromptGeneratorSession id (indexed lookup key)"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Owning user id"
+    },
+    "app_name": {
+      "type": "string"
+    },
+    "app_type": {
+      "type": "string",
+      "description": "SaaS, marketplace, CRM, dashboard, internal tool, etc."
+    },
+    "target_users": {
+      "type": "string"
+    },
+    "problem_solved": {
+      "type": "string"
+    },
+    "primary_outcome": {
+      "type": "string"
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": [],
+      "description": "Each role: name, can_see, can_create, can_edit, can_delete, never_access"
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": [],
+      "description": "Each page: name, purpose, access, main_actions"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": [],
+      "description": "Each feature: name, purpose, user_actions, permission_rules"
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": [],
+      "description": "Each entity: name, fields, relationships, owner_field, status_values"
+    },
+    "workflows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": [],
+      "description": "Each workflow: name, trigger, steps, roles_involved"
+    },
+    "integrations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "ai_features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "admin_tools": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "security_rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "monetization": {
+      "type": "string"
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "missing_items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "recommended_build_order": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "confidence_score": {
+      "type": "number",
+      "default": 0
+    },
+    "approved_by_user": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "session_id"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

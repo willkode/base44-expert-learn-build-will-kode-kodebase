@@ -16,10 +16,22 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { planId, productId, donationCents, redirectUrl } = await req.json();
+    const { planId, productId, donationCents, promptSessionId, redirectUrl } = await req.json();
 
-    let amountCents, itemName, productIdResolved = null, isDonation = false;
-    if (donationCents != null) {
+    let amountCents, itemName, productIdResolved = null, isDonation = false, promptSessionResolved = null;
+    if (promptSessionId) {
+      // Prompt Engine prompt pack — fixed $10 unlock. Verify the session belongs
+      // to this user and has prompts generated before charging.
+      const sessions = await base44.entities.PromptGeneratorSession.filter({ id: promptSessionId });
+      const session = sessions[0];
+      if (!session) return Response.json({ error: 'Prompt session not found.' }, { status: 404 });
+      if (session.current_stage !== 'prompts_ready') {
+        return Response.json({ error: 'Prompt pack is not ready to unlock yet.' }, { status: 400 });
+      }
+      amountCents = 1000;
+      itemName = `Prompt Pack — ${session.app_name || 'Your App'}`;
+      promptSessionResolved = session.id;
+    } else if (donationCents != null) {
       // Donations: amount is chosen by the supporter but bounded server-side.
       const cents = Math.round(Number(donationCents));
       if (!Number.isFinite(cents) || cents < 100 || cents > 50000) {
@@ -56,6 +68,7 @@ Deno.serve(async (req) => {
     };
     if (planId) metadata.planId = planId;
     if (productIdResolved) metadata.productId = productIdResolved;
+    if (promptSessionResolved) metadata.promptSessionId = promptSessionResolved;
     if (isDonation) metadata.donation = 'true';
 
     const res = await fetch(`${baseUrl}/v2/online-checkout/payment-links`, {

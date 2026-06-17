@@ -1,0 +1,72 @@
+{
+  "name": "PromptGeneratorMessage",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Linked PromptGeneratorSession id (indexed lookup key)"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Owning user id"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "user",
+        "assistant"
+      ],
+      "default": "assistant"
+    },
+    "content": {
+      "type": "string"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "question",
+        "answer",
+        "summary",
+        "confirmation",
+        "generation"
+      ],
+      "default": "question"
+    },
+    "order_index": {
+      "type": "number",
+      "default": 0,
+      "description": "Stable ordering within a session"
+    }
+  },
+  "required": [
+    "session_id",
+    "role",
+    "content"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
