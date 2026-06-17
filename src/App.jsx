@@ -100,6 +100,7 @@ import SocialBrandProfile from '@/pages/admin/social/SocialBrandProfile';
 import SocialCampaigns from '@/pages/admin/social/SocialCampaigns';
 import SocialCampaignDetail from '@/pages/admin/social/SocialCampaignDetail';
 import SocialStudio from '@/pages/admin/social/SocialStudio';
+import SocialApprovals from '@/pages/admin/social/SocialApprovals';
 import SocialCalendar from '@/pages/admin/social/SocialCalendar';
 import SocialConnections from '@/pages/admin/social/SocialConnections';
 import SocialAnalytics from '@/pages/admin/social/SocialAnalytics';
@@ -210,6 +211,7 @@ const AuthenticatedApp = () => {
               <Route path="campaigns" element={<SocialCampaigns />} />
               <Route path="campaigns/:id" element={<SocialCampaignDetail />} />
               <Route path="studio" element={<SocialStudio />} />
+              <Route path="approvals" element={<SocialApprovals />} />
               <Route path="calendar" element={<SocialCalendar />} />
               <Route path="connections" element={<SocialConnections />} />
               <Route path="analytics" element={<SocialAnalytics />} />
