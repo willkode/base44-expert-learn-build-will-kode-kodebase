@@ -1,19 +1,29 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
 // Validates that every selected platform meets its publish-readiness requirements.
-function validatePlatformRequirements(post, account) {
+// `accounts` is a map keyed by platform so Facebook and Instagram are checked
+// against their OWN connected account, never each other's.
+function validatePlatformRequirements(post, accounts) {
   const errors = [];
   const platforms = post.selected_platforms || [];
   const v = post.platform_variants || {};
 
   for (const platform of platforms) {
     if (platform === "instagram") {
+      const ig = accounts.instagram;
       const media = (v.instagram_media_urls && v.instagram_media_urls.length) || post.image_url;
       if (!media) errors.push("Instagram posts require an image, video, or Reel before approval.");
       if (!v.instagram_caption && !post.content) errors.push("Instagram posts require a caption.");
+      const igId = ig && (ig.instagram_business_account_id || ig.selected_default_instagram_account_id);
+      if (!igId) {
+        errors.push("Instagram posts require a connected Instagram professional account before approval.");
+      } else if (!ig.facebook_page_access_token_encrypted) {
+        errors.push("Instagram account must be linked to a Facebook Page (reconnect Instagram) before approval.");
+      }
     }
     if (platform === "facebook") {
-      const hasPage = account && (account.facebook_page_id || account.selected_default_facebook_page_id);
+      const fb = accounts.facebook;
+      const hasPage = fb && (fb.facebook_page_id || fb.selected_default_facebook_page_id);
       if (!hasPage) errors.push("Facebook posts require a connected Page target before approval.");
       if (!v.facebook_text && !post.content) errors.push("Facebook posts require post text.");
     }
@@ -48,14 +58,16 @@ Deno.serve(async (req) => {
     }
 
     // Look up the relevant connected account(s) for platform validation.
+    // Resolve each platform's own account so Facebook and Instagram never share state.
     const platforms = post.selected_platforms || [];
-    let fbIgAccount = null;
+    const accountsByPlatform = {};
     if (platforms.includes("facebook") || platforms.includes("instagram")) {
       const accounts = await base44.entities.SocialAccount.filter({ account_id: "global" }, "-created_date", 200);
-      fbIgAccount = accounts.find((a) => a.platform === "facebook" || a.platform === "instagram") || null;
+      accountsByPlatform.facebook = accounts.find((a) => a.platform === "facebook") || null;
+      accountsByPlatform.instagram = accounts.find((a) => a.platform === "instagram") || null;
     }
 
-    const reqErrors = validatePlatformRequirements(post, fbIgAccount);
+    const reqErrors = validatePlatformRequirements(post, accountsByPlatform);
     if (reqErrors.length > 0) {
       return Response.json({ error: reqErrors.join(" "), requirement_errors: reqErrors }, { status: 400 });
     }

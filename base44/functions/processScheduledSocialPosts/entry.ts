@@ -227,9 +227,17 @@ async function publishToReddit(payload, ctx) {
 
 async function publishToLinkedIn(payload, ctx) {
   const token = await ensureValidToken(ctx.base44, ctx.account, "linkedin");
-  const authorUrn = ctx.account.platform_account_id ? `urn:li:person:${ctx.account.platform_account_id}` : "";
+  // Honor the author chosen at schedule time (person or organization). Fall back
+  // to the account's default author, then the connected person URN.
+  const authorUrn = (payload.author_urn
+    || ctx.account.selected_default_author_urn
+    || ctx.account.linkedin_person_urn
+    || (ctx.account.platform_account_id ? `urn:li:person:${ctx.account.platform_account_id}` : "")).trim();
   if (!authorUrn) throw new PublishError("linkedin_author_missing", "LinkedIn author URN is missing — reconnect the account.", { retryable: false });
-  const text = (ctx.post.platform_variants?.linkedin_text || ctx.post.content || "").trim();
+  if (authorUrn.includes(":organization:") && ctx.account.can_post_as_organization === false) {
+    throw new PublishError("missing_permission", "This LinkedIn account cannot post as an organization.", { retryable: false });
+  }
+  const text = (payload.commentary || ctx.post.platform_variants?.linkedin_text || ctx.post.content || "").trim();
   if (!text) throw new PublishError("platform_rejected_content", "LinkedIn post text is empty.", { retryable: false });
   const res = await fetch("https://api.linkedin.com/v2/ugcPosts", {
     method: "POST",

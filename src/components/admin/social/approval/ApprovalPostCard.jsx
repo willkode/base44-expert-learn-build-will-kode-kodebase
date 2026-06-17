@@ -5,11 +5,11 @@ import StatusBadge from "@/components/admin/social/StatusBadge";
 import { PLATFORM_MAP, APPROVAL_STATUS_STYLES, formatDateTime } from "@/components/admin/social/socialConfig";
 import { schedulingBlockReason, approvalBlockReasons, primaryPostText } from "./approvalConfig";
 
-export default function ApprovalPostCard({ post, fbIgAccount, onSubmit, onApprove, onReject, onRevision, onSchedule, busyAction }) {
+export default function ApprovalPostCard({ post, metaAccounts, onSubmit, onApprove, onReject, onRevision, onSchedule, busyAction }) {
   const platforms = post.selected_platforms || [];
   const text = primaryPostText(post);
-  const blockReason = schedulingBlockReason(post, fbIgAccount);
-  const approveBlocks = approvalBlockReasons(post, fbIgAccount);
+  const blockReason = schedulingBlockReason(post, metaAccounts);
+  const approveBlocks = approvalBlockReasons(post, metaAccounts);
   const busy = busyAction != null;
 
   const canSubmit = ["draft", "revision_requested"].includes(post.approval_status);

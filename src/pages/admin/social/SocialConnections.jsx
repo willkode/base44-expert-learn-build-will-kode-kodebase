@@ -92,6 +92,17 @@ export default function SocialConnections() {
                 </div>
               )}
 
+              {(status === "expired" || status === "error") && (
+                <div className="mb-4 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] text-amber-400 space-y-1">
+                  <p className="font-medium">
+                    {status === "expired" ? "Authorization expired" : "Connection error"} — posts to {label} will not publish until you reconnect.
+                  </p>
+                  {acc?.last_error_message && (
+                    <p className="text-amber-300/80">{acc.last_error_message}</p>
+                  )}
+                </div>
+              )}
+
               {acc?.last_connected_at && (
                 <p className="text-xs text-muted-foreground mb-4">Last connected {formatDateTime(acc.last_connected_at)}</p>
               )}
@@ -99,11 +110,13 @@ export default function SocialConnections() {
               <div className="flex items-center gap-2">
                 {status === "connected" ? (
                   <>
-                    <Button variant="outline" size="sm" disabled title="OAuth comes next"><RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Reconnect</Button>
-                    <Button variant="outline" size="sm" disabled title="OAuth comes next"><Unplug className="w-3.5 h-3.5 mr-1.5" /> Disconnect</Button>
+                    <Button variant="outline" size="sm" disabled title="OAuth setup required — see below"><RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Reconnect</Button>
+                    <Button variant="outline" size="sm" disabled title="OAuth setup required — see below"><Unplug className="w-3.5 h-3.5 mr-1.5" /> Disconnect</Button>
                   </>
                 ) : (
-                  <Button size="sm" disabled title="OAuth comes next"><Plug className="w-3.5 h-3.5 mr-1.5" /> Connect</Button>
+                  <Button size="sm" disabled title="OAuth setup required — see below">
+                    <Plug className="w-3.5 h-3.5 mr-1.5" /> {status === "expired" || status === "error" ? "Reconnect" : "Connect"}
+                  </Button>
                 )}
               </div>
             </div>

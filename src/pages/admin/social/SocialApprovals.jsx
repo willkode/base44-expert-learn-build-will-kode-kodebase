@@ -19,7 +19,7 @@ import { trackEvent } from "@/lib/analytics";
 export default function SocialApprovals() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
-  const [fbIgAccount, setFbIgAccount] = useState(null);
+  const [metaAccounts, setMetaAccounts] = useState({ facebook: null, instagram: null });
   const [statusFilter, setStatusFilter] = useState("needs_review");
   const [platformFilter, setPlatformFilter] = useState("all");
   const [busy, setBusy] = useState({}); // { [postId]: actionName }
@@ -35,7 +35,10 @@ export default function SocialApprovals() {
       base44.entities.SocialAccount.filter({ account_id: "global" }, "-created_date", 200),
     ]).then(([p, accounts]) => {
       setPosts(p);
-      setFbIgAccount(accounts.find((a) => a.platform === "facebook" || a.platform === "instagram") || null);
+      setMetaAccounts({
+        facebook: accounts.find((a) => a.platform === "facebook") || null,
+        instagram: accounts.find((a) => a.platform === "instagram") || null,
+      });
       setLoading(false);
     });
   };
@@ -164,7 +167,7 @@ export default function SocialApprovals() {
               <ApprovalPostCard
                 key={post.id}
                 post={post}
-                fbIgAccount={fbIgAccount}
+                metaAccounts={metaAccounts}
                 busyAction={busy[post.id] || null}
                 onSubmit={handleSubmit}
                 onApprove={handleApprove}
