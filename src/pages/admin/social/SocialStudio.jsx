@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import StudioGeneratorForm from "@/components/admin/social/studio/StudioGeneratorForm";
 import PlatformVariantEditor from "@/components/admin/social/studio/PlatformVariantEditor";
 import GlobalAssetsPanel from "@/components/admin/social/studio/GlobalAssetsPanel";
+import StudioImagePanel from "@/components/admin/social/studio/StudioImagePanel";
 import { EMPTY_STUDIO_FORM } from "@/components/admin/social/studio/studioConfig";
 import { saveStudioPosts } from "@/components/admin/social/studio/studioSave";
 import { trackEvent } from "@/lib/analytics";
@@ -186,6 +187,14 @@ export default function SocialStudio() {
               onChange={setResult}
               onRegenerate={handleRegenerateAsset}
               regenerating={regenerating}
+            />
+          )}
+          {result && (
+            <StudioImagePanel
+              result={result}
+              onChange={setResult}
+              selectedPlatforms={form.selected_platforms}
+              includeTextOnImage={false}
             />
           )}
         </div>

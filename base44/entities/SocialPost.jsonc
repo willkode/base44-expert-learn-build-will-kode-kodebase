@@ -108,6 +108,11 @@
     "image_alt_text": {
       "type": "string"
     },
+    "image_provider_meta": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Metadata about how the post image was generated (provider, model, style, aspect ratio, dimensions, prompt, source: ai|upload)"
+    },
     "selected_platforms": {
       "type": "array",
       "items": {
