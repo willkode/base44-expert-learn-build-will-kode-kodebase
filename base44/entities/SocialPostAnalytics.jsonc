@@ -1,0 +1,165 @@
+{
+  "name": "SocialPostAnalytics",
+  "type": "object",
+  "properties": {
+    "scheduled_post_id": {
+      "type": "string",
+      "description": "Linked ScheduledPost id (indexed lookup key)"
+    },
+    "social_post_id": {
+      "type": "string"
+    },
+    "campaign_id": {
+      "type": "string"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "twitter",
+        "reddit",
+        "linkedin",
+        "facebook",
+        "instagram"
+      ]
+    },
+    "platform_post_id": {
+      "type": "string"
+    },
+    "platform_post_url": {
+      "type": "string"
+    },
+    "impressions": {
+      "type": "number",
+      "default": 0
+    },
+    "reach": {
+      "type": "number",
+      "default": 0
+    },
+    "likes": {
+      "type": "number",
+      "default": 0
+    },
+    "comments": {
+      "type": "number",
+      "default": 0
+    },
+    "shares": {
+      "type": "number",
+      "default": 0
+    },
+    "reposts": {
+      "type": "number",
+      "default": 0
+    },
+    "clicks": {
+      "type": "number",
+      "default": 0
+    },
+    "saves": {
+      "type": "number",
+      "default": 0
+    },
+    "upvotes": {
+      "type": "number",
+      "default": 0
+    },
+    "downvotes": {
+      "type": "number",
+      "default": 0
+    },
+    "score": {
+      "type": "number",
+      "default": 0
+    },
+    "engagement_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "click_through_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "follower_count_at_post_time": {
+      "type": "number"
+    },
+    "collected_at": {
+      "type": "string",
+      "description": "ISO timestamp when this snapshot was collected"
+    },
+    "raw_platform_response": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Raw sanitized platform analytics response (no tokens/secrets)"
+    },
+    "facebook_reactions": {
+      "type": "number"
+    },
+    "facebook_comments": {
+      "type": "number"
+    },
+    "facebook_shares": {
+      "type": "number"
+    },
+    "facebook_clicks": {
+      "type": "number"
+    },
+    "facebook_impressions": {
+      "type": "number"
+    },
+    "facebook_reach": {
+      "type": "number"
+    },
+    "facebook_video_views": {
+      "type": "number"
+    },
+    "facebook_post_engaged_users": {
+      "type": "number"
+    },
+    "instagram_likes": {
+      "type": "number"
+    },
+    "instagram_comments": {
+      "type": "number"
+    },
+    "instagram_saves": {
+      "type": "number"
+    },
+    "instagram_shares": {
+      "type": "number"
+    },
+    "instagram_reach": {
+      "type": "number"
+    },
+    "instagram_impressions": {
+      "type": "number"
+    },
+    "instagram_plays": {
+      "type": "number"
+    },
+    "instagram_reel_plays": {
+      "type": "number"
+    },
+    "instagram_profile_visits": {
+      "type": "number"
+    },
+    "instagram_follows": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "platform"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "name": "ScheduledPost",
+  "type": "object",
+  "properties": {
+    "social_post_id": {
+      "type": "string",
+      "description": "Linked SocialPost id (indexed lookup key)"
+    },
+    "campaign_id": {
+      "type": "string"
+    },
+    "social_account_id": {
+      "type": "string",
+      "description": "Linked SocialAccount id used to publish"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "twitter",
+        "reddit",
+        "linkedin",
+        "facebook",
+        "instagram"
+      ]
+    },
+    "platform_specific_payload": {
+      "type": "object",
+      "description": "Resolved per-platform publish payload",
+      "properties": {
+        "facebook_page_id": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "link_url": {
+          "type": "string"
+        },
+        "media_urls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "post_type": {
+          "type": "string",
+          "enum": [
+            "text",
+            "link",
+            "photo",
+            "video",
+            "reel"
+          ]
+        },
+        "published": {
+          "type": "boolean"
+        },
+        "call_to_action": {
+          "type": "string"
+        },
+        "privacy_status": {
+          "type": "string"
+        },
+        "instagram_business_account_id": {
+          "type": "string"
+        },
+        "caption": {
+          "type": "string"
+        },
+        "media_type": {
+          "type": "string",
+          "enum": [
+            "image",
+            "video",
+            "reel",
+            "carousel",
+            "story"
+          ]
+        },
+        "container_id": {
+          "type": "string"
+        },
+        "children_container_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "alt_text": {
+          "type": "string"
+        },
+        "first_comment": {
+          "type": "string"
+        },
+        "hashtags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "share_to_feed": {
+          "type": "boolean"
+        },
+        "location_id": {
+          "type": "string"
+        },
+        "user_tags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "product_tags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true,
+      "default": {}
+    },
+    "scheduled_at": {
+      "type": "string",
+      "description": "ISO timestamp when this job should publish (indexed lookup key)"
+    },
+    "timezone": {
+      "type": "string",
+      "default": "America/Chicago"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "processing",
+        "published",
+        "failed",
+        "canceled",
+        "skipped"
+      ],
+      "default": "queued"
+    },
+    "attempt_count": {
+      "type": "number",
+      "default": 0
+    },
+    "max_attempts": {
+      "type": "number",
+      "default": 3
+    },
+    "last_attempt_at": {
+      "type": "string"
+    },
+    "next_retry_at": {
+      "type": "string"
+    },
+    "platform_post_id": {
+      "type": "string"
+    },
+    "platform_post_url": {
+      "type": "string"
+    },
+    "error_code": {
+      "type": "string"
+    },
+    "error_message": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "platform"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

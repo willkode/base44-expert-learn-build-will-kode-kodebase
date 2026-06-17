@@ -1,0 +1,77 @@
+{
+  "name": "PostingSchedule",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Owning user id"
+    },
+    "account_id": {
+      "type": "string",
+      "default": "global",
+      "description": "Workspace/account scope key"
+    },
+    "name": {
+      "type": "string"
+    },
+    "platforms": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "twitter",
+          "reddit",
+          "linkedin",
+          "facebook",
+          "instagram"
+        ]
+      },
+      "default": []
+    },
+    "days_of_week": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "description": "0=Sunday ... 6=Saturday"
+      },
+      "default": []
+    },
+    "posting_times": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "HH:MM 24-hour local time"
+      },
+      "default": []
+    },
+    "timezone": {
+      "type": "string",
+      "default": "America/Chicago"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "default_campaign_id": {
+      "type": "string"
+    },
+    "created_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

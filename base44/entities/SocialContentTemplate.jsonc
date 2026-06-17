@@ -1,0 +1,89 @@
+{
+  "name": "SocialContentTemplate",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Owning user id"
+    },
+    "account_id": {
+      "type": "string",
+      "default": "global",
+      "description": "Workspace/account scope key"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "template_type": {
+      "type": "string",
+      "enum": [
+        "launch",
+        "feature_update",
+        "educational",
+        "case_study",
+        "testimonial",
+        "promotional",
+        "community",
+        "thought_leadership",
+        "reddit_discussion",
+        "linkedin_authority",
+        "twitter_thread",
+        "facebook_page_update",
+        "instagram_caption",
+        "instagram_reel",
+        "instagram_carousel"
+      ],
+      "default": "educational"
+    },
+    "prompt_structure": {
+      "type": "string",
+      "description": "AI prompt scaffold for this template"
+    },
+    "default_platforms": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "twitter",
+          "reddit",
+          "linkedin",
+          "facebook",
+          "instagram"
+        ]
+      },
+      "default": []
+    },
+    "default_tone": {
+      "type": "string"
+    },
+    "default_call_to_action": {
+      "type": "string"
+    },
+    "is_global": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this template is shared workspace-wide"
+    },
+    "created_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

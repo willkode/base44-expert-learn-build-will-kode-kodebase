@@ -1,0 +1,69 @@
+{
+  "name": "SocialAutomationLog",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "account_id": {
+      "type": "string",
+      "default": "global",
+      "description": "Workspace/account scope key"
+    },
+    "event_type": {
+      "type": "string",
+      "description": "e.g. content_generated, scheduled, post_attempt, token_refresh, analytics_sync, meta_event"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "twitter",
+        "reddit",
+        "linkedin",
+        "facebook",
+        "instagram"
+      ]
+    },
+    "related_campaign_id": {
+      "type": "string"
+    },
+    "related_post_id": {
+      "type": "string"
+    },
+    "related_scheduled_post_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "warning",
+        "error"
+      ],
+      "default": "success"
+    },
+    "message": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Sanitized context. Never store raw tokens, page tokens, platform secrets, or full API auth responses."
+    }
+  },
+  "required": [
+    "event_type"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

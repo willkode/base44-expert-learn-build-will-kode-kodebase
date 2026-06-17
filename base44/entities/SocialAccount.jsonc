@@ -1,0 +1,205 @@
+{
+  "name": "SocialAccount",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Owning user id"
+    },
+    "account_id": {
+      "type": "string",
+      "default": "global",
+      "description": "Workspace/account scope key (single-workspace app uses 'global')"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "twitter",
+        "reddit",
+        "linkedin",
+        "facebook",
+        "instagram"
+      ],
+      "description": "Connected social platform"
+    },
+    "platform_account_id": {
+      "type": "string",
+      "description": "Platform-side account id (indexed lookup key)"
+    },
+    "platform_username": {
+      "type": "string"
+    },
+    "platform_display_name": {
+      "type": "string"
+    },
+    "platform_avatar_url": {
+      "type": "string"
+    },
+    "access_token_encrypted": {
+      "type": "string",
+      "description": "BACKEND ONLY. Encrypted access token. Never expose to frontend or logs."
+    },
+    "refresh_token_encrypted": {
+      "type": "string",
+      "description": "BACKEND ONLY. Encrypted refresh token. Never expose to frontend or logs."
+    },
+    "token_expires_at": {
+      "type": "string",
+      "description": "ISO timestamp when the access token expires"
+    },
+    "scopes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "connection_status": {
+      "type": "string",
+      "enum": [
+        "connected",
+        "expired",
+        "disconnected",
+        "error"
+      ],
+      "default": "disconnected"
+    },
+    "last_connected_at": {
+      "type": "string"
+    },
+    "last_successful_post_at": {
+      "type": "string"
+    },
+    "last_error_message": {
+      "type": "string"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Email/id of the admin who connected this account"
+    },
+    "meta_user_id": {
+      "type": "string",
+      "description": "Meta (Facebook) user id"
+    },
+    "meta_business_id": {
+      "type": "string"
+    },
+    "facebook_page_id": {
+      "type": "string"
+    },
+    "facebook_page_name": {
+      "type": "string"
+    },
+    "facebook_page_access_token_encrypted": {
+      "type": "string",
+      "description": "BACKEND ONLY. Encrypted Facebook Page access token. Never expose to frontend or logs."
+    },
+    "facebook_page_category": {
+      "type": "string"
+    },
+    "facebook_page_picture_url": {
+      "type": "string"
+    },
+    "facebook_page_tasks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "available_facebook_pages": {
+      "type": "array",
+      "description": "List of selectable Facebook Pages (public info only; tokens stored separately)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "picture_url": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "selected_default_facebook_page_id": {
+      "type": "string"
+    },
+    "meta_scopes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "meta_token_expires_at": {
+      "type": "string"
+    },
+    "meta_app_review_status": {
+      "type": "string",
+      "description": "Status of Meta app review for required permissions"
+    },
+    "instagram_business_account_id": {
+      "type": "string"
+    },
+    "instagram_username": {
+      "type": "string"
+    },
+    "instagram_profile_picture_url": {
+      "type": "string"
+    },
+    "instagram_account_type": {
+      "type": "string"
+    },
+    "instagram_connected_facebook_page_id": {
+      "type": "string"
+    },
+    "available_instagram_accounts": {
+      "type": "array",
+      "description": "List of selectable Instagram professional accounts (public info only)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "profile_picture_url": {
+            "type": "string"
+          },
+          "connected_facebook_page_id": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "selected_default_instagram_account_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "platform"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

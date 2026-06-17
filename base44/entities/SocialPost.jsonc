@@ -1,0 +1,193 @@
+{
+  "name": "SocialPost",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Owning user id"
+    },
+    "account_id": {
+      "type": "string",
+      "default": "global",
+      "description": "Workspace/account scope key"
+    },
+    "campaign_id": {
+      "type": "string",
+      "description": "Linked SocialCampaign id (indexed lookup key)"
+    },
+    "title_internal": {
+      "type": "string",
+      "description": "Internal-only label for the post (not published)"
+    },
+    "content": {
+      "type": "string",
+      "description": "Base/master content used to derive platform variants"
+    },
+    "platform_variants": {
+      "type": "object",
+      "description": "Per-platform content variants",
+      "properties": {
+        "twitter_text": {
+          "type": "string"
+        },
+        "twitter_thread": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reddit_title": {
+          "type": "string"
+        },
+        "reddit_body": {
+          "type": "string"
+        },
+        "linkedin_text": {
+          "type": "string"
+        },
+        "facebook_text": {
+          "type": "string"
+        },
+        "facebook_link_url": {
+          "type": "string"
+        },
+        "facebook_cta": {
+          "type": "string"
+        },
+        "facebook_media_urls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "facebook_post_type": {
+          "type": "string"
+        },
+        "instagram_caption": {
+          "type": "string"
+        },
+        "instagram_media_urls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "instagram_media_type": {
+          "type": "string"
+        },
+        "instagram_alt_text": {
+          "type": "string"
+        },
+        "instagram_first_comment": {
+          "type": "string"
+        },
+        "instagram_hashtags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true,
+      "default": {}
+    },
+    "hashtags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "image_prompt": {
+      "type": "string",
+      "description": "AI prompt used to generate the post image"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "image_alt_text": {
+      "type": "string"
+    },
+    "selected_platforms": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "twitter",
+          "reddit",
+          "linkedin",
+          "facebook",
+          "instagram"
+        ]
+      },
+      "default": []
+    },
+    "approval_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "needs_review",
+        "approved",
+        "rejected",
+        "revision_requested"
+      ],
+      "default": "draft"
+    },
+    "publishing_status": {
+      "type": "string",
+      "enum": [
+        "unscheduled",
+        "scheduled",
+        "publishing",
+        "published",
+        "partially_published",
+        "failed",
+        "canceled"
+      ],
+      "default": "unscheduled"
+    },
+    "scheduled_at": {
+      "type": "string",
+      "description": "ISO timestamp for scheduled publishing (indexed lookup key)"
+    },
+    "timezone": {
+      "type": "string",
+      "default": "America/Chicago"
+    },
+    "created_by": {
+      "type": "string"
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "approved_at": {
+      "type": "string"
+    },
+    "rejected_reason": {
+      "type": "string"
+    },
+    "revision_notes": {
+      "type": "string"
+    },
+    "ai_model_used": {
+      "type": "string"
+    },
+    "ai_generation_input": {
+      "type": "string",
+      "description": "Raw brief/topic used to generate the post"
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
