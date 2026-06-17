@@ -5,6 +5,7 @@ import PageHeader from "@/components/shared/PageHeader";
 import LoadingState from "@/components/shared/LoadingState";
 import { Button } from "@/components/ui/button";
 import { PLATFORMS, PLATFORM_MAP } from "@/components/admin/social/socialConfig";
+import PublishingQueue from "@/components/admin/social/publishing/PublishingQueue";
 import { trackEvent } from "@/lib/analytics";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -112,6 +113,8 @@ export default function SocialCalendar() {
           <CalendarDays className="w-4 h-4" /> No scheduled posts yet. Approved posts can be scheduled from the Content Studio.
         </div>
       )}
+
+      <PublishingQueue />
     </div>
   );
 }
