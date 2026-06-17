@@ -30,6 +30,7 @@ import Videos from '@/pages/learn/Videos';
 
 import LlmGuide from '@/pages/learn/LlmGuide';
 import KodeSessions from '@/pages/services/KodeSessions';
+import ErService from '@/pages/services/ErService';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -135,6 +136,7 @@ const AuthenticatedApp = () => {
 
         <Route path="/learn/llm-guide" element={<LlmGuide />} />
         <Route path="/services/kode-sessions" element={<KodeSessions />} />
+        <Route path="/services/er-service" element={<ErService />} />
       </Route>
       <Route path="/" element={<Home />} />
       <Route path="/tools/blueprint" element={<BlueprintTool />} />
