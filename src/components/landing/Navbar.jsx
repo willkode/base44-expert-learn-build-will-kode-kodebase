@@ -13,7 +13,6 @@ import SocialLinks from "@/components/landing/SocialLinks";
 import { trackCTA } from "@/lib/analytics";
 
 const links = [
-  { label: "Products", to: "/products" },
   { label: "Contact Me", to: "/contact" },
 ];
 
@@ -91,32 +90,6 @@ export default function Navbar() {
 
         <nav className="hidden md:flex items-center gap-1">
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50 focus:outline-none">
-              Services
-              <ChevronDown className="w-4 h-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-[34rem] p-3">
-              <div className="grid grid-cols-2 gap-1">
-                {serviceItems.map((item) => (
-                  <DropdownMenuItem key={item.to} asChild className="p-0 focus:bg-transparent">
-                    <Link to={item.to} className="flex items-start gap-3 rounded-lg p-3 hover:bg-secondary/60 transition-colors cursor-pointer">
-                      <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
-                        <item.icon className="h-4 w-4" />
-                      </span>
-                      <span className="min-w-0">
-                        <span className="flex items-center font-semibold text-sm text-foreground">
-                          {item.label}
-                          <LearnBadge badge={item.badge} />
-                        </span>
-                        <span className="block text-xs text-muted-foreground leading-snug mt-0.5">{item.desc}</span>
-                      </span>
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
              <DropdownMenuTrigger className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50 focus:outline-none">
                Learn
                <ChevronDown className="w-4 h-4" />
@@ -168,7 +141,36 @@ export default function Navbar() {
                </div>
              </DropdownMenuContent>
              </DropdownMenu>
-           {links.map((l) => (
+             <DropdownMenu>
+             <DropdownMenuTrigger className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50 focus:outline-none">
+             Services
+             <ChevronDown className="w-4 h-4" />
+             </DropdownMenuTrigger>
+             <DropdownMenuContent align="start" className="w-[34rem] p-3">
+             <div className="grid grid-cols-2 gap-1">
+               {serviceItems.map((item) => (
+                 <DropdownMenuItem key={item.to} asChild className="p-0 focus:bg-transparent">
+                   <Link to={item.to} className="flex items-start gap-3 rounded-lg p-3 hover:bg-secondary/60 transition-colors cursor-pointer">
+                     <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
+                       <item.icon className="h-4 w-4" />
+                     </span>
+                     <span className="min-w-0">
+                       <span className="flex items-center font-semibold text-sm text-foreground">
+                         {item.label}
+                         <LearnBadge badge={item.badge} />
+                       </span>
+                       <span className="block text-xs text-muted-foreground leading-snug mt-0.5">{item.desc}</span>
+                     </span>
+                   </Link>
+                 </DropdownMenuItem>
+               ))}
+             </div>
+             </DropdownMenuContent>
+             </DropdownMenu>
+             <Link to="/products" className="relative px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/50">
+             Products
+             </Link>
+             {links.map((l) => (
              l.to ? (
                <Link
                  key={l.to}
@@ -224,25 +226,6 @@ export default function Navbar() {
       {open && (
         <div className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border px-6 py-5 space-y-1">
           <div className="pt-2 pb-1">
-            <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Services</p>
-            {serviceItems.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
-              >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
-                  <item.icon className="h-4 w-4" />
-                </span>
-                <span className="flex items-center text-sm font-medium text-muted-foreground">
-                  {item.label}
-                  <LearnBadge badge={item.badge} />
-                </span>
-              </Link>
-            ))}
-          </div>
-          <div className="pt-2 pb-1">
              <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Learn</p>
             {learnLinks.map((l) => (
               <Link
@@ -280,6 +263,32 @@ export default function Navbar() {
                </Link>
              ))}
             </div>
+            <div className="pt-2 pb-1">
+            <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Services</p>
+            {serviceItems.map((item) => (
+             <Link
+               key={item.to}
+               to={item.to}
+               onClick={() => setOpen(false)}
+               className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
+             >
+               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
+                 <item.icon className="h-4 w-4" />
+               </span>
+               <span className="flex items-center text-sm font-medium text-muted-foreground">
+                 {item.label}
+                 <LearnBadge badge={item.badge} />
+               </span>
+             </Link>
+            ))}
+            </div>
+            <Link
+            to="/products"
+            onClick={() => setOpen(false)}
+            className="block text-sm font-medium text-muted-foreground hover:text-foreground py-2.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
+            >
+            Products
+            </Link>
             {links.map((l) => (
              l.to ? (
                <Link
