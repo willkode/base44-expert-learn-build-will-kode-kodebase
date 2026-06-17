@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { PLATFORMS, CONNECTION_STATUS_STYLES, formatDateTime } from "@/components/admin/social/socialConfig";
 import { trackEvent } from "@/lib/analytics";
 import SocialAlertBanner from "@/components/admin/social/notifications/SocialAlertBanner";
+import SocialSafetyWarnings from "@/components/admin/social/setup/SocialSafetyWarnings";
 
 const REQUIRED_SCOPES = {
   twitter: ["tweet.read", "tweet.write", "users.read", "offline.access"],
@@ -79,8 +80,15 @@ export default function SocialConnections() {
 
               {key === "facebook" && status !== "connected" && (
                 <div className="mb-4 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] text-amber-400 space-y-1">
-                  <p>Connect a Facebook Page to schedule and publish Page posts, links, images, videos, and campaign updates.</p>
+                  <p>No Facebook Page connected yet. Connect a Page you manage to schedule and publish Page posts, links, images, videos, and campaign updates.</p>
                   <p className="text-amber-300/80">Facebook posting requires a connected Facebook Page and the correct Meta permissions. Personal profile posting is not supported by this workflow.</p>
+                </div>
+              )}
+
+              {key === "instagram" && status !== "connected" && (
+                <div className="mb-4 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] text-amber-400 space-y-1">
+                  <p>No Instagram account connected yet. Link an Instagram <span className="font-medium">Business or Creator</span> (professional) account to a Facebook Page you manage.</p>
+                  <p className="text-amber-300/80">Instagram requires media — text-only posts are not supported. Publishing depends on Meta permissions and media format requirements.</p>
                 </div>
               )}
 
@@ -106,6 +114,8 @@ export default function SocialConnections() {
       <p className="text-xs text-muted-foreground">
         OAuth connection flows are implemented in a later step. Each platform requires its own developer app and credentials.
       </p>
+
+      <SocialSafetyWarnings />
     </div>
   );
 }

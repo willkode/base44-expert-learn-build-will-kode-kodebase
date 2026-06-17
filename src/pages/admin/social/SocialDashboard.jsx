@@ -16,6 +16,7 @@ import {
 } from "@/components/admin/social/socialConfig";
 import SocialAlertBanner from "@/components/admin/social/notifications/SocialAlertBanner";
 import AdminRecoveryTools from "@/components/admin/social/recovery/AdminRecoveryTools";
+import SocialSetupGuide from "@/components/admin/social/setup/SocialSetupGuide";
 
 const quickActions = [
   { label: "Create Post", to: "/admin/marketing/social/studio", icon: PenSquare },
@@ -32,6 +33,9 @@ export default function SocialDashboard() {
   const [accounts, setAccounts] = useState([]);
   const [scheduled, setScheduled] = useState([]);
   const [analytics, setAnalytics] = useState([]);
+  const [posts, setPosts] = useState([]);
+  const [campaigns, setCampaigns] = useState([]);
+  const [brandProfiles, setBrandProfiles] = useState([]);
 
   useEffect(() => {
     trackEvent("admin_social_dashboard_view");
@@ -39,10 +43,16 @@ export default function SocialDashboard() {
       base44.entities.SocialAccount.list("-created_date", 200),
       base44.entities.ScheduledPost.list("-scheduled_at", 500),
       base44.entities.SocialPostAnalytics.list("-collected_at", 500),
-    ]).then(([acc, sch, an]) => {
+      base44.entities.SocialPost.list("-created_date", 200),
+      base44.entities.SocialCampaign.list("-created_date", 100),
+      base44.entities.BrandProfile.list("-created_date", 10),
+    ]).then(([acc, sch, an, po, ca, bp]) => {
       setAccounts(acc);
       setScheduled(sch);
       setAnalytics(an);
+      setPosts(po);
+      setCampaigns(ca);
+      setBrandProfiles(bp);
       setLoading(false);
     });
   }, []);
@@ -91,6 +101,15 @@ export default function SocialDashboard() {
       <SocialAlertBanner
         events={["post_failed", "facebook_post_failed", "instagram_post_failed", "campaign_paused_failures", "instagram_limit_reached"]}
         title="Needs attention"
+      />
+
+      <SocialSetupGuide
+        accounts={accounts}
+        scheduled={scheduled}
+        posts={posts}
+        campaigns={campaigns}
+        brandProfiles={brandProfiles}
+        appPublicUrlSet={true}
       />
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
