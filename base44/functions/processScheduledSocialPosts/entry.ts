@@ -89,16 +89,43 @@ async function publishToTwitter(payload, ctx) {
 async function publishToReddit(payload, ctx) {
   const token = await ensureValidToken(ctx.base44, ctx.account, "reddit");
   const v = ctx.post.platform_variants || {};
-  const title = v.reddit_title;
+  const title = payload.title || v.reddit_title;
   if (!title) throw new PublishError("platform_rejected_content", "Reddit title is required.", { retryable: false });
-  const subreddit = payload.subreddit || ctx.account.platform_username;
-  const form = new URLSearchParams({
-    sr: subreddit || "", kind: "self", title, text: v.reddit_body || "", api_type: "json",
-  });
+  const subreddit = (payload.subreddit || ctx.account.platform_username || "").trim();
+  if (!subreddit) throw new PublishError("platform_rejected_content", "Reddit subreddit is required.", { retryable: false });
+
+  // Map our post kind to Reddit's submit "kind" + content fields.
+  const requestedKind = payload.reddit_post_kind || "self";
+  const mediaUrls = payload.media_urls || (ctx.post.image_url ? [ctx.post.image_url] : []);
+  const fields = {
+    sr: subreddit,
+    title,
+    api_type: "json",
+    nsfw: payload.nsfw ? "true" : "false",
+    spoiler: payload.spoiler ? "true" : "false",
+    sendreplies: payload.send_replies === false ? "false" : "true",
+  };
+  if (payload.flair_id) fields.flair_id = payload.flair_id;
+  if (payload.flair_text) fields.flair_text = payload.flair_text;
+
+  if (requestedKind === "link") {
+    if (!payload.link_url) throw new PublishError("platform_rejected_content", "Reddit link post requires a URL.", { retryable: false });
+    fields.kind = "link";
+    fields.url = payload.link_url;
+  } else if (requestedKind === "image") {
+    // Reddit's media upload flow differs; without it, submit the image as a link post to its URL.
+    if (!mediaUrls.length) throw new PublishError("instagram_media_required", "Reddit image post requires an image.", { retryable: false });
+    fields.kind = "link";
+    fields.url = mediaUrls[0];
+  } else {
+    fields.kind = "self";
+    fields.text = payload.body || v.reddit_body || ctx.post.content || "";
+  }
+
   const res = await fetch("https://oauth.reddit.com/api/submit", {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/x-www-form-urlencoded", "User-Agent": "KodeBaseSocial/1.0" },
-    body: form.toString(),
+    body: new URLSearchParams(fields).toString(),
   });
   if (res.status === 429) throw new PublishError("rate_limited", "Reddit rate limit hit.");
   if (res.status === 401 || res.status === 403) throw new PublishError("missing_permission", "Reddit rejected the credentials.", { retryable: false });
@@ -111,6 +138,17 @@ async function publishToReddit(payload, ctx) {
   }
   const url = data?.json?.data?.url || "";
   const id = data?.json?.data?.id || data?.json?.data?.name || "";
+
+  // Best-effort: post the suggested first comment for context.
+  if (payload.suggested_comment && (data?.json?.data?.name || id)) {
+    try {
+      await fetch("https://oauth.reddit.com/api/comment", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/x-www-form-urlencoded", "User-Agent": "KodeBaseSocial/1.0" },
+        body: new URLSearchParams({ api_type: "json", thing_id: data?.json?.data?.name || id, text: payload.suggested_comment }).toString(),
+      });
+    } catch (_e) { /* non-fatal */ }
+  }
   return { platform_post_id: id, platform_post_url: url };
 }
 

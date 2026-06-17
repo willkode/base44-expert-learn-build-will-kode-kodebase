@@ -8,7 +8,24 @@ function buildPayload(platform, post, account, overrides) {
     return { message: o.message || v.twitter_text || post.content || '', thread: v.twitter_thread || [], media_urls: post.image_url ? [post.image_url] : [] };
   }
   if (platform === 'reddit') {
-    return { title: o.title || v.reddit_title || post.title_internal || '', message: o.message || v.reddit_body || post.content || '' };
+    const kind = o.reddit_post_kind || 'self';
+    const media = o.media_urls && o.media_urls.length ? o.media_urls : (post.image_url ? [post.image_url] : []);
+    return {
+      subreddit: (o.subreddit || '').trim(),
+      reddit_post_kind: kind,
+      title: o.title || v.reddit_title || post.title_internal || '',
+      body: o.body || o.message || v.reddit_body || post.content || '',
+      link_url: o.link_url || '',
+      media_urls: media,
+      flair_id: o.flair_id || '',
+      flair_text: o.flair_text || '',
+      nsfw: !!o.nsfw,
+      spoiler: !!o.spoiler,
+      send_replies: o.send_replies !== false,
+      suggested_comment: o.suggested_comment || '',
+      promotion_disclosure: o.promotion_disclosure || '',
+      subreddit_rules_notes: o.subreddit_rules_notes || '',
+    };
   }
   if (platform === 'linkedin') {
     return { message: o.message || v.linkedin_text || post.content || '', media_urls: post.image_url ? [post.image_url] : [] };
@@ -43,9 +60,20 @@ function buildPayload(platform, post, account, overrides) {
   return { message: post.content || '' };
 }
 
-function validatePlatform(platform, post, account) {
+function validatePlatform(platform, post, account, overrides) {
   if (!account || account.connection_status !== 'connected') {
     return `${platform} requires a connected account.`;
+  }
+  if (platform === 'reddit') {
+    const o = overrides || {};
+    const v = post.platform_variants || {};
+    const title = o.title || v.reddit_title || post.title_internal || '';
+    const kind = o.reddit_post_kind || 'self';
+    if (!(o.subreddit || '').trim()) return 'Reddit requires a target subreddit.';
+    if (!title.trim()) return 'Reddit requires a post title.';
+    if (kind === 'self' && !((o.body || o.message || v.reddit_body || post.content || '').trim())) return 'Reddit text posts require a body.';
+    if (kind === 'link' && !((o.link_url || '').trim())) return 'Reddit link posts require a URL.';
+    if (kind === 'image' && !((o.media_urls && o.media_urls.length) || post.image_url)) return 'Reddit image posts require an image.';
   }
   if (platform === 'facebook') {
     const pageId = account.selected_default_facebook_page_id || account.facebook_page_id;
@@ -103,7 +131,7 @@ Deno.serve(async (req) => {
       if (when.getTime() <= Date.now()) { errors.push(`${platform}: cannot schedule in the past.`); continue; }
 
       const account = accountById[social_account_id];
-      const reason = validatePlatform(platform, post, account);
+      const reason = validatePlatform(platform, post, account, overrides);
       if (reason) { errors.push(reason); continue; }
 
       // Duplicate guard: same post + platform + account, not canceled.

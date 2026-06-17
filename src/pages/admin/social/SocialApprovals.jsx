@@ -10,6 +10,7 @@ import { PLATFORMS } from "@/components/admin/social/socialConfig";
 import ApprovalPostCard from "@/components/admin/social/approval/ApprovalPostCard";
 import ApprovalReasonDialog from "@/components/admin/social/approval/ApprovalReasonDialog";
 import ApprovalHistory from "@/components/admin/social/approval/ApprovalHistory";
+import RedditScheduleDialog from "@/components/admin/social/reddit/RedditScheduleDialog";
 import { APPROVAL_FILTERS } from "@/components/admin/social/approval/approvalConfig";
 import { trackEvent } from "@/lib/analytics";
 
@@ -21,6 +22,7 @@ export default function SocialApprovals() {
   const [platformFilter, setPlatformFilter] = useState("all");
   const [busy, setBusy] = useState({}); // { [postId]: actionName }
   const [dialog, setDialog] = useState({ open: false, mode: null, post: null });
+  const [redditDialog, setRedditDialog] = useState({ open: false, post: null });
   const [historyKey, setHistoryKey] = useState(0);
 
   const load = () => {
@@ -164,6 +166,7 @@ export default function SocialApprovals() {
                 onApprove={handleApprove}
                 onReject={(p) => setDialog({ open: true, mode: "reject", post: p })}
                 onRevision={(p) => setDialog({ open: true, mode: "revision", post: p })}
+                onSchedule={(post.selected_platforms || []).includes("reddit") ? (p) => setRedditDialog({ open: true, post: p }) : undefined}
               />
             ))
           )}
@@ -179,6 +182,13 @@ export default function SocialApprovals() {
         mode={dialog.mode}
         submitting={dialog.post ? busy[dialog.post.id] === dialog.mode : false}
         onConfirm={handleConfirmReason}
+      />
+
+      <RedditScheduleDialog
+        open={redditDialog.open}
+        onOpenChange={(open) => setRedditDialog((d) => ({ ...d, open }))}
+        post={redditDialog.post}
+        onScheduled={() => { trackEvent("admin_social_reddit_scheduled"); load(); }}
       />
     </div>
   );
