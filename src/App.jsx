@@ -29,6 +29,7 @@ import SuperAgent from '@/pages/learn/SuperAgent';
 import Videos from '@/pages/learn/Videos';
 
 import LlmGuide from '@/pages/learn/LlmGuide';
+import KodeSessions from '@/pages/services/KodeSessions';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -133,6 +134,7 @@ const AuthenticatedApp = () => {
         <Route path="/learn/videos" element={<Videos />} />
 
         <Route path="/learn/llm-guide" element={<LlmGuide />} />
+        <Route path="/services/kode-sessions" element={<KodeSessions />} />
       </Route>
       <Route path="/" element={<Home />} />
       <Route path="/tools/blueprint" element={<BlueprintTool />} />
