@@ -285,51 +285,145 @@ async function publishToFacebook(payload, ctx) {
   return { platform_post_id: id, platform_post_url: id ? `https://www.facebook.com/${id}` : "" };
 }
 
+const IG_API = "https://graph.facebook.com/v19.0";
+
+function isVideoUrl(u) { return /\.(mp4|mov|m4v|webm)(\?|$)/i.test(u || ""); }
+
+// Maps a Meta Graph error into a precise PublishError code.
+function instagramError(err, fallbackCode, fallbackMsg) {
+  const msg = String(err?.message || "").toLowerCase();
+  if (err?.code === 190) return new PublishError("instagram_token_expired", "Instagram token expired — reconnect.", { retryable: false });
+  if (msg.includes("permission") || err?.code === 200 || err?.code === 10) {
+    return new PublishError("instagram_permission_missing", "Missing Instagram publishing permission.", { retryable: false });
+  }
+  if (msg.includes("limit") || err?.code === 4 || err?.code === 17) {
+    return new PublishError("instagram_publish_limit_reached", "Instagram publish limit reached — try again later.", { retryable: false });
+  }
+  if (msg.includes("not a valid") || msg.includes("media") || msg.includes("aspect") || msg.includes("format")) {
+    return new PublishError("instagram_media_rejected", `Instagram rejected the media: ${err?.message || "invalid media"}.`, { retryable: false });
+  }
+  return new PublishError(fallbackCode, `${fallbackMsg}${err?.message ? ": " + err.message : "."}`);
+}
+
+// Creates a single media container (used directly for image/video/reel/story,
+// and per-item for carousel children).
+async function createIgContainer(igId, token, fields) {
+  const res = await fetch(`${IG_API}/${igId}/media`, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...fields, access_token: token }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (data?.error) throw instagramError(data.error, "instagram_container_creation_failed", "Failed to create Instagram media container");
+  if (!data.id) throw new PublishError("instagram_container_creation_failed", "Failed to create Instagram media container.");
+  return data.id;
+}
+
+// Polls a container until it is FINISHED (videos/reels process asynchronously).
+async function waitForIgContainer(containerId, token, attempts = 5) {
+  for (let i = 0; i < attempts; i++) {
+    const res = await fetch(`${IG_API}/${containerId}?fields=status_code,status&access_token=${encodeURIComponent(token)}`);
+    const data = await res.json().catch(() => ({}));
+    const code = data.status_code;
+    if (code === "FINISHED" || code === "PUBLISHED") return true;
+    if (code === "ERROR") throw new PublishError("instagram_media_rejected", `Instagram could not process the media (${data.status || "error"}).`, { retryable: false });
+    // Still IN_PROGRESS — wait, then retry within this run.
+    if (i < attempts - 1) await new Promise((r) => setTimeout(r, 2500));
+  }
+  // Not ready yet — let the job retry on the next worker pass.
+  throw new PublishError("instagram_container_not_ready", "Instagram media is still processing — will retry.");
+}
+
 async function publishToInstagram(payload, ctx) {
   const account = ctx.account;
   const igId = payload.instagram_business_account_id || account.instagram_business_account_id || account.selected_default_instagram_account_id;
   if (!igId) throw new PublishError("instagram_account_missing", "No Instagram professional account connected.", { retryable: false });
+
   const v = ctx.post.platform_variants || {};
-  const mediaUrls = payload.media_urls || v.instagram_media_urls || (ctx.post.image_url ? [ctx.post.image_url] : []);
-  if (!mediaUrls.length) throw new PublishError("instagram_media_required", "Instagram requires an image, video, or Reel.", { retryable: false });
+  const mediaUrls = (payload.media_urls && payload.media_urls.length ? payload.media_urls : (v.instagram_media_urls || (ctx.post.image_url ? [ctx.post.image_url] : [])))
+    .filter((m) => (m || "").trim());
+  if (!mediaUrls.length) throw new PublishError("instagram_media_required", "Instagram requires an image, video, or Reel — text-only posts are not allowed.", { retryable: false });
+
   if (!account.facebook_page_access_token_encrypted) throw new PublishError("instagram_token_expired", "Instagram token missing — reconnect the linked Page.", { retryable: false });
   const token = await decryptToken(account.facebook_page_access_token_encrypted);
   if (!token) throw new PublishError("instagram_permission_missing", "Instagram access token invalid — reconnect the account.", { retryable: false });
+
+  const mediaType = payload.media_type || v.instagram_media_type || "image";
   const caption = payload.caption || v.instagram_caption || ctx.post.content || "";
 
-  // 1) create media container
-  const createRes = await fetch(`https://graph.facebook.com/v19.0/${igId}/media`, {
-    method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ image_url: mediaUrls[0], caption, access_token: token }),
-  });
-  const createData = await createRes.json().catch(() => ({}));
-  if (createData?.error?.code === 190) throw new PublishError("instagram_token_expired", "Instagram token expired — reconnect.", { retryable: false });
-  if (createData?.error && String(createData.error.message || "").toLowerCase().includes("permission")) {
-    throw new PublishError("instagram_permission_missing", "Missing Instagram publishing permission.", { retryable: false });
-  }
-  if (!createData.id) throw new PublishError("instagram_container_creation_failed", "Failed to create Instagram media container.");
-  const containerId = createData.id;
+  let containerId;
 
-  // 2) check container readiness
-  const statusRes = await fetch(`https://graph.facebook.com/v19.0/${containerId}?fields=status_code&access_token=${encodeURIComponent(token)}`);
-  const statusData = await statusRes.json().catch(() => ({}));
-  if (statusData.status_code && statusData.status_code !== "FINISHED" && statusData.status_code !== "PUBLISHED") {
-    throw new PublishError("instagram_container_not_ready", `Instagram media not ready (${statusData.status_code}).`);
+  // 1) Build the media container per media type.
+  if (mediaType === "carousel") {
+    if (mediaUrls.length < 2) throw new PublishError("instagram_media_rejected", "Carousels need at least 2 media items.", { retryable: false });
+    const childIds = [];
+    for (const url of mediaUrls.slice(0, 10)) {
+      const childFields = isVideoUrl(url)
+        ? { media_type: "VIDEO", video_url: url, is_carousel_item: true }
+        : { image_url: url, is_carousel_item: true };
+      const childId = await createIgContainer(igId, token, childFields);
+      if (isVideoUrl(url)) await waitForIgContainer(childId, token);
+      childIds.push(childId);
+    }
+    await log(ctx.base44, { status: "success", platform: "instagram", message: `Created ${childIds.length} carousel item(s).`, job: ctx.job, metadata: { children: childIds } });
+    containerId = await createIgContainer(igId, token, { media_type: "CAROUSEL", caption, children: childIds.join(",") });
+    ctx.containerMeta = { children_container_ids: childIds };
+  } else if (mediaType === "reel") {
+    containerId = await createIgContainer(igId, token, {
+      media_type: "REELS", video_url: mediaUrls[0], caption, share_to_feed: payload.share_to_feed !== false,
+    });
+    await waitForIgContainer(containerId, token);
+  } else if (mediaType === "video") {
+    containerId = await createIgContainer(igId, token, { media_type: "VIDEO", video_url: mediaUrls[0], caption });
+    await waitForIgContainer(containerId, token);
+  } else if (mediaType === "story") {
+    const storyFields = isVideoUrl(mediaUrls[0])
+      ? { media_type: "STORIES", video_url: mediaUrls[0] }
+      : { media_type: "STORIES", image_url: mediaUrls[0] };
+    containerId = await createIgContainer(igId, token, storyFields);
+    if (isVideoUrl(mediaUrls[0])) await waitForIgContainer(containerId, token);
+  } else {
+    // Single image.
+    containerId = await createIgContainer(igId, token, { image_url: mediaUrls[0], caption });
+    await waitForIgContainer(containerId, token);
   }
 
-  // 3) publish container
-  const pubRes = await fetch(`https://graph.facebook.com/v19.0/${igId}/media_publish`, {
+  await log(ctx.base44, { status: "success", platform: "instagram", message: `Container ready (${mediaType}).`, job: ctx.job, metadata: { container_id: containerId } });
+
+  // 2) Publish the container.
+  const pubRes = await fetch(`${IG_API}/${igId}/media_publish`, {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ creation_id: containerId, access_token: token }),
   });
   const pubData = await pubRes.json().catch(() => ({}));
-  if (pubData?.error) {
-    const sub = String(pubData.error.message || "").toLowerCase();
-    if (sub.includes("limit")) throw new PublishError("instagram_publish_limit_reached", "Instagram daily publish limit reached.", { retryable: false });
-    throw new PublishError("instagram_media_publish_failed", `Instagram publish failed: ${pubData.error.message}.`);
-  }
+  if (pubData?.error) throw instagramError(pubData.error, "instagram_media_publish_failed", "Instagram publish failed");
   if (!pubData.id) throw new PublishError("instagram_media_publish_failed", "Instagram publish failed.");
-  return { platform_post_id: pubData.id, platform_post_url: `https://www.instagram.com/` };
+  const mediaId = pubData.id;
+
+  // 3) Resolve the permalink (best-effort).
+  let permalink = "";
+  try {
+    const linkRes = await fetch(`${IG_API}/${mediaId}?fields=permalink&access_token=${encodeURIComponent(token)}`);
+    const linkData = await linkRes.json().catch(() => ({}));
+    permalink = linkData.permalink || "";
+  } catch (_e) { /* non-fatal */ }
+
+  // 4) Best-effort first comment (e.g. a clean hashtag block).
+  if (payload.first_comment && (payload.first_comment || "").trim()) {
+    try {
+      await fetch(`${IG_API}/${mediaId}/comments`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: payload.first_comment, access_token: token }),
+      });
+      await log(ctx.base44, { status: "success", platform: "instagram", message: "Posted first comment.", job: ctx.job, metadata: {} });
+    } catch (_e) { /* non-fatal */ }
+  }
+
+  return {
+    platform_post_id: mediaId,
+    platform_post_url: permalink || `https://www.instagram.com/${account.instagram_username || account.platform_username || ""}`,
+    container_id: containerId,
+    children_container_ids: (ctx.containerMeta && ctx.containerMeta.children_container_ids) || [],
+  };
 }
 
 const PUBLISHERS = {

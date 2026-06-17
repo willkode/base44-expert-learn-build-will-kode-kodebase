@@ -71,6 +71,13 @@ export default function SocialConnections() {
                 </div>
               </div>
 
+              {key === "facebook" && status !== "connected" && (
+                <div className="mb-4 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] text-amber-400 space-y-1">
+                  <p>Connect a Facebook Page to schedule and publish Page posts, links, images, videos, and campaign updates.</p>
+                  <p className="text-amber-300/80">Facebook posting requires a connected Facebook Page and the correct Meta permissions. Personal profile posting is not supported by this workflow.</p>
+                </div>
+              )}
+
               {acc?.last_connected_at && (
                 <p className="text-xs text-muted-foreground mb-4">Last connected {formatDateTime(acc.last_connected_at)}</p>
               )}

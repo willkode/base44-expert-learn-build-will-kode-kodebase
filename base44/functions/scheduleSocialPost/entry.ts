@@ -54,16 +54,18 @@ function buildPayload(platform, post, account, overrides) {
   }
   if (platform === 'instagram') {
     const igId = o.instagram_business_account_id || account.selected_default_instagram_account_id || account.instagram_business_account_id || '';
-    const media = v.instagram_media_urls && v.instagram_media_urls.length ? v.instagram_media_urls : (post.image_url ? [post.image_url] : []);
+    const media = (o.media_urls && o.media_urls.length)
+      ? o.media_urls
+      : (v.instagram_media_urls && v.instagram_media_urls.length ? v.instagram_media_urls : (post.image_url ? [post.image_url] : []));
     return {
       instagram_business_account_id: igId,
       caption: o.caption || v.instagram_caption || '',
       media_urls: media,
-      media_type: v.instagram_media_type || 'image',
-      alt_text: v.instagram_alt_text || post.image_alt_text || '',
-      first_comment: v.instagram_first_comment || '',
-      hashtags: v.instagram_hashtags || [],
-      share_to_feed: true,
+      media_type: o.media_type || v.instagram_media_type || 'image',
+      alt_text: o.alt_text || v.instagram_alt_text || post.image_alt_text || '',
+      first_comment: o.first_comment || v.instagram_first_comment || '',
+      hashtags: o.hashtags || v.instagram_hashtags || [],
+      share_to_feed: o.share_to_feed !== false,
     };
   }
   return { message: post.content || '' };
@@ -103,11 +105,24 @@ function validatePlatform(platform, post, account, overrides) {
     if (!pageId) return 'Facebook requires a connected Facebook Page.';
   }
   if (platform === 'instagram') {
-    const igId = account.selected_default_instagram_account_id || account.instagram_business_account_id;
-    if (!igId) return 'Instagram requires a connected professional account.';
+    const o = overrides || {};
     const v = post.platform_variants || {};
-    const media = (v.instagram_media_urls && v.instagram_media_urls.length) || post.image_url;
-    if (!media) return 'Instagram requires valid media before scheduling.';
+    const igId = o.instagram_business_account_id || account.selected_default_instagram_account_id || account.instagram_business_account_id;
+    if (!igId) return 'Instagram requires a connected professional account.';
+    const mediaList = (o.media_urls && o.media_urls.length)
+      ? o.media_urls
+      : (v.instagram_media_urls && v.instagram_media_urls.length ? v.instagram_media_urls : (post.image_url ? [post.image_url] : []));
+    const media = mediaList.filter((m) => (m || '').trim());
+    // Visual-first: never allow text-only Instagram posts.
+    if (!media.length) return 'Instagram requires valid media — text-only posts are not allowed.';
+    const mediaType = o.media_type || v.instagram_media_type || 'image';
+    if (mediaType === 'carousel' && media.length < 2) return 'Instagram carousels require at least 2 media items.';
+    if (mediaType === 'carousel' && media.length > 10) return 'Instagram carousels allow at most 10 media items.';
+    if (mediaType !== 'carousel' && media.length > 1) return `Instagram ${mediaType} posts allow only one media item — use a carousel for multiple.`;
+    const isVideo = (u) => /\.(mp4|mov|m4v|webm)(\?|$)/i.test(u || '');
+    if ((mediaType === 'reel' || mediaType === 'video') && !media.some(isVideo)) {
+      return `Instagram ${mediaType} posts require a valid video file.`;
+    }
   }
   return null;
 }
