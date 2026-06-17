@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight, Wand2 } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import LoadingState from "@/components/shared/LoadingState";
 import { Button } from "@/components/ui/button";
 import { PLATFORMS, PLATFORM_MAP } from "@/components/admin/social/socialConfig";
 import PublishingQueue from "@/components/admin/social/publishing/PublishingQueue";
+import AutoFillDialog from "@/components/admin/social/calendar/AutoFillDialog";
 import { trackEvent } from "@/lib/analytics";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -15,13 +16,17 @@ export default function SocialCalendar() {
   const [scheduled, setScheduled] = useState([]);
   const [cursor, setCursor] = useState(new Date());
   const [platformFilter, setPlatformFilter] = useState("all");
+  const [autoFillOpen, setAutoFillOpen] = useState(false);
 
-  useEffect(() => {
-    trackEvent("admin_social_calendar_view");
+  const loadScheduled = () =>
     base44.entities.ScheduledPost.list("-scheduled_at", 1000).then((s) => {
       setScheduled(s);
       setLoading(false);
     });
+
+  useEffect(() => {
+    trackEvent("admin_social_calendar_view");
+    loadScheduled();
   }, []);
 
   if (loading) return <LoadingState label="Loading calendar..." />;
@@ -52,12 +57,15 @@ export default function SocialCalendar() {
         description="View scheduled posts by month. Filter by platform to focus your plan."
         actions={
           <div className="flex items-center gap-2">
+            <Button onClick={() => setAutoFillOpen(true)}><Wand2 className="w-4 h-4 mr-1.5" /> Auto-Fill Calendar</Button>
             <Button variant="outline" size="icon" onClick={() => setCursor(new Date(year, month - 1, 1))}><ChevronLeft className="w-4 h-4" /></Button>
             <span className="text-sm font-medium w-36 text-center">{monthLabel}</span>
             <Button variant="outline" size="icon" onClick={() => setCursor(new Date(year, month + 1, 1))}><ChevronRight className="w-4 h-4" /></Button>
           </div>
         }
       />
+
+      <AutoFillDialog open={autoFillOpen} onOpenChange={setAutoFillOpen} onScheduled={loadScheduled} />
 
       <div className="flex flex-wrap gap-2">
         <button
