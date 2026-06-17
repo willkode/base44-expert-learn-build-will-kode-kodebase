@@ -10,6 +10,7 @@ import BlueprintProgressRing from "@/components/promptengine/BlueprintProgressRi
 import DiscoveryChat from "@/components/promptengine/DiscoveryChat";
 import BlueprintReview from "@/components/promptengine/BlueprintReview";
 import PromptPackView from "@/components/promptengine/PromptPackView";
+import UnlockedPacksList from "@/components/promptengine/UnlockedPacksList";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/6935b73f9_generated_image.png";
 
@@ -21,6 +22,7 @@ export default function PromptEngine() {
   const [blueprint, setBlueprint] = useState(null);
   const [packStatus, setPackStatus] = useState(null);
   const [view, setView] = useState("discovery"); // discovery | review | pack
+  const [allSessions, setAllSessions] = useState([]);
 
   const sessionIdFromUrl = new URLSearchParams(window.location.search).get("session");
 
@@ -57,20 +59,29 @@ export default function PromptEngine() {
     (async () => {
       setLoading(true);
       try {
+        // Load all of the user's sessions so they can return to any unlocked pack.
+        const all = await base44.entities.PromptGeneratorSession.list("-created_date", 100);
+        setAllSessions(all);
         if (sessionIdFromUrl) {
           await loadSession(sessionIdFromUrl);
-        } else {
-          // Resume the most recent session, or start fresh.
-          const recent = await base44.entities.PromptGeneratorSession.list("-created_date", 1);
-          if (recent[0]) {
-            await loadSession(recent[0].id);
-          }
+        } else if (all[0]) {
+          // Resume the most recent session.
+          await loadSession(all[0].id);
         }
       } finally {
         setLoading(false);
       }
     })();
   }, [sessionIdFromUrl, loadSession]);
+
+  const openSession = async (s) => {
+    setLoading(true);
+    try {
+      await loadSession(s.id);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const startNew = async () => {
     setLoading(true);
@@ -83,6 +94,7 @@ export default function PromptEngine() {
         blueprint_status: "empty",
       });
       trackEvent("prompt_engine_start_session", {});
+      setAllSessions((prev) => [s, ...prev]);
       setSession(s);
       setMessages([]);
       setBlueprint(null);
@@ -96,8 +108,10 @@ export default function PromptEngine() {
   const handlePackGenerated = async () => {
     if (!session) return;
     await loadPackStatus(session.id);
-    const refreshed = await base44.entities.PromptGeneratorSession.filter({ id: session.id });
-    if (refreshed[0]) setSession(refreshed[0]);
+    const all = await base44.entities.PromptGeneratorSession.list("-created_date", 100);
+    setAllSessions(all);
+    const refreshed = all.find((s) => s.id === session.id);
+    if (refreshed) setSession(refreshed);
     setView("pack");
   };
 
@@ -131,18 +145,21 @@ export default function PromptEngine() {
       />
 
       {!session ? (
-        <div className="rounded-xl border border-border bg-card p-10 text-center">
-          <div className="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center mx-auto mb-4">
-            <Sparkles className="w-6 h-6 text-primary" />
+        <div className="space-y-5">
+          <div className="rounded-xl border border-border bg-card p-10 text-center">
+            <div className="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center mx-auto mb-4">
+              <Sparkles className="w-6 h-6 text-primary" />
+            </div>
+            <h2 className="font-sora font-bold text-xl">Start with your app idea</h2>
+            <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
+              Describe what you want to build. The engine asks a few smart questions, drafts a complete blueprint,
+              then generates copy-paste-ready prompts.
+            </p>
+            <Button onClick={startNew} size="lg" className="mt-6">
+              <Sparkles className="w-4 h-4 mr-2" /> Start a new blueprint
+            </Button>
           </div>
-          <h2 className="font-sora font-bold text-xl">Start with your app idea</h2>
-          <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
-            Describe what you want to build. The engine asks a few smart questions, drafts a complete blueprint,
-            then generates copy-paste-ready prompts.
-          </p>
-          <Button onClick={startNew} size="lg" className="mt-6">
-            <Sparkles className="w-4 h-4 mr-2" /> Start a new blueprint
-          </Button>
+          <UnlockedPacksList sessions={allSessions} onOpen={openSession} />
         </div>
       ) : (
         <div className="space-y-5">
@@ -192,6 +209,10 @@ export default function PromptEngine() {
 
           {view === "pack" && packStatus && (
             <PromptPackView status={packStatus} session={session} onRefresh={() => loadPackStatus(session.id)} />
+          )}
+
+          {allSessions.filter((s) => s.unlocked && s.id !== session.id && s.generated_prompt_count > 0).length > 0 && (
+            <UnlockedPacksList sessions={allSessions.filter((s) => s.id !== session.id)} onOpen={openSession} />
           )}
         </div>
       )}
