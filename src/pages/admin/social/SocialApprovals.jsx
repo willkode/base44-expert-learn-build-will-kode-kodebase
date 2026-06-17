@@ -11,6 +11,7 @@ import ApprovalPostCard from "@/components/admin/social/approval/ApprovalPostCar
 import ApprovalReasonDialog from "@/components/admin/social/approval/ApprovalReasonDialog";
 import ApprovalHistory from "@/components/admin/social/approval/ApprovalHistory";
 import RedditScheduleDialog from "@/components/admin/social/reddit/RedditScheduleDialog";
+import LinkedInScheduleDialog from "@/components/admin/social/linkedin/LinkedInScheduleDialog";
 import { APPROVAL_FILTERS } from "@/components/admin/social/approval/approvalConfig";
 import { trackEvent } from "@/lib/analytics";
 
@@ -23,6 +24,7 @@ export default function SocialApprovals() {
   const [busy, setBusy] = useState({}); // { [postId]: actionName }
   const [dialog, setDialog] = useState({ open: false, mode: null, post: null });
   const [redditDialog, setRedditDialog] = useState({ open: false, post: null });
+  const [linkedinDialog, setLinkedinDialog] = useState({ open: false, post: null });
   const [historyKey, setHistoryKey] = useState(0);
 
   const load = () => {
@@ -166,7 +168,13 @@ export default function SocialApprovals() {
                 onApprove={handleApprove}
                 onReject={(p) => setDialog({ open: true, mode: "reject", post: p })}
                 onRevision={(p) => setDialog({ open: true, mode: "revision", post: p })}
-                onSchedule={(post.selected_platforms || []).includes("reddit") ? (p) => setRedditDialog({ open: true, post: p }) : undefined}
+                onSchedule={
+                  (post.selected_platforms || []).includes("reddit")
+                    ? (p) => setRedditDialog({ open: true, post: p })
+                    : (post.selected_platforms || []).includes("linkedin")
+                      ? (p) => setLinkedinDialog({ open: true, post: p })
+                      : undefined
+                }
               />
             ))
           )}
@@ -189,6 +197,13 @@ export default function SocialApprovals() {
         onOpenChange={(open) => setRedditDialog((d) => ({ ...d, open }))}
         post={redditDialog.post}
         onScheduled={() => { trackEvent("admin_social_reddit_scheduled"); load(); }}
+      />
+
+      <LinkedInScheduleDialog
+        open={linkedinDialog.open}
+        onOpenChange={(open) => setLinkedinDialog((d) => ({ ...d, open }))}
+        post={linkedinDialog.post}
+        onScheduled={() => { trackEvent("admin_social_linkedin_scheduled"); load(); }}
       />
     </div>
   );

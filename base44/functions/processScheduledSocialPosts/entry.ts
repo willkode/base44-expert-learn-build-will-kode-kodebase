@@ -69,21 +69,93 @@ async function ensureValidToken(base44, account, platform) {
 }
 
 // --- Per-platform publishers ----------------------------------------------
-async function publishToTwitter(payload, ctx) {
-  const token = await ensureValidToken(ctx.base44, ctx.account, "twitter");
-  const text = (payload.message || ctx.post.platform_variants?.twitter_text || ctx.post.content || "").trim();
-  if (!text) throw new PublishError("platform_rejected_content", "Tweet text is empty.", { retryable: false });
+// Uploads media to X's v1.1 media endpoint and returns a media_id string.
+async function uploadTwitterMedia(token, mediaUrl) {
+  // Fetch the image bytes, then upload to X.
+  const imgRes = await fetch(mediaUrl);
+  if (!imgRes.ok) throw new PublishError("media_upload_failed", "Could not fetch the image to upload to X.");
+  const bytes = new Uint8Array(await imgRes.arrayBuffer());
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  const b64 = btoa(binary);
+  const form = new URLSearchParams({ media_data: b64 });
+  const up = await fetch("https://upload.twitter.com/1.1/media/upload.json", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/x-www-form-urlencoded" },
+    body: form.toString(),
+  });
+  if (up.status === 429) throw new PublishError("rate_limited", "X media rate limit hit.");
+  if (!up.ok) throw new PublishError("media_upload_failed", `X media upload failed (${up.status}).`);
+  const data = await up.json().catch(() => ({}));
+  const id = data.media_id_string || (data.media_id != null ? String(data.media_id) : "");
+  if (!id) throw new PublishError("media_upload_failed", "X did not return a media id.");
+  return id;
+}
+
+// Posts a single tweet; optional reply-to (for threads), media, reply settings, quote.
+async function postTweet(token, { text, mediaId, replyToId, replySettings, quoteId }) {
+  const tweetBody = { text };
+  if (mediaId) tweetBody.media = { media_ids: [mediaId] };
+  if (replyToId) tweetBody.reply = { in_reply_to_tweet_id: replyToId };
+  if (quoteId) tweetBody.quote_tweet_id = quoteId;
+  if (replySettings && replySettings !== "everyone") tweetBody.reply_settings = replySettings;
+
   const res = await fetch("https://api.twitter.com/2/tweets", {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ text }),
+    body: JSON.stringify(tweetBody),
   });
   if (res.status === 429) throw new PublishError("rate_limited", "X rate limit hit.");
   if (res.status === 401 || res.status === 403) throw new PublishError("missing_permission", "X rejected the credentials/permissions.", { retryable: false });
   if (!res.ok) throw new PublishError("platform_rejected_content", `X rejected the post (${res.status}).`, { retryable: false });
-  const data = await res.json();
+  const data = await res.json().catch(() => ({}));
   const id = data?.data?.id;
-  return { platform_post_id: id, platform_post_url: id ? `https://twitter.com/i/web/status/${id}` : "" };
+  if (!id) throw new PublishError("platform_rejected_content", "X did not return a tweet id.", { retryable: false });
+  return id;
+}
+
+async function publishToTwitter(payload, ctx) {
+  const token = await ensureValidToken(ctx.base44, ctx.account, "twitter");
+  const v = ctx.post.platform_variants || {};
+  const text = (payload.text || payload.message || v.twitter_text || ctx.post.content || "").trim();
+  const thread = (payload.thread && payload.thread.length ? payload.thread : (v.twitter_thread || []))
+    .filter((t) => (t || "").trim());
+  if (!text && !thread.length) throw new PublishError("platform_rejected_content", "Tweet text is empty.", { retryable: false });
+
+  // Upload media first if present, so it can be attached to the first tweet.
+  let mediaId = payload.media_id || "";
+  const mediaUrl = payload.media_url || (payload.media_urls && payload.media_urls[0]) || ctx.post.image_url || "";
+  if (mediaUrl && !mediaId) {
+    mediaId = await uploadTwitterMedia(token, mediaUrl);
+  }
+
+  const allTweetIds = [];
+  // 1) First tweet.
+  const firstText = text || thread[0];
+  const replies = text ? thread : thread.slice(1);
+  const firstId = await postTweet(token, {
+    text: firstText,
+    mediaId: mediaId || undefined,
+    replySettings: payload.reply_settings,
+    quoteId: payload.quote_post_id || undefined,
+  });
+  allTweetIds.push(firstId);
+  await log(ctx.base44, { status: "success", platform: "twitter", message: "Posted first tweet.", job: ctx.job, metadata: { tweet_id: firstId } });
+
+  // 2) Replies in order.
+  let prevId = firstId;
+  for (let i = 0; i < replies.length; i++) {
+    const replyId = await postTweet(token, { text: replies[i], replyToId: prevId });
+    allTweetIds.push(replyId);
+    prevId = replyId;
+    await log(ctx.base44, { status: "success", platform: "twitter", message: `Posted thread reply ${i + 1}.`, job: ctx.job, metadata: { tweet_id: replyId } });
+  }
+
+  return {
+    platform_post_id: firstId,
+    platform_post_url: `https://twitter.com/i/web/status/${firstId}`,
+    thread_post_ids: allTweetIds,
+  };
 }
 
 async function publishToReddit(payload, ctx) {
@@ -330,13 +402,14 @@ async function processJob(base44, job) {
     // 3) Publish.
     const publisher = PUBLISHERS[platform];
     if (!publisher) throw new PublishError("unknown_platform_error", `Unknown platform: ${platform}.`, { retryable: false });
-    const result = await publisher(fresh.platform_specific_payload || {}, { base44, account, post });
+    const result = await publisher(fresh.platform_specific_payload || {}, { base44, account, post, job: fresh });
 
     // 4) Success.
     await base44.asServiceRole.entities.ScheduledPost.update(fresh.id, {
       status: "published",
       platform_post_id: result.platform_post_id || "",
       platform_post_url: result.platform_post_url || "",
+      thread_post_ids: result.thread_post_ids || [],
       error_code: "", error_message: "", next_retry_at: "",
     });
     await rollupSocialPostStatus(base44, fresh.social_post_id);

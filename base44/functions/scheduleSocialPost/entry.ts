@@ -28,7 +28,16 @@ function buildPayload(platform, post, account, overrides) {
     };
   }
   if (platform === 'linkedin') {
-    return { message: o.message || v.linkedin_text || post.content || '', media_urls: post.image_url ? [post.image_url] : [] };
+    return {
+      author_urn: o.author_urn || account.selected_default_author_urn || account.linkedin_person_urn || '',
+      author_type: o.author_type || 'person',
+      commentary: o.commentary || o.message || v.linkedin_text || post.content || '',
+      visibility: o.visibility || 'PUBLIC',
+      media_url: o.media_url || post.image_url || '',
+      media_title: o.media_title || post.image_alt_text || '',
+      image_urn: '',
+      distribution: o.distribution || {},
+    };
   }
   if (platform === 'facebook') {
     const pageId = o.facebook_page_id || account.selected_default_facebook_page_id || account.facebook_page_id || '';
@@ -74,6 +83,20 @@ function validatePlatform(platform, post, account, overrides) {
     if (kind === 'self' && !((o.body || o.message || v.reddit_body || post.content || '').trim())) return 'Reddit text posts require a body.';
     if (kind === 'link' && !((o.link_url || '').trim())) return 'Reddit link posts require a URL.';
     if (kind === 'image' && !((o.media_urls && o.media_urls.length) || post.image_url)) return 'Reddit image posts require an image.';
+  }
+  if (platform === 'linkedin') {
+    const o = overrides || {};
+    const v = post.platform_variants || {};
+    const authorUrn = o.author_urn || account.selected_default_author_urn || account.linkedin_person_urn || '';
+    const authorType = o.author_type || 'person';
+    const commentary = o.commentary || o.message || v.linkedin_text || post.content || '';
+    if (!authorUrn.trim()) return 'LinkedIn requires a selected author (profile or page).';
+    if (!commentary.trim()) return 'LinkedIn requires post text.';
+    if (authorType === 'person' && account.can_post_as_person === false) return 'This LinkedIn account cannot post to a personal profile.';
+    if (authorType === 'organization') {
+      if (account.can_post_as_organization === false) return 'This LinkedIn account cannot post as an organization.';
+      if (!o.organization_role_confirmed) return 'Confirm your organization posting role before scheduling a page post.';
+    }
   }
   if (platform === 'facebook') {
     const pageId = account.selected_default_facebook_page_id || account.facebook_page_id;

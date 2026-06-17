@@ -117,6 +117,102 @@
             "type": "object",
             "additionalProperties": true
           }
+        },
+        "subreddit": {
+          "type": "string",
+          "description": "Target subreddit name (without the r/ prefix)"
+        },
+        "reddit_post_kind": {
+          "type": "string",
+          "enum": [
+            "self",
+            "link",
+            "image"
+          ],
+          "description": "Reddit submission kind: self (text), link, or image"
+        },
+        "title": {
+          "type": "string",
+          "description": "Reddit post title"
+        },
+        "body": {
+          "type": "string",
+          "description": "Reddit self-post body (markdown)"
+        },
+        "flair_id": {
+          "type": "string",
+          "description": "Reddit flair template id"
+        },
+        "flair_text": {
+          "type": "string",
+          "description": "Reddit flair display text"
+        },
+        "nsfw": {
+          "type": "boolean",
+          "description": "Mark the Reddit submission as NSFW"
+        },
+        "spoiler": {
+          "type": "boolean",
+          "description": "Mark the Reddit submission as a spoiler"
+        },
+        "send_replies": {
+          "type": "boolean",
+          "description": "Send reply notifications to the author's inbox"
+        },
+        "suggested_comment": {
+          "type": "string",
+          "description": "Suggested first comment to add context after posting"
+        },
+        "promotion_disclosure": {
+          "type": "string",
+          "description": "Disclosure note appended when content is promotional"
+        },
+        "subreddit_rules_notes": {
+          "type": "string",
+          "description": "Reviewer notes about the target subreddit's rules"
+        },
+        "text": {
+          "type": "string",
+          "description": "X/Twitter primary post text (first tweet)"
+        },
+        "thread": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "X/Twitter thread: ordered list of follow-up tweet texts published as replies"
+        },
+        "media_url": {
+          "type": "string",
+          "description": "X/Twitter media URL to attach to the first tweet"
+        },
+        "media_id": {
+          "type": "string",
+          "description": "X/Twitter media id returned after uploading media to X"
+        },
+        "reply_settings": {
+          "type": "string",
+          "enum": [
+            "everyone",
+            "mentionedUsers",
+            "following"
+          ],
+          "description": "X/Twitter reply permissions for the post"
+        },
+        "quote_post_id": {
+          "type": "string",
+          "description": "X/Twitter tweet id this post quotes"
+        },
+        "poll_options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "X/Twitter poll choices (optional, if poll support is enabled later)"
+        },
+        "poll_duration_minutes": {
+          "type": "number",
+          "description": "X/Twitter poll duration in minutes (optional)"
         }
       },
       "additionalProperties": true,
@@ -161,6 +257,13 @@
     },
     "platform_post_url": {
       "type": "string"
+    },
+    "thread_post_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "X/Twitter: all tweet ids created for a thread, in order"
     },
     "error_code": {
       "type": "string"

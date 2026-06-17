@@ -185,6 +185,58 @@
     },
     "selected_default_instagram_account_id": {
       "type": "string"
+    },
+    "linkedin_person_urn": {
+      "type": "string",
+      "description": "LinkedIn person URN for posting as the personal profile (urn:li:person:xxxx)"
+    },
+    "linkedin_organization_urns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "LinkedIn organization URNs the connected account can post for (urn:li:organization:xxxx)"
+    },
+    "selected_default_author_urn": {
+      "type": "string",
+      "description": "Default LinkedIn author URN (person or organization) used when scheduling"
+    },
+    "can_post_as_person": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the connected account is allowed to post to the personal profile"
+    },
+    "can_post_as_organization": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the connected account is allowed to post to at least one organization/page"
+    },
+    "organization_role": {
+      "type": "string",
+      "description": "The role the connected user holds on the organization (e.g. ADMINISTRATOR, DIRECT_SPONSORED_CONTENT_POSTER)"
+    },
+    "available_organizations": {
+      "type": "array",
+      "description": "List of selectable LinkedIn organizations/pages (public info only)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "urn": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "logo_url": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
     }
   },
   "required": [
