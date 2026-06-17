@@ -105,6 +105,7 @@ import SocialCalendar from '@/pages/admin/social/SocialCalendar';
 import SocialConnections from '@/pages/admin/social/SocialConnections';
 import SocialAnalytics from '@/pages/admin/social/SocialAnalytics';
 import SocialLogs from '@/pages/admin/social/SocialLogs';
+import SocialSettings from '@/pages/admin/social/SocialSettings';
 import SecurityDashboard from '@/pages/admin/security/SecurityDashboard';
 import AdminSettings from '@/pages/admin/AdminSettings';
 import AdminAnalyticsPlan from '@/pages/admin/AdminAnalyticsPlan';
@@ -216,6 +217,7 @@ const AuthenticatedApp = () => {
               <Route path="connections" element={<SocialConnections />} />
               <Route path="analytics" element={<SocialAnalytics />} />
               <Route path="logs" element={<SocialLogs />} />
+              <Route path="settings" element={<SocialSettings />} />
             </Route>
             <Route path="/admin/security" element={<SecurityDashboard />} />
             <Route path="/admin/settings" element={<AdminSettings />} />

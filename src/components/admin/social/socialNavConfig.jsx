@@ -8,6 +8,7 @@ import {
   ScrollText,
   Palette,
   CheckSquare,
+  Settings2,
 } from "lucide-react";
 
 export const socialNav = [
@@ -20,4 +21,5 @@ export const socialNav = [
   { label: "Connections", to: "/admin/marketing/social/connections", icon: Plug },
   { label: "Analytics", to: "/admin/marketing/social/analytics", icon: BarChart3 },
   { label: "Logs", to: "/admin/marketing/social/logs", icon: ScrollText },
+  { label: "Settings", to: "/admin/marketing/social/settings", icon: Settings2 },
 ];

@@ -1,0 +1,102 @@
+{
+  "name": "SocialSettings",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "default": "global",
+      "description": "Singleton settings key, use 'global'"
+    },
+    "systemEnabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Master switch for the social marketing system"
+    },
+    "defaultTimezone": {
+      "type": "string",
+      "default": "America/Chicago"
+    },
+    "defaultApprovalRequired": {
+      "type": "boolean",
+      "default": true
+    },
+    "defaultPostingFrequencyLimit": {
+      "type": "number",
+      "default": 5,
+      "description": "Default max posts per day across the system"
+    },
+    "enableAiGeneration": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableImageGeneration": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableAutoPosting": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableAnalyticsSync": {
+      "type": "boolean",
+      "default": true
+    },
+    "platforms": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Per-platform settings keyed by platform (twitter, reddit, linkedin, facebook, instagram)",
+      "default": {}
+    },
+    "facebook": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Facebook-specific settings and guardrails",
+      "default": {}
+    },
+    "instagram": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Instagram-specific settings and guardrails",
+      "default": {}
+    },
+    "ai": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "AI generation defaults",
+      "default": {}
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Safety guardrail toggles",
+      "default": {}
+    },
+    "notifications": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Notification preferences",
+      "default": {}
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Usage limits",
+      "default": {}
+    }
+  },
+  "required": [
+    "key"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
