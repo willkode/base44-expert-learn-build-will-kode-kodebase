@@ -32,28 +32,46 @@ function SectionHeading({ icon: Icon, eyebrow, title, to, linkLabel }) {
   );
 }
 
+const PROMPT_CATEGORY_IMAGES = {
+  "App Building": "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/d9cd910f2_generated_image.png",
+  Workflow: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/f614e00a2_generated_image.png",
+};
+const PROMPT_DEFAULT_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/d7d834e22_generated_image.png";
+
 function PromptPreviewCard({ prompt }) {
+  const image = prompt.imageUrl || PROMPT_CATEGORY_IMAGES[prompt.category] || PROMPT_DEFAULT_IMAGE;
   return (
     <Link
       to={prompt.slug ? `/learn/prompt-library/${prompt.slug}` : "/learn/prompt-library"}
-      className="group flex flex-col h-full rounded-2xl border border-border bg-card/70 p-6 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300"
+      className="group flex flex-col h-full overflow-hidden rounded-2xl border border-border bg-card/70 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300"
     >
-      <span className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium w-fit mb-3">
-        {prompt.category}
-      </span>
-      <h3 className="font-sora font-bold text-lg mb-2 group-hover:text-primary transition-colors">
-        {prompt.title}
-      </h3>
-      {prompt.description && (
-        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-4">
-          {prompt.description}
-        </p>
-      )}
-      {prompt.promptText && (
-        <pre className="mt-auto text-xs text-muted-foreground bg-secondary/50 rounded-lg p-3 max-h-24 overflow-hidden whitespace-pre-wrap font-inter leading-relaxed">
-          {prompt.promptText}
-        </pre>
-      )}
+      <div className="relative h-36 overflow-hidden">
+        <img
+          src={image}
+          alt={prompt.category}
+          loading="lazy"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+      </div>
+      <div className="flex flex-col flex-1 p-6">
+        <span className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium w-fit mb-3">
+          {prompt.category}
+        </span>
+        <h3 className="font-sora font-bold text-lg mb-2 group-hover:text-primary transition-colors">
+          {prompt.title}
+        </h3>
+        {prompt.description && (
+          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-4">
+            {prompt.description}
+          </p>
+        )}
+        {prompt.promptText && (
+          <pre className="mt-auto text-xs text-muted-foreground bg-secondary/50 rounded-lg p-3 max-h-24 overflow-hidden whitespace-pre-wrap font-inter leading-relaxed">
+            {prompt.promptText}
+          </pre>
+        )}
+      </div>
     </Link>
   );
 }
