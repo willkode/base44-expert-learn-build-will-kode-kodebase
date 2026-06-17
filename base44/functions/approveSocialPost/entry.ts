@@ -79,6 +79,17 @@ Deno.serve(async (req) => {
       });
     } catch (_e) { /* best-effort */ }
 
+    try {
+      await base44.functions.invoke("createSocialNotification", {
+        event_type: "post_approved",
+        title: "Post approved",
+        message: `"${post.title_internal || 'A post'}" was approved by ${user.email}.`,
+        related_record_type: "SocialPost",
+        related_record_id: social_post_id,
+        severity: "success",
+      });
+    } catch (_e) { /* best-effort */ }
+
     return Response.json({ post: updated });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

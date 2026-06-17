@@ -2,16 +2,20 @@ import React from "react";
 import { Outlet, NavLink, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { socialNav } from "./socialNavConfig";
+import SocialNotificationBell from "./notifications/SocialNotificationBell";
 
 export default function SocialMarketingLayout() {
   return (
     <div>
-      <Link
-        to="/admin/marketing"
-        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-4"
-      >
-        <ArrowLeft className="w-4 h-4" /> Marketing
-      </Link>
+      <div className="flex items-center justify-between mb-4">
+        <Link
+          to="/admin/marketing"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="w-4 h-4" /> Marketing
+        </Link>
+        <SocialNotificationBell />
+      </div>
       <div className="flex gap-1.5 overflow-x-auto pb-2 mb-6 border-b border-border -mx-1 px-1">
         {socialNav.map(({ label, to, icon: Icon, end }) => (
           <NavLink

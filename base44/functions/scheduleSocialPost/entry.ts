@@ -210,6 +210,19 @@ Deno.serve(async (req) => {
         message: `Scheduled ${created.length} platform job(s) for "${post.title_internal || 'post'}".`,
         metadata: { platforms: created.map((c) => c.platform), errors },
       });
+      try {
+        await base44.asServiceRole.entities.SocialNotification.create({
+          account_id: 'global',
+          user_id: user.id,
+          event_type: 'post_scheduled',
+          title: 'Post scheduled',
+          message: `"${post.title_internal || 'A post'}" was scheduled across ${created.length} platform(s).`,
+          related_record_type: 'SocialPost',
+          related_record_id: social_post_id,
+          severity: 'success',
+          read: false,
+        });
+      } catch (_e) { /* best-effort */ }
     }
 
     return Response.json({ success: created.length > 0, created, errors });

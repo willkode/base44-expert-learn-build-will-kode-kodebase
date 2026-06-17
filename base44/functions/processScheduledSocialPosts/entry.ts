@@ -452,6 +452,30 @@ async function log(base44, { status, platform, message, job, metadata }) {
   } catch (_e) { /* best-effort */ }
 }
 
+// Service-role in-app notification (scheduler runs without an admin user).
+async function notify(base44, { event_type, title, message, platform, severity, job }) {
+  try {
+    await base44.asServiceRole.entities.SocialNotification.create({
+      account_id: "global",
+      event_type,
+      title,
+      message: message || "",
+      platform: platform || undefined,
+      related_record_type: "ScheduledPost",
+      related_record_id: job?.id,
+      severity: severity || "info",
+      read: false,
+    });
+  } catch (_e) { /* best-effort */ }
+}
+
+// Map a platform to its publish-success / publish-failure notification event.
+function publishEvent(platform, ok) {
+  if (platform === "facebook") return ok ? "facebook_post_published" : "facebook_post_failed";
+  if (platform === "instagram") return ok ? "instagram_post_published" : "instagram_post_failed";
+  return ok ? "post_published" : "post_failed";
+}
+
 // --- Per-post SocialPost rollup -------------------------------------------
 async function rollupSocialPostStatus(base44, socialPostId) {
   if (!socialPostId) return;
@@ -520,6 +544,12 @@ async function processJob(base44, job) {
     await base44.asServiceRole.entities.ScheduledPost.update(fresh.id, successUpdate);
     await rollupSocialPostStatus(base44, fresh.social_post_id);
     await log(base44, { status: "success", platform, message: `Published to ${platform}.`, job: fresh, metadata: { platform_post_id: result.platform_post_id } });
+    await notify(base44, {
+      event_type: publishEvent(platform, true),
+      title: `${platform.charAt(0).toUpperCase() + platform.slice(1)} post published`,
+      message: `"${post.title_internal || 'Your post'}" was published to ${platform}.`,
+      platform, severity: "success", job: fresh,
+    });
     return { published: true };
   } catch (err) {
     const code = err.code || "unknown_platform_error";
@@ -540,6 +570,24 @@ async function processJob(base44, job) {
       message: `${willRetry ? "Retry scheduled" : "Failed"}: ${err.message || code}`,
       job: fresh, metadata: { error_code: code, attempt: attempts, will_retry: willRetry },
     });
+    if (!willRetry) {
+      const isTokenExpired = code === "auth_token_expired" || /token|expired|unauthor/i.test(err.message || "");
+      await notify(base44, {
+        event_type: publishEvent(platform, false),
+        title: `${platform.charAt(0).toUpperCase() + platform.slice(1)} post failed`,
+        message: `Publishing failed: ${err.message || code}`,
+        platform, severity: "error", job: fresh,
+      });
+      if (isTokenExpired) {
+        const tokenEvent = platform === "facebook" ? "facebook_token_expired" : platform === "instagram" ? "instagram_token_expired" : "account_token_expired";
+        await notify(base44, {
+          event_type: tokenEvent,
+          title: `${platform.charAt(0).toUpperCase() + platform.slice(1)} token expired`,
+          message: `Reconnect your ${platform} account to resume publishing.`,
+          platform, severity: "error", job: fresh,
+        });
+      }
+    }
     return { failed: true, code };
   }
 }

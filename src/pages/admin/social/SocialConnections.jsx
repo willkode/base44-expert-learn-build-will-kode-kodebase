@@ -7,6 +7,7 @@ import StatusBadge from "@/components/admin/social/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { PLATFORMS, CONNECTION_STATUS_STYLES, formatDateTime } from "@/components/admin/social/socialConfig";
 import { trackEvent } from "@/lib/analytics";
+import SocialAlertBanner from "@/components/admin/social/notifications/SocialAlertBanner";
 
 const REQUIRED_SCOPES = {
   twitter: ["tweet.read", "tweet.write", "users.read", "offline.access"],
@@ -37,6 +38,11 @@ export default function SocialConnections() {
       <PageHeader
         title="Platform Connections"
         description="Connect your social accounts. Account tokens are stored securely on the backend and never shown here."
+      />
+
+      <SocialAlertBanner
+        events={["account_token_expired", "facebook_token_expired", "instagram_token_expired", "account_disconnected", "facebook_page_disconnected", "instagram_account_disconnected"]}
+        title="Connection alerts"
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -14,6 +14,7 @@ import { trackEvent } from "@/lib/analytics";
 import {
   PLATFORM_MAP, CONNECTION_STATUS_STYLES, JOB_STATUS_STYLES, prettyLabel, formatDateTime,
 } from "@/components/admin/social/socialConfig";
+import SocialAlertBanner from "@/components/admin/social/notifications/SocialAlertBanner";
 
 const quickActions = [
   { label: "Create Post", to: "/admin/marketing/social/studio", icon: PenSquare },
@@ -84,6 +85,11 @@ export default function SocialDashboard() {
             {connected.length ? `${connected.length} connected` : "No accounts connected"}
           </Badge>
         }
+      />
+
+      <SocialAlertBanner
+        events={["post_failed", "facebook_post_failed", "instagram_post_failed", "campaign_paused_failures", "instagram_limit_reached"]}
+        title="Needs attention"
       />
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">

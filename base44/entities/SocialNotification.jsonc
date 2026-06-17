@@ -1,0 +1,107 @@
+{
+  "name": "SocialNotification",
+  "type": "object",
+  "properties": {
+    "account_id": {
+      "type": "string",
+      "default": "global",
+      "description": "Workspace/account scope key"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Owning/target user id"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "account_connected",
+        "account_disconnected",
+        "account_token_expired",
+        "post_generated",
+        "post_needs_approval",
+        "post_approved",
+        "post_rejected",
+        "post_scheduled",
+        "post_rescheduled",
+        "post_canceled",
+        "post_published",
+        "post_failed",
+        "analytics_sync_completed",
+        "campaign_completed",
+        "campaign_paused_failures",
+        "facebook_page_connected",
+        "facebook_page_disconnected",
+        "facebook_token_expired",
+        "facebook_post_published",
+        "facebook_post_failed",
+        "facebook_analytics_synced",
+        "instagram_account_connected",
+        "instagram_account_disconnected",
+        "instagram_token_expired",
+        "instagram_post_published",
+        "instagram_post_failed",
+        "instagram_limit_reached",
+        "instagram_analytics_synced"
+      ],
+      "description": "Social automation event type"
+    },
+    "title": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "twitter",
+        "reddit",
+        "linkedin",
+        "facebook",
+        "instagram"
+      ]
+    },
+    "related_record_type": {
+      "type": "string",
+      "description": "e.g. SocialPost, ScheduledPost, SocialAccount, SocialCampaign"
+    },
+    "related_record_id": {
+      "type": "string"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "success",
+        "warning",
+        "error"
+      ],
+      "default": "info"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false
+    },
+    "emailed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether an email was sent for this notification"
+    }
+  },
+  "required": [
+    "event_type",
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

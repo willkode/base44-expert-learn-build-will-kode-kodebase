@@ -12,6 +12,7 @@ import StudioImagePanel from "@/components/admin/social/studio/StudioImagePanel"
 import { EMPTY_STUDIO_FORM } from "@/components/admin/social/studio/studioConfig";
 import { saveStudioPosts } from "@/components/admin/social/studio/studioSave";
 import { trackEvent } from "@/lib/analytics";
+import SocialAlertBanner from "@/components/admin/social/notifications/SocialAlertBanner";
 
 export default function SocialStudio() {
   const [loading, setLoading] = useState(true);
@@ -170,6 +171,8 @@ export default function SocialStudio() {
           )
         }
       />
+
+      <SocialAlertBanner events={["post_needs_approval"]} title="Awaiting approval" />
 
       <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
         {/* Left: generator + shared assets */}
