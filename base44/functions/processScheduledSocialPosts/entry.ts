@@ -14,6 +14,7 @@ const RETRYABLE = new Set([
   "instagram_container_creation_failed",
   "instagram_container_not_ready",
   "instagram_media_publish_failed",
+  "instagram_media_upload_failed",
   "unknown_platform_error",
 ]);
 
@@ -499,13 +500,24 @@ async function processJob(base44, job) {
     const result = await publisher(fresh.platform_specific_payload || {}, { base44, account, post, job: fresh });
 
     // 4) Success.
-    await base44.asServiceRole.entities.ScheduledPost.update(fresh.id, {
+    const successUpdate = {
       status: "published",
       platform_post_id: result.platform_post_id || "",
       platform_post_url: result.platform_post_url || "",
       thread_post_ids: result.thread_post_ids || [],
       error_code: "", error_message: "", next_retry_at: "",
-    });
+    };
+    // Persist Instagram container metadata back onto the job payload.
+    if (platform === "instagram" && (result.container_id || result.children_container_ids)) {
+      successUpdate.platform_specific_payload = {
+        ...(fresh.platform_specific_payload || {}),
+        container_id: result.container_id || "",
+        children_container_ids: result.children_container_ids || [],
+        platform_post_id: result.platform_post_id || "",
+        platform_post_url: result.platform_post_url || "",
+      };
+    }
+    await base44.asServiceRole.entities.ScheduledPost.update(fresh.id, successUpdate);
     await rollupSocialPostStatus(base44, fresh.social_post_id);
     await log(base44, { status: "success", platform, message: `Published to ${platform}.`, job: fresh, metadata: { platform_post_id: result.platform_post_id } });
     return { published: true };

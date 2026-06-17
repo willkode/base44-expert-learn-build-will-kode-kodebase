@@ -12,8 +12,7 @@ import ApprovalReasonDialog from "@/components/admin/social/approval/ApprovalRea
 import ApprovalHistory from "@/components/admin/social/approval/ApprovalHistory";
 import RedditScheduleDialog from "@/components/admin/social/reddit/RedditScheduleDialog";
 import LinkedInScheduleDialog from "@/components/admin/social/linkedin/LinkedInScheduleDialog";
-import TwitterScheduleDialog from "@/components/admin/social/twitter/TwitterScheduleDialog";
-import FacebookScheduleDialog from "@/components/admin/social/facebook/FacebookScheduleDialog";
+import InstagramScheduleDialog from "@/components/admin/social/instagram/InstagramScheduleDialog";
 import { APPROVAL_FILTERS } from "@/components/admin/social/approval/approvalConfig";
 import { trackEvent } from "@/lib/analytics";
 
@@ -27,8 +26,7 @@ export default function SocialApprovals() {
   const [dialog, setDialog] = useState({ open: false, mode: null, post: null });
   const [redditDialog, setRedditDialog] = useState({ open: false, post: null });
   const [linkedinDialog, setLinkedinDialog] = useState({ open: false, post: null });
-  const [twitterDialog, setTwitterDialog] = useState({ open: false, post: null });
-  const [facebookDialog, setFacebookDialog] = useState({ open: false, post: null });
+  const [instagramDialog, setInstagramDialog] = useState({ open: false, post: null });
   const [historyKey, setHistoryKey] = useState(0);
 
   const load = () => {
@@ -172,14 +170,15 @@ export default function SocialApprovals() {
                 onApprove={handleApprove}
                 onReject={(p) => setDialog({ open: true, mode: "reject", post: p })}
                 onRevision={(p) => setDialog({ open: true, mode: "revision", post: p })}
-                onSchedule={(() => {
-                  const plats = post.selected_platforms || [];
-                  if (plats.includes("facebook")) return (p) => setFacebookDialog({ open: true, post: p });
-                  if (plats.includes("twitter")) return (p) => setTwitterDialog({ open: true, post: p });
-                  if (plats.includes("linkedin")) return (p) => setLinkedinDialog({ open: true, post: p });
-                  if (plats.includes("reddit")) return (p) => setRedditDialog({ open: true, post: p });
-                  return undefined;
-                })()}
+                onSchedule={
+                  (post.selected_platforms || []).includes("reddit")
+                    ? (p) => setRedditDialog({ open: true, post: p })
+                    : (post.selected_platforms || []).includes("linkedin")
+                      ? (p) => setLinkedinDialog({ open: true, post: p })
+                      : (post.selected_platforms || []).includes("instagram")
+                        ? (p) => setInstagramDialog({ open: true, post: p })
+                        : undefined
+                }
               />
             ))
           )}
@@ -211,18 +210,11 @@ export default function SocialApprovals() {
         onScheduled={() => { trackEvent("admin_social_linkedin_scheduled"); load(); }}
       />
 
-      <TwitterScheduleDialog
-        open={twitterDialog.open}
-        onOpenChange={(open) => setTwitterDialog((d) => ({ ...d, open }))}
-        post={twitterDialog.post}
-        onScheduled={() => { trackEvent("admin_social_twitter_scheduled"); load(); }}
-      />
-
-      <FacebookScheduleDialog
-        open={facebookDialog.open}
-        onOpenChange={(open) => setFacebookDialog((d) => ({ ...d, open }))}
-        post={facebookDialog.post}
-        onScheduled={() => { trackEvent("admin_social_facebook_scheduled"); load(); }}
+      <InstagramScheduleDialog
+        open={instagramDialog.open}
+        onOpenChange={(open) => setInstagramDialog((d) => ({ ...d, open }))}
+        post={instagramDialog.post}
+        onScheduled={() => { trackEvent("admin_social_instagram_scheduled"); load(); }}
       />
     </div>
   );
