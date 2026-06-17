@@ -11,6 +11,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 // Public pages
 import Home from '@/pages/Home';
 import BlueprintTool from '@/pages/tools/Blueprint';
+import PromptEngine from '@/pages/tools/PromptEngine';
 import Features from '@/pages/Features';
 import Pricing from '@/pages/Pricing';
 import Products from '@/pages/Products';
@@ -160,6 +161,7 @@ const AuthenticatedApp = () => {
             <Route path="qa" element={<QAChecklist />} />
             <Route path="launch-audit" element={<LaunchAudit />} />
           </Route>
+          <Route path="/tools/prompt-engine" element={<PromptEngine />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />
 
