@@ -13,6 +13,7 @@ import Workspace from "@/components/landing/Workspace";
 import Agents from "@/components/landing/Agents";
 import Blueprint from "@/components/landing/Blueprint";
 import BlueprintShowcase from "@/components/landing/BlueprintShowcase";
+import ExploreResources from "@/components/landing/ExploreResources";
 import FAQ from "@/components/landing/FAQ";
 import Platforms from "@/components/landing/Platforms";
 import Pricing from "@/components/landing/Pricing";
@@ -56,6 +57,7 @@ export default function Home() {
         <Agents />
         <Blueprint />
         <BlueprintShowcase />
+        <ExploreResources />
         <Platforms />
         <Pricing />
         <Testimonials />
