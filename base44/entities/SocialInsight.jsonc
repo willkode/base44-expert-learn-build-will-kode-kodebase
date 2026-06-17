@@ -1,0 +1,125 @@
+{
+  "name": "SocialInsight",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Owning user id"
+    },
+    "account_id": {
+      "type": "string",
+      "default": "global",
+      "description": "Workspace/account scope key"
+    },
+    "title": {
+      "type": "string",
+      "description": "Short human-friendly label for the insight report"
+    },
+    "date_range": {
+      "type": "string",
+      "description": "Date range key analyzed (e.g. 7, 30, 90, all)"
+    },
+    "campaign_id": {
+      "type": "string",
+      "description": "Campaign filter applied when generated (optional)"
+    },
+    "platform_filter": {
+      "type": "string",
+      "description": "Platform filter applied when generated (optional)"
+    },
+    "posts_analyzed": {
+      "type": "number",
+      "default": 0
+    },
+    "summary": {
+      "type": "string"
+    },
+    "top_findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "recommended_actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "content_ideas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "platform_recommendations": {
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    },
+    "posting_time_recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "hashtag_recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "campaign_recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "facebook_recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "instagram_recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "metrics_snapshot": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Aggregated metric snapshot used to generate the insight (no tokens/secrets)",
+      "default": {}
+    },
+    "ai_model_used": {
+      "type": "string"
+    },
+    "created_by": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

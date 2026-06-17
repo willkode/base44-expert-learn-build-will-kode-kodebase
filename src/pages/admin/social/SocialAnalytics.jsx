@@ -6,6 +6,7 @@ import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
 import StatCard from "@/components/shared/StatCard";
 import { PLATFORMS, PLATFORM_MAP } from "@/components/admin/social/socialConfig";
+import AIInsightsCard from "@/components/admin/social/analytics/AIInsightsCard";
 import { trackEvent } from "@/lib/analytics";
 
 const RANGES = [
@@ -84,6 +85,8 @@ export default function SocialAnalytics() {
           {campaigns.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
       </div>
+
+      <AIInsightsCard range={range} platform={platform} campaign={campaign} campaigns={campaigns} />
 
       {analytics.length === 0 ? (
         <EmptyState
