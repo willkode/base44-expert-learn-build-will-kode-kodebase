@@ -15,6 +15,7 @@ import OverviewTab from "@/components/admin/social/analytics/OverviewTab";
 import CampaignTab from "@/components/admin/social/analytics/CampaignTab";
 import PlatformTab from "@/components/admin/social/analytics/PlatformTab";
 import InsightsTab from "@/components/admin/social/analytics/InsightsTab";
+import AIInsightsCard from "@/components/admin/social/analytics/AIInsightsCard";
 import PostDetailDrawer from "@/components/admin/social/analytics/PostDetailDrawer";
 import { latestPerPost, jobContentType } from "@/components/admin/social/analytics/analyticsConfig";
 
@@ -128,6 +129,7 @@ export default function SocialAnalytics() {
             <TabsTrigger value="campaign">Campaign</TabsTrigger>
             <TabsTrigger value="platform">Platform</TabsTrigger>
             <TabsTrigger value="insights">Content insights</TabsTrigger>
+            <TabsTrigger value="ai">AI Insights</TabsTrigger>
           </TabsList>
 
           <div className="mt-5 space-y-5">
@@ -161,6 +163,14 @@ export default function SocialAnalytics() {
             </TabsContent>
             <TabsContent value="insights" className="mt-0">
               <InsightsTab rows={rows} jobsById={jobsById} postsById={postsById} />
+            </TabsContent>
+            <TabsContent value="ai" className="mt-0">
+              <AIInsightsCard
+                range={filters.range}
+                platform={filters.platform}
+                campaign={filters.campaign}
+                campaigns={campaigns}
+              />
             </TabsContent>
           </div>
         </Tabs>
