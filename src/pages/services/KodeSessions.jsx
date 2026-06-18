@@ -356,7 +356,7 @@ export default function KodeSessions() {
             {[
               { tag: "Full project", title: "Hire Me", desc: "Custom builds, advanced fixes, and scoped development.", to: "/contact", cta: "Learn more" },
               { tag: "Monthly retainer", title: "KodeCare", desc: "Recurring hours every month with priority scheduling.", to: "/services/kodecare", cta: "Learn more" },
-              { tag: "About", title: "Meet Will Kode", desc: "Certified Base44 Expert, OG Partner, and trusted moderator.", to: "/contact", cta: "Learn more" },
+              { tag: "About", title: "Meet Will Kode", desc: "Certified Base44 Expert and trusted community moderator.", to: "/contact", cta: "Learn more" },
             ].map((card) => (
               <motion.div
                 key={card.title}
