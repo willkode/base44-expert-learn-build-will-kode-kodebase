@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import Seo from "@/components/seo/Seo";
+import { faqSchema } from "@/lib/seo";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -93,7 +95,6 @@ const freeTools = [
 export default function SecurityAudit() {
   useEffect(() => {
     trackEvent("page_view", { page: "security_audit_service" });
-    document.title = "Security Audit + Fix — Lock Down Your App Before Launch | KodeBase";
   }, []);
 
   const handleCTA = (label) => {
@@ -102,6 +103,13 @@ export default function SecurityAudit() {
 
   return (
     <>
+      <Seo
+        title="Security Audit + Fix — Lock Down Your Base44 App Before Launch | KodeBase"
+        description="A focused security review of your auth, RLS rules, role enforcement, and data exposure. Get vulnerabilities found and fixed in 24–48 hours with copy-paste fix prompts."
+        path="/services/security-audit"
+        image="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/c4571791e_generated_image.png"
+        jsonLd={[faqSchema(faqs)]}
+      />
       {/* Hero */}
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="absolute inset-0 blueprint-grid opacity-20" />

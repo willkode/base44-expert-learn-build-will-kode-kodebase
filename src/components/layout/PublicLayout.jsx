@@ -6,7 +6,7 @@ import NewsletterPopup from "@/components/newsletter/NewsletterPopup";
 
 export default function PublicLayout() {
   return (
-    <div className="dark min-h-screen bg-background text-foreground font-inter overflow-x-hidden">
+    <div className="dark min-h-screen bg-background text-foreground font-inter antialiased overflow-x-hidden">
       <Navbar />
       <main className="pt-16">
         <Outlet />

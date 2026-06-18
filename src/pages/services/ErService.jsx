@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import Seo from "@/components/seo/Seo";
+import { faqSchema } from "@/lib/seo";
 import {
   AlertTriangle, FileSearch, FileText, Zap, Layers, ArrowRight,
   CheckCircle, ChevronDown, ChevronUp, MousePointerClick, Layout,
@@ -109,12 +111,23 @@ function FAQ({ q, a }) {
 }
 
 export default function ErService() {
+  useEffect(() => {
+    trackEvent("page_view", { page: "er_service" });
+  }, []);
+
   const handleCTA = (label) => {
     trackEvent("service_cta_click", { service: "er_service", cta: label });
   };
 
   return (
     <>
+      <Seo
+        title="Emergency App Audit — Find Every Bug in 24–48 Hours | KodeBase"
+        description="A complete 14-point Base44 app audit with a written report and copy-paste fix prompts. Get every issue identified and prioritized — delivered in 24–48 hours."
+        path="/services/er-service"
+        image="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/49ee2fc44_generated_image.png"
+        jsonLd={[faqSchema(faqs)]}
+      />
       {/* Hero */}
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="absolute inset-0 blueprint-grid opacity-20" />

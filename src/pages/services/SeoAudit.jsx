@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import Seo from "@/components/seo/Seo";
+import { faqSchema } from "@/lib/seo";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -388,7 +390,6 @@ function FAQ({ q, a }) {
 export default function SeoAudit() {
   useEffect(() => {
     trackEvent("page_view", { page: "seo_audit_service" });
-    document.title = "Base44 SEO Audit & Corrections — Stop Guessing, Start Ranking | KodeBase";
   }, []);
 
   const handleCTA = (label) => {
@@ -397,6 +398,13 @@ export default function SeoAudit() {
 
   return (
     <>
+      <Seo
+        title="Base44 SEO Audit & Corrections — Stop Guessing, Start Ranking | KodeBase"
+        description="Full technical SEO audit built specifically for Base44 apps. 12 areas checked, prioritized findings, and ready-to-paste fix prompts. Delivered in 48–72 hours."
+        path="/services/seo-audit"
+        image="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/d740c93da_generated_image.png"
+        jsonLd={[faqSchema(faqs)]}
+      />
       {/* Hero */}
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="absolute inset-0 blueprint-grid opacity-20" />

@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import Seo from "@/components/seo/Seo";
+import { faqSchema } from "@/lib/seo";
 import {
   Bug, Layers, Sparkles, Layout, GitBranch, Zap, Shield, Monitor,
   CheckCircle, Clock, ArrowRight, ChevronDown, ChevronUp, Star, Users, FileText
@@ -102,12 +104,23 @@ function FAQ({ q, a }) {
 }
 
 export default function KodeSessions() {
+  useEffect(() => {
+    trackEvent("page_view", { page: "kode_sessions_service" });
+  }, []);
+
   const handleBook = (label) => {
     trackEvent("service_cta_click", { service: "kode_sessions", cta: label });
   };
 
   return (
     <>
+      <Seo
+        title="Kode Sessions — Live 1-on-1 Expert Help for Base44 | KodeBase"
+        description="Book a live 1-on-1 session with Will — debug, build, and ship together in real time via screen share. 30-year developer. Sessions booked within days."
+        path="/services/kode-sessions"
+        image="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/b91838cc7_generated_image.png"
+        jsonLd={[faqSchema(faqs)]}
+      />
       {/* Hero */}
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="absolute inset-0 blueprint-grid opacity-20" />
