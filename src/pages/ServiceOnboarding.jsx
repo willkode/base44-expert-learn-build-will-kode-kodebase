@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { CheckCircle2, ArrowRight, Loader2, UserPlus, Plus, MoreHorizontal, ChevronRight } from "lucide-react";
+import { CheckCircle2, ArrowRight, Loader2, UserPlus, Plus, MoreHorizontal, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import { trackEvent } from "@/lib/analytics";
 
 const WILL_EMAIL = "iamwillkode@gmail.com";
+const BOOKING_URL = "https://calendar.app.google/6UYFDc74UTQCkxdA7";
+
+const KODE_SESSION_IDS = ["kode_session_1hr", "kode_session_2hr"];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -17,12 +20,15 @@ export default function ServiceOnboarding() {
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
   const serviceId = urlParams.get("service") || "";
+  const isKodeSession = KODE_SESSION_IDS.includes(serviceId);
 
-  const [step, setStep] = useState(1); // 1 = contact form, 2 = collaborator instructions
+  const [step, setStep] = useState(1);
   const [form, setForm] = useState({ name: "", email: "", appUrl: "", notes: "" });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
+
+  const totalSteps = isKodeSession ? 3 : 2;
 
   useEffect(() => {
     trackEvent("page_view", { page: "service_onboarding", serviceId });
@@ -42,7 +48,7 @@ export default function ServiceOnboarding() {
         message: `SERVICE ONBOARDING — ${serviceId}\n\nApp URL: ${form.appUrl || "Not provided"}\n\nNotes: ${form.notes || "None"}`,
       });
       trackEvent("service_onboarding_form_submit", { serviceId });
-      setStep(2);
+      setStep(isKodeSession ? 2 : 2); // for kode sessions: step 2 = booking, step 3 = collaborator
     } catch (err) {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -56,21 +62,25 @@ export default function ServiceOnboarding() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // For kode sessions the collaborator step is step 3; for others it's step 2
+  const collaboratorStep = isKodeSession ? 3 : 2;
+
   return (
     <div className="min-h-screen bg-background blueprint-grid flex items-center justify-center px-6 py-16">
       <div className="max-w-lg w-full">
         {/* Progress */}
         <div className="flex items-center gap-3 mb-8">
-          {[1, 2].map((s) => (
+          {Array.from({ length: totalSteps }, (_, i) => i + 1).map((s) => (
             <React.Fragment key={s}>
               <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold transition-colors ${step >= s ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
                 {step > s ? <CheckCircle2 className="w-4 h-4" /> : s}
               </div>
-              {s < 2 && <div className={`flex-1 h-0.5 transition-colors ${step > s ? "bg-primary" : "bg-border"}`} />}
+              {s < totalSteps && <div className={`flex-1 h-0.5 transition-colors ${step > s ? "bg-primary" : "bg-border"}`} />}
             </React.Fragment>
           ))}
         </div>
 
+        {/* Step 1 — Contact form */}
         {step === 1 && (
           <motion.div initial="hidden" animate="visible" variants={fadeUp}>
             <div className="rounded-2xl border border-border bg-card p-8">
@@ -83,47 +93,24 @@ export default function ServiceOnboarding() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-1.5">Your name <span className="text-primary">*</span></label>
-                  <input
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    required
-                    placeholder="Jane Smith"
-                    className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground"
-                  />
+                  <input name="name" value={form.name} onChange={handleChange} required placeholder="Jane Smith"
+                    className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-1.5">Your email <span className="text-primary">*</span></label>
-                  <input
-                    name="email"
-                    type="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="you@example.com"
-                    className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground"
-                  />
+                  <input name="email" type="email" value={form.email} onChange={handleChange} required placeholder="you@example.com"
+                    className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-1.5">Your app URL <span className="text-muted-foreground font-normal">(optional)</span></label>
-                  <input
-                    name="appUrl"
-                    value={form.appUrl}
-                    onChange={handleChange}
-                    placeholder="https://yourapp.base44.app"
-                    className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground"
-                  />
+                  <input name="appUrl" value={form.appUrl} onChange={handleChange} placeholder="https://yourapp.base44.app"
+                    className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-1.5">Anything I should know upfront? <span className="text-muted-foreground font-normal">(optional)</span></label>
-                  <textarea
-                    name="notes"
-                    value={form.notes}
-                    onChange={handleChange}
-                    rows={3}
+                  <textarea name="notes" value={form.notes} onChange={handleChange} rows={3}
                     placeholder="Describe the issue, what you've tried, or any context that will help..."
-                    className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground resize-none"
-                  />
+                    className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground resize-none" />
                 </div>
                 {error && <p className="text-sm text-destructive">{error}</p>}
                 <Button type="submit" size="lg" className="w-full font-semibold bg-primary hover:bg-primary/90 text-primary-foreground" disabled={submitting}>
@@ -134,13 +121,60 @@ export default function ServiceOnboarding() {
           </motion.div>
         )}
 
-        {step === 2 && (
+        {/* Step 2 (Kode Sessions only) — Book a time */}
+        {step === 2 && isKodeSession && (
+          <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+            <div className="rounded-2xl border border-border bg-card p-8">
+              <div className="mb-6">
+                <Calendar className="w-10 h-10 text-primary mb-3" />
+                <h1 className="font-sora font-bold text-2xl mb-1">Book your session time</h1>
+                <p className="text-muted-foreground text-sm">Pick a time that works for you. Sessions are usually available within a few days.</p>
+              </div>
+
+              <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 mb-6 space-y-2">
+                {[
+                  "Choose from available slots",
+                  "You'll get a confirmation email",
+                  "We'll build live on your screen",
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                    <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <a
+                href={BOOKING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackEvent("service_booking_click", { serviceId })}
+              >
+                <Button size="lg" className="w-full font-semibold bg-primary hover:bg-primary/90 text-primary-foreground mb-3">
+                  <Calendar className="w-4 h-4 mr-2" /> Pick a time with Will
+                </Button>
+              </a>
+
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full"
+                onClick={() => setStep(3)}
+              >
+                I've booked — continue <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Collaborator step — step 2 for non-kode-session, step 3 for kode session */}
+        {step === collaboratorStep && (
           <motion.div initial="hidden" animate="visible" variants={fadeUp}>
             <div className="rounded-2xl border border-border bg-card p-8">
               <div className="mb-6">
                 <UserPlus className="w-10 h-10 text-primary mb-3" />
                 <h1 className="font-sora font-bold text-2xl mb-1">Add Will as a collaborator</h1>
-                <p className="text-muted-foreground text-sm">To get started, Will needs collaborator access to your Base44 app. Here's how to add him in under 30 seconds.</p>
+                <p className="text-muted-foreground text-sm">Will needs collaborator access to your Base44 app. Here's how to add him in under 30 seconds.</p>
               </div>
 
               {/* Email to add */}
@@ -154,32 +188,14 @@ export default function ServiceOnboarding() {
                 </Button>
               </div>
 
-              {/* Step-by-step instructions */}
+              {/* Steps */}
               <div className="space-y-3 mb-6">
                 <p className="text-sm font-semibold text-foreground">How to add a collaborator in Base44:</p>
-
                 {[
-                  {
-                    num: "1",
-                    text: "In your Base44 app, look at the top-right corner of the editor toolbar.",
-                    highlight: null,
-                  },
-                  {
-                    num: "2",
-                    text: 'Click the "+" button (next to your profile avatar in the toolbar).',
-                    highlight: "Look for the + icon shown below:",
-                    hasImage: true,
-                  },
-                  {
-                    num: "3",
-                    text: `Type Will's email address and send the invite.`,
-                    highlight: `Email: ${WILL_EMAIL}`,
-                  },
-                  {
-                    num: "4",
-                    text: "Will will accept the invite and get started on your service.",
-                    highlight: null,
-                  },
+                  { num: "1", text: "In your Base44 app, look at the top-right corner of the editor toolbar.", highlight: null, hasImage: false },
+                  { num: "2", text: 'Click the "+" button next to your profile avatar.', highlight: "Look for the + icon shown below:", hasImage: true },
+                  { num: "3", text: "Type Will's email address and send the invite.", highlight: `Email: ${WILL_EMAIL}`, hasImage: false },
+                  { num: "4", text: "Will will accept and get started on your service.", highlight: null, hasImage: false },
                 ].map((s) => (
                   <div key={s.num} className="flex gap-3">
                     <div className="w-6 h-6 rounded-full bg-primary/20 text-primary text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{s.num}</div>
@@ -188,11 +204,10 @@ export default function ServiceOnboarding() {
                       {s.highlight && <p className="text-xs font-semibold text-primary mt-0.5">{s.highlight}</p>}
                       {s.hasImage && (
                         <div className="mt-2 rounded-lg border border-border bg-[#1a2035] p-3 inline-flex items-center gap-2">
-                          {/* Simulated toolbar */}
-                          <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center overflow-hidden">
+                          <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center">
                             <span className="text-xs font-bold text-muted-foreground">W</span>
                           </div>
-                          <div className="w-7 h-7 rounded-full border-2 border-dashed border-primary/60 flex items-center justify-center cursor-pointer">
+                          <div className="w-7 h-7 rounded-full border-2 border-dashed border-primary/60 flex items-center justify-center">
                             <Plus className="w-3.5 h-3.5 text-primary" />
                           </div>
                           <div className="w-7 h-7 rounded-full border border-border flex items-center justify-center">
@@ -211,7 +226,10 @@ export default function ServiceOnboarding() {
 
               <div className="rounded-xl border border-border bg-secondary/30 p-4 mb-6">
                 <p className="text-xs text-muted-foreground">
-                  <strong className="text-foreground">What happens next:</strong> Once Will has access, he'll review your app details and reach out within 24 hours to confirm the plan and schedule a time if needed.
+                  <strong className="text-foreground">What happens next:</strong>{" "}
+                  {isKodeSession
+                    ? "Will will join the session ready to go. You'll get a meeting link in your confirmation email."
+                    : "Once Will has access, he'll review your app and reach out within 24 hours to confirm the plan."}
                 </p>
               </div>
 
