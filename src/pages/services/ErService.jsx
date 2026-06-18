@@ -10,6 +10,7 @@ import {
   Bug, Smartphone, Monitor, Clock, ClipboardList, Star
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 import { trackEvent } from "@/lib/analytics";
 
 const fadeUp = {
@@ -58,7 +59,7 @@ const plans = [
       "Recommended next steps",
     ],
     cta: "Get the Audit",
-    href: "https://checkout.square.site/merchant/MLYDVQNYZ9YXJ/checkout/6ZFPBTVBBPZUIPKGW44SPJF4",
+    serviceId: "er_audit",
   },
   {
     title: "Audit + Fix",
@@ -73,7 +74,7 @@ const plans = [
       "Verified working after fix",
     ],
     cta: "Get Audit + Fix",
-    href: "https://checkout.square.site/merchant/MLYDVQNYZ9YXJ/checkout/6ZFPBTVBBPZUIPKGW44SPJF4",
+    serviceId: "er_audit_fix",
   },
 ];
 
@@ -265,11 +266,11 @@ export default function ErService() {
                     </li>
                   ))}
                 </ul>
-                <a href={plan.href} target="_blank" rel="noopener noreferrer" onClick={() => handleCTA(plan.title)}>
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold" size="lg">
-                    {plan.cta}
-                  </Button>
-                </a>
+                <ServiceCheckoutButton
+                  serviceId={plan.serviceId}
+                  label={plan.cta}
+                  onClick={() => handleCTA(plan.title)}
+                />
               </motion.div>
             ))}
           </div>
@@ -355,16 +356,12 @@ export default function ErService() {
           <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-4">
             Need a second set of expert eyes on your app?
           </h2>
-          <a
-            href="https://checkout.square.site/merchant/MLYDVQNYZ9YXJ/checkout/6ZFPBTVBBPZUIPKGW44SPJF4"
-            target="_blank"
-            rel="noopener noreferrer"
+          <ServiceCheckoutButton
+            serviceId="er_audit"
+            label="Get the Audit"
+            className="px-10 inline-flex w-auto"
             onClick={() => handleCTA("final_cta")}
-          >
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10">
-              Get the Audit <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
-          </a>
+          />
         </div>
       </section>
     </>

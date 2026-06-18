@@ -9,6 +9,7 @@ import {
   Smartphone, Image, Code2, Settings, Search, BarChart2, Shield
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 import { trackEvent } from "@/lib/analytics";
 
 const fadeUp = {
@@ -266,7 +267,7 @@ const plans = [
       "Ready-to-paste Base44 fix prompts",
     ],
     cta: "Get SEO Audit",
-    href: "https://checkout.square.site/merchant/MLYDVQNYZ9YXJ/checkout/6ZFPBTVBBPZUIPKGW44SPJF4",
+    serviceId: "seo_audit",
   },
   {
     title: "SEO Audit + Fix",
@@ -287,7 +288,7 @@ const plans = [
       "Final verification pass",
     ],
     cta: "Get Audit + Fix",
-    href: "https://checkout.square.site/merchant/MLYDVQNYZ9YXJ/checkout/6ZFPBTVBBPZUIPKGW44SPJF4",
+    serviceId: "seo_audit_fix",
   },
   {
     title: "SSR / Prerender Setup",
@@ -304,7 +305,7 @@ const plans = [
       "Search and social preview verification",
     ],
     cta: "Get SSR Setup",
-    href: "https://checkout.square.site/merchant/MLYDVQNYZ9YXJ/checkout/6ZFPBTVBBPZUIPKGW44SPJF4",
+    serviceId: "seo_ssr_setup",
   },
 ];
 
@@ -595,11 +596,11 @@ export default function SeoAudit() {
                     </li>
                   ))}
                 </ul>
-                <a href={plan.href} target="_blank" rel="noopener noreferrer" onClick={() => handleCTA(plan.title)}>
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold" size="lg">
-                    {plan.cta}
-                  </Button>
-                </a>
+                <ServiceCheckoutButton
+                  serviceId={plan.serviceId}
+                  label={plan.cta}
+                  onClick={() => handleCTA(plan.title)}
+                />
               </motion.div>
             ))}
           </div>
@@ -683,16 +684,12 @@ export default function SeoAudit() {
             Stop guessing what's hurting your rankings.
           </h2>
           <p className="text-muted-foreground mb-8">Get a Base44 SEO Audit and know exactly what needs to be fixed. Choose your package, send your URL, and get a prioritized report with real corrections.</p>
-          <a
-            href="https://checkout.square.site/merchant/MLYDVQNYZ9YXJ/checkout/6ZFPBTVBBPZUIPKGW44SPJF4"
-            target="_blank"
-            rel="noopener noreferrer"
+          <ServiceCheckoutButton
+            serviceId="seo_audit"
+            label="Get My SEO Audit"
+            className="px-10 inline-flex w-auto"
             onClick={() => handleCTA("final_cta")}
-          >
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10">
-              Get My SEO Audit <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
-          </a>
+          />
         </div>
       </section>
     </>

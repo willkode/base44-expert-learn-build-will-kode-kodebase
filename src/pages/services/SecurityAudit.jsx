@@ -9,6 +9,7 @@ import {
   PenSquare, Key, AlertTriangle, Server, ShieldOff, Star
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 import { trackEvent } from "@/lib/analytics";
 
 const fadeUp = {
@@ -51,7 +52,7 @@ const plans = [
       "Copy-paste fix prompts",
     ],
     cta: "Get Security Audit",
-    href: "https://checkout.square.site/merchant/MLYDVQNYZ9YXJ/checkout/6ZFPBTVBBPZUIPKGW44SPJF4",
+    serviceId: "security_audit",
   },
   {
     title: "Security Audit + Fix",
@@ -66,7 +67,7 @@ const plans = [
       "Verified secure after fix",
     ],
     cta: "Get Audit + Fix",
-    href: "https://checkout.square.site/merchant/MLYDVQNYZ9YXJ/checkout/6ZFPBTVBBPZUIPKGW44SPJF4",
+    serviceId: "security_audit_fix",
   },
 ];
 
@@ -241,11 +242,11 @@ export default function SecurityAudit() {
                     </li>
                   ))}
                 </ul>
-                <a href={plan.href} target="_blank" rel="noopener noreferrer" onClick={() => handleCTA(plan.title)}>
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold" size="lg">
-                    {plan.cta}
-                  </Button>
-                </a>
+                <ServiceCheckoutButton
+                  serviceId={plan.serviceId}
+                  label={plan.cta}
+                  onClick={() => handleCTA(plan.title)}
+                />
               </motion.div>
             ))}
           </div>
@@ -363,16 +364,12 @@ export default function SecurityAudit() {
           <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-4">
             Lock down your app before problems grow.
           </h2>
-          <a
-            href="https://checkout.square.site/merchant/MLYDVQNYZ9YXJ/checkout/6ZFPBTVBBPZUIPKGW44SPJF4"
-            target="_blank"
-            rel="noopener noreferrer"
+          <ServiceCheckoutButton
+            serviceId="security_audit"
+            label="Get Security Audit"
+            className="px-10 inline-flex w-auto"
             onClick={() => handleCTA("final_cta")}
-          >
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10">
-              Get Security Audit <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
-          </a>
+          />
         </div>
       </section>
     </>

@@ -8,6 +8,7 @@ import {
   CheckCircle, Clock, ArrowRight, ChevronDown, ChevronUp, Star, Users, FileText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 import PublicLayout from "@/components/layout/PublicLayout";
 import { trackEvent } from "@/lib/analytics";
 
@@ -41,7 +42,7 @@ const plans = [
     ],
     badge: null,
     cta: "Book 1 Hour",
-    href: "https://checkout.square.site/merchant/MLYDVQNYZ9YXJ/checkout/6ZFPBTVBBPZUIPKGW44SPJF4",
+    serviceId: "kode_session_1hr",
   },
   {
     title: "2 Hour Session",
@@ -56,7 +57,7 @@ const plans = [
     ],
     badge: "Most popular",
     cta: "Book 2 Hours",
-    href: "https://checkout.square.site/merchant/MLYDVQNYZ9YXJ/checkout/6ZFPBTVBBPZUIPKGW44SPJF4",
+    serviceId: "kode_session_2hr",
   },
 ];
 
@@ -237,11 +238,11 @@ export default function KodeSessions() {
                     </li>
                   ))}
                 </ul>
-                <a href={plan.href} target="_blank" rel="noopener noreferrer" onClick={() => handleBook(plan.title)}>
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold" size="lg">
-                    {plan.cta}
-                  </Button>
-                </a>
+                <ServiceCheckoutButton
+                  serviceId={plan.serviceId}
+                  label={plan.cta}
+                  onClick={() => handleBook(plan.title)}
+                />
               </motion.div>
             ))}
           </div>
@@ -381,16 +382,12 @@ export default function KodeSessions() {
           <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-4">
             Book your session and get unstuck faster.
           </h2>
-          <a
-            href="https://checkout.square.site/merchant/MLYDVQNYZ9YXJ/checkout/6ZFPBTVBBPZUIPKGW44SPJF4"
-            target="_blank"
-            rel="noopener noreferrer"
+          <ServiceCheckoutButton
+            serviceId="kode_session_1hr"
+            label="Book a Session"
+            className="px-10 inline-flex w-auto"
             onClick={() => handleBook("final_cta")}
-          >
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10">
-              Book a Session <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
-          </a>
+          />
         </div>
       </section>
     </>

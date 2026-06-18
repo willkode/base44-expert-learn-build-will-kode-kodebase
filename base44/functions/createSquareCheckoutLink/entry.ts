@@ -10,16 +10,38 @@ const PLAN_PRICING = {
   agency: { amountCents: 14900, name: 'Agency', blueprintLimit: 60 },
 };
 
+// One-time service pricing — amounts resolved server-side only
+const SERVICE_PRICING = {
+  // ER Service
+  er_audit: { amountCents: 5000, name: 'App Audit — Report + Fix Prompts' },
+  er_audit_fix: { amountCents: 12500, name: 'App Audit + Fix' },
+  // Security Audit
+  security_audit: { amountCents: 5000, name: 'Security Audit — Report + Fix Prompts' },
+  security_audit_fix: { amountCents: 12500, name: 'Security Audit + Fix' },
+  // SEO Audit
+  seo_audit: { amountCents: 5000, name: 'SEO Audit — Report + Fix Prompts' },
+  seo_audit_fix: { amountCents: 12500, name: 'SEO Audit + Fix' },
+  seo_ssr_setup: { amountCents: 15000, name: 'SSR / Prerender Setup' },
+  // Kode Sessions
+  kode_session_1hr: { amountCents: 7500, name: 'Kode Session — 1 Hour' },
+  kode_session_2hr: { amountCents: 15000, name: 'Kode Session — 2 Hours' },
+};
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { planId, productId, donationCents, promptSessionId, redirectUrl } = await req.json();
+    const { planId, productId, serviceId, donationCents, promptSessionId, redirectUrl } = await req.json();
 
     let amountCents, itemName, productIdResolved = null, isDonation = false, promptSessionResolved = null;
-    if (promptSessionId) {
+    if (serviceId) {
+      const service = SERVICE_PRICING[serviceId];
+      if (!service) return Response.json({ error: 'Invalid service.' }, { status: 400 });
+      amountCents = service.amountCents;
+      itemName = service.name;
+    } else if (promptSessionId) {
       // Prompt Engine prompt pack — fixed $10 unlock. Verify the session belongs
       // to this user and has prompts generated before charging.
       const sessions = await base44.entities.PromptGeneratorSession.filter({ id: promptSessionId });
@@ -66,6 +88,7 @@ Deno.serve(async (req) => {
       base44UserEmail: user.email,
       itemName,
     };
+    if (serviceId) metadata.serviceId = serviceId;
     if (planId) metadata.planId = planId;
     if (productIdResolved) metadata.productId = productIdResolved;
     if (promptSessionResolved) metadata.promptSessionId = promptSessionResolved;
