@@ -22,9 +22,10 @@ export default function ServiceCheckoutButton({ serviceId, label, size = "lg", c
         window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`;
         return;
       }
+      const onboardingUrl = `${window.location.origin}/service-onboarding?service=${encodeURIComponent(serviceId)}`;
       const response = await base44.functions.invoke("createSquareCheckoutLink", {
         serviceId,
-        redirectUrl: window.location.origin + "/dashboard",
+        redirectUrl: onboardingUrl,
       });
       const { checkoutUrl, error: apiError } = response.data;
       if (apiError) throw new Error(apiError);
