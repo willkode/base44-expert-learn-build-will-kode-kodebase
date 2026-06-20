@@ -14,7 +14,7 @@ const CATEGORIES = [
   "Productivity", "Sales", "Content", "Design", "Security", "Other"
 ];
 
-const blank = { title: "", prompt_body: "", category: "Development", description: "", tags: [], order: 0, published: true };
+const blank = { title: "", prompt_body: "", category: "Development", description: "", tags: [], order: 0, published: true, recommended_model: "" };
 
 export default function VaultPromptFormDialog({ open, onOpenChange, prompt, onSaved }) {
   const [form, setForm] = useState(blank);
@@ -197,6 +197,16 @@ Return only the JSON object, no extra text.`,
               placeholder="Paste or write the full prompt here…"
               rows={10}
               className="font-mono text-sm resize-y"
+            />
+          </div>
+
+          {/* Recommended AI Model */}
+          <div className="space-y-1.5">
+            <Label>Recommended AI Model</Label>
+            <Input
+              value={form.recommended_model}
+              onChange={(e) => set("recommended_model", e.target.value)}
+              placeholder="e.g. GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro"
             />
           </div>
 

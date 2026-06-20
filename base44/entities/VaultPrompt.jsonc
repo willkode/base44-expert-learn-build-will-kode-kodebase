@@ -26,6 +26,10 @@
       "type": "string",
       "description": "Short explanation of what the prompt does"
     },
+    "recommended_model": {
+      "type": "string",
+      "description": "Recommended AI model to use with this prompt (e.g. GPT-4o, Claude 3.5 Sonnet)"
+    },
     "order": {
       "type": "number",
       "default": 0
