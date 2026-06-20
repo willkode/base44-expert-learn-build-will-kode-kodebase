@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, LayoutTemplate } from "lucide-react";
+import { ArrowRight, Sparkles, Crown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { trackCTA } from "@/lib/analytics";
 
@@ -73,15 +73,15 @@ export default function Hero() {
             <div className="p-[1.5px] rounded-md bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15]">
               <Button
                 onClick={() => {
-                  trackCTA({ text: "View Blueprint Tool", location: "hero", destination: "#how" });
-                  document.querySelector("#how")?.scrollIntoView({ behavior: "smooth" });
+                  trackCTA({ text: "Pro Membership", location: "hero", destination: "/pro" });
+                  navigate("/pro");
                 }}
                 size="lg"
                 variant="outline"
                 className="w-full bg-background hover:bg-white/10 text-white border-0 font-semibold text-base px-7 py-6">
 
-                <LayoutTemplate className="w-4 h-4 mr-1" />
-                View Blue Print Tool
+                <Crown className="w-4 h-4 mr-1 text-amber-400" />
+                Pro Membership
               </Button>
             </div>
           </div>
