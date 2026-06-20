@@ -118,6 +118,8 @@ import AdminSettings from '@/pages/admin/AdminSettings';
 import AdminSales from '@/pages/admin/AdminSales';
 import AdminPromptVault from '@/pages/admin/AdminPromptVault';
 import AdminAnalyticsPlan from '@/pages/admin/AdminAnalyticsPlan';
+import PromptVault from '@/pages/PromptVault';
+import VaultAccess from '@/pages/VaultAccess';
 
 const AuthenticatedApp = () => {
   return (
@@ -148,6 +150,7 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<Home />} />
       <Route path="/tools/blueprint" element={<BlueprintTool />} />
       <Route path="/tools/prompt-generator" element={<PromptGenerator />} />
+      <Route path="/vault" element={<PromptVault />} />
 
       {/* Auth pages */}
       <Route path="/login" element={<Login />} />
@@ -176,6 +179,7 @@ const AuthenticatedApp = () => {
             <Route path="launch-audit" element={<LaunchAudit />} />
           </Route>
           <Route path="/tools/prompt-engine" element={<PromptEngine />} />
+          <Route path="/vault/access" element={<VaultAccess />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />
 

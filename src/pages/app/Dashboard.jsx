@@ -10,6 +10,7 @@ import RecentProjects from "@/components/dashboard/RecentProjects";
 import StartBlueprintCard from "@/components/dashboard/StartBlueprintCard";
 import HowItWorks from "@/components/dashboard/HowItWorks";
 import RecentPromptPacks from "@/components/dashboard/RecentPromptPacks";
+import PromptVaultBanner from "@/components/dashboard/PromptVaultBanner";
 
 export default function Dashboard() {
   const { user } = useOutletContext();
@@ -19,21 +20,31 @@ export default function Dashboard() {
   const [blueprints, setBlueprints] = useState([]);
   const [packs, setPacks] = useState([]);
   const [security, setSecurity] = useState([]);
+  const [hasVaultAccess, setHasVaultAccess] = useState(false);
+
+  const VAULT_PRODUCT_ID = "6a36c8c785752800bd7580be";
 
   useEffect(() => {
-    Promise.all([
-      base44.entities.Project.list("-updated_date", 50),
-      base44.entities.Blueprint.list("-created_date", 100),
-      base44.entities.PromptPack.list("-created_date", 50),
-      base44.entities.SecurityFinding.list("-created_date", 200),
-    ]).then(([p, b, pk, s]) => {
+    const init = async () => {
+      const [p, b, pk, s] = await Promise.all([
+        base44.entities.Project.list("-updated_date", 50),
+        base44.entities.Blueprint.list("-created_date", 100),
+        base44.entities.PromptPack.list("-created_date", 50),
+        base44.entities.SecurityFinding.list("-created_date", 200),
+      ]);
       setProjects(p);
       setBlueprints(b);
       setPacks(pk);
       setSecurity(s);
+      // Check vault access
+      if (user?.id) {
+        const payments = await base44.entities.Payment.filter({ userId: user.id, productId: VAULT_PRODUCT_ID, status: "completed" }, "-created_date", 1);
+        setHasVaultAccess(payments.length > 0);
+      }
       setLoading(false);
-    });
-  }, []);
+    };
+    init().catch(() => setLoading(false));
+  }, [user?.id]);
 
   const completedBlueprints = blueprints.filter((b) => b.status === "completed").length;
   const reviewedProjects = new Set(security.map((s) => s.projectId)).size;
@@ -71,6 +82,8 @@ export default function Dashboard() {
         <StatCard icon={Package} label="Prompt Packs Generated" value={packs.length} />
         <StatCard icon={ShieldCheck} label="Security Reviews" value={reviewedProjects} />
       </div>
+
+      <PromptVaultBanner hasAccess={hasVaultAccess} />
 
       <StartBlueprintCard />
 
