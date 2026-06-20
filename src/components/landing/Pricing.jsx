@@ -1,58 +1,26 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Check, Lock } from "lucide-react";
+import { Check, Crown, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { PLANS, PLAN_ORDER } from "@/lib/plans";
 import { trackPricingPlanClick } from "@/lib/analytics";
 
-const CTAS = { free: "Start Solo", pro: "Go Pro", agency: "Start Agency" };
-
-const ALL_PLANS_INCLUDE = [
-  "Prompt Library",
-  "Agent Skills",
-  "SuperAgent Prompts",
-  "LLM Guides",
-  "Videos & Live Events",
-];
-
-const FREE_TIER = {
-  name: "Free",
-  price: "$0",
-  period: "/mo",
-  desc: "Kick the tires for free.",
-  features: [
-    "1 project",
-    "1 blueprint",
-    "Security reviews",
-    "QA checklists",
-  ],
-  lockedFeatures: [
-    "Prompt packs (paid plan)",
-    "Markdown export (paid plan)",
-  ],
-  cta: "Get started free",
-  highlight: false,
-};
-
-const PAID_ORDER = PLAN_ORDER.filter((id) => id !== "agency");
-const tiers = [
-  FREE_TIER,
-  ...PAID_ORDER.map((id) => ({
-    id,
-    name: PLANS[id].name,
-    price: PLANS[id].price,
-    period: PLANS[id].period,
-    desc: PLANS[id].desc,
-    features: PLANS[id].features,
-    cta: CTAS[id],
-    highlight: id === "pro",
-  })),
+const PRO_PERKS = [
+  "Blueprint System — 25 blueprints/month",
+  "Prompt Engine — ordered build prompt packs",
+  "Prompt Vault — 200+ curated expert prompts",
+  "Priority support via WhatsApp & email",
+  "25 projects, client-ready exports",
+  "Security reviews & QA checklists",
 ];
 
 export default function Pricing() {
   const navigate = useNavigate();
-  const getStarted = () => navigate("/register");
+
+  const handleCTA = () => {
+    trackPricingPlanClick({ planId: "pro", planName: "Pro", price: 39 });
+    navigate("/pro");
+  };
 
   return (
     <section id="pricing" className="py-24 relative scroll-mt-20">
@@ -69,76 +37,46 @@ export default function Pricing() {
             Architect once. Build right. <span className="text-gradient-orange">Skip the rebuild.</span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            Start with Solo at $12.99/mo. All tiers include full feature access. Upgrade for more projects.
+            One Pro plan. Everything you need to go from idea to shipped app.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {tiers.map((t, i) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className={`relative rounded-2xl border p-8 flex flex-col transition-all duration-300 hover:-translate-y-1 ${
-                t.highlight
-                  ? "border-primary bg-card glow-orange lg:scale-[1.04] z-10"
-                  : "border-border bg-card/60 hover:border-primary/40"
-              }`}
-            >
-              {t.highlight && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wide">
-                  Most Popular
-                </span>
-              )}
-              <h3 className="font-sora font-bold text-xl mb-1">{t.name}</h3>
-              <p className="text-sm text-muted-foreground mb-5">{t.desc}</p>
-              <div className="flex items-end gap-1 mb-6">
-                <span className="font-sora font-extrabold text-4xl">{t.price}</span>
-                <span className="text-muted-foreground mb-1.5">{t.period}</span>
-              </div>
-              <ul className="space-y-3 mb-8 flex-1">
-                {t.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-sm">
-                    <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                    <span className="text-foreground">{f}</span>
-                  </li>
-                ))}
-                {t.lockedFeatures?.map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-sm">
-                    <Lock className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                    <span className="text-muted-foreground line-through">{f}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="border-t border-border pt-5 mb-8">
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Free with every plan</p>
-                <ul className="space-y-2">
-                  {ALL_PLANS_INCLUDE.map((f) => (
-                    <li key={f} className="flex items-start gap-2.5 text-sm">
-                      <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                      <span className="text-foreground">{f}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <Button
-                onClick={() => {
-                  trackPricingPlanClick({ planId: t.id || "free", planName: t.name, price: parseFloat(t.price.replace("$", "")) || 0 });
-                  t.id ? navigate(`/checkout?plan=${t.id}`) : getStarted();
-                }}
-                className={`w-full font-semibold ${
-                  t.highlight
-                    ? "bg-primary hover:bg-primary/90 text-primary-foreground"
-                    : "bg-secondary hover:bg-secondary/80 text-foreground"
-                }`}
-              >
-                {t.cta}
-              </Button>
-            </motion.div>
-          ))}
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="max-w-2xl mx-auto rounded-2xl border border-primary bg-card glow-orange p-10 flex flex-col items-center text-center"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/40 bg-amber-500/10 mb-6">
+            <Crown className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-xs font-bold uppercase tracking-widest text-amber-400">Pro Membership</span>
+          </div>
+
+          <div className="flex items-end gap-1 mb-2 justify-center">
+            <span className="font-sora font-extrabold text-6xl">$39</span>
+            <span className="text-muted-foreground mb-2">/mo</span>
+          </div>
+          <p className="text-muted-foreground text-sm mb-8">For freelance vibecoders who build seriously.</p>
+
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 mb-10 text-left w-full max-w-lg">
+            {PRO_PERKS.map((f) => (
+              <li key={f} className="flex items-start gap-2.5 text-sm">
+                <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                <span className="text-foreground">{f}</span>
+              </li>
+            ))}
+          </ul>
+
+          <Button
+            size="lg"
+            onClick={handleCTA}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10"
+          >
+            See everything in Pro <ArrowRight className="w-4 h-4 ml-1" />
+          </Button>
+          <p className="text-xs text-muted-foreground mt-4">Cancel anytime. No contracts.</p>
+        </motion.div>
       </div>
     </section>
   );
