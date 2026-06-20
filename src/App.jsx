@@ -116,6 +116,7 @@ import SocialSettings from '@/pages/admin/social/SocialSettings';
 import SecurityDashboard from '@/pages/admin/security/SecurityDashboard';
 import AdminSettings from '@/pages/admin/AdminSettings';
 import AdminSales from '@/pages/admin/AdminSales';
+import AdminPromptVault from '@/pages/admin/AdminPromptVault';
 import AdminAnalyticsPlan from '@/pages/admin/AdminAnalyticsPlan';
 
 const AuthenticatedApp = () => {
@@ -237,6 +238,7 @@ const AuthenticatedApp = () => {
             <Route path="/admin/security" element={<SecurityDashboard />} />
             <Route path="/admin/settings" element={<AdminSettings />} />
             <Route path="/admin/sales" element={<AdminSales />} />
+            <Route path="/admin/prompt-vault" element={<AdminPromptVault />} />
             <Route path="/admin/analytics" element={<AdminAnalyticsPlan />} />
           </Route>
         </Route>

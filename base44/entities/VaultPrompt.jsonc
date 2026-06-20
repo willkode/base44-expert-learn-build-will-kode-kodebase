@@ -1,0 +1,62 @@
+{
+  "name": "VaultPrompt",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Short descriptive title for the prompt"
+    },
+    "prompt_body": {
+      "type": "string",
+      "description": "The full prompt text"
+    },
+    "category": {
+      "type": "string",
+      "description": "Primary category (e.g. Development, Business, SEO, Marketing, AI, Productivity)"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Searchable tags"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short explanation of what the prompt does"
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    },
+    "published": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this prompt is visible to users with access"
+    }
+  },
+  "required": [
+    "title",
+    "prompt_body"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        }
+      ]
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
