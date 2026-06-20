@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, CheckCircle2, Mail, MessageCircle } from "lucide-react";
 import { trackFormStart, trackFormSubmit, trackFormError, trackLead } from "@/lib/analytics";
+import SocialLinks from "@/components/landing/SocialLinks";
 
 export default function ContactForm() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "", website: "" });
@@ -89,6 +90,10 @@ export default function ContactForm() {
             <p className="text-sm font-medium group-hover:text-primary transition-colors">+1 (334) 392-9401</p>
           </div>
         </a>
+        <div>
+          <p className="text-xs text-muted-foreground mb-3">Find me on social</p>
+          <SocialLinks />
+        </div>
       </div>
 
       {/* Form — left side */}

@@ -1,8 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import ContactForm from "@/components/contact/ContactForm";
-import SocialLinks from "@/components/landing/SocialLinks";
-import { Mail } from "lucide-react";
+
 import Seo from "@/components/seo/Seo";
 
 export default function Contact() {
@@ -14,7 +13,7 @@ export default function Contact() {
         path="/contact"
         image="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/7c583194a_generated_image.png"
       />
-      <div className="max-w-3xl mx-auto px-6">
+      <div className="max-w-5xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -38,15 +37,7 @@ export default function Contact() {
           <ContactForm />
         </motion.div>
 
-        <div className="mt-12 text-center">
-          <p className="text-sm text-muted-foreground mb-4 flex items-center justify-center gap-2">
-            <Mail className="w-4 h-4 text-primary" />
-            Or find me on social
-          </p>
-          <div className="flex justify-center">
-            <SocialLinks />
-          </div>
-        </div>
+
       </div>
     </section>
   );
