@@ -6,9 +6,7 @@ import {
   Crown,
   Layers,
   Wand2,
-  Vault,
   HeadphonesIcon,
-  ArrowRight,
   CheckCircle2,
   Zap,
   Shield,
@@ -17,20 +15,22 @@ import {
   Phone,
   Percent,
 } from "lucide-react";
+import Navbar from "@/components/landing/Navbar";
+import Footer from "@/components/landing/Footer";
 import ProHero from "@/components/promembership/ProHero";
 import ProHighlights from "@/components/promembership/ProHighlights";
 import ProBenefitCard from "@/components/promembership/ProBenefitCard";
 import ProCtaFooter from "@/components/promembership/ProCtaFooter";
 
-const OG_IMAGE = "https://ucarecdn.com/b9e28e1f-6e6a-4f7d-bd60-4d7a5b5f1234/prokodebase.jpg";
+const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/c5ae1c23f_generated_image.png";
 
 const BENEFITS = [
   {
     icon: Layers,
     title: "Blueprint System",
     badge: "Unlimited",
-    color: "from-blue-500/20 to-blue-600/10 border-blue-500/20",
     iconColor: "text-blue-400",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/b19e032e0_generated_image.png",
     description:
       "Generate fully structured app blueprints from a single idea. Get entities, roles, pages, workflows, integrations, and a recommended build order — all in one AI-powered discovery session.",
     features: [
@@ -46,8 +46,8 @@ const BENEFITS = [
     icon: Wand2,
     title: "Prompt Engine",
     badge: "Pro Exclusive",
-    color: "from-primary/20 to-primary/10 border-primary/20",
     iconColor: "text-primary",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a2b810bf6_generated_image.png",
     description:
       "Turn your blueprint into a full ordered prompt pack — every prompt you need to build your app in the right sequence, from foundation to polish. Copy, paste, build.",
     features: [
@@ -63,8 +63,8 @@ const BENEFITS = [
     icon: Lock,
     title: "Prompt Vault",
     badge: "Pro Exclusive",
-    color: "from-amber-500/20 to-amber-600/10 border-amber-500/20",
     iconColor: "text-amber-400",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/445de1ec7_generated_image.png",
     description:
       "Access a curated library of expert-crafted prompts across development, business, SEO, marketing, AI, and productivity. Hand-picked and updated regularly.",
     features: [
@@ -80,8 +80,8 @@ const BENEFITS = [
     icon: Phone,
     title: "Monthly Strategy Call",
     badge: "1 Free / Month",
-    color: "from-primary/20 to-amber-500/10 border-primary/20",
     iconColor: "text-primary",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/741a92683_generated_image.png",
     description:
       "Every month, Pro members get one free 1-hour live call with Will — for build strategy, debugging, or a second opinion. Need more? Book extra sessions at your discounted Pro rate.",
     features: [
@@ -97,8 +97,8 @@ const BENEFITS = [
     icon: Percent,
     title: "40% Member Discount",
     badge: "On Everything",
-    color: "from-amber-500/20 to-orange-600/10 border-amber-500/20",
     iconColor: "text-amber-400",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/ec264d855_generated_image.png",
     description:
       "Pro members save 40% on all products and services — prompt packs, audits, sessions, and more. The discount is applied automatically at checkout, no code needed.",
     features: [
@@ -114,8 +114,8 @@ const BENEFITS = [
     icon: HeadphonesIcon,
     title: "Priority Support",
     badge: "Pro Perk",
-    color: "from-green-500/20 to-green-600/10 border-green-500/20",
     iconColor: "text-green-400",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/e719b11ef_generated_image.png",
     description:
       "Skip the queue. Pro members get priority responses via WhatsApp and email — whether you're debugging, planning, or need a second opinion on your build.",
     features: [
@@ -148,7 +148,7 @@ export default function ProMembership() {
   }, []);
 
   return (
-    <>
+    <div className="dark min-h-screen bg-background text-foreground font-inter antialiased overflow-x-hidden">
       <Seo
         title="Pro Membership — KodeBase"
         description="Everything in your Pro plan: Blueprint System, Prompt Engine, Prompt Vault, and priority support. Build faster with the full KodeBase toolkit."
@@ -164,33 +164,41 @@ export default function ProMembership() {
           "offers": { "@type": "Offer", "price": "39.00", "priceCurrency": "USD", "priceSpecification": { "@type": "UnitPriceSpecification", "billingDuration": "P1M" } }
         }]}
       />
+      <Navbar />
+      <main>
+        <ProHero />
 
-      <ProHero />
+        <ProHighlights highlights={PLAN_HIGHLIGHTS} />
 
-      <ProHighlights highlights={PLAN_HIGHLIGHTS} />
+        {/* Benefit cards */}
+        <section className="relative py-24 scroll-mt-20">
+          <div className="absolute inset-0 blueprint-grid opacity-30" />
+          <div className="relative max-w-7xl mx-auto px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="max-w-3xl mx-auto text-center mb-16"
+            >
+              <span className="text-sm font-semibold text-primary uppercase tracking-widest">Membership Perks</span>
+              <h2 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-5">
+                What's <span className="text-gradient-orange">included in Pro</span>
+              </h2>
+              <p className="text-lg text-muted-foreground">Six powerful perks, one plan. Here's everything you can do as a Pro member.</p>
+            </motion.div>
 
-      {/* Benefit cards */}
-      <section className="max-w-6xl mx-auto px-4 py-20 md:py-24">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-14"
-        >
-          <span className="text-xs font-semibold tracking-widest text-primary uppercase">Membership Perks</span>
-          <h2 className="font-sora font-bold text-3xl md:text-4xl mt-2 mb-3">What's included in Pro</h2>
-          <p className="text-muted-foreground max-w-lg mx-auto">Six powerful perks, one plan. Here's everything you can do as a Pro member.</p>
-        </motion.div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {BENEFITS.map((benefit, i) => (
+                <ProBenefitCard key={benefit.title} benefit={benefit} index={i} />
+              ))}
+            </div>
+          </div>
+        </section>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {BENEFITS.map((benefit, i) => (
-            <ProBenefitCard key={benefit.title} benefit={benefit} index={i} />
-          ))}
-        </div>
-      </section>
-
-      <ProCtaFooter />
-    </>
+        <ProCtaFooter />
+      </main>
+      <Footer />
+    </div>
   );
 }

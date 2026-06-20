@@ -4,24 +4,27 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Crown, ArrowRight } from "lucide-react";
 
+const HERO_BG = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/774a81b65_generated_image.png";
+
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
   show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.5, delay: i * 0.1 } }),
 };
 
-// Pure visual redesign of the hero. Copy + links are unchanged.
+// Hero styled to match the Home page: full-bleed AI background, readability overlays,
+// gradient-border secondary button. Copy + links unchanged.
 export default function ProHero() {
   return (
-    <section className="relative overflow-hidden bg-background blueprint-grid">
-      {/* layered glows */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
-      <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[80vw] max-w-3xl h-72 bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute top-40 -right-20 w-72 h-72 bg-amber-500/10 blur-[100px] rounded-full pointer-events-none" />
+    <section className="relative overflow-hidden min-h-[80vh] flex items-center">
+      {/* AI background */}
+      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${HERO_BG})` }} />
+      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/40 z-[1]" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent z-[1]" />
 
-      <div className="relative z-10 max-w-3xl mx-auto px-4 pt-28 pb-20 md:pt-36 md:pb-28 text-center">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-32 pb-20 lg:pt-28 text-center">
         <motion.div
           variants={fadeUp} initial="hidden" animate="show" custom={0}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 mb-6 backdrop-blur-sm"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 mb-7 backdrop-blur-sm"
         >
           <Crown className="w-3.5 h-3.5 text-amber-400" />
           <span className="text-xs font-semibold tracking-widest text-amber-400 uppercase">Pro Membership</span>
@@ -29,7 +32,7 @@ export default function ProHero() {
 
         <motion.h1
           variants={fadeUp} initial="hidden" animate="show" custom={1}
-          className="font-sora font-bold text-4xl md:text-5xl lg:text-6xl leading-[1.05] mb-5"
+          className="font-sora font-extrabold text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight mb-6 max-w-3xl mx-auto"
         >
           Everything you need to{" "}
           <span className="text-gradient-orange">build faster</span>
@@ -37,23 +40,28 @@ export default function ProHero() {
 
         <motion.p
           variants={fadeUp} initial="hidden" animate="show" custom={2}
-          className="text-muted-foreground text-lg md:text-xl max-w-xl mx-auto mb-10"
+          className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto mb-9"
         >
           Your Pro plan unlocks the full KodeBase stack — from idea to shipped app with structured blueprints, ordered prompts, a curated vault, and expert support.
         </motion.p>
 
         <motion.div
           variants={fadeUp} initial="hidden" animate="show" custom={3}
-          className="flex flex-col sm:flex-row gap-3 justify-center"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 justify-center"
         >
           <Link to="/dashboard" className="w-full sm:w-auto">
-            <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 font-semibold px-8 glow-orange">
-              Go to Dashboard <ArrowRight className="w-4 h-4 ml-1" />
+            <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-red-500 text-primary-foreground font-semibold text-base px-7 py-6 shadow-lg shadow-red-600/30 group transition-transform hover:-translate-y-0.5">
+              Go to Dashboard
+              <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
-          <Link to="/pricing" className="w-full sm:w-auto">
-            <Button size="lg" variant="outline" className="w-full sm:w-auto">View Plans</Button>
-          </Link>
+          <div className="p-[1.5px] rounded-md bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] w-full sm:w-auto">
+            <Link to="/pricing" className="block">
+              <Button size="lg" variant="outline" className="w-full bg-background hover:bg-white/10 text-white border-0 font-semibold text-base px-7 py-6">
+                View Plans
+              </Button>
+            </Link>
+          </div>
         </motion.div>
       </div>
     </section>
