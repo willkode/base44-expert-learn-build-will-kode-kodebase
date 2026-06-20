@@ -18,6 +18,7 @@ import {
   Video,
   Megaphone,
   ShieldHalf,
+  DollarSign,
 } from "lucide-react";
 
 export const userNav = [
@@ -47,6 +48,7 @@ export const adminNav = [
   { label: "Templates", to: "/admin/templates", icon: LayoutTemplate },
   { label: "Videos", to: "/admin/videos", icon: Video },
   { label: "Marketing", to: "/admin/marketing", icon: Megaphone },
+  { label: "Sales & Orders", to: "/admin/sales", icon: DollarSign },
   { label: "Security", to: "/admin/security", icon: ShieldHalf },
   { label: "System Settings", to: "/admin/settings", icon: Cog },
 ];

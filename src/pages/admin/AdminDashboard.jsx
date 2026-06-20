@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Users, FolderKanban, Boxes, ScrollText, Wand2, ShieldAlert, ClipboardCheck } from "lucide-react";
+import { Users, FolderKanban, Boxes, ScrollText, Wand2, ShieldAlert, ClipboardCheck, DollarSign } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/shared/PageHeader";
 import StatCard from "@/components/shared/StatCard";
@@ -19,8 +19,11 @@ export default function AdminDashboard() {
       base44.entities.SecurityFinding.list("-created_date", 500),
       base44.entities.QAItem.list("-created_date", 500),
       base44.entities.AgentRun.list("-created_date", 500),
-    ]).then(([users, projects, blueprints, packs, findings, qa, runs]) => {
+      base44.entities.Payment.filter({ status: "completed" }, "-created_date", 500),
+    ]).then(([users, projects, blueprints, packs, findings, qa, runs, sales]) => {
       setStats({
+        sales: sales.length,
+        revenue: sales.reduce((s, p) => s + (p.amountCents || 0), 0),
         users: users.length,
         projects: projects.length,
         blueprints: blueprints.length,
@@ -48,6 +51,7 @@ export default function AdminDashboard() {
             <StatCard icon={ShieldAlert} label="Security Findings" value={stats.findings} />
             <StatCard icon={ClipboardCheck} label="QA Items" value={stats.qa} />
             <Link to="/admin/logs"><StatCard icon={ScrollText} label="AI Runs" value={stats.runs} /></Link>
+            <Link to="/admin/sales"><StatCard icon={DollarSign} label="Total Sales" value={`$${((stats.revenue || 0) / 100).toFixed(2)}`} /></Link>
           </div>
 
           <div>
