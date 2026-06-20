@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { X } from "lucide-react";
+import { X, Sparkles } from "lucide-react";
 
 const CATEGORIES = [
   "Development", "Business", "SEO", "Marketing", "AI & Prompting",
@@ -20,6 +20,7 @@ export default function VaultPromptFormDialog({ open, onOpenChange, prompt, onSa
   const [form, setForm] = useState(blank);
   const [tagInput, setTagInput] = useState("");
   const [saving, setSaving] = useState(false);
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     if (prompt) {
@@ -43,6 +44,51 @@ export default function VaultPromptFormDialog({ open, onOpenChange, prompt, onSa
     }
   };
   const removeTag = (t) => set("tags", form.tags.filter((x) => x !== t));
+
+  const generateWithAI = async () => {
+    if (!form.prompt_body.trim()) {
+      toast.error("Paste a prompt body first");
+      return;
+    }
+    setGenerating(true);
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are a metadata generator for a premium prompt vault. Given the following prompt text, generate a JSON object with these fields:
+- title: a concise, compelling title (max 10 words)
+- description: a short one-sentence explanation of what the prompt does (max 20 words)
+- category: pick exactly one from: Development, Business, SEO, Marketing, AI & Prompting, Productivity, Sales, Content, Design, Security, Other
+- tags: an array of 3–5 relevant lowercase keyword tags
+
+Prompt text:
+"""
+${form.prompt_body}
+"""
+
+Return only the JSON object, no extra text.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            title: { type: "string" },
+            description: { type: "string" },
+            category: { type: "string" },
+            tags: { type: "array", items: { type: "string" } }
+          }
+        }
+      });
+      setForm((f) => ({
+        ...f,
+        title: result.title || f.title,
+        description: result.description || f.description,
+        category: CATEGORIES.includes(result.category) ? result.category : f.category,
+        tags: Array.isArray(result.tags) ? result.tags : f.tags,
+      }));
+      toast.success("Metadata generated!");
+    } catch (err) {
+      toast.error("AI generation failed");
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   const save = async () => {
     if (!form.title.trim() || !form.prompt_body.trim()) {
@@ -131,7 +177,20 @@ export default function VaultPromptFormDialog({ open, onOpenChange, prompt, onSa
 
           {/* Prompt body */}
           <div className="space-y-1.5">
-            <Label>Prompt Body <span className="text-destructive">*</span></Label>
+            <div className="flex items-center justify-between">
+              <Label>Prompt Body <span className="text-destructive">*</span></Label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={generateWithAI}
+                disabled={generating || !form.prompt_body.trim()}
+                className="gap-1.5 text-xs text-primary hover:text-primary h-7 px-2"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                {generating ? "Generating…" : "Generate metadata with AI"}
+              </Button>
+            </div>
             <Textarea
               value={form.prompt_body}
               onChange={(e) => set("prompt_body", e.target.value)}
