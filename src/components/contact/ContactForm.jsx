@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2, Mail, MessageCircle } from "lucide-react";
 import { trackFormStart, trackFormSubmit, trackFormError, trackLead } from "@/lib/analytics";
 
 export default function ContactForm() {
@@ -56,7 +56,43 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-2xl border border-border bg-card p-6 md:p-8 space-y-5">
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+      {/* Contact Info — right side on desktop, top on mobile */}
+      <div className="lg:col-span-2 lg:order-2 space-y-6">
+        <div>
+          <h3 className="font-sora font-bold text-lg mb-1">Get in Touch</h3>
+          <p className="text-muted-foreground text-sm">Reach out directly — I respond within 24 hours.</p>
+        </div>
+        <a
+          href="mailto:iamwillkode@gmail.com"
+          className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 hover:border-primary/50 transition-colors group"
+        >
+          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+            <Mail className="w-5 h-5 text-primary" />
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground mb-0.5">Email</p>
+            <p className="text-sm font-medium group-hover:text-primary transition-colors">iamwillkode@gmail.com</p>
+          </div>
+        </a>
+        <a
+          href="https://wa.me/13343929401"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 hover:border-primary/50 transition-colors group"
+        >
+          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+            <MessageCircle className="w-5 h-5 text-primary" />
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground mb-0.5">WhatsApp</p>
+            <p className="text-sm font-medium group-hover:text-primary transition-colors">+1 (334) 392-9401</p>
+          </div>
+        </a>
+      </div>
+
+      {/* Form — left side */}
+      <form onSubmit={handleSubmit} className="lg:col-span-3 lg:order-1 rounded-2xl border border-border bg-card p-6 md:p-8 space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div className="space-y-2">
           <Label htmlFor="contact-name">Name</Label>
@@ -100,5 +136,6 @@ export default function ContactForm() {
         {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Send Message"}
       </Button>
     </form>
+    </div>
   );
 }
