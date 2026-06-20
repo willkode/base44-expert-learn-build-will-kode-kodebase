@@ -161,7 +161,7 @@ export default function ProMembership() {
           "name": "KodeBase Pro",
           "description": "Pro membership for the KodeBase platform. Includes Blueprint System, Prompt Engine, Prompt Vault, and priority support.",
           "brand": { "@type": "Brand", "name": "KodeBase" },
-          "offers": { "@type": "Offer", "price": "39.00", "priceCurrency": "USD", "priceSpecification": { "@type": "UnitPriceSpecification", "billingDuration": "P1M" } }
+          "offers": { "@type": "Offer", "price": "25.00", "priceCurrency": "USD", "priceSpecification": { "@type": "UnitPriceSpecification", "billingDuration": "P1M" } }
         }]}
       />
       <Navbar />

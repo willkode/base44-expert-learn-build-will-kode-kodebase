@@ -6,7 +6,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 // Amounts are ALWAYS resolved server-side — never trusted from the client.
 const PLAN_PRICING = {
   free: { amountCents: 1299, name: 'Solo', blueprintLimit: 1 },
-  pro: { amountCents: 3900, name: 'Pro', blueprintLimit: 25 },
+  pro: { amountCents: 2500, name: 'Pro', blueprintLimit: 25 },
   agency: { amountCents: 14900, name: 'Agency', blueprintLimit: 60 },
 };
 

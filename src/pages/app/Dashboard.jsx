@@ -23,8 +23,6 @@ export default function Dashboard() {
   const [security, setSecurity] = useState([]);
   const [hasVaultAccess, setHasVaultAccess] = useState(false);
 
-  const VAULT_PRODUCT_ID = "6a36c8c785752800bd7580be";
-
   useEffect(() => {
     const init = async () => {
       const [p, b, pk, s] = await Promise.all([
@@ -37,10 +35,10 @@ export default function Dashboard() {
       setBlueprints(b);
       setPacks(pk);
       setSecurity(s);
-      // Check vault access
+      // Check vault access (Pro membership OR one-time vault purchase)
       if (user?.id) {
-        const payments = await base44.entities.Payment.filter({ userId: user.id, productId: VAULT_PRODUCT_ID, status: "completed" }, "-created_date", 1);
-        setHasVaultAccess(payments.length > 0);
+        const res = await base44.functions.invoke("checkVaultAccess", {});
+        setHasVaultAccess(!!res.data?.hasAccess);
       }
       setLoading(false);
     };

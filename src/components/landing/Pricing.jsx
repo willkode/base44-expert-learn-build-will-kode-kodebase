@@ -18,7 +18,7 @@ export default function Pricing() {
   const navigate = useNavigate();
 
   const handleCTA = () => {
-    trackPricingPlanClick({ planId: "pro", planName: "Pro", price: 39 });
+    trackPricingPlanClick({ planId: "pro", planName: "Pro", price: 25 });
     navigate("/pro");
   };
 
@@ -54,7 +54,7 @@ export default function Pricing() {
           </div>
 
           <div className="flex items-end gap-1 mb-2 justify-center">
-            <span className="font-sora font-extrabold text-6xl">$39</span>
+            <span className="font-sora font-extrabold text-6xl">$25</span>
             <span className="text-muted-foreground mb-2">/mo</span>
           </div>
           <p className="text-muted-foreground text-sm mb-8">For freelance vibecoders who build seriously.</p>

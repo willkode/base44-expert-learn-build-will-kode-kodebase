@@ -26,6 +26,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
+    // Pro membership includes full Prompt Engine access — no per-pack unlock fee.
+    const profiles = await base44.asServiceRole.entities.UserProfile.filter({ userId: user.id });
+    const isPro = profiles[0]?.plan === 'pro';
+
     // Reconcile unlock from a completed Payment (in case the webhook flipped the
     // Payment but not the session, or vice versa).
     let unlocked = !!session.unlocked;
@@ -43,7 +47,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    const canSeeBodies = unlocked || isAdmin;
+    const canSeeBodies = unlocked || isAdmin || isPro;
 
     const prompts = await base44.entities.GeneratedPrompt.filter({ session_id: sessionId }, 'order_number');
     const safePrompts = prompts.map((p) => {
@@ -68,7 +72,7 @@ Deno.serve(async (req) => {
 
     return Response.json({
       success: true,
-      unlocked,
+      unlocked: canSeeBodies,
       isAdmin,
       session: {
         id: session.id,

@@ -102,9 +102,9 @@ export default function VaultAccess() {
     const init = async () => {
       const authed = await base44.auth.isAuthenticated();
       if (!authed) { navigate("/login?next=/vault/access"); return; }
-      const me = await base44.auth.me();
-      const payments = await base44.entities.Payment.filter({ userId: me.id, productId: PRODUCT_ID, status: "completed" }, "-created_date", 1);
-      if (payments.length === 0) { setHasAccess(false); setLoading(false); return; }
+      await base44.auth.me();
+      const res = await base44.functions.invoke("checkVaultAccess", {});
+      if (!res.data?.hasAccess) { setHasAccess(false); setLoading(false); return; }
       setHasAccess(true);
       const data = await base44.entities.VaultPrompt.filter({ published: true }, "order");
       setPrompts(data);
@@ -124,10 +124,13 @@ export default function VaultAccess() {
       <div className="max-w-md w-full rounded-2xl border border-border bg-card p-10 text-center">
         <Lock className="w-12 h-12 text-primary mx-auto mb-4" />
         <h1 className="font-sora font-bold text-2xl mb-2">Vault locked</h1>
-        <p className="text-muted-foreground text-sm mb-6">Get lifetime access for just $5 — 50% off the regular $10 price.</p>
+        <p className="text-muted-foreground text-sm mb-6">Included free with Pro membership — or get lifetime access for just $5 (50% off the regular $10).</p>
         <Button onClick={() => navigate(`/checkout?product=${PRODUCT_ID}`)} className="w-full font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90">
           Unlock for $5
         </Button>
+        <button onClick={() => navigate("/pro")} className="mt-3 text-sm text-primary hover:underline">
+          Or get it free with Pro →
+        </button>
       </div>
     </div>
   );

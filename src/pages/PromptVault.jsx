@@ -70,9 +70,8 @@ export default function PromptVault() {
     // Check if current user has paid
     base44.auth.isAuthenticated().then(async (authed) => {
       if (!authed) { setCheckingAccess(false); return; }
-      const me = await base44.auth.me();
-      const payments = await base44.entities.Payment.filter({ userId: me.id, productId: PRODUCT_ID, status: "completed" }, "-created_date", 1);
-      setHasAccess(payments.length > 0);
+      const res = await base44.functions.invoke("checkVaultAccess", {});
+      setHasAccess(!!res.data?.hasAccess);
       setCheckingAccess(false);
     }).catch(() => setCheckingAccess(false));
   }, []);

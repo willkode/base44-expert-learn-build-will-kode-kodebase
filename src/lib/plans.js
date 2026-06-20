@@ -27,7 +27,7 @@ export const PLANS = {
   pro: {
     id: "pro",
     name: "Pro",
-    price: "$39",
+    price: "$25",
     period: "/mo",
     desc: "For freelance vibecoders.",
     projectLimit: 25,

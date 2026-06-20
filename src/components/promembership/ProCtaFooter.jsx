@@ -23,7 +23,7 @@ export default function ProCtaFooter() {
           <Crown className="w-7 h-7 text-amber-400" />
         </div>
         <h2 className="font-sora font-bold text-2xl md:text-3xl mb-3">Not on Pro yet?</h2>
-        <p className="text-muted-foreground mb-8 max-w-md mx-auto">Upgrade to Pro for $39/mo and unlock the full KodeBase toolkit today.</p>
+        <p className="text-muted-foreground mb-8 max-w-md mx-auto">Upgrade to Pro for $25/mo and unlock the full KodeBase toolkit today.</p>
         <Link to="/pricing">
           <Button size="lg" className="bg-primary hover:bg-red-500 font-semibold px-10 shadow-lg shadow-red-600/30 transition-transform hover:-translate-y-0.5">
             Upgrade to Pro <ArrowRight className="w-4 h-4 ml-1" />
