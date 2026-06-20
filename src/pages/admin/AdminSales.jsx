@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/shared/PageHeader";
 import LoadingState from "@/components/shared/LoadingState";
-import { DollarSign, Search, ExternalLink, CheckCircle2, Clock, XCircle } from "lucide-react";
+import { DollarSign, Search, ExternalLink, CheckCircle2, Clock, XCircle, Send, X, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const STATUS_STYLES = {
   completed: "bg-green-500/15 text-green-400",
@@ -16,12 +17,102 @@ const StatusBadge = ({ status }) => (
   </span>
 );
 
+function SendPdfsModal({ onClose }) {
+  const [products, setProducts] = useState([]);
+  const [email, setEmail] = useState("");
+  const [selected, setSelected] = useState([]);
+  const [sending, setSending] = useState(false);
+  const [result, setResult] = useState(null);
+
+  useEffect(() => {
+    base44.entities.Product.filter({ deliversPdf: true }).then(setProducts);
+  }, []);
+
+  const toggle = (id) =>
+    setSelected((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
+
+  const handleSend = async () => {
+    if (!email || selected.length === 0) return;
+    setSending(true);
+    try {
+      const res = await base44.functions.invoke("sendProductPdfs", { email, productIds: selected });
+      setResult({ success: true, message: `Sent ${res.data.sent} PDF${res.data.sent !== 1 ? "s" : ""} to ${email}` });
+    } catch (e) {
+      setResult({ success: false, message: e.message || "Failed to send" });
+    }
+    setSending(false);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="bg-card border border-border rounded-2xl w-full max-w-md shadow-2xl">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+          <h2 className="font-sora font-bold text-lg">Send Product PDFs</h2>
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {result ? (
+          <div className="p-6 text-center">
+            <div className={`text-4xl mb-3`}>{result.success ? "✅" : "❌"}</div>
+            <p className={`font-semibold ${result.success ? "text-green-400" : "text-destructive"}`}>{result.message}</p>
+            <Button className="mt-6 w-full" variant="outline" onClick={onClose}>Close</Button>
+          </div>
+        ) : (
+          <div className="p-6 space-y-5">
+            <div>
+              <label className="text-sm font-medium text-foreground block mb-1.5">Customer Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="customer@example.com"
+                className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-foreground block mb-2">Select Products to Send</label>
+              <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                {products.map((p) => (
+                  <label key={p.id} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${selected.includes(p.id) ? "border-primary bg-primary/10" : "border-border bg-secondary/30 hover:border-primary/40"}`}>
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(p.id)}
+                      onChange={() => toggle(p.id)}
+                      className="accent-primary w-4 h-4 shrink-0"
+                    />
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{p.name}</p>
+                      <p className="text-xs text-muted-foreground">{p.pdfFileName}</p>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <Button
+              onClick={handleSend}
+              disabled={!email || selected.length === 0 || sending}
+              className="w-full"
+            >
+              {sending ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Sending…</> : <><Send className="w-4 h-4 mr-2" /> Send {selected.length > 0 ? `${selected.length} PDF${selected.length !== 1 ? "s" : ""}` : "PDFs"}</>}
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function AdminSales() {
   const [payments, setPayments] = useState([]);
   const [users, setUsers] = useState({});
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [showSendModal, setShowSendModal] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -60,9 +151,15 @@ export default function AdminSales() {
 
   return (
     <div>
-      <PageHeader title="Sales & Orders" description="All product and service purchases across users." />
+      {showSendModal && <SendPdfsModal onClose={() => setShowSendModal(false)} />}
+      <div className="flex items-start justify-between gap-4 mb-6">
+        <PageHeader title="Sales & Orders" description="All product and service purchases across users." />
+        <Button onClick={() => setShowSendModal(true)} className="shrink-0 mt-1">
+          <Send className="w-4 h-4 mr-2" /> Send PDFs
+        </Button>
+      </div>
 
-      {/* Summary cards */}
+      {/* Summary cards - note: PageHeader is now inside the flex row above */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         {[
           { label: "Total Revenue", value: formatCents(totalRevenue), icon: DollarSign, color: "text-green-400" },
