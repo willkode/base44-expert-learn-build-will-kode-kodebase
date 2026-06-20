@@ -7,6 +7,7 @@ import PageHeader from "@/components/shared/PageHeader";
 import AdminTable from "@/components/admin/AdminTable";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import UserDetailDrawer from "@/components/admin/users/UserDetailDrawer";
 
 const ROLES = ["user", "admin"];
 const PLANS = ["free", "pro", "agency"];
@@ -19,6 +20,7 @@ export default function AdminUsers() {
   const [plan, setPlan] = useState("all");
   const [role, setRole] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const load = () => {
     Promise.all([
@@ -92,20 +94,29 @@ export default function AdminUsers() {
         columns={["Name", "Email", "Joined", "Projects", "Role", "Plan"]}
         emptyIcon={Users}
         emptyTitle="No users found"
+        onRowClick={(u) => setSelectedUser(u)}
         renderRow={(u) => [
           <span className="font-medium">{u.full_name || "—"}</span>,
           <span className="text-muted-foreground">{u.email}</span>,
           <span className="text-muted-foreground text-sm">{u.created_date ? format(new Date(u.created_date), "MMM d, yyyy") : "—"}</span>,
           <span>{counts[u.id] || 0}</span>,
-          <Select value={u.role || "user"} onValueChange={(v) => update(u, { role: v })}>
+          <Select value={u.role || "user"} onValueChange={(v) => { v !== u.role && update(u, { role: v }); }} onClick={(e) => e.stopPropagation()}>
             <SelectTrigger className="w-28 h-8"><SelectValue /></SelectTrigger>
             <SelectContent>{ROLES.map((r) => <SelectItem key={r} value={r} className="capitalize">{r}</SelectItem>)}</SelectContent>
           </Select>,
-          <Select value={u.plan || "free"} onValueChange={(v) => update(u, { plan: v })}>
+          <Select value={u.plan || "free"} onValueChange={(v) => { v !== u.plan && update(u, { plan: v }); }} onClick={(e) => e.stopPropagation()}>
             <SelectTrigger className="w-28 h-8"><SelectValue /></SelectTrigger>
             <SelectContent>{PLANS.map((p) => <SelectItem key={p} value={p} className="capitalize">{p}</SelectItem>)}</SelectContent>
           </Select>,
         ]}
+      />
+
+      <UserDetailDrawer
+        user={selectedUser}
+        open={!!selectedUser}
+        onClose={() => setSelectedUser(null)}
+        projectCount={counts[selectedUser?.id] || 0}
+        onUpdated={load}
       />
     </div>
   );
