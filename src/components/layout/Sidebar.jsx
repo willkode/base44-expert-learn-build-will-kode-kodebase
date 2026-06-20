@@ -41,10 +41,10 @@ export default function Sidebar({ user, onNavigate }) {
     <div className="flex flex-col h-full bg-card/60 border-r border-border w-64">
       <NewProjectModal open={modalOpen} onOpenChange={setModalOpen} />
       <Link to="/dashboard" onClick={onNavigate} className="flex items-center gap-2.5 px-5 h-16 border-b border-border">
-        <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
-          <Compass className="w-5 h-5 text-primary-foreground" />
-        </div>
-        <span className="font-sora font-bold text-base tracking-tight leading-tight">Base44 Architect</span>
+        <img src="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/7ac1b8038_7feb47fe7_kode-base-logo-white.png" alt="KodeBase" className="h-8 w-auto" />
+        <span className="font-sora font-bold text-base tracking-tight">
+          <span className="text-white">KODE</span><span className="text-primary">BASE</span>
+        </span>
       </Link>
 
       <nav className="flex-1 overflow-y-auto px-3 py-5 space-y-1">
