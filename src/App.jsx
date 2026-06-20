@@ -120,6 +120,7 @@ import AdminPromptVault from '@/pages/admin/AdminPromptVault';
 import AdminAnalyticsPlan from '@/pages/admin/AdminAnalyticsPlan';
 import PromptVault from '@/pages/PromptVault';
 import VaultAccess from '@/pages/VaultAccess';
+import ProMembership from '@/pages/ProMembership';
 
 const AuthenticatedApp = () => {
   return (
@@ -151,6 +152,7 @@ const AuthenticatedApp = () => {
       <Route path="/tools/blueprint" element={<BlueprintTool />} />
       <Route path="/tools/prompt-generator" element={<PromptGenerator />} />
       <Route path="/vault" element={<PromptVault />} />
+      <Route path="/pro" element={<ProMembership />} />
 
       {/* Auth pages */}
       <Route path="/login" element={<Login />} />

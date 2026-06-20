@@ -20,6 +20,7 @@ import {
   ShieldHalf,
   DollarSign,
   Vault,
+  Crown,
 } from "lucide-react";
 
 export const userNav = [
@@ -28,6 +29,7 @@ export const userNav = [
   { label: "Projects", to: "/projects", icon: FolderKanban },
   { label: "Prompt Engine", to: "/tools/prompt-engine", icon: Wand2 },
   { label: "Prompt Vault", to: "/vault/access", icon: Vault },
+  { label: "Pro Membership", to: "/pro", icon: Crown },
   { label: "Resources/Learn", to: "/help", icon: GraduationCap },
   { label: "Settings", to: "/settings", icon: Settings },
 ];
