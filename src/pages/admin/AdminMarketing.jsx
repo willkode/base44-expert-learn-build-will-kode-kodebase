@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/shared/PageHeader";
 import MarketingToolCard from "@/components/admin/marketing/MarketingToolCard";
+import WallpaperCard from "@/components/admin/marketing/WallpaperCard";
 import { Mail, Share2, PenSquare, Library } from "lucide-react";
 
 const tools = [
@@ -48,6 +49,7 @@ export default function AdminMarketing() {
           <MarketingToolCard key={tool.title} {...tool} onClick={to ? () => navigate(to) : undefined} />
         ))}
       </div>
+      <WallpaperCard />
     </div>
   );
 }
