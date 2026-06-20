@@ -14,6 +14,7 @@ import ResendEmailDetails from "@/components/products/ResendEmailDetails";
 import TwilioSmsDetails from "@/components/products/TwilioSmsDetails";
 import SocialMediaDetails from "@/components/products/SocialMediaDetails";
 import SecurityLockdownDetails from "@/components/products/SecurityLockdownDetails";
+import PromptVaultDetails from "@/components/products/PromptVaultDetails";
 import { trackViewItem, trackSelectItem } from "@/lib/analytics";
 
 export default function ProductDetail() {
@@ -84,6 +85,8 @@ export default function ProductDetail() {
 
         {product.slug === "security-lockdown-pro" && <SecurityLockdownDetails />}
 
+        {product.slug === "prompt-vault" && <PromptVaultDetails onBuy={handleBuy} price={price} />}
+
         {product.description && (
           <div className="max-w-3xl mx-auto text-center mt-24 mb-16">
             <span className="text-sm font-semibold text-primary uppercase tracking-widest">Overview</span>
@@ -98,7 +101,9 @@ export default function ProductDetail() {
 
         <div className="max-w-2xl mx-auto text-center mt-24 rounded-2xl border border-border bg-card p-10 glow-orange">
           <h2 className="font-sora font-bold text-2xl md:text-3xl mb-3">
-            Ready to install your <span className="text-gradient-orange">marketing engine?</span>
+            {product.slug === "prompt-vault"
+              ? <>Ready to unlock the <span className="text-gradient-orange">Prompt Vault?</span></>
+              : <>Ready to install your <span className="text-gradient-orange">marketing engine?</span></>}
           </h2>
           <p className="text-muted-foreground mb-6">{product.supportNote || "One-time fee · Free support included"}</p>
           <Button
