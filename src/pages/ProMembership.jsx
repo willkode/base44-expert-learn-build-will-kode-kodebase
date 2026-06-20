@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import Seo from "@/components/seo/Seo";
 import { trackEvent } from "@/lib/analytics";
 import {
@@ -19,6 +17,10 @@ import {
   Phone,
   Percent,
 } from "lucide-react";
+import ProHero from "@/components/promembership/ProHero";
+import ProHighlights from "@/components/promembership/ProHighlights";
+import ProBenefitCard from "@/components/promembership/ProBenefitCard";
+import ProCtaFooter from "@/components/promembership/ProCtaFooter";
 
 const OG_IMAGE = "https://ucarecdn.com/b9e28e1f-6e6a-4f7d-bd60-4d7a5b5f1234/prokodebase.jpg";
 
@@ -140,11 +142,6 @@ const PLAN_HIGHLIGHTS = [
   { icon: CheckCircle2, label: "Reusable templates" },
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.5, delay: i * 0.1 } }),
-};
-
 export default function ProMembership() {
   useEffect(() => {
     trackEvent("view_pro_membership", { page_path: "/pro" });
@@ -168,128 +165,32 @@ export default function ProMembership() {
         }]}
       />
 
-      {/* Hero */}
-      <section className="relative min-h-[52vh] flex items-center justify-center overflow-hidden bg-background blueprint-grid">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
-        <div className="relative z-10 max-w-3xl mx-auto px-4 py-24 text-center">
-          <motion.div
-            variants={fadeUp} initial="hidden" animate="show" custom={0}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 mb-6"
-          >
-            <Crown className="w-3.5 h-3.5 text-amber-400" />
-            <span className="text-xs font-semibold tracking-widest text-amber-400 uppercase">Pro Membership</span>
-          </motion.div>
+      <ProHero />
 
-          <motion.h1
-            variants={fadeUp} initial="hidden" animate="show" custom={1}
-            className="font-sora font-bold text-4xl md:text-5xl lg:text-6xl leading-tight mb-5"
-          >
-            Everything you need to{" "}
-            <span className="text-gradient-orange">build faster</span>
-          </motion.h1>
-
-          <motion.p
-            variants={fadeUp} initial="hidden" animate="show" custom={2}
-            className="text-muted-foreground text-lg md:text-xl max-w-xl mx-auto mb-10"
-          >
-            Your Pro plan unlocks the full KodeBase stack — from idea to shipped app with structured blueprints, ordered prompts, a curated vault, and expert support.
-          </motion.p>
-
-          <motion.div
-            variants={fadeUp} initial="hidden" animate="show" custom={3}
-            className="flex flex-wrap gap-3 justify-center"
-          >
-            <Link to="/dashboard">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 font-semibold px-8 glow-orange">
-                Go to Dashboard <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </Link>
-            <Link to="/pricing">
-              <Button size="lg" variant="outline">View Plans</Button>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Plan highlights strip */}
-      <section className="border-y border-border bg-card/50 py-6">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {PLAN_HIGHLIGHTS.map(({ icon: Icon, label }, i) => (
-              <motion.div
-                key={label}
-                variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} custom={i * 0.05}
-                className="flex items-center gap-2 text-sm text-muted-foreground"
-              >
-                <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
-                <span>{label}</span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ProHighlights highlights={PLAN_HIGHLIGHTS} />
 
       {/* Benefit cards */}
-      <section className="max-w-6xl mx-auto px-4 py-20">
-        <div className="text-center mb-14">
-          <h2 className="font-sora font-bold text-3xl md:text-4xl mb-3">What's included in Pro</h2>
+      <section className="max-w-6xl mx-auto px-4 py-20 md:py-24">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-14"
+        >
+          <span className="text-xs font-semibold tracking-widest text-primary uppercase">Membership Perks</span>
+          <h2 className="font-sora font-bold text-3xl md:text-4xl mt-2 mb-3">What's included in Pro</h2>
           <p className="text-muted-foreground max-w-lg mx-auto">Six powerful perks, one plan. Here's everything you can do as a Pro member.</p>
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {BENEFITS.map(({ icon: Icon, title, badge, color, iconColor, description, features, cta }, i) => (
-            <motion.div
-              key={title}
-              variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} custom={i * 0.1}
-              className={`rounded-2xl border bg-gradient-to-br ${color} p-6 flex flex-col gap-5`}
-            >
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-card/60 border border-white/10 flex items-center justify-center shrink-0">
-                  <Icon className={`w-6 h-6 ${iconColor}`} />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-sora font-bold text-lg">{title}</h3>
-                    <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/10 text-white/70">{badge}</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
-                </div>
-              </div>
-
-              <ul className="space-y-2 pl-1">
-                {features.map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-sm text-foreground/80">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-auto">
-                <Link to={cta.href}>
-                  <Button size="sm" variant="outline" className="w-full border-white/10 hover:bg-white/5 font-medium">
-                    {cta.label} <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                  </Button>
-                </Link>
-              </div>
-            </motion.div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {BENEFITS.map((benefit, i) => (
+            <ProBenefitCard key={benefit.title} benefit={benefit} index={i} />
           ))}
         </div>
       </section>
 
-      {/* CTA footer */}
-      <section className="border-t border-border bg-card/30 py-16">
-        <div className="max-w-xl mx-auto px-4 text-center">
-          <Crown className="w-10 h-10 text-amber-400 mx-auto mb-4" />
-          <h2 className="font-sora font-bold text-2xl md:text-3xl mb-3">Not on Pro yet?</h2>
-          <p className="text-muted-foreground mb-8">Upgrade to Pro for $39/mo and unlock the full KodeBase toolkit today.</p>
-          <Link to="/pricing">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 font-semibold px-10 glow-orange">
-              Upgrade to Pro <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
-          </Link>
-        </div>
-      </section>
+      <ProCtaFooter />
     </>
   );
 }
