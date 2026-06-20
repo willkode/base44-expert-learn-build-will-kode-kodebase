@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Wand2, MessageSquare } from "lucide-react";
+import { ArrowRight, Wand2, MessageSquare, Crown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
 import { trackCTA } from "@/lib/analytics";
@@ -14,6 +14,11 @@ export default function PromptEngineHero() {
     const destination = isAuthenticated ? "/tools/prompt-engine" : "/register";
     trackCTA({ text: "Generate My Prompts", location: "prompt_engine_hero", destination });
     navigate(destination);
+  };
+
+  const upgradeCTA = () => {
+    trackCTA({ text: "Upgrade to Pro", location: "prompt_engine_hero", destination: "/pricing" });
+    navigate("/pricing");
   };
 
   const seeHow = () => {
@@ -34,9 +39,15 @@ export default function PromptEngineHero() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="max-w-3xl mx-auto"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-7 backdrop-blur-sm">
-            <Wand2 className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs font-semibold tracking-wide text-primary uppercase">The KodeBase Prompt Engine</span>
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-7">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 backdrop-blur-sm">
+              <Wand2 className="w-3.5 h-3.5 text-primary" />
+              <span className="text-xs font-semibold tracking-wide text-primary uppercase">The KodeBase Prompt Engine</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 backdrop-blur-sm">
+              <Crown className="w-3 h-3 text-amber-400" />
+              <span className="text-xs font-semibold tracking-wide text-amber-400 uppercase">Pro Feature</span>
+            </div>
           </div>
 
           <h1 className="font-sora font-extrabold text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight mb-6">
@@ -76,7 +87,7 @@ export default function PromptEngineHero() {
               Ready in minutes
             </span>
             <span className="hidden sm:block w-px h-4 bg-border" />
-            <span>One-time $10 unlock</span>
+            <span className="flex items-center gap-1.5"><Crown className="w-3.5 h-3.5 text-amber-400" /> Pro &amp; Agency plans</span>
             <span className="hidden sm:block w-px h-4 bg-border" />
             <span>Saved to your account forever</span>
           </div>
