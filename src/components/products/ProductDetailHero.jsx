@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { base44 } from "@/api/base44Client";
 
 export default function ProductDetailHero({ product, onBuy }) {
   const price = `$${(product.priceCents / 100).toFixed(product.priceCents % 100 === 0 ? 0 : 2)}`;
+  const [vaultCount, setVaultCount] = useState(null);
+
+  useEffect(() => {
+    if (product.slug === "prompt-vault") {
+      base44.entities.VaultPrompt.filter({ published: true }, "order", 200)
+        .then((prompts) => setVaultCount(prompts.length));
+    }
+  }, [product.slug]);
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
       <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
@@ -20,7 +29,14 @@ export default function ProductDetailHero({ product, onBuy }) {
         <h1 className="font-sora font-bold text-4xl md:text-5xl tracking-tight mb-5">
           {product.name.replace(" Pro", "")} <span className="text-gradient-orange">Pro</span>
         </h1>
-        <p className="text-lg text-muted-foreground mb-8">{product.tagline}</p>
+        <p className="text-lg text-muted-foreground mb-8">
+          {product.slug === "prompt-vault" && vaultCount !== null
+            ? product.tagline?.replace(/\d+\+?\s*prompt/i, `${vaultCount}+ prompt`) || product.tagline
+            : product.tagline}
+          {product.slug === "prompt-vault" && vaultCount !== null && (
+            <span className="block mt-2 text-sm font-semibold text-primary">{vaultCount} prompts available now</span>
+          )}
+        </p>
         <div className="flex items-end gap-2 mb-2">
           <span className="font-sora font-extrabold text-5xl">{price}</span>
           <span className="text-muted-foreground mb-2">one-time</span>
