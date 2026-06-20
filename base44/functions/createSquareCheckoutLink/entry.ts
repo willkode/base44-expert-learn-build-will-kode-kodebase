@@ -35,12 +35,21 @@ Deno.serve(async (req) => {
 
     const { planId, productId, serviceId, donationCents, promptSessionId, redirectUrl } = await req.json();
 
+    // Pro members get 40% off products and one-time services (not subscriptions,
+    // donations, or prompt packs). Plan is resolved server-side from the profile.
+    let isProMember = false;
+    try {
+      const profiles = await base44.asServiceRole.entities.UserProfile.filter({ userId: user.id });
+      isProMember = profiles[0]?.plan === 'pro';
+    } catch (_e) { isProMember = false; }
+    const applyProDiscount = (cents) => isProMember ? Math.round(cents * 0.6) : cents;
+
     let amountCents, itemName, productIdResolved = null, isDonation = false, promptSessionResolved = null;
     if (serviceId) {
       const service = SERVICE_PRICING[serviceId];
       if (!service) return Response.json({ error: 'Invalid service.' }, { status: 400 });
-      amountCents = service.amountCents;
-      itemName = service.name;
+      amountCents = applyProDiscount(service.amountCents);
+      itemName = isProMember ? `${service.name} (Pro 40% off)` : service.name;
     } else if (promptSessionId) {
       // Prompt Engine prompt pack — fixed $10 unlock. Verify the session belongs
       // to this user and has prompts generated before charging.
@@ -71,8 +80,8 @@ Deno.serve(async (req) => {
       const products = await base44.asServiceRole.entities.Product.filter({ id: productId });
       const product = products[0];
       if (!product || product.active === false) return Response.json({ error: 'Product not found.' }, { status: 404 });
-      amountCents = product.priceCents;
-      itemName = product.name;
+      amountCents = applyProDiscount(product.priceCents);
+      itemName = isProMember ? `${product.name} (Pro 40% off)` : product.name;
       productIdResolved = product.id;
     } else {
       return Response.json({ error: 'Invalid payment request.' }, { status: 400 });

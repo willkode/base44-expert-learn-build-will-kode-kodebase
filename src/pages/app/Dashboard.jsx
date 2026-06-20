@@ -11,6 +11,7 @@ import StartBlueprintCard from "@/components/dashboard/StartBlueprintCard";
 import HowItWorks from "@/components/dashboard/HowItWorks";
 import RecentPromptPacks from "@/components/dashboard/RecentPromptPacks";
 import PromptVaultBanner from "@/components/dashboard/PromptVaultBanner";
+import ProCallCard from "@/components/dashboard/ProCallCard";
 
 export default function Dashboard() {
   const { user } = useOutletContext();
@@ -82,6 +83,8 @@ export default function Dashboard() {
         <StatCard icon={Package} label="Prompt Packs Generated" value={packs.length} />
         <StatCard icon={ShieldCheck} label="Security Reviews" value={reviewedProjects} />
       </div>
+
+      <ProCallCard />
 
       <PromptVaultBanner hasAccess={hasVaultAccess} />
 

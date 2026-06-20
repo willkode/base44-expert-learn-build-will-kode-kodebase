@@ -43,6 +43,15 @@
     "usagePeriodStart": {
       "type": "string",
       "description": "ISO timestamp of the start of the current usage period"
+    },
+    "callCreditsUsed": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of free monthly 1hr call credits used in the current credit period"
+    },
+    "callCreditPeriodStart": {
+      "type": "string",
+      "description": "ISO timestamp of the start of the current monthly call-credit period"
     }
   },
   "required": [
