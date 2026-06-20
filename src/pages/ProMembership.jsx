@@ -16,6 +16,8 @@ import {
   Shield,
   FileCode2,
   Lock,
+  Phone,
+  Percent,
 } from "lucide-react";
 
 const OG_IMAGE = "https://ucarecdn.com/b9e28e1f-6e6a-4f7d-bd60-4d7a5b5f1234/prokodebase.jpg";
@@ -73,6 +75,40 @@ const BENEFITS = [
     cta: { label: "Browse the Vault", href: "/vault/access" },
   },
   {
+    icon: Phone,
+    title: "Monthly Strategy Call",
+    badge: "1 Free / Month",
+    color: "from-primary/20 to-amber-500/10 border-primary/20",
+    iconColor: "text-primary",
+    description:
+      "Every month, Pro members get one free 1-hour live call with Will — for build strategy, debugging, or a second opinion. Need more? Book extra sessions at your discounted Pro rate.",
+    features: [
+      "1 free 1-hour call every month",
+      "Live screen-share & build help",
+      "Strategy, debugging & planning",
+      "Extra calls at 40% off ($75)",
+      "Request directly from your dashboard",
+    ],
+    cta: { label: "Request a Call", href: "/dashboard" },
+  },
+  {
+    icon: Percent,
+    title: "40% Member Discount",
+    badge: "On Everything",
+    color: "from-amber-500/20 to-orange-600/10 border-amber-500/20",
+    iconColor: "text-amber-400",
+    description:
+      "Pro members save 40% on all products and services — prompt packs, audits, sessions, and more. The discount is applied automatically at checkout, no code needed.",
+    features: [
+      "40% off all products",
+      "40% off all services",
+      "Applied automatically at checkout",
+      "Stacks across the full catalog",
+      "Pays for itself fast",
+    ],
+    cta: { label: "Browse Products", href: "/products" },
+  },
+  {
     icon: HeadphonesIcon,
     title: "Priority Support",
     badge: "Pro Perk",
@@ -96,6 +132,8 @@ const PLAN_HIGHLIGHTS = [
   { icon: Layers, label: "25 blueprints / month" },
   { icon: Wand2, label: "Full Prompt Engine access" },
   { icon: Lock, label: "Prompt Vault access" },
+  { icon: Phone, label: "1 free 1-hour call / month" },
+  { icon: Percent, label: "40% off all products & services" },
   { icon: FileCode2, label: "Client-ready exports" },
   { icon: Shield, label: "Security reviews & QA checklists" },
   { icon: HeadphonesIcon, label: "Priority support" },
@@ -195,7 +233,7 @@ export default function ProMembership() {
       <section className="max-w-6xl mx-auto px-4 py-20">
         <div className="text-center mb-14">
           <h2 className="font-sora font-bold text-3xl md:text-4xl mb-3">What's included in Pro</h2>
-          <p className="text-muted-foreground max-w-lg mx-auto">Four powerful tools, one plan. Here's everything you can do as a Pro member.</p>
+          <p className="text-muted-foreground max-w-lg mx-auto">Six powerful perks, one plan. Here's everything you can do as a Pro member.</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
