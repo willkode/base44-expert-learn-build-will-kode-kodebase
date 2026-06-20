@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Users } from "lucide-react";
+import { format } from "date-fns";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import PageHeader from "@/components/shared/PageHeader";
@@ -16,6 +17,8 @@ export default function AdminUsers() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [plan, setPlan] = useState("all");
+  const [role, setRole] = useState("all");
+  const [sortBy, setSortBy] = useState("newest");
 
   const load = () => {
     Promise.all([
@@ -38,12 +41,21 @@ export default function AdminUsers() {
     load();
   };
 
-  const filtered = rows.filter((u) => {
-    const q = search.toLowerCase();
-    const matchSearch = !q || (u.full_name || "").toLowerCase().includes(q) || (u.email || "").toLowerCase().includes(q);
-    const matchPlan = plan === "all" || (u.plan || "free") === plan;
-    return matchSearch && matchPlan;
-  });
+  const filtered = rows
+    .filter((u) => {
+      const q = search.toLowerCase();
+      const matchSearch = !q || (u.full_name || "").toLowerCase().includes(q) || (u.email || "").toLowerCase().includes(q);
+      const matchPlan = plan === "all" || (u.plan || "free") === plan;
+      const matchRole = role === "all" || (u.role || "user") === role;
+      return matchSearch && matchPlan && matchRole;
+    })
+    .sort((a, b) => {
+      if (sortBy === "newest") return new Date(b.created_date) - new Date(a.created_date);
+      if (sortBy === "oldest") return new Date(a.created_date) - new Date(b.created_date);
+      if (sortBy === "name") return (a.full_name || "").localeCompare(b.full_name || "");
+      if (sortBy === "projects") return (counts[b.id] || 0) - (counts[a.id] || 0);
+      return 0;
+    });
 
   return (
     <div>
@@ -57,16 +69,33 @@ export default function AdminUsers() {
             {PLANS.map((p) => <SelectItem key={p} value={p} className="capitalize">{p}</SelectItem>)}
           </SelectContent>
         </Select>
+        <Select value={role} onValueChange={setRole}>
+          <SelectTrigger className="w-36"><SelectValue placeholder="Role" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All roles</SelectItem>
+            {ROLES.map((r) => <SelectItem key={r} value={r} className="capitalize">{r}</SelectItem>)}
+          </SelectContent>
+        </Select>
+        <Select value={sortBy} onValueChange={setSortBy}>
+          <SelectTrigger className="w-44"><SelectValue placeholder="Sort by" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="newest">Newest first</SelectItem>
+            <SelectItem value="oldest">Oldest first</SelectItem>
+            <SelectItem value="name">Name A–Z</SelectItem>
+            <SelectItem value="projects">Most projects</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <AdminTable
         loading={loading}
         rows={filtered}
-        columns={["Name", "Email", "Projects", "Role", "Plan"]}
+        columns={["Name", "Email", "Joined", "Projects", "Role", "Plan"]}
         emptyIcon={Users}
         emptyTitle="No users found"
         renderRow={(u) => [
           <span className="font-medium">{u.full_name || "—"}</span>,
           <span className="text-muted-foreground">{u.email}</span>,
+          <span className="text-muted-foreground text-sm">{u.created_date ? format(new Date(u.created_date), "MMM d, yyyy") : "—"}</span>,
           <span>{counts[u.id] || 0}</span>,
           <Select value={u.role || "user"} onValueChange={(v) => update(u, { role: v })}>
             <SelectTrigger className="w-28 h-8"><SelectValue /></SelectTrigger>
