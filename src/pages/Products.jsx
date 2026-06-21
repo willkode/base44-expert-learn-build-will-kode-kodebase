@@ -9,6 +9,7 @@ import LoadingState from "@/components/shared/LoadingState";
 import Seo from "@/components/seo/Seo";
 import { softwareApplicationSchema } from "@/lib/seo";
 import { trackSelectItem } from "@/lib/analytics";
+import FathersDayBanner from "@/components/products/FathersDayBanner";
 
 export default function Products() {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ export default function Products() {
         jsonLd={[softwareApplicationSchema()]}
       />
       <div className="max-w-7xl mx-auto">
+        <FathersDayBanner />
         <div className="max-w-3xl mx-auto text-center mb-16">
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">Products</span>
           <h1 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-5">
