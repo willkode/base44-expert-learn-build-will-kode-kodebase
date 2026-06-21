@@ -2,21 +2,34 @@ import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import Sidebar from "./Sidebar";
 import LoadingState from "@/components/shared/LoadingState";
 import Seo from "@/components/seo/Seo";
 
 export default function AppLayout() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Reuse the user already resolved by AuthProvider on app boot instead of
+  // firing a duplicate auth.me() round-trip on every authenticated page load.
+  const { user: authUser, isLoadingAuth } = useAuth();
+  const [user, setUser] = useState(authUser);
+  const [loading, setLoading] = useState(!authUser);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    base44.auth.me().then((u) => {
-      setUser(u);
+    if (authUser) {
+      setUser(authUser);
       setLoading(false);
-    });
-  }, []);
+      return;
+    }
+    // Fallback: context hasn't resolved a user yet (e.g. direct deep-link
+    // before AuthProvider finished). Only fetch if auth has settled with no user.
+    if (!isLoadingAuth) {
+      base44.auth.me().then((u) => {
+        setUser(u);
+        setLoading(false);
+      }).catch(() => setLoading(false));
+    }
+  }, [authUser, isLoadingAuth]);
 
   if (loading) {
     return (
