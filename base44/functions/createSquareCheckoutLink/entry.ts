@@ -17,7 +17,7 @@ const SERVICE_PRICING = {
   er_audit_fix: { amountCents: 12500, name: 'App Audit + Fix' },
   // Security Audit
   security_audit: { amountCents: 5000, name: 'Security Audit — Report + Fix Prompts' },
-  security_audit_fix: { amountCents: 12500, name: 'Security Audit + Fix' },
+  security_audit_fix: { amountCents: 6250, name: 'Security Audit + Fix (50% off)' },
   // SEO Audit
   seo_audit: { amountCents: 5000, name: 'SEO Audit — Report + Fix Prompts' },
   seo_audit_fix: { amountCents: 12500, name: 'SEO Audit + Fix' },
