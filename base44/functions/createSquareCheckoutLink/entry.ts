@@ -14,7 +14,7 @@ const PLAN_PRICING = {
 const SERVICE_PRICING = {
   // ER Service
   er_audit: { amountCents: 5000, name: 'App Audit — Report + Fix Prompts' },
-  er_audit_fix: { amountCents: 12500, name: 'App Audit + Fix' },
+  er_audit_fix: { amountCents: 6250, name: 'App Audit + Fix (50% off)' },
   // Security Audit
   security_audit: { amountCents: 5000, name: 'Security Audit — Report + Fix Prompts' },
   security_audit_fix: { amountCents: 6250, name: 'Security Audit + Fix (50% off)' },

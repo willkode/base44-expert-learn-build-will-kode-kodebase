@@ -64,9 +64,10 @@ const plans = [
   {
     title: "Audit + Fix",
     subtitle: "Report + direct fix implementation",
-    price: "$125",
+    price: "$62.50",
+    originalPrice: "$125",
     billing: "one-time",
-    badge: "Most popular",
+    badge: "50% OFF",
     features: [
       "Everything in Audit Only",
       "Will fixes all issues found",
@@ -254,8 +255,11 @@ export default function ErService() {
                 )}
                 <h3 className="font-sora font-bold text-xl mb-1">{plan.title}</h3>
                 <p className="text-sm text-muted-foreground mb-4">{plan.subtitle}</p>
-                <div className="flex items-baseline gap-1 mb-6">
+                <div className="flex items-baseline gap-2 mb-6">
                   <span className="font-sora font-extrabold text-4xl text-foreground">{plan.price}</span>
+                  {plan.originalPrice && (
+                    <span className="text-muted-foreground/60 text-lg line-through">{plan.originalPrice}</span>
+                  )}
                   <span className="text-muted-foreground text-sm">{plan.billing}</span>
                 </div>
                 <ul className="space-y-3 mb-8 flex-1">
