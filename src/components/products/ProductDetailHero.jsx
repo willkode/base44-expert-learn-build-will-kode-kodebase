@@ -38,7 +38,11 @@ export default function ProductDetailHero({ product, onBuy }) {
           )}
         </div>
         <h1 className="font-sora font-bold text-4xl md:text-5xl tracking-tight mb-5">
-          {product.name.replace(" Pro", "")} <span className="text-gradient-orange">Pro</span>
+          {product.name.includes(" Pro") ? (
+            <>{product.name.replace(" Pro", "")} <span className="text-gradient-orange">Pro</span></>
+          ) : (
+            product.name
+          )}
         </h1>
         <p className="text-lg text-muted-foreground mb-8">
           {product.slug === "prompt-vault" && vaultCount !== null

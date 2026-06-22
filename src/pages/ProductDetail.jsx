@@ -15,6 +15,7 @@ import TwilioSmsDetails from "@/components/products/TwilioSmsDetails";
 import SocialMediaDetails from "@/components/products/SocialMediaDetails";
 import SecurityLockdownDetails from "@/components/products/SecurityLockdownDetails";
 import PromptVaultDetails from "@/components/products/PromptVaultDetails";
+import VibeCodingBusinessOsDetails from "@/components/products/VibeCodingBusinessOsDetails";
 import { trackViewItem, trackSelectItem } from "@/lib/analytics";
 
 export default function ProductDetail() {
@@ -87,11 +88,15 @@ export default function ProductDetail() {
 
         {product.slug === "prompt-vault" && <PromptVaultDetails onBuy={handleBuy} price={price} />}
 
+        {product.slug === "vibe-coding-business-os" && <VibeCodingBusinessOsDetails />}
+
         {product.description && (
           <div className="max-w-3xl mx-auto text-center mt-24 mb-16">
             <span className="text-sm font-semibold text-primary uppercase tracking-widest">Overview</span>
             <h2 className="font-sora font-bold text-3xl md:text-4xl tracking-tight mt-4 mb-5">
-              One purchase. <span className="text-gradient-orange">Every engine.</span>
+              {product.slug === "kode-marketing-engine-pro"
+                ? <>One purchase. <span className="text-gradient-orange">Every engine.</span></>
+                : <>What's <span className="text-gradient-orange">inside.</span></>}
             </h2>
             <p className="text-lg text-muted-foreground">{product.description}</p>
           </div>
@@ -103,6 +108,8 @@ export default function ProductDetail() {
           <h2 className="font-sora font-bold text-2xl md:text-3xl mb-3">
             {product.slug === "prompt-vault"
               ? <>Ready to unlock the <span className="text-gradient-orange">Prompt Vault?</span></>
+              : product.slug === "vibe-coding-business-os"
+              ? <>Ready to build your <span className="text-gradient-orange">Business OS?</span></>
               : <>Ready to install your <span className="text-gradient-orange">marketing engine?</span></>}
           </h2>
           <p className="text-muted-foreground mb-6">{product.supportNote || "One-time fee · Free support included"}</p>
