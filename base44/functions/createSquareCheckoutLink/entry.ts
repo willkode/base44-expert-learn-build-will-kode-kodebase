@@ -48,8 +48,11 @@ Deno.serve(async (req) => {
     if (serviceId) {
       const service = SERVICE_PRICING[serviceId];
       if (!service) return Response.json({ error: 'Invalid service.' }, { status: 400 });
-      amountCents = applyProDiscount(service.amountCents);
-      itemName = isProMember ? `${service.name} (Pro 40% off)` : service.name;
+      // These services are already half-price promos — the Pro discount must not stack on top.
+      const noStackServices = ['er_audit_fix', 'security_audit_fix'];
+      const proEligible = isProMember && !noStackServices.includes(serviceId);
+      amountCents = proEligible ? Math.round(service.amountCents * 0.6) : service.amountCents;
+      itemName = proEligible ? `${service.name} (Pro 40% off)` : service.name;
     } else if (promptSessionId) {
       // Prompt Engine prompt pack — fixed $10 unlock. Verify the session belongs
       // to this user and has prompts generated before charging.
