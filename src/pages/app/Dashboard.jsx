@@ -12,6 +12,7 @@ import HowItWorks from "@/components/dashboard/HowItWorks";
 import RecentPromptPacks from "@/components/dashboard/RecentPromptPacks";
 import PromptVaultBanner from "@/components/dashboard/PromptVaultBanner";
 import ProCallCard from "@/components/dashboard/ProCallCard";
+import MyProducts from "@/components/dashboard/MyProducts";
 
 export default function Dashboard() {
   const { user } = useOutletContext();
@@ -85,6 +86,8 @@ export default function Dashboard() {
       <ProCallCard />
 
       <PromptVaultBanner hasAccess={hasVaultAccess} />
+
+      <MyProducts userId={user?.id} />
 
       <StartBlueprintCard />
 
