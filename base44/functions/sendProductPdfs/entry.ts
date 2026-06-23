@@ -26,33 +26,28 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No matching PDF products found' }, { status: 404 });
     }
 
-    // Generate signed URLs for each product's PDF
-    const links = [];
-    for (const product of selected) {
-      if (!product.pdfFileUri) continue;
-      const result = await base44.asServiceRole.integrations.Core.CreateFileSignedUrl({
-        file_uri: product.pdfFileUri,
-        expires_in: 60 * 60 * 24 * 7, // 7 days
-      });
-      links.push({ name: product.name, url: result.signed_url, fileName: product.pdfFileName });
-    }
-
-    if (links.length === 0) {
-      return Response.json({ error: 'No PDFs available for selected products' }, { status: 404 });
-    }
+    // Email a link back to the in-app Download page instead of raw signed media
+    // URLs. Raw signed URLs expire and fail ("token validation failed") once the
+    // email sits in an inbox; the Download page always mints fresh valid links
+    // for the authenticated buyer.
+    const appBase = (Deno.env.get('APP_PUBLIC_URL') || 'https://kodebase.us').replace(/\/$/, '');
+    const links = selected.map((product) => ({
+      name: product.name,
+      url: `${appBase}/download/${product.id}`,
+    }));
 
     // Build email HTML
     const linksHtml = links.map(l =>
       `<div style="margin:16px 0;padding:16px;background:#111827;border-radius:10px;border:1px solid #1e293b;">
         <a href="${l.url}" style="color:#fb923c;font-weight:600;font-size:15px;text-decoration:none;">📄 Download ${l.name}</a>
-        <p style="color:#64748b;font-size:12px;margin:4px 0 0;">${l.fileName} · Link valid for 7 days</p>
+        <p style="color:#64748b;font-size:12px;margin:4px 0 0;">Opens your secure download page</p>
       </div>`
     ).join('');
 
     const html = `
       <div style="background:#0d1326;color:#f8fafc;font-family:Inter,sans-serif;padding:40px 32px;max-width:600px;margin:0 auto;border-radius:16px;">
         <h1 style="color:#fb923c;font-size:24px;margin:0 0 8px;">Your KodeBase Download${links.length > 1 ? 's' : ''}</h1>
-        <p style="color:#94a3b8;margin:0 0 28px;font-size:15px;">Here are your product files. Each download link is valid for <strong style="color:#f8fafc;">7 days</strong>.</p>
+        <p style="color:#94a3b8;margin:0 0 28px;font-size:15px;">Tap a product below to open your secure download page and grab your files.</p>
         ${linksHtml}
         <hr style="border:none;border-top:1px solid #1e293b;margin:32px 0;" />
         <p style="color:#475569;font-size:12px;margin:0;">Questions? Contact us at <a href="https://kodebase.com/contact" style="color:#fb923c;">kodebase.com/contact</a></p>

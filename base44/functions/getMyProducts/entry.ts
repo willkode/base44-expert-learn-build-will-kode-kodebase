@@ -23,6 +23,9 @@ Deno.serve(async (req) => {
     const all = await base44.asServiceRole.entities.Product.list('-created_date', 500);
     const owned = all
       .filter((p) => productIds.includes(p.id))
+      // Prompt Vault has its own dedicated CTA on the dashboard above My Products,
+      // so it should not also appear in the My Products list.
+      .filter((p) => p.slug !== 'prompt-vault')
       .map((p) => ({
         id: p.id,
         name: p.name,
