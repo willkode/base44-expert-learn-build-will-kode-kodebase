@@ -1,8 +1,20 @@
 export const SUMMER_SALE_END_LABEL = "July 31";
-const SUMMER_SALE_END_AT = new Date("2026-08-01T04:59:59Z").getTime();
 
-export function isSummerSaleActive(now = Date.now()) {
-  return now <= SUMMER_SALE_END_AT;
+// The Summer Special runs through July 31. We anchor the deadline to the
+// current calendar year so the window is correct regardless of the runtime clock.
+function summerSaleEndAt(now = new Date()) {
+  const year = now.getFullYear();
+  // Aug 1, 00:00 local — i.e. end of July 31.
+  let end = new Date(year, 7, 1, 0, 0, 0, 0).getTime();
+  // If we're already in Aug–Dec, the sale targets next year's window.
+  if (now.getMonth() > 6) {
+    end = new Date(year + 1, 7, 1, 0, 0, 0, 0).getTime();
+  }
+  return end;
+}
+
+export function isSummerSaleActive(now = new Date()) {
+  return now.getTime() < summerSaleEndAt(now);
 }
 
 export function getProductSalePriceCents(priceCents) {

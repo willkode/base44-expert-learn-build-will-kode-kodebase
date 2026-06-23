@@ -27,6 +27,15 @@ const SERVICE_PRICING = {
   kode_session_2hr: { amountCents: 15000, name: 'Kode Session — 2 Hours' },
 };
 
+// Summer Special: 50% off all products through July 31, anchored to the current
+// calendar year so the window is correct regardless of when checkout runs.
+const isSummerProductSaleActive = () => {
+  const now = new Date();
+  const year = now.getMonth() > 6 ? now.getFullYear() + 1 : now.getFullYear();
+  const end = new Date(year, 7, 1, 0, 0, 0, 0); // Aug 1 local = end of Jul 31
+  return now < end;
+};
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -83,8 +92,13 @@ Deno.serve(async (req) => {
       const products = await base44.asServiceRole.entities.Product.filter({ id: productId });
       const product = products[0];
       if (!product || product.active === false) return Response.json({ error: 'Product not found.' }, { status: 404 });
-      amountCents = applyProDiscount(product.priceCents);
-      itemName = isProMember ? `${product.name} (Pro 40% off)` : product.name;
+      if (isSummerProductSaleActive()) {
+        amountCents = Math.round(product.priceCents * 0.5);
+        itemName = `${product.name} (Summer Special 50% off)`;
+      } else {
+        amountCents = applyProDiscount(product.priceCents);
+        itemName = isProMember ? `${product.name} (Pro 40% off)` : product.name;
+      }
       productIdResolved = product.id;
     } else {
       return Response.json({ error: 'Invalid payment request.' }, { status: 400 });
