@@ -16,6 +16,7 @@ import SocialMediaDetails from "@/components/products/SocialMediaDetails";
 import SecurityLockdownDetails from "@/components/products/SecurityLockdownDetails";
 import PromptVaultDetails from "@/components/products/PromptVaultDetails";
 import VibeCodingBusinessOsDetails from "@/components/products/VibeCodingBusinessOsDetails";
+import CustomOutreachEngineProDetails from "@/components/products/CustomOutreachEngineProDetails";
 import { trackViewItem, trackSelectItem } from "@/lib/analytics";
 
 export default function ProductDetail() {
@@ -89,6 +90,8 @@ export default function ProductDetail() {
         {product.slug === "prompt-vault" && <PromptVaultDetails onBuy={handleBuy} price={price} />}
 
         {product.slug === "vibe-coding-business-os" && <VibeCodingBusinessOsDetails />}
+
+        {product.slug === "custom-outreach-engine-pro" && <CustomOutreachEngineProDetails />}
 
         {product.description && (
           <div className="max-w-3xl mx-auto text-center mt-24 mb-16">
