@@ -19,7 +19,10 @@ export default function ProductDetailHero({ product, onBuy }) {
         .then((prompts) => setVaultCount(prompts.length));
     }
   }, [product.slug]);
-  const showRating = ["prompt-vault", "kode-marketing-engine-pro", "ai-drift-control-system"].includes(product.slug);
+  const fiveStarSlugs = ["prompt-vault", "kode-marketing-engine-pro", "ai-drift-control-system"];
+  const fourStarSlugs = ["ai-auto-blogging-system", "resend-email-marketing-system", "twilio-sms-marketing-system", "social-media-marketing-system"];
+  const rating = fiveStarSlugs.includes(product.slug) ? 5 : fourStarSlugs.includes(product.slug) ? 4 : 0;
+  const showRating = rating > 0;
   const isVault = product.slug === "prompt-vault";
   const vaultImage = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/01b4f78d8_image.png";
 
@@ -53,10 +56,13 @@ export default function ProductDetailHero({ product, onBuy }) {
           <div className="flex items-center gap-2 mb-5">
             <div className="flex items-center gap-0.5">
               {[0, 1, 2, 3, 4].map((i) => (
-                <Star key={i} className="w-5 h-5 fill-[#facc15] text-[#facc15]" />
+                <Star
+                  key={i}
+                  className={i < rating ? "w-5 h-5 fill-[#facc15] text-[#facc15]" : "w-5 h-5 text-muted-foreground/40"}
+                />
               ))}
             </div>
-            <span className="text-sm text-muted-foreground">5.0</span>
+            <span className="text-sm text-muted-foreground">{rating.toFixed(1)}</span>
           </div>
         )}
         <p className="text-lg text-muted-foreground mb-8">
