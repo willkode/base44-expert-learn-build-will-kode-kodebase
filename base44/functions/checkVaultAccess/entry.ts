@@ -28,11 +28,25 @@ Deno.serve(async (req) => {
     }
 
     const hasAccess = isPro || hasPurchase;
+
+    // When access is granted, return the published prompts via the service role.
+    // VaultPrompt RLS only lets admins / creators read directly, so a regular
+    // user granted access (Pro, purchase, or admin grant) needs them served here.
+    let prompts = [];
+    if (hasAccess) {
+      prompts = await base44.asServiceRole.entities.VaultPrompt.filter(
+        { published: true },
+        'order',
+        500
+      );
+    }
+
     return Response.json({
       hasAccess,
       isPro,
       hasPurchase,
       via: isPro ? 'pro' : (hasPurchase ? 'purchase' : null),
+      prompts,
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

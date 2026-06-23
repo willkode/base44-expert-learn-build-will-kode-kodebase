@@ -106,8 +106,9 @@ export default function VaultAccess() {
       const res = await base44.functions.invoke("checkVaultAccess", {});
       if (!res.data?.hasAccess) { setHasAccess(false); setLoading(false); return; }
       setHasAccess(true);
-      const data = await base44.entities.VaultPrompt.filter({ published: true }, "order");
-      setPrompts(data);
+      // Prompts are served by the access-gated backend (service role) so admin-granted
+      // and Pro users can read them despite VaultPrompt's admin/creator-only RLS.
+      setPrompts(res.data.prompts || []);
       setLoading(false);
     };
     init().catch(() => setLoading(false));
