@@ -74,15 +74,33 @@
     "deliversPdf": {
       "type": "boolean",
       "default": false,
-      "description": "Whether this product delivers a downloadable PDF after purchase"
+      "description": "Whether this product delivers downloadable file(s) after purchase"
     },
     "pdfFileUri": {
       "type": "string",
-      "description": "Private storage URI of the deliverable PDF (paid content)"
+      "description": "Legacy single-file private storage URI of the deliverable PDF (kept for back-compat)"
     },
     "pdfFileName": {
       "type": "string",
-      "description": "Friendly file name shown on download, e.g. prompt-pack.pdf"
+      "description": "Legacy single-file friendly name shown on download, e.g. prompt-pack.pdf"
+    },
+    "pdfFiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "fileUri": {
+            "type": "string",
+            "description": "Private storage URI of the deliverable file"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "Friendly file name shown on download"
+          }
+        }
+      },
+      "default": [],
+      "description": "Deliverable file(s) buyers receive after purchase"
     }
   },
   "required": [

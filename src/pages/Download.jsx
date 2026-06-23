@@ -16,6 +16,8 @@ export default function Download() {
   const [emailing, setEmailing] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [fileCount, setFileCount] = useState(0);
+  const [preparing, setPreparing] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -47,6 +49,7 @@ export default function Download() {
 
         if (result?.hasAccess) {
           setProduct({ name: result.productName, deliversPdf: result.deliversPdf });
+          setFileCount(result.fileCount || 0);
           trackEvent("download_page_view", { item_id: productId, item_name: result.productName });
         } else if (result?.error) {
           setAccessError(result.error);
@@ -62,26 +65,35 @@ export default function Download() {
     return () => { active = false; };
   }, [productId]);
 
+  const triggerDownload = (url, name) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = name;
+    link.target = "_blank";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleDownload = async () => {
+    setPreparing(true);
     let res;
     try {
       res = await base44.functions.invoke("getProductDownload", { productId });
     } catch (e) {
+      setPreparing(false);
       setAccessError(e?.response?.data?.error || "Something went wrong preparing your download.");
       return;
     }
+    setPreparing(false);
     if (res.data?.error) { setAccessError(res.data.error); return; }
     trackEvent("file_download", { item_id: productId, item_name: product?.name });
     if (/ai drift control/i.test(product?.name || "")) {
       trackEvent("drift_control_pdf_download", { item_id: productId, item_name: product?.name });
     }
-    const link = document.createElement("a");
-    link.href = res.data.downloadUrl;
-    link.download = res.data.fileName;
-    link.target = "_blank";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const downloads = res.data.files?.length ? res.data.files : [{ downloadUrl: res.data.downloadUrl, fileName: res.data.fileName }];
+    // Stagger multiple downloads so browsers don't block them as a popup burst.
+    downloads.forEach((f, i) => setTimeout(() => triggerDownload(f.downloadUrl, f.fileName), i * 400));
   };
 
   const handleEmail = async () => {
@@ -134,14 +146,18 @@ export default function Download() {
           <p className="text-muted-foreground text-sm mb-1">
             Your purchase of <span className="text-foreground font-medium">{product.name}</span> is complete.
           </p>
-          <p className="text-muted-foreground text-sm mb-8">Download your PDF below, or send it to your email.</p>
+          <p className="text-muted-foreground text-sm mb-8">
+            Download your file{fileCount > 1 ? "s" : ""} below, or send {fileCount > 1 ? "them" : "it"} to your email.
+          </p>
 
           <Button
             onClick={handleDownload}
+            disabled={preparing}
             size="lg"
             className="w-full font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
           >
-            <DownloadIcon className="w-4 h-4 mr-2" /> Download PDF
+            {preparing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <DownloadIcon className="w-4 h-4 mr-2" />}
+            {fileCount > 1 ? `Download ${fileCount} files` : "Download PDF"}
           </Button>
 
           <div className="mt-4">
@@ -152,7 +168,7 @@ export default function Download() {
             ) : (
               <Button onClick={handleEmail} disabled={emailing} variant="outline" size="lg" className="w-full">
                 {emailing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Mail className="w-4 h-4 mr-2" />}
-                Email PDF to {userEmail}
+                Email {fileCount > 1 ? "files" : "PDF"} to {userEmail}
               </Button>
             )}
           </div>

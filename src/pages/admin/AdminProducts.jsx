@@ -38,7 +38,11 @@ export default function AdminProducts() {
     (p) => !q || (p.name || "").toLowerCase().includes(q) || (p.slug || "").toLowerCase().includes(q)
   );
 
-  const withPdf = products.filter((p) => p.deliversPdf && p.pdfFileUri).length;
+  const fileCount = (p) => {
+    const arr = Array.isArray(p.pdfFiles) ? p.pdfFiles.filter((f) => f && f.fileUri).length : 0;
+    return arr > 0 ? arr : (p.pdfFileUri ? 1 : 0);
+  };
+  const withPdf = products.filter((p) => p.deliversPdf && fileCount(p) > 0).length;
 
   return (
     <div>
@@ -94,8 +98,8 @@ export default function AdminProducts() {
           p.deliversPdf
             ? <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/30 text-xs">Enabled</Badge>
             : <Badge variant="outline" className="text-muted-foreground text-xs">Off</Badge>,
-          p.pdfFileUri
-            ? <span className="inline-flex items-center gap-1.5 text-sm"><FileText className="w-4 h-4 text-primary" /><span className="truncate max-w-[160px]">{p.pdfFileName || "PDF uploaded"}</span></span>
+          fileCount(p) > 0
+            ? <span className="inline-flex items-center gap-1.5 text-sm"><FileText className="w-4 h-4 text-primary" />{fileCount(p)} file{fileCount(p) > 1 ? "s" : ""}</span>
             : <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground"><FileX className="w-4 h-4" /> None</span>,
           p.active === false
             ? <Badge variant="outline" className="text-muted-foreground text-xs">Inactive</Badge>
