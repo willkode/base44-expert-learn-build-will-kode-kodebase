@@ -9,6 +9,7 @@ import LoadingState from "@/components/shared/LoadingState";
 import Seo from "@/components/seo/Seo";
 import { softwareApplicationSchema } from "@/lib/seo";
 import { trackSelectItem } from "@/lib/analytics";
+import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 
 export default function Products() {
   const navigate = useNavigate();
@@ -80,10 +81,24 @@ export default function Products() {
                   <div className="flex flex-col gap-4">
                     <div className="flex items-end justify-between gap-4">
                       <div>
-                        <div className="flex items-end gap-1">
-                          <span className="font-sora font-extrabold text-3xl">${(p.priceCents / 100).toFixed(p.priceCents % 100 === 0 ? 0 : 2)}</span>
-                          <span className="text-muted-foreground mb-1 text-sm">one-time</span>
-                        </div>
+                        {isSummerSaleActive() ? (
+                          <>
+                            <Badge className="mb-1.5 text-[10px] bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
+                              Summer Special · 50% off
+                            </Badge>
+                            <div className="flex items-end gap-1.5">
+                              <span className="font-sora font-extrabold text-3xl">{formatUsd(getProductSalePriceCents(p.priceCents))}</span>
+                              <span className="text-muted-foreground mb-1 text-sm line-through">{formatUsd(p.priceCents)}</span>
+                              <span className="text-muted-foreground mb-1 text-sm">one-time</span>
+                            </div>
+                            <p className="text-xs text-primary mt-1">Sale ends {SUMMER_SALE_END_LABEL}</p>
+                          </>
+                        ) : (
+                          <div className="flex items-end gap-1">
+                            <span className="font-sora font-extrabold text-3xl">{formatUsd(p.priceCents)}</span>
+                            <span className="text-muted-foreground mb-1 text-sm">one-time</span>
+                          </div>
+                        )}
                         {p.supportNote && <p className="text-xs text-muted-foreground mt-1">{p.supportNote}</p>}
                       </div>
                       <Button

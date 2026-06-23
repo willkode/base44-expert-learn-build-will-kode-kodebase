@@ -4,9 +4,13 @@ import { Sparkles, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
+import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 
 export default function ProductDetailHero({ product, onBuy }) {
-  const price = `$${(product.priceCents / 100).toFixed(product.priceCents % 100 === 0 ? 0 : 2)}`;
+  const onSale = isSummerSaleActive();
+  const salePriceCents = getProductSalePriceCents(product.priceCents);
+  const price = formatUsd(salePriceCents);
+  const fullPrice = formatUsd(product.priceCents);
   const [vaultCount, setVaultCount] = useState(null);
 
   useEffect(() => {
@@ -52,8 +56,14 @@ export default function ProductDetailHero({ product, onBuy }) {
             <span className="block mt-2 text-sm font-semibold text-primary">{vaultCount} prompts available now</span>
           )}
         </p>
+        {onSale && (
+          <Badge className="mb-2 text-xs bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
+            <Sparkles className="w-3 h-3 mr-1" /> Summer Special · 50% off · ends {SUMMER_SALE_END_LABEL}
+          </Badge>
+        )}
         <div className="flex items-end gap-2 mb-2">
           <span className="font-sora font-extrabold text-5xl">{price}</span>
+          {onSale && <span className="text-muted-foreground mb-2 text-2xl line-through">{fullPrice}</span>}
           <span className="text-muted-foreground mb-2">one-time</span>
         </div>
         {product.supportNote && <p className="text-sm text-muted-foreground mb-6">{product.supportNote}</p>}

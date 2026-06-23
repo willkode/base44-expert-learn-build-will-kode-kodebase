@@ -6,6 +6,7 @@ import { PLANS } from "@/lib/plans";
 import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
 import { trackBeginCheckout, trackPurchase } from "@/lib/analytics";
+import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function Checkout() {
     if (plan) {
       trackBeginCheckout({ id: planId, name: `${plan.name} plan`, category: "subscription", price: parseFloat(plan.price.replace("$", "")) || 0 });
     } else if (product) {
-      trackBeginCheckout({ id: product.id, name: product.name, category: product.category, price: product.priceCents / 100 });
+      trackBeginCheckout({ id: product.id, name: product.name, category: product.category, price: getProductSalePriceCents(product.priceCents) / 100 });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planId, product?.id]);
@@ -138,7 +139,9 @@ export default function Checkout() {
     ? {
         name: product.name,
         desc: product.tagline,
-        priceLabel: `$${(product.priceCents / 100).toFixed(product.priceCents % 100 === 0 ? 0 : 2)}`,
+        priceLabel: formatUsd(getProductSalePriceCents(product.priceCents)),
+        fullPriceLabel: formatUsd(product.priceCents),
+        onSale: isSummerSaleActive(),
         periodLabel: " one-time",
         features: product.features || [],
         supportNote: product.supportNote,
@@ -211,10 +214,14 @@ export default function Checkout() {
           <div className="rounded-2xl border border-border bg-card/60 p-8">
             <h2 className="font-sora font-bold text-xl mb-1">{item.name}</h2>
             {item.desc && <p className="text-sm text-muted-foreground mb-5">{item.desc}</p>}
-            <div className="flex items-end gap-1 mb-2">
+            <div className="flex items-end gap-2 mb-2">
               <span className="font-sora font-extrabold text-4xl">{item.priceLabel}</span>
+              {item.onSale && <span className="text-muted-foreground mb-1.5 text-xl line-through">{item.fullPriceLabel}</span>}
               <span className="text-muted-foreground mb-1.5">{item.periodLabel}</span>
             </div>
+            {item.onSale && (
+              <p className="text-xs text-primary mb-1">Summer Special · 50% off · ends {SUMMER_SALE_END_LABEL}</p>
+            )}
             {item.supportNote && <p className="text-xs text-muted-foreground mb-4">{item.supportNote}</p>}
             <ul className="space-y-2.5 mt-4">
               {item.features.map((f) => (
