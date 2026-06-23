@@ -19,7 +19,7 @@ export default function ProductDetailHero({ product, onBuy }) {
         .then((prompts) => setVaultCount(prompts.length));
     }
   }, [product.slug]);
-  const fiveStarSlugs = ["prompt-vault", "kode-marketing-engine-pro", "ai-drift-control-system"];
+  const fiveStarSlugs = ["prompt-vault", "kode-marketing-engine-pro", "ai-drift-control-system", "security-lockdown-pro"];
   const fourStarSlugs = ["ai-auto-blogging-system", "resend-email-marketing-system", "twilio-sms-marketing-system", "social-media-marketing-system"];
   const rating = fiveStarSlugs.includes(product.slug) ? 5 : fourStarSlugs.includes(product.slug) ? 4 : 0;
   const showRating = rating > 0;
