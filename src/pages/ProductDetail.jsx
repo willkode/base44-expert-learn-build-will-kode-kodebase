@@ -18,6 +18,7 @@ import PromptVaultDetails from "@/components/products/PromptVaultDetails";
 import VibeCodingBusinessOsDetails from "@/components/products/VibeCodingBusinessOsDetails";
 import CustomOutreachEngineProDetails from "@/components/products/CustomOutreachEngineProDetails";
 import { trackViewItem, trackSelectItem } from "@/lib/analytics";
+import { getProductSalePriceCents, formatUsd, isSummerSaleActive } from "@/lib/summerSale";
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -51,7 +52,10 @@ export default function ProductDetail() {
     );
   }
 
-  const price = `$${(product.priceCents / 100).toFixed(product.priceCents % 100 === 0 ? 0 : 2)}`;
+  const onSale = isSummerSaleActive();
+  const salePriceCents = getProductSalePriceCents(product.priceCents);
+  const price = formatUsd(salePriceCents);
+  const fullPrice = formatUsd(product.priceCents);
   const handleBuy = () => {
     trackSelectItem({ id: product.id, name: product.name, category: product.category, price: product.priceCents / 100 });
     navigate(`/checkout?product=${product.id}`);
@@ -113,6 +117,8 @@ export default function ProductDetail() {
               ? <>Ready to unlock the <span className="text-gradient-orange">Prompt Vault?</span></>
               : product.slug === "vibe-coding-business-os"
               ? <>Ready to build your <span className="text-gradient-orange">Business OS?</span></>
+              : product.slug === "custom-outreach-engine-pro"
+              ? <>Ready to build your <span className="text-gradient-orange">outreach engine?</span></>
               : <>Ready to install your <span className="text-gradient-orange">marketing engine?</span></>}
           </h2>
           <p className="text-muted-foreground mb-6">{product.supportNote || "One-time fee · Free support included"}</p>
@@ -121,7 +127,7 @@ export default function ProductDetail() {
             onClick={handleBuy}
             className="font-semibold text-base px-8 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
           >
-            Buy Now — {price}
+            Buy Now — {onSale && <span className="line-through opacity-60 mr-1.5">{fullPrice}</span>}{price}
           </Button>
           <p className="text-xs text-muted-foreground mt-3 flex items-center justify-center gap-1">
             <Lock className="w-3 h-3" /> Secure checkout powered by Square
