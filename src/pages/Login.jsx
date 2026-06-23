@@ -9,11 +9,19 @@ import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { trackLogin } from "@/lib/analytics";
 
+// Only allow same-app redirect targets (must start with a single "/").
+function safeNext(raw) {
+  if (!raw) return "/dashboard";
+  const decoded = decodeURIComponent(raw);
+  return decoded.startsWith("/") && !decoded.startsWith("//") ? decoded : "/dashboard";
+}
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const next = safeNext(new URLSearchParams(window.location.search).get("next"));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +30,7 @@ export default function Login() {
     try {
       await base44.auth.loginViaEmailPassword(email, password);
       trackLogin("email");
-      window.location.href = "/dashboard";
+      window.location.href = next;
     } catch (err) {
       setError(err.message || "Invalid email or password");
     } finally {
@@ -32,7 +40,7 @@ export default function Login() {
 
   const handleGoogle = () => {
     trackLogin("google");
-    base44.auth.loginWithProvider("google", "/dashboard");
+    base44.auth.loginWithProvider("google", next);
   };
 
   return (
