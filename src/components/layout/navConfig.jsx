@@ -21,6 +21,7 @@ import {
   DollarSign,
   Vault,
   Crown,
+  Package,
 } from "lucide-react";
 
 export const userNav = [
@@ -54,6 +55,7 @@ export const adminNav = [
   { label: "Marketing", to: "/admin/marketing", icon: Megaphone },
   { label: "Prompt Vault", to: "/admin/prompt-vault", icon: Vault },
   { label: "Sales & Orders", to: "/admin/sales", icon: DollarSign },
+  { label: "Products & Downloads", to: "/admin/products", icon: Package },
   { label: "Security", to: "/admin/security", icon: ShieldHalf },
   { label: "System Settings", to: "/admin/settings", icon: Cog },
 ];
