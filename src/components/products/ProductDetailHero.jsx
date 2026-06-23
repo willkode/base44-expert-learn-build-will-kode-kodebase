@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Lock } from "lucide-react";
+import { Sparkles, Lock, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
@@ -19,6 +19,7 @@ export default function ProductDetailHero({ product, onBuy }) {
         .then((prompts) => setVaultCount(prompts.length));
     }
   }, [product.slug]);
+  const showRating = ["prompt-vault", "kode-marketing-engine-pro", "ai-drift-control-system"].includes(product.slug);
   const isVault = product.slug === "prompt-vault";
   const vaultImage = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/01b4f78d8_image.png";
 
@@ -48,6 +49,16 @@ export default function ProductDetailHero({ product, onBuy }) {
             product.name
           )}
         </h1>
+        {showRating && (
+          <div className="flex items-center gap-2 mb-5">
+            <div className="flex items-center gap-0.5">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <Star key={i} className="w-5 h-5 fill-[#facc15] text-[#facc15]" />
+              ))}
+            </div>
+            <span className="text-sm text-muted-foreground">5.0</span>
+          </div>
+        )}
         <p className="text-lg text-muted-foreground mb-8">
           {product.slug === "prompt-vault" && vaultCount !== null
             ? product.tagline?.replace(/\d+\+?\s*prompt/i, `${vaultCount}+ prompt`) || product.tagline
