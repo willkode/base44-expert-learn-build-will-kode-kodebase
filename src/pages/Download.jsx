@@ -29,10 +29,18 @@ export default function Download() {
         // record can also lag a few seconds behind the Square webhook, so we poll.
         let result = null;
         for (let attempt = 0; attempt < 8 && active; attempt++) {
-          const res = await base44.functions.invoke("getProductDownload", { productId, checkOnly: true });
-          if (res.data?.hasAccess) { result = res.data; break; }
+          // The probe returns 403 (no completed purchase yet) or 404 (product
+          // missing). Axios throws on those, so read the body from the error.
+          let data, statusCode;
+          try {
+            const res = await base44.functions.invoke("getProductDownload", { productId, checkOnly: true });
+            data = res.data; statusCode = res.status;
+          } catch (e) {
+            data = e?.response?.data; statusCode = e?.response?.status;
+          }
+          if (data?.hasAccess) { result = data; break; }
           // A non-access error (e.g. product missing) shouldn't be retried.
-          if (res.data?.error && res.status !== 403) { result = res.data; break; }
+          if (data?.error && statusCode !== 403) { result = data; break; }
           await new Promise((r) => setTimeout(r, 2500));
         }
         if (!active) return;
@@ -55,7 +63,13 @@ export default function Download() {
   }, [productId]);
 
   const handleDownload = async () => {
-    const res = await base44.functions.invoke("getProductDownload", { productId });
+    let res;
+    try {
+      res = await base44.functions.invoke("getProductDownload", { productId });
+    } catch (e) {
+      setAccessError(e?.response?.data?.error || "Something went wrong preparing your download.");
+      return;
+    }
     if (res.data?.error) { setAccessError(res.data.error); return; }
     trackEvent("file_download", { item_id: productId, item_name: product?.name });
     if (/ai drift control/i.test(product?.name || "")) {
@@ -72,7 +86,14 @@ export default function Download() {
 
   const handleEmail = async () => {
     setEmailing(true);
-    const res = await base44.functions.invoke("getProductDownload", { productId, sendEmail: true });
+    let res;
+    try {
+      res = await base44.functions.invoke("getProductDownload", { productId, sendEmail: true });
+    } catch (e) {
+      setEmailing(false);
+      setAccessError(e?.response?.data?.error || "Something went wrong sending your email.");
+      return;
+    }
     setEmailing(false);
     if (res.data?.error) { setAccessError(res.data.error); return; }
     trackEvent("download_emailed", { item_id: productId, item_name: product?.name });
