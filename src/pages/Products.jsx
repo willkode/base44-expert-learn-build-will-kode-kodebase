@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Check, Sparkles } from "lucide-react";
+import { Check, Sparkles, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
 import Seo from "@/components/seo/Seo";
@@ -16,6 +18,9 @@ export default function Products() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("all");
+  const [sort, setSort] = useState("featured");
 
   useEffect(() => {
     base44.entities.Product.filter({ active: true }, "order").then((items) => {
@@ -23,6 +28,28 @@ export default function Products() {
       setLoading(false);
     });
   }, []);
+
+  const categories = useMemo(
+    () => Array.from(new Set(products.map((p) => p.category).filter(Boolean))),
+    [products]
+  );
+
+  const visibleProducts = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    let list = products.filter((p) => {
+      const matchesCategory = category === "all" || p.category === category;
+      const matchesSearch =
+        !q ||
+        [p.name, p.tagline, p.description, ...(p.features || [])]
+          .filter(Boolean)
+          .some((t) => t.toLowerCase().includes(q));
+      return matchesCategory && matchesSearch;
+    });
+    if (sort === "price_asc") list = [...list].sort((a, b) => a.priceCents - b.priceCents);
+    else if (sort === "price_desc") list = [...list].sort((a, b) => b.priceCents - a.priceCents);
+    else if (sort === "name") list = [...list].sort((a, b) => a.name.localeCompare(b.name));
+    return list;
+  }, [products, search, category, sort]);
 
   return (
     <div className="pt-28 pb-24 px-6">
@@ -49,8 +76,45 @@ export default function Products() {
         {loading ? (
           <LoadingState label="Loading products..." />
         ) : (
+          <>
+          <div className="max-w-5xl mx-auto mb-10 flex flex-col md:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search products..."
+                className="pl-9"
+              />
+            </div>
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger className="w-full md:w-52">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All categories</SelectItem>
+                {categories.map((c) => (
+                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={sort} onValueChange={setSort}>
+              <SelectTrigger className="w-full md:w-52">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="featured">Featured</SelectItem>
+                <SelectItem value="price_asc">Price: Low to High</SelectItem>
+                <SelectItem value="price_desc">Price: High to Low</SelectItem>
+                <SelectItem value="name">Name: A–Z</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          {visibleProducts.length === 0 ? (
+            <p className="text-center text-muted-foreground py-16">No products match your search.</p>
+          ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {products.map((p, i) => (
+            {visibleProducts.map((p, i) => (
               <motion.div
                 key={p.id}
                 initial={{ opacity: 0, y: 30 }}
@@ -126,6 +190,8 @@ export default function Products() {
               </motion.div>
             ))}
           </div>
+          )}
+          </>
         )}
       </div>
     </div>
