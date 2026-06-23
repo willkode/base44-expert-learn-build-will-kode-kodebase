@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Download as DownloadIcon, Mail, CheckCircle2, Loader2, ArrowLeft } from "lucide-react";
+import { Download as DownloadIcon, Mail, CheckCircle2, Loader2, ArrowLeft, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
@@ -17,7 +17,9 @@ export default function Download() {
   const [emailSent, setEmailSent] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [fileCount, setFileCount] = useState(0);
-  const [preparing, setPreparing] = useState(false);
+  const [files, setFiles] = useState([]);
+  const [loadingFiles, setLoadingFiles] = useState(false);
+  const [downloadingIdx, setDownloadingIdx] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -51,6 +53,15 @@ export default function Download() {
           setProduct({ name: result.productName, deliversPdf: result.deliversPdf });
           setFileCount(result.fileCount || 0);
           trackEvent("download_page_view", { item_id: productId, item_name: result.productName });
+          // Fetch the signed file list so each file can be listed individually.
+          if (result.deliversPdf) {
+            setLoadingFiles(true);
+            try {
+              const dl = await base44.functions.invoke("getProductDownload", { productId });
+              if (active && dl.data?.files?.length) setFiles(dl.data.files);
+            } catch { /* surfaced when the user clicks a file */ }
+            if (active) setLoadingFiles(false);
+          }
         } else if (result?.error) {
           setAccessError(result.error);
         } else {
@@ -75,25 +86,27 @@ export default function Download() {
     document.body.removeChild(link);
   };
 
-  const handleDownload = async () => {
-    setPreparing(true);
-    let res;
+  const handleDownloadOne = async (idx) => {
+    const file = files[idx];
+    if (!file) return;
+    setDownloadingIdx(idx);
+    // Signed URLs are time-limited; re-fetch a fresh one right before download.
+    let fresh = file;
     try {
-      res = await base44.functions.invoke("getProductDownload", { productId });
+      const res = await base44.functions.invoke("getProductDownload", { productId });
+      if (res.data?.files?.[idx]) fresh = res.data.files[idx];
+      else if (res.data?.error) { setAccessError(res.data.error); setDownloadingIdx(null); return; }
     } catch (e) {
-      setPreparing(false);
       setAccessError(e?.response?.data?.error || "Something went wrong preparing your download.");
+      setDownloadingIdx(null);
       return;
     }
-    setPreparing(false);
-    if (res.data?.error) { setAccessError(res.data.error); return; }
-    trackEvent("file_download", { item_id: productId, item_name: product?.name });
+    trackEvent("file_download", { item_id: productId, item_name: product?.name, file_name: fresh.fileName });
     if (/ai drift control/i.test(product?.name || "")) {
       trackEvent("drift_control_pdf_download", { item_id: productId, item_name: product?.name });
     }
-    const downloads = res.data.files?.length ? res.data.files : [{ downloadUrl: res.data.downloadUrl, fileName: res.data.fileName }];
-    // Stagger multiple downloads so browsers don't block them as a popup burst.
-    downloads.forEach((f, i) => setTimeout(() => triggerDownload(f.downloadUrl, f.fileName), i * 400));
+    triggerDownload(fresh.downloadUrl, fresh.fileName);
+    setDownloadingIdx(null);
   };
 
   const handleEmail = async () => {
@@ -150,15 +163,32 @@ export default function Download() {
             Download your file{fileCount > 1 ? "s" : ""} below, or send {fileCount > 1 ? "them" : "it"} to your email.
           </p>
 
-          <Button
-            onClick={handleDownload}
-            disabled={preparing}
-            size="lg"
-            className="w-full font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
-          >
-            {preparing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <DownloadIcon className="w-4 h-4 mr-2" />}
-            {fileCount > 1 ? `Download ${fileCount} files` : "Download PDF"}
-          </Button>
+          {loadingFiles ? (
+            <div className="flex items-center justify-center py-4 text-muted-foreground text-sm">
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Preparing your files…
+            </div>
+          ) : (
+            <div className="space-y-2.5 text-left">
+              {files.map((f, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleDownloadOne(idx)}
+                  disabled={downloadingIdx !== null}
+                  className="w-full flex items-center gap-3 rounded-xl border border-border bg-secondary/40 px-4 py-3 hover:border-primary/50 hover:bg-secondary/70 transition-colors disabled:opacity-60"
+                >
+                  <div className="w-9 h-9 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
+                    <FileText className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="text-sm font-medium truncate flex-1">{f.fileName}</span>
+                  {downloadingIdx === idx ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-primary shrink-0" />
+                  ) : (
+                    <DownloadIcon className="w-4 h-4 text-primary shrink-0" />
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="mt-4">
             {emailSent ? (
