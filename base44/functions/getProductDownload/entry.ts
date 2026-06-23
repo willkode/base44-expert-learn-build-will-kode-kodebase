@@ -9,16 +9,18 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { productId, sendEmail } = await req.json();
+    const { productId, sendEmail, checkOnly } = await req.json();
     if (!productId) return Response.json({ error: 'Missing product.' }, { status: 400 });
 
     const products = await base44.asServiceRole.entities.Product.filter({ id: productId });
     const product = products[0];
-    if (!product || !product.deliversPdf || !product.pdfFileUri) {
-      return Response.json({ error: 'This product has no downloadable file.' }, { status: 404 });
+    if (!product) {
+      return Response.json({ error: 'We couldn\'t find that product.' }, { status: 404 });
     }
 
-    // Verify the user actually paid for this product.
+    // Verify the user actually paid for this product (resolved server-side with
+    // the service role so admin-granted purchases are matched the same way the
+    // dashboard "My Products" section resolves them).
     const payments = await base44.asServiceRole.entities.Payment.filter({
       userId: user.id,
       productId,
@@ -26,6 +28,22 @@ Deno.serve(async (req) => {
     });
     if (payments.length === 0) {
       return Response.json({ error: 'No completed purchase found for this product.' }, { status: 403 });
+    }
+
+    // Access-only probe used by the Download page to decide whether to show the
+    // "you're all set" view. Doesn't generate a signed URL.
+    if (checkOnly) {
+      return Response.json({
+        success: true,
+        hasAccess: true,
+        productName: product.name,
+        deliversPdf: !!(product.deliversPdf && product.pdfFileUri),
+        email: user.email,
+      });
+    }
+
+    if (!product.deliversPdf || !product.pdfFileUri) {
+      return Response.json({ error: 'This product has no downloadable file.' }, { status: 404 });
     }
 
     const signed = await base44.asServiceRole.integrations.Core.CreateFileSignedUrl({

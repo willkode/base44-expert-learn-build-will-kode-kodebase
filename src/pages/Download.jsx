@@ -23,31 +23,25 @@ export default function Download() {
       try {
         const me = await base44.auth.me();
         if (active) setUserEmail(me.email);
-        const products = await base44.entities.Product.filter({ id: productId });
-        if (!active) return;
-        const p = products[0];
-        if (!p) {
-          setAccessError("We couldn't find that product.");
-          return;
-        }
-        setProduct(p);
 
-        // The Payment record is written asynchronously by the Square webhook,
-        // which can lag a few seconds behind the post-checkout redirect.
-        // Poll for a completed purchase before showing the "unavailable" state.
-        let found = false;
+        // Access is resolved entirely server-side (service role) so admin-granted
+        // purchases are matched the same way the dashboard does. The Payment
+        // record can also lag a few seconds behind the Square webhook, so we poll.
+        let result = null;
         for (let attempt = 0; attempt < 8 && active; attempt++) {
-          const payments = await base44.entities.Payment.filter({
-            userId: me.id,
-            productId,
-            status: "completed",
-          });
-          if (payments.length > 0) { found = true; break; }
+          const res = await base44.functions.invoke("getProductDownload", { productId, checkOnly: true });
+          if (res.data?.hasAccess) { result = res.data; break; }
+          // A non-access error (e.g. product missing) shouldn't be retried.
+          if (res.data?.error && res.status !== 403) { result = res.data; break; }
           await new Promise((r) => setTimeout(r, 2500));
         }
         if (!active) return;
-        if (found) {
-          trackEvent("download_page_view", { item_id: productId, item_name: p.name });
+
+        if (result?.hasAccess) {
+          setProduct({ name: result.productName, deliversPdf: result.deliversPdf });
+          trackEvent("download_page_view", { item_id: productId, item_name: result.productName });
+        } else if (result?.error) {
+          setAccessError(result.error);
         } else {
           setAccessError("We couldn't find a completed purchase for this product on your account yet. If you just paid, please wait a moment and refresh.");
         }
