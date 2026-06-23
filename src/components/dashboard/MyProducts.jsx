@@ -18,19 +18,10 @@ export default function MyProducts({ userId }) {
     let active = true;
     (async () => {
       try {
-        const payments = await base44.entities.Payment.filter(
-          { userId, status: "completed" },
-          "-created_date",
-          200
-        );
-        const productIds = [...new Set(payments.map((p) => p.productId).filter(Boolean))];
-        if (productIds.length === 0) {
-          if (active) { setProducts([]); setLoading(false); }
-          return;
-        }
-        const all = await base44.entities.Product.list("-created_date", 200);
-        const owned = all.filter((p) => productIds.includes(p.id));
-        if (active) { setProducts(owned); setLoading(false); }
+        // Resolved server-side so manually-granted purchases (created_by an
+        // admin) still surface here regardless of client-side RLS read scope.
+        const res = await base44.functions.invoke("getMyProducts", {});
+        if (active) { setProducts(res.data?.products || []); setLoading(false); }
       } catch {
         if (active) setLoading(false);
       }
