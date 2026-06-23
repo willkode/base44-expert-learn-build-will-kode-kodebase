@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import SocialLinks from "@/components/landing/SocialLinks";
 import { trackCTA } from "@/lib/analytics";
+import SummerSaleBar from "@/components/landing/SummerSaleBar";
 
 const links = [
   { label: "Contact Me", to: "/contact" },
@@ -72,13 +73,15 @@ export default function Navbar() {
   const goDashboard = () => navigate("/dashboard");
 
   return (
-    <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-background/70 backdrop-blur-xl border-b border-border shadow-lg shadow-black/20"
-          : "bg-transparent border-b border-transparent"
-      }`}
-    >
+    <header className="fixed top-0 inset-x-0 z-50">
+      <SummerSaleBar />
+      <div
+        className={`transition-all duration-300 ${
+          scrolled
+            ? "bg-background/70 backdrop-blur-xl border-b border-border shadow-lg shadow-black/20"
+            : "bg-transparent border-b border-transparent"
+        }`}
+      >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
            <img src="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/7ac1b8038_7feb47fe7_kode-base-logo-white.png" alt="KodeBase" className="h-9 w-auto group-hover:scale-105 transition-transform" />
@@ -336,6 +339,7 @@ export default function Navbar() {
           </div>
         </div>
       )}
+      </div>
     </header>
   );
 }
