@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
 
     // 2) Generate copy + on-brand dark-themed HTML.
     const imageInstruction = featureImageUrl
-      ? `- At the very top of the email body, include the feature image as a full-width banner: <img src="${featureImageUrl}" alt="" style="width:100%;max-width:600px;display:block;border-radius:12px;" />.`
+      ? `- Do NOT include the feature image yourself; it is added automatically at the top.`
       : `- Do not include any image.`;
 
     const fullPrompt = `You are an expert email marketing copywriter and HTML email designer. Write a single ${typeText} marketing email based on this brief:
@@ -43,17 +43,18 @@ Deno.serve(async (req) => {
 Tone: ${toneText}.${brand}
 
 BRAND DESIGN SYSTEM (must be followed exactly in the HTML):
-- Dark tech aesthetic. Outer/background color: #0a0f1e. Main content container background: #0d1326.
+- Dark tech aesthetic on a transparent background (the outer wrapper and container are added automatically — do NOT add your own outer/background container, max-width wrapper, or <table>).
 - Body text color: #e2e8f0 (light slate). Muted text: #94a3b8.
 - Headings color: a warm gradient look — use #fb923c for headings (orange).
 - Primary call-to-action button: background gradient from #f87171 to #fb923c to #facc15 (use background:linear-gradient(90deg,#f87171,#fb923c,#facc15)), white text (#0a0f1e text is also acceptable for contrast), bold, rounded 8px, generous padding.
-- Subtle borders: #1e293b. Rounded corners (12px) on the content container.
-- Centered container max-width 600px. Readable font sizes (16px body, 26px+ headings). Use a system sans-serif font stack.
+- Subtle borders: #1e293b.
+- Readable font sizes (16px body, 26px+ headings). Use a system sans-serif font stack.
+- Center-align headings and the call-to-action button. Keep all content full-width within its column (no floats, no side columns, no fixed widths on text blocks).
 
 Requirements:
 - Write a compelling subject line (under 60 characters) optimized for high open rates.
 - Write short preview/preheader text (under 100 characters).
-- Write the email body as clean, responsive, INLINE-styled HTML matching the brand design system above. Do NOT include <html>, <head>, or <body> tags — only the inner content markup, wrapped in a centered dark container.
+- Write ONLY the inner content blocks as INLINE-styled HTML (headings, paragraphs, button). Do NOT include <html>, <head>, <body>, any wrapping <div>/<table> container, or any background color — those are added automatically. Just the content elements stacked vertically.
 ${imageInstruction}
 - Use href="#" placeholders for any links/buttons. Do not invent real URLs.
 - Do not include an unsubscribe footer; it is appended automatically.
@@ -74,7 +75,29 @@ Write the plain-text version as clean readable text (no HTML).`;
       },
     });
 
-    return Response.json({ success: true, featureImageUrl, ...result });
+    // Wrap the generated inner content in a deterministic, email-client-safe
+    // centered container so desktop + mobile render identically regardless of
+    // the markup the model returns.
+    const bannerHtml = featureImageUrl
+      ? `<img src="${featureImageUrl}" alt="" width="600" style="width:100%;max-width:600px;height:auto;display:block;border:0;border-radius:12px 12px 0 0;" />`
+      : '';
+
+    const wrappedHtml = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0a0f1e;margin:0;padding:24px 0;">
+  <tr>
+    <td align="center" style="padding:0 12px;">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background-color:#0d1326;border:1px solid #1e293b;border-radius:12px;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#e2e8f0;">
+        ${bannerHtml ? `<tr><td style="padding:0;">${bannerHtml}</td></tr>` : ''}
+        <tr>
+          <td style="padding:32px 28px;font-size:16px;line-height:1.6;color:#e2e8f0;">
+            ${result.htmlContent || ''}
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>`;
+
+    return Response.json({ success: true, featureImageUrl, ...result, htmlContent: wrappedHtml });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
