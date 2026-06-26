@@ -56,6 +56,13 @@ export default function AgentSkills() {
             <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
               Reusable skills and capabilities to make your AI agents smarter and more reliable. Copy a build prompt, drop in the recommended model, and ship.
             </p>
+            {!loading && skills.length > 0 && (
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 mt-7">
+                <Sparkles className="w-3.5 h-3.5 text-primary" />
+                <span className="text-sm font-semibold text-gradient-orange">{skills.length}</span>
+                <span className="text-sm text-muted-foreground">skill{skills.length !== 1 ? "s" : ""} and counting</span>
+              </div>
+            )}
           </motion.div>
         </div>
       </section>
