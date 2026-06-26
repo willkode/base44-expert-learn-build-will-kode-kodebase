@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import Seo from "@/components/seo/Seo";
 import LoadingState from "@/components/shared/LoadingState";
 import AgentSkillCard from "@/components/learn/AgentSkillCard";
+import SkillReviewPanel from "@/components/learn/SkillReviewPanel";
 import { trackEvent } from "@/lib/analytics";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/b1ec637c7_generated_image.png";
@@ -15,13 +16,18 @@ export default function AgentSkills() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterCat, setFilterCat] = useState("all");
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    trackEvent("view_agent_skills", { page_path: "/learn/agent-skills" });
+  const loadSkills = () =>
     base44.entities.AgentSkill.filter({ published: true }, "order", 200)
       .then(setSkills)
       .catch(() => {})
       .finally(() => setLoading(false));
+
+  useEffect(() => {
+    trackEvent("view_agent_skills", { page_path: "/learn/agent-skills" });
+    loadSkills();
+    base44.auth.me().then((u) => setIsAdmin(u?.role === "admin")).catch(() => setIsAdmin(false));
   }, []);
 
   const categories = ["all", ...Array.from(new Set(skills.map((s) => s.category).filter(Boolean)))];
@@ -70,6 +76,9 @@ export default function AgentSkills() {
       {/* Body */}
       <section className="px-6 pb-24">
         <div className="max-w-5xl mx-auto">
+          {isAdmin && (
+            <SkillReviewPanel existingTitles={skills.map((s) => s.title)} onChanged={loadSkills} />
+          )}
           {loading ? (
             <LoadingState label="Loading agent skills…" />
           ) : skills.length === 0 ? (
