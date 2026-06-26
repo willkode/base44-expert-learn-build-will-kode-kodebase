@@ -54,6 +54,7 @@ export const adminNav = [
   { label: "Videos", to: "/admin/videos", icon: Video },
   { label: "Marketing", to: "/admin/marketing", icon: Megaphone },
   { label: "Prompt Vault", to: "/admin/prompt-vault", icon: Vault },
+  { label: "Agent Skills", to: "/admin/agent-skills", icon: Sparkles },
   { label: "Sales & Orders", to: "/admin/sales", icon: DollarSign },
   { label: "Products & Downloads", to: "/admin/products", icon: Package },
   { label: "Security", to: "/admin/security", icon: ShieldHalf },

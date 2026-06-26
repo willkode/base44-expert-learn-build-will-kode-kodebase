@@ -1,0 +1,64 @@
+{
+  "name": "AgentSkill",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Short descriptive title for the skill"
+    },
+    "category": {
+      "type": "string",
+      "description": "Primary category (e.g. Development, Business, SEO, Marketing, AI & Prompting, Productivity)"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Searchable tags"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short explanation of what the skill does"
+    },
+    "prompt_body": {
+      "type": "string",
+      "description": "The full prompt used to build the skill"
+    },
+    "recommended_model": {
+      "type": "string",
+      "description": "Recommended AI model to use with this skill (e.g. GPT-4o, Claude 3.5 Sonnet)"
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    },
+    "published": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this skill is visible on the public Agent Skills page"
+    }
+  },
+  "required": [
+    "title",
+    "prompt_body"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "$and": [
+        {
+          "created_by_id": {
+            "$ne": "anonymous"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
