@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
-import { Sparkles, Plus, Pencil, Trash2, Eye, EyeOff, Tag } from "lucide-react";
+import { Sparkles, Plus, Pencil, Trash2, Eye, EyeOff, Tag, ClipboardPaste } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import AdminTable from "@/components/admin/AdminTable";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import AgentSkillFormDialog from "@/components/admin/skills/AgentSkillFormDialog";
+import BulkPasteSkillsDialog from "@/components/admin/skills/BulkPasteSkillsDialog";
 
 export default function AdminAgentSkills() {
   const [skills, setSkills] = useState([]);
@@ -19,6 +20,7 @@ export default function AdminAgentSkills() {
   const [search, setSearch] = useState("");
   const [filterCat, setFilterCat] = useState("all");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [bulkOpen, setBulkOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
@@ -62,9 +64,14 @@ export default function AdminAgentSkills() {
         title="Agent Skills"
         description={`${skills.length} skill${skills.length !== 1 ? "s" : ""} · shown on the public Agent Skills page`}
         actions={
-          <Button onClick={openNew} className="gap-2">
-            <Plus className="w-4 h-4" /> Add Skill
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={() => setBulkOpen(true)} variant="outline" className="gap-2">
+              <ClipboardPaste className="w-4 h-4" /> Import skills
+            </Button>
+            <Button onClick={openNew} className="gap-2">
+              <Plus className="w-4 h-4" /> Add Skill
+            </Button>
+          </div>
         }
       />
 
@@ -146,6 +153,8 @@ export default function AdminAgentSkills() {
       />
 
       <AgentSkillFormDialog open={dialogOpen} onOpenChange={setDialogOpen} skill={editing} onSaved={load} />
+
+      <BulkPasteSkillsDialog open={bulkOpen} onOpenChange={setBulkOpen} onImported={load} />
 
       <AlertDialog open={!!deleteTarget} onOpenChange={(o) => !o && setDeleteTarget(null)}>
         <AlertDialogContent>
