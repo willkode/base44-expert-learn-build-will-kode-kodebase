@@ -4,14 +4,19 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/analytics";
 
-export default function AiControlPromptCard({ item }) {
+export default function AiControlPromptCard({ item, unlocked, onCopyRequest }) {
   const [copied, setCopied] = useState(false);
 
-  const copy = () => {
+  const doCopy = () => {
     navigator.clipboard.writeText(item.prompt);
     setCopied(true);
     trackEvent("copy_ai_control_prompt", { prompt_id: item.id, page_path: "/learn/ai-controls" });
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const copy = () => {
+    if (unlocked) doCopy();
+    else onCopyRequest(doCopy);
   };
 
   return (

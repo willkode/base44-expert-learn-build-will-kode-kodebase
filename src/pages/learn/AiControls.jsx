@@ -1,21 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { ShieldCheck, Search } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
 import Seo from "@/components/seo/Seo";
 import AiControlPromptCard from "@/components/learn/AiControlPromptCard";
+import NewsletterGateDialog from "@/components/learn/NewsletterGateDialog";
 import { AI_CONTROL_PROMPTS } from "@/components/learn/aiControlPrompts";
 import { trackEvent } from "@/lib/analytics";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/afd514d60_generated_image.png";
+const STORAGE_KEY = "kb_newsletter_subscribed";
 
 export default function AiControls() {
   const [search, setSearch] = useState("");
   const [filterCat, setFilterCat] = useState("all");
+  const [unlocked, setUnlocked] = useState(false);
+  const [gateOpen, setGateOpen] = useState(false);
+  const pendingCopy = useRef(null);
 
   useEffect(() => {
     trackEvent("view_ai_controls", { page_path: "/learn/ai-controls" });
+    if (localStorage.getItem(STORAGE_KEY)) setUnlocked(true);
+    base44.auth.isAuthenticated().then((authed) => {
+      if (authed) setUnlocked(true);
+    }).catch(() => {});
   }, []);
+
+  const handleCopyRequest = (doCopy) => {
+    pendingCopy.current = doCopy;
+    setGateOpen(true);
+  };
+
+  const handleSubscribed = () => {
+    localStorage.setItem(STORAGE_KEY, "1");
+    setUnlocked(true);
+    if (pendingCopy.current) {
+      pendingCopy.current();
+      pendingCopy.current = null;
+    }
+  };
 
   const categories = ["all", ...Array.from(new Set(AI_CONTROL_PROMPTS.map((p) => p.category)))];
   const filtered = AI_CONTROL_PROMPTS.filter((p) => {
@@ -91,11 +115,15 @@ export default function AiControls() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filtered.map((p) => <AiControlPromptCard key={p.id} item={p} />)}
+              {filtered.map((p) => (
+                <AiControlPromptCard key={p.id} item={p} unlocked={unlocked} onCopyRequest={handleCopyRequest} />
+              ))}
             </div>
           )}
         </div>
       </section>
+
+      <NewsletterGateDialog open={gateOpen} onOpenChange={setGateOpen} onSubscribed={handleSubscribed} />
     </div>
   );
 }
