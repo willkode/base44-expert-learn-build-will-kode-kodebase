@@ -17,6 +17,9 @@ import SecurityLockdownDetails from "@/components/products/SecurityLockdownDetai
 import PromptVaultDetails from "@/components/products/PromptVaultDetails";
 import VibeCodingBusinessOsDetails from "@/components/products/VibeCodingBusinessOsDetails";
 import CustomOutreachEngineProDetails from "@/components/products/CustomOutreachEngineProDetails";
+import MonetizationEngineDetails from "@/components/products/MonetizationEngineDetails";
+import AgentWorkforceDetails from "@/components/products/AgentWorkforceDetails";
+import ClientPortalDetails from "@/components/products/ClientPortalDetails";
 import { trackViewItem, trackSelectItem } from "@/lib/analytics";
 import { getProductSalePriceCents, formatUsd, isSummerSaleActive } from "@/lib/summerSale";
 
@@ -97,6 +100,12 @@ export default function ProductDetail() {
 
         {product.slug === "custom-outreach-engine-pro" && <CustomOutreachEngineProDetails />}
 
+        {product.slug === "saas-monetization-engine-pro" && <MonetizationEngineDetails />}
+
+        {product.slug === "ai-agent-workforce-system" && <AgentWorkforceDetails />}
+
+        {product.slug === "client-portal-white-label-system" && <ClientPortalDetails />}
+
         {product.description && (
           <div className="max-w-3xl mx-auto text-center mt-24 mb-16">
             <span className="text-sm font-semibold text-primary uppercase tracking-widest">Overview</span>
@@ -119,6 +128,12 @@ export default function ProductDetail() {
               ? <>Ready to build your <span className="text-gradient-orange">Business OS?</span></>
               : product.slug === "custom-outreach-engine-pro"
               ? <>Ready to build your <span className="text-gradient-orange">outreach engine?</span></>
+              : product.slug === "saas-monetization-engine-pro"
+              ? <>Ready to start <span className="text-gradient-orange">getting paid?</span></>
+              : product.slug === "ai-agent-workforce-system"
+              ? <>Ready to hire your <span className="text-gradient-orange">AI workforce?</span></>
+              : product.slug === "client-portal-white-label-system"
+              ? <>Ready to deliver like an <span className="text-gradient-orange">agency?</span></>
               : <>Ready to install your <span className="text-gradient-orange">marketing engine?</span></>}
           </h2>
           <p className="text-muted-foreground mb-6">{product.supportNote || "One-time fee · Free support included"}</p>
