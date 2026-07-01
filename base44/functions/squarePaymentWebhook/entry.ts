@@ -44,6 +44,7 @@ Deno.serve(async (req) => {
 
     // Fetch the order to read the metadata we attached at checkout-link creation.
     let metadata = {};
+    let lineItemName = '';
     if (payment.order_id) {
       const orderRes = await fetch(`${baseUrl}/v2/orders/${payment.order_id}`, {
         headers: {
@@ -53,23 +54,59 @@ Deno.serve(async (req) => {
       });
       const orderBody = await orderRes.json();
       metadata = orderBody?.order?.metadata || {};
+      lineItemName = orderBody?.order?.line_items?.[0]?.name || '';
     }
 
-    const userId = metadata.base44UserId;
+    let userId = metadata.base44UserId || null;
+    let userEmail = metadata.base44UserEmail || payment.buyer_email_address || '';
     const planId = metadata.planId || null;
-    const productId = metadata.productId || null;
+    let productId = metadata.productId || null;
     const promptSessionId = metadata.promptSessionId || null;
-    const itemName = metadata.itemName || 'Purchase';
+    const itemName = metadata.itemName || lineItemName || 'Purchase';
     const amountCents = payment.amount_money?.amount || 0;
 
+    // Fallback attribution — Square doesn't always echo order metadata back on
+    // payment-link orders. Match the buyer by email (we pre-populate it at
+    // checkout) so real purchases are never silently dropped.
+    if (!userId && userEmail) {
+      const users = await base44.asServiceRole.entities.User.filter({ email: userEmail });
+      if (users[0]) userId = users[0].id;
+    }
+
+    // Fallback product resolution — match the line-item name (minus promo
+    // suffixes) against the product catalog so buyers get assigned the product.
+    if (!productId && !planId && !promptSessionId && !metadata.serviceId && !metadata.donation) {
+      const cleanName = (metadata.itemName || lineItemName || '')
+        .replace(/\s*\((Summer Special 50% off|Pro 40% off)\)\s*$/, '')
+        .trim();
+      if (cleanName) {
+        const products = await base44.asServiceRole.entities.Product.list('-created_date', 500);
+        const match = products.find((p) => p.name === cleanName);
+        if (match) productId = match.id;
+      }
+    }
+
     if (!userId) {
-      // Nothing to attribute to — acknowledge so Square stops retrying.
+      // Could not match a user — record it anyway for admin review instead of
+      // dropping the payment, then acknowledge so Square stops retrying.
+      await base44.asServiceRole.entities.Payment.create({
+        userId: 'external_square',
+        userEmail: userEmail || 'unknown',
+        productId: productId || undefined,
+        itemName,
+        amountCents,
+        currency: 'USD',
+        squarePaymentId: payment.id,
+        squareReceiptUrl: payment.receipt_url || '',
+        status: 'completed',
+        errorMessage: 'Unattributed — no matching app user; review in Admin > Sales',
+      });
       return Response.json({ received: true, unattributed: true });
     }
 
     await base44.asServiceRole.entities.Payment.create({
       userId,
-      userEmail: metadata.base44UserEmail || '',
+      userEmail: userEmail || '',
       planId: planId || undefined,
       productId: productId || undefined,
       promptSessionId: promptSessionId || undefined,

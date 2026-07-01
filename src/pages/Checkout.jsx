@@ -67,8 +67,10 @@ export default function Checkout() {
             category: plan ? "subscription" : product?.category,
             price: (pay.amountCents || 0) / 100,
           });
-          if (productId && product?.deliversPdf) {
-            navigate(`/download/${productId}`);
+          if (productId) {
+            // Product purchases land on the dashboard, where My Products lists
+            // everything they own with download access.
+            navigate("/dashboard");
             return;
           }
           setDone(pay);
