@@ -70,7 +70,7 @@ export default function Checkout() {
           if (productId) {
             // Product purchases land on the dashboard, where My Products lists
             // everything they own with download access.
-            navigate("/dashboard");
+            navigate(`/dashboard?purchase=success&item=${encodeURIComponent(product?.name || pay.itemName || "")}`);
             return;
           }
           setDone(pay);

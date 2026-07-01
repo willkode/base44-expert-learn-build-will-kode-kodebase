@@ -13,6 +13,7 @@ import RecentPromptPacks from "@/components/dashboard/RecentPromptPacks";
 import PromptVaultBanner from "@/components/dashboard/PromptVaultBanner";
 import ProCallCard from "@/components/dashboard/ProCallCard";
 import MyProducts from "@/components/dashboard/MyProducts";
+import PurchaseThankYouDialog from "@/components/dashboard/PurchaseThankYouDialog";
 
 export default function Dashboard() {
   const { user } = useOutletContext();
@@ -53,6 +54,7 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
+      <PurchaseThankYouDialog />
       <div className="flex items-start justify-between gap-4 mb-10 flex-wrap">
         <PageHeader
           title={`Welcome${user?.full_name ? `, ${user.full_name.split(" ")[0]}` : ""}`}
