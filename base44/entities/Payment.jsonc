@@ -17,6 +17,10 @@
       "type": "string",
       "description": "Product id, if a one-time product purchase"
     },
+    "promptSessionId": {
+      "type": "string",
+      "description": "PromptGeneratorSession id, if a prompt pack unlock purchase"
+    },
     "itemName": {
       "type": "string",
       "description": "Human-readable name of what was purchased"
@@ -57,7 +61,7 @@
           "created_by_id": "{{user.id}}"
         },
         {
-          "userId": "{{user.id}}"
+          "data.userId": "{{user.id}}"
         },
         {
           "user_condition": {
