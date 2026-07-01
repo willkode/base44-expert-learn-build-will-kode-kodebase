@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, Bot, DraftingCompass, Wand2, Headphones, Wrench, Shield, TrendingUp, Monitor, Heart } from "lucide-react";
+import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, ShieldCheck, DraftingCompass, Wand2, Headphones, Wrench, Shield, TrendingUp, Monitor, Heart } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import {
   DropdownMenu,
@@ -37,7 +37,7 @@ const learnLinks = [
   { label: "Agent Skills", to: "/learn/agent-skills", icon: Sparkles, desc: "Expert playbooks the AI uses on demand", badge: "NEW" },
   { label: "Prompt Library", to: "/learn/prompt-library", icon: Library, desc: "Expert prompts by Will Kode", badge: "NEW" },
   { label: "AI LLM Guide", to: "/learn/llm-guide", icon: Settings2, desc: "Pick the right model for the job", badge: "NEW" },
-  { label: "SuperAgent", to: "/learn/superagent", icon: Bot, desc: "Base44 AI Agent overview", badge: "B44" },
+  { label: "AI Controls", to: "/learn/ai-controls", icon: ShieldCheck, desc: "Free prompts to keep AI builds on track", badge: "NEW" },
 ];
 
 function LearnBadge({ badge }) {

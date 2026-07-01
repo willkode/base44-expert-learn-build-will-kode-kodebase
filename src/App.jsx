@@ -26,6 +26,7 @@ import PromptLibrary from '@/pages/learn/PromptLibrary';
 import PromptPostDetail from '@/pages/learn/PromptPostDetail';
 import AgentSkills from '@/pages/learn/AgentSkills';
 import SuperAgent from '@/pages/learn/SuperAgent';
+import AiControls from '@/pages/learn/AiControls';
 import Videos from '@/pages/learn/Videos';
 
 import LlmGuide from '@/pages/learn/LlmGuide';
@@ -142,6 +143,7 @@ const AuthenticatedApp = () => {
         <Route path="/learn/prompt-library/:slug" element={<PromptPostDetail />} />
         <Route path="/learn/agent-skills" element={<AgentSkills />} />
         <Route path="/learn/superagent" element={<SuperAgent />} />
+        <Route path="/learn/ai-controls" element={<AiControls />} />
         <Route path="/learn/videos" element={<Videos />} />
 
         <Route path="/learn/llm-guide" element={<LlmGuide />} />
