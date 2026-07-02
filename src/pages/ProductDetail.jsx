@@ -20,6 +20,7 @@ import CustomOutreachEngineProDetails from "@/components/products/CustomOutreach
 import MonetizationEngineDetails from "@/components/products/MonetizationEngineDetails";
 import AgentWorkforceDetails from "@/components/products/AgentWorkforceDetails";
 import ClientPortalDetails from "@/components/products/ClientPortalDetails";
+import MobileApprovalKitDetails from "@/components/products/MobileApprovalKitDetails";
 import { trackViewItem, trackSelectItem } from "@/lib/analytics";
 import { getProductSalePriceCents, formatUsd, isSummerSaleActive } from "@/lib/summerSale";
 
@@ -106,6 +107,8 @@ export default function ProductDetail() {
 
         {product.slug === "client-portal-white-label-system" && <ClientPortalDetails />}
 
+        {product.slug === "mobile-app-store-approval-kit" && <MobileApprovalKitDetails />}
+
         {product.description && (
           <div className="max-w-3xl mx-auto text-center mt-24 mb-16">
             <span className="text-sm font-semibold text-primary uppercase tracking-widest">Overview</span>
@@ -134,6 +137,8 @@ export default function ProductDetail() {
               ? <>Ready to hire your <span className="text-gradient-orange">AI workforce?</span></>
               : product.slug === "client-portal-white-label-system"
               ? <>Ready to deliver like an <span className="text-gradient-orange">agency?</span></>
+              : product.slug === "mobile-app-store-approval-kit"
+              ? <>Ready to get <span className="text-gradient-orange">approved?</span></>
               : <>Ready to install your <span className="text-gradient-orange">marketing engine?</span></>}
           </h2>
           <p className="text-muted-foreground mb-6">{product.supportNote || "One-time fee · Free support included"}</p>
