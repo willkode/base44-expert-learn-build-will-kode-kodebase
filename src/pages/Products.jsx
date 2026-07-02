@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
+
+const MotionLink = motion(Link);
 import { Check, Sparkles, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -115,12 +117,13 @@ export default function Products() {
           ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {visibleProducts.map((p, i) => (
-              <motion.div
+              <MotionLink
                 key={p.id}
+                to={`/products/${p.slug}`}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="rounded-2xl border border-border bg-card/60 overflow-hidden flex flex-col hover:border-primary/40 transition-all duration-300 hover:-translate-y-1"
+                className="rounded-2xl border border-border bg-card/60 overflow-hidden flex flex-col hover:border-primary/40 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
               >
                 {p.imageUrl && (
                   <img src={p.imageUrl} alt={p.name} className="w-full aspect-video object-cover" />
@@ -168,7 +171,9 @@ export default function Products() {
                         {p.supportNote && <p className="text-xs text-muted-foreground mt-1">{p.supportNote}</p>}
                       </div>
                       <Button
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
                           trackSelectItem({ id: p.id, name: p.name, category: p.category, price: p.priceCents / 100 });
                           navigate(`/checkout?product=${p.id}`);
                         }}
@@ -178,7 +183,11 @@ export default function Products() {
                       </Button>
                     </div>
                     <Button
-                      onClick={() => navigate(`/products/${p.slug}`)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        navigate(`/products/${p.slug}`);
+                      }}
                       variant="outline"
                       size="sm"
                       className="w-full"
@@ -187,7 +196,7 @@ export default function Products() {
                     </Button>
                   </div>
                 </div>
-              </motion.div>
+              </MotionLink>
             ))}
           </div>
           )}
