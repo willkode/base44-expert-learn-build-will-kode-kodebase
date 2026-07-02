@@ -227,7 +227,7 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <div className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border px-6 py-5 space-y-1">
+        <div className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border px-6 py-5 space-y-1 max-h-[calc(100vh-4rem)] overflow-y-auto overscroll-contain">
           <div className="pt-2 pb-1">
              <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Learn</p>
             {learnLinks.map((l) => (
