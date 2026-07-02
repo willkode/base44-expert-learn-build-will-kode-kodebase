@@ -67,6 +67,19 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Record the delivery for admin download tracking (time/date + IP).
+    const ip = (req.headers.get('x-forwarded-for') || '').split(',')[0].trim()
+      || req.headers.get('x-real-ip') || 'unknown';
+    await base44.asServiceRole.entities.DownloadLog.create({
+      userId: user.id,
+      userEmail: user.email || '',
+      productId: product.id,
+      productName: product.name,
+      fileCount: files.length,
+      emailed: !!sendEmail,
+      ip,
+    });
+
     let emailed = false;
     if (sendEmail) {
       const linkLines = files.map((f) => `${f.fileName}:\n${f.downloadUrl}`).join('\n\n');

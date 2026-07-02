@@ -1,0 +1,47 @@
+{
+  "name": "DownloadLog",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "description": "Downloading user id"
+    },
+    "userEmail": {
+      "type": "string"
+    },
+    "productId": {
+      "type": "string"
+    },
+    "productName": {
+      "type": "string"
+    },
+    "fileCount": {
+      "type": "number",
+      "default": 1
+    },
+    "emailed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the download links were also emailed to the user"
+    },
+    "ip": {
+      "type": "string",
+      "description": "Requesting IP address"
+    }
+  },
+  "required": [
+    "userId"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

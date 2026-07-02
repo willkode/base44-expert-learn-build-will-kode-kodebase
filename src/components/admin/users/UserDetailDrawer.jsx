@@ -6,7 +6,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Package, FolderOpen, Calendar, Mail, User, ShieldCheck } from "lucide-react";
+import { Loader2, Package, FolderOpen, Calendar, Mail, User, ShieldCheck, Download, Globe } from "lucide-react";
 
 const ROLES = ["user", "admin"];
 const PLANS = ["free", "pro", "agency"];
@@ -14,6 +14,7 @@ const PLANS = ["free", "pro", "agency"];
 export default function UserDetailDrawer({ user, open, onClose, projectCount, onUpdated }) {
   const [products, setProducts] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [downloads, setDownloads] = useState([]);
   const [loadingData, setLoadingData] = useState(false);
   const [saving, setSaving] = useState(null); // productId being toggled
 
@@ -23,9 +24,11 @@ export default function UserDetailDrawer({ user, open, onClose, projectCount, on
     Promise.all([
       base44.entities.Product.filter({ active: true }),
       base44.entities.Payment.filter({ userId: user.id }),
-    ]).then(([prods, pays]) => {
+      base44.entities.DownloadLog.filter({ userId: user.id }, "-created_date", 50).catch(() => []),
+    ]).then(([prods, pays, dls]) => {
       setProducts(prods.sort((a, b) => (a.order || 0) - (b.order || 0)));
       setPayments(pays);
+      setDownloads(dls);
       setLoadingData(false);
     });
   }, [open, user]);
@@ -205,6 +208,37 @@ export default function UserDetailDrawer({ user, open, onClose, projectCount, on
             </div>
           </div>
         )}
+
+        {/* Download activity */}
+        <div className="mt-6">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-1">
+            <Download className="w-3.5 h-3.5" /> Download Activity
+          </p>
+          {downloads.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No downloads yet.</p>
+          ) : (
+            <div className="space-y-2">
+              {downloads.map((d) => (
+                <div key={d.id} className="p-2.5 rounded-lg bg-background/40 border border-border text-sm">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-foreground truncate">{d.productName || d.productId || "—"}</span>
+                    {d.emailed && (
+                      <Badge variant="outline" className="text-[10px] px-1.5 py-0 shrink-0">Emailed</Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between gap-2 mt-1 text-xs text-muted-foreground">
+                    <span>
+                      {d.created_date ? format(new Date(d.created_date), "MMM d, yyyy · h:mm a") : "—"}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Globe className="w-3 h-3" /> {d.ip || "unknown"}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </SheetContent>
     </Sheet>
   );
