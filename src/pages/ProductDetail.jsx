@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Lock } from "lucide-react";
+import { ArrowLeft, Lock, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
@@ -21,6 +21,7 @@ import MonetizationEngineDetails from "@/components/products/MonetizationEngineD
 import AgentWorkforceDetails from "@/components/products/AgentWorkforceDetails";
 import ClientPortalDetails from "@/components/products/ClientPortalDetails";
 import MobileApprovalKitDetails from "@/components/products/MobileApprovalKitDetails";
+import CompleteBundleDetails from "@/components/products/CompleteBundleDetails";
 import { trackViewItem, trackSelectItem } from "@/lib/analytics";
 import { getProductSalePriceCents, formatUsd, isSummerSaleActive } from "@/lib/summerSale";
 
@@ -109,6 +110,8 @@ export default function ProductDetail() {
 
         {product.slug === "mobile-app-store-approval-kit" && <MobileApprovalKitDetails />}
 
+        {product.slug === "complete-builder-bundle" && <CompleteBundleDetails bundlePriceCents={product.priceCents} />}
+
         {product.description && (
           <div className="max-w-3xl mx-auto text-center mt-24 mb-16">
             <span className="text-sm font-semibold text-primary uppercase tracking-widest">Overview</span>
@@ -139,6 +142,8 @@ export default function ProductDetail() {
               ? <>Ready to deliver like an <span className="text-gradient-orange">agency?</span></>
               : product.slug === "mobile-app-store-approval-kit"
               ? <>Ready to get <span className="text-gradient-orange">approved?</span></>
+              : product.slug === "complete-builder-bundle"
+              ? <>Ready to own <span className="text-gradient-orange">everything?</span></>
               : <>Ready to install your <span className="text-gradient-orange">marketing engine?</span></>}
           </h2>
           <p className="text-muted-foreground mb-6">{product.supportNote || "One-time fee · Free support included"}</p>
@@ -151,6 +156,9 @@ export default function ProductDetail() {
           </Button>
           <p className="text-xs text-muted-foreground mt-3 flex items-center justify-center gap-1">
             <Lock className="w-3 h-3" /> Secure checkout powered by Square
+          </p>
+          <p className="text-xs text-muted-foreground mt-1.5 flex items-center justify-center gap-1">
+            <RefreshCw className="w-3 h-3" /> Lifetime updates included — every future version free
           </p>
         </div>
       </div>

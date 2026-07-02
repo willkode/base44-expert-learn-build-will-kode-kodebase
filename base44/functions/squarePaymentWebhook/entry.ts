@@ -118,6 +118,28 @@ Deno.serve(async (req) => {
       status: 'completed',
     });
 
+    // Complete Builder Bundle — expand into individual product access so every
+    // included product shows up in My Products with its own download.
+    if (productId) {
+      const prods = await base44.asServiceRole.entities.Product.filter({ id: productId });
+      if (prods[0]?.slug === 'complete-builder-bundle') {
+        const all = await base44.asServiceRole.entities.Product.filter({ active: true });
+        const included = all.filter((p) => p.slug !== 'complete-builder-bundle' && (p.priceCents || 0) > 0);
+        for (const p of included) {
+          await base44.asServiceRole.entities.Payment.create({
+            userId,
+            userEmail: userEmail || '',
+            productId: p.id,
+            itemName: `${p.name} (Complete Builder Bundle)`,
+            amountCents: 0,
+            currency: 'USD',
+            squarePaymentId: `${payment.id}-bundle-${p.id}`,
+            status: 'completed',
+          });
+        }
+      }
+    }
+
     // Prompt Engine: unlock the prompt pack for this session.
     if (promptSessionId) {
       const sessions = await base44.asServiceRole.entities.PromptGeneratorSession.filter({ id: promptSessionId });
@@ -130,11 +152,11 @@ Deno.serve(async (req) => {
     }
 
     // Plan purchases upgrade the user's profile.
-    const PLAN_LIMITS = { free: 1, pro: 25, agency: 60 };
+    const PLAN_LIMITS = { free: 1, pro: 25, agency: 60, pro_annual: 25 };
     if (planId && PLAN_LIMITS[planId] !== undefined) {
       const profiles = await base44.asServiceRole.entities.UserProfile.filter({ userId });
       const planData = {
-        plan: planId,
+        plan: planId === 'pro_annual' ? 'pro' : planId,
         blueprintLimit: PLAN_LIMITS[planId],
         usagePeriodStart: new Date().toISOString(),
       };

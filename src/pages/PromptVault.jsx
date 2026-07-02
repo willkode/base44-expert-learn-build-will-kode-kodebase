@@ -63,8 +63,8 @@ export default function PromptVault() {
   useEffect(() => {
     trackEvent("prompt_vault_page_view", { source: "landing" });
     // Load a few published prompts for preview (titles + categories only)
-    base44.entities.VaultPrompt.filter({ published: true }, "order", 6)
-      .then(setPreviews)
+    base44.functions.invoke("getVaultPreviews", {})
+      .then((res) => setPreviews(res.data?.previews || []))
       .catch(() => {});
 
     // Check if current user has paid

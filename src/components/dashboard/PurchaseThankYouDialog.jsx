@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { PartyPopper } from "lucide-react";
+import { PartyPopper, Crown } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { trackEvent } from "@/lib/analytics";
 
 // Shown when the user lands on the dashboard right after a successful product
 // purchase (?purchase=success&item=...). Clears the URL params on close.
@@ -36,6 +37,26 @@ export default function PurchaseThankYouDialog() {
             {itemName ? <><span className="text-foreground font-medium">{itemName}</span> is now yours. </> : "Your payment went through. "}
             You'll find it under <span className="text-foreground font-medium">My Products</span> below, ready to download anytime.
           </p>
+          <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-left mb-5">
+            <div className="flex items-center gap-2 mb-1.5">
+              <Crown className="w-4 h-4 text-amber-400" />
+              <span className="text-sm font-semibold">Level up: go Pro</span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-3">
+              Pro members get 40% off every product & service, 25 blueprints a month, full Prompt Vault access, and a free monthly strategy call.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                trackEvent("post_purchase_pro_upsell_click", {});
+                setOpen(false);
+                navigate("/pro");
+              }}
+            >
+              Explore Pro Membership
+            </Button>
+          </div>
           <Button onClick={close} className="w-full font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90">
             Got it
           </Button>

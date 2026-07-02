@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
-import { Package, FileText, FileX, Download, Settings2, Eye, EyeOff } from "lucide-react";
+import { Package, FileText, FileX, Download, Settings2, Eye, EyeOff, Megaphone } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import AdminTable from "@/components/admin/AdminTable";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import ProductPdfDialog from "@/components/admin/products/ProductPdfDialog";
+import NotifyBuyersDialog from "@/components/admin/products/NotifyBuyersDialog";
 
 export default function AdminProducts() {
   const [products, setProducts] = useState([]);
@@ -15,6 +16,8 @@ export default function AdminProducts() {
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [notifying, setNotifying] = useState(null);
+  const [notifyOpen, setNotifyOpen] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -111,6 +114,9 @@ export default function AdminProducts() {
             <Button variant="ghost" size="icon" title="Manage download" onClick={() => openManage(p)}>
               <Settings2 className="w-4 h-4" />
             </Button>
+            <Button variant="ghost" size="icon" title="Notify buyers of an update" onClick={() => { setNotifying(p); setNotifyOpen(true); }}>
+              <Megaphone className="w-4 h-4" />
+            </Button>
           </div>,
         ]}
       />
@@ -120,6 +126,12 @@ export default function AdminProducts() {
         onOpenChange={setDialogOpen}
         product={editing}
         onSaved={load}
+      />
+
+      <NotifyBuyersDialog
+        open={notifyOpen}
+        onOpenChange={setNotifyOpen}
+        product={notifying}
       />
     </div>
   );

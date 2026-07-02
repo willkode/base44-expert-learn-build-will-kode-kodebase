@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { PLANS } from "@/lib/plans";
 import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
+import BundleUpsell from "@/components/checkout/BundleUpsell";
 import { trackBeginCheckout, trackPurchase } from "@/lib/analytics";
 import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 
@@ -92,6 +93,17 @@ export default function Checkout() {
   const startCheckout = async () => {
     setRedirecting(true);
     setError(null);
+    // Free products skip Square entirely — access is granted server-side.
+    if (product && (product.priceCents || 0) === 0) {
+      const res = await base44.functions.invoke("claimFreeProduct", { productId });
+      if (res.data?.success) {
+        navigate(`/dashboard?purchase=success&item=${encodeURIComponent(product.name)}`);
+      } else {
+        setRedirecting(false);
+        setError(res.data?.error || "Could not claim this product. Please try again.");
+      }
+      return;
+    }
     const returnUrl = `${window.location.origin}/checkout?${planId ? `plan=${planId}` : `product=${productId}`}&status=success`;
     const res = await base44.functions.invoke("createSquareCheckoutLink", {
       planId: planId || undefined,
@@ -141,9 +153,9 @@ export default function Checkout() {
     ? {
         name: product.name,
         desc: product.tagline,
-        priceLabel: formatUsd(getProductSalePriceCents(product.priceCents)),
+        priceLabel: (product.priceCents || 0) === 0 ? "Free" : formatUsd(getProductSalePriceCents(product.priceCents)),
         fullPriceLabel: formatUsd(product.priceCents),
-        onSale: isSummerSaleActive(),
+        onSale: isSummerSaleActive() && (product.priceCents || 0) > 0,
         periodLabel: " one-time",
         features: product.features || [],
         supportNote: product.supportNote,
@@ -216,6 +228,23 @@ export default function Checkout() {
           <div className="rounded-2xl border border-border bg-card/60 p-8">
             <h2 className="font-sora font-bold text-xl mb-1">{item.name}</h2>
             {item.desc && <p className="text-sm text-muted-foreground mb-5">{item.desc}</p>}
+            {(planId === "pro" || planId === "pro_annual") && (
+              <div className="flex gap-2 mb-5">
+                <button
+                  onClick={() => navigate("/checkout?plan=pro", { replace: true })}
+                  className={`flex-1 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${planId === "pro" ? "border-primary bg-primary/10 text-foreground" : "border-border text-muted-foreground hover:text-foreground"}`}
+                >
+                  Monthly · $25/mo
+                </button>
+                <button
+                  onClick={() => navigate("/checkout?plan=pro_annual", { replace: true })}
+                  className={`flex-1 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${planId === "pro_annual" ? "border-primary bg-primary/10 text-foreground" : "border-border text-muted-foreground hover:text-foreground"}`}
+                >
+                  Annual · $250/yr
+                  <span className="block font-normal text-[10px] text-primary">2 months free</span>
+                </button>
+              </div>
+            )}
             <div className="flex items-end gap-2 mb-2">
               <span className="font-sora font-extrabold text-4xl">{item.priceLabel}</span>
               {item.onSale && <span className="text-muted-foreground mb-1.5 text-xl line-through">{item.fullPriceLabel}</span>}
@@ -233,6 +262,9 @@ export default function Checkout() {
                 </li>
               ))}
             </ul>
+            {product && (product.priceCents || 0) > 0 && product.slug !== "complete-builder-bundle" && (
+              <BundleUpsell currentProductId={product.id} />
+            )}
           </div>
 
           <div className="rounded-2xl border border-border bg-card p-8 flex flex-col">
@@ -259,7 +291,9 @@ export default function Checkout() {
               className="w-full mt-auto font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
             >
               {redirecting ? (
-                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Redirecting to Square…</>
+                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> {product && (product.priceCents || 0) === 0 ? "Claiming…" : "Redirecting to Square…"}</>
+              ) : product && (product.priceCents || 0) === 0 ? (
+                <>Claim for free</>
               ) : (
                 <>Continue to payment <ExternalLink className="w-4 h-4 ml-2" /></>
               )}

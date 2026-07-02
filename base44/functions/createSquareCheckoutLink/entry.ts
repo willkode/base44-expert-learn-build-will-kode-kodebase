@@ -7,6 +7,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 const PLAN_PRICING = {
   free: { amountCents: 1299, name: 'Solo', blueprintLimit: 1 },
   pro: { amountCents: 2500, name: 'Pro', blueprintLimit: 25 },
+  pro_annual: { amountCents: 25000, name: 'Pro Annual', blueprintLimit: 25 },
   agency: { amountCents: 14900, name: 'Agency', blueprintLimit: 60 },
 };
 
@@ -92,6 +93,9 @@ Deno.serve(async (req) => {
       const products = await base44.asServiceRole.entities.Product.filter({ id: productId });
       const product = products[0];
       if (!product || product.active === false) return Response.json({ error: 'Product not found.' }, { status: 404 });
+      if ((product.priceCents || 0) === 0) {
+        return Response.json({ error: 'This product is free — claim it directly, no payment needed.' }, { status: 400 });
+      }
       if (isSummerProductSaleActive()) {
         amountCents = Math.round(product.priceCents * 0.5);
         itemName = `${product.name} (Summer Special 50% off)`;
