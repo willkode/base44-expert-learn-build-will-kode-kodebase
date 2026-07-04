@@ -37,6 +37,11 @@ const isSummerProductSaleActive = () => {
   return now < end;
 };
 
+// July 4th Flash Sale: $2.50 flat on all paid products, today only, ends
+// 11:59pm Central. Overrides the Summer Special and Pro discount.
+const FLASH_SALE_PRICE_CENTS = 250;
+const isFlashSaleActive = () => Date.now() < new Date('2026-07-04T23:59:00-05:00').getTime();
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -96,7 +101,10 @@ Deno.serve(async (req) => {
       if ((product.priceCents || 0) === 0) {
         return Response.json({ error: 'This product is free — claim it directly, no payment needed.' }, { status: 400 });
       }
-      if (isSummerProductSaleActive()) {
+      if (isFlashSaleActive()) {
+        amountCents = FLASH_SALE_PRICE_CENTS;
+        itemName = `${product.name} (Flash Sale $2.50)`;
+      } else if (isSummerProductSaleActive()) {
         amountCents = Math.round(product.priceCents * 0.5);
         itemName = `${product.name} (Summer Special 50% off)`;
       } else {
