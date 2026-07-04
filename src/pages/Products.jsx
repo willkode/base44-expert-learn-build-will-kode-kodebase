@@ -15,7 +15,6 @@ import { softwareApplicationSchema } from "@/lib/seo";
 import { trackSelectItem } from "@/lib/analytics";
 import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 import { isFlashSaleActive, getFlashSalePriceCents } from "@/lib/flashSale";
-import SummerSaleBanner from "@/components/products/SummerSaleBanner";
 import FlashSaleBanner from "@/components/products/FlashSaleBanner";
 
 export default function Products() {
@@ -68,7 +67,6 @@ export default function Products() {
       />
       <div className="max-w-7xl mx-auto">
         <FlashSaleBanner />
-        <SummerSaleBanner />
         <div className="max-w-3xl mx-auto text-center mb-16">
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">Products</span>
           <h1 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-5">
