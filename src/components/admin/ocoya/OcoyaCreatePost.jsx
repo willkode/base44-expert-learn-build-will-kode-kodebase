@@ -163,10 +163,19 @@ export default function OcoyaCreatePost({ workspaceId }) {
               <div className="space-y-2">
                 <Label>Image</Label>
                 <img src={content.imageUrl} alt="Generated post visual" className="rounded-xl w-full max-w-md border border-border" />
-                <Button variant="outline" size="sm" onClick={handleRegenImage} disabled={regenImage}>
-                  {regenImage ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-1.5" />}
-                  Regenerate image
-                </Button>
+                <div className="space-y-2 max-w-md">
+                  <Label className="text-xs text-muted-foreground">Describe the image you want</Label>
+                  <Textarea
+                    value={content.imagePrompt}
+                    onChange={(e) => setContent({ ...content, imagePrompt: e.target.value })}
+                    rows={3}
+                    placeholder='e.g. "A glowing rocket launching from a laptop screen, blueprint grid background"'
+                  />
+                  <Button variant="outline" size="sm" onClick={handleRegenImage} disabled={regenImage || !content.imagePrompt?.trim()}>
+                    {regenImage ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-1.5" />}
+                    Regenerate image
+                  </Button>
+                </div>
               </div>
             )}
           </div>
