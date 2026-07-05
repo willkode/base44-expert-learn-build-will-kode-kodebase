@@ -7,7 +7,17 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Wand2, RefreshCw, Send, Loader2, CheckCircle2 } from "lucide-react";
 import OcoyaProfilePicker from "@/components/admin/ocoya/OcoyaProfilePicker";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { trackEvent } from "@/lib/analytics";
+
+const IMAGE_STYLES = [
+  { id: "brand", label: "Brand style (flat vector)" },
+  { id: "photoreal", label: "Photorealistic" },
+  { id: "threeD", label: "3D render" },
+  { id: "illustration", label: "Illustration" },
+  { id: "minimal", label: "Minimal abstract" },
+  { id: "isometric", label: "Isometric scene" },
+];
 
 const MODES = [
   { id: "now", label: "Publish now" },
@@ -18,6 +28,7 @@ const MODES = [
 export default function OcoyaCreatePost({ workspaceId }) {
   const [instructions, setInstructions] = useState("");
   const [includeImage, setIncludeImage] = useState(true);
+  const [imageStyle, setImageStyle] = useState("brand");
   const [generating, setGenerating] = useState(false);
   const [content, setContent] = useState(null); // { caption, imagePrompt, imageUrl }
   const [regenImage, setRegenImage] = useState(false);
@@ -36,6 +47,7 @@ export default function OcoyaCreatePost({ workspaceId }) {
     const res = await base44.functions.invoke("generateOcoyaPostContent", {
       instructions,
       includeImage,
+      imageStyle,
     });
     setGenerating(false);
     if (res.data?.error) {
@@ -51,6 +63,7 @@ export default function OcoyaCreatePost({ workspaceId }) {
     setRegenImage(true);
     const res = await base44.functions.invoke("generateOcoyaPostContent", {
       imagePrompt: content.imagePrompt,
+      imageStyle,
     });
     setRegenImage(false);
     if (res.data?.imageUrl) setContent({ ...content, imageUrl: res.data.imageUrl });
@@ -135,10 +148,24 @@ export default function OcoyaCreatePost({ workspaceId }) {
           rows={4}
         />
         <div className="flex items-center justify-between flex-wrap gap-3">
-          <label className="flex items-center gap-2 text-sm">
-            <Switch checked={includeImage} onCheckedChange={setIncludeImage} />
-            Generate an AI image
-          </label>
+          <div className="flex items-center flex-wrap gap-4">
+            <label className="flex items-center gap-2 text-sm">
+              <Switch checked={includeImage} onCheckedChange={setIncludeImage} />
+              Generate an AI image
+            </label>
+            {includeImage && (
+              <Select value={imageStyle} onValueChange={setImageStyle}>
+                <SelectTrigger className="w-52">
+                  <SelectValue placeholder="Image style" />
+                </SelectTrigger>
+                <SelectContent>
+                  {IMAGE_STYLES.map((s) => (
+                    <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
           <Button onClick={handleGenerate} disabled={generating || !instructions.trim()}>
             {generating ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Wand2 className="w-4 h-4 mr-1.5" />}
             {generating ? "Generating..." : content ? "Regenerate" : "Generate post"}

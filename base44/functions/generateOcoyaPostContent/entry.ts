@@ -1,7 +1,18 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-const BRAND_IMAGE_STYLE =
-  'Dark tech aesthetic on a deep navy background (#0d1326 / #0a0f1e). Glowing orange-to-red gradient accents transitioning through coral, orange, and amber (#f87171, #fb923c, #facc15). Minimal flat vector style with subtle blueprint grid lines and soft glows. Clean, modern, premium SaaS/developer-tool look. No text, no logos, no watermarks. Consistent lighting, high contrast, ample negative space.';
+const BRAND_PALETTE =
+  'Deep navy background (#0d1326 / #0a0f1e) with glowing orange-to-red gradient accents transitioning through coral, orange, and amber (#f87171, #fb923c, #facc15). No text, no logos, no watermarks. Consistent lighting, high contrast, ample negative space.';
+
+const IMAGE_STYLES = {
+  brand: `Dark tech aesthetic. Minimal flat vector style with subtle blueprint grid lines and soft glows. Clean, modern, premium SaaS/developer-tool look. ${BRAND_PALETTE}`,
+  photoreal: `Photorealistic, cinematic photography style with dramatic moody lighting. ${BRAND_PALETTE}`,
+  threeD: `Premium 3D render, glossy materials, soft studio lighting, depth of field. ${BRAND_PALETTE}`,
+  illustration: `Detailed digital illustration, bold shapes, stylized characters and scenes. ${BRAND_PALETTE}`,
+  minimal: `Ultra-minimal abstract composition, simple geometric shapes, generous empty space. ${BRAND_PALETTE}`,
+  isometric: `Isometric flat design scene with clean lines, subtle blueprint grid, soft glows. ${BRAND_PALETTE}`,
+};
+
+const styleFor = (key) => IMAGE_STYLES[key] || IMAGE_STYLES.brand;
 
 Deno.serve(async (req) => {
   try {
@@ -11,12 +22,12 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { instructions, includeImage = true, imagePrompt } = await req.json();
+    const { instructions, includeImage = true, imagePrompt, imageStyle } = await req.json();
 
     // Regenerate-image-only mode: caller already has a prompt.
     if (!instructions && imagePrompt) {
       const img = await base44.integrations.Core.GenerateImage({
-        prompt: `${imagePrompt}. ${BRAND_IMAGE_STYLE}`,
+        prompt: `${imagePrompt}. ${styleFor(imageStyle)}`,
       });
       return Response.json({ imageUrl: img.url, imagePrompt });
     }
@@ -52,7 +63,7 @@ Rules:
     let imageUrl = null;
     if (includeImage) {
       const img = await base44.integrations.Core.GenerateImage({
-        prompt: `${result.image_prompt}. ${BRAND_IMAGE_STYLE}`,
+        prompt: `${result.image_prompt}. ${styleFor(imageStyle)}`,
       });
       imageUrl = img.url;
     }
