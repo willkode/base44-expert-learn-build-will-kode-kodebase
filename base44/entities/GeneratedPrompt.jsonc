@@ -69,37 +69,14 @@
   ],
   "rls": {
     "read": {
-      "$or": [
-        {
-          "created_by_id": "{{user.id}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "user_condition": {
+        "role": "admin"
+      }
     },
     "write": {
-      "$and": [
-        {
-          "created_by_id": {
-            "$ne": "anonymous"
-          }
-        },
-        {
-          "$or": [
-            {
-              "created_by_id": "{{user.id}}"
-            },
-            {
-              "user_condition": {
-                "role": "admin"
-              }
-            }
-          ]
-        }
-      ]
+      "user_condition": {
+        "role": "admin"
+      }
     }
   }
 }
