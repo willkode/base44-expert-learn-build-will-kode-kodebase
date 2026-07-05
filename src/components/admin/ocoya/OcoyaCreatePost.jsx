@@ -10,7 +10,7 @@ import OcoyaProfilePicker from "@/components/admin/ocoya/OcoyaProfilePicker";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { trackEvent } from "@/lib/analytics";
 
-const IMAGE_STYLES = [
+export const IMAGE_STYLES = [
   { id: "brand", label: "Brand style (flat vector)" },
   { id: "photoreal", label: "Photorealistic" },
   { id: "threeD", label: "3D render" },

@@ -1,0 +1,224 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Sparkles, Wand2, Loader2 } from "lucide-react";
+import OcoyaProfilePicker from "@/components/admin/ocoya/OcoyaProfilePicker";
+import OcoyaDraftCard from "@/components/admin/ocoya/OcoyaDraftCard";
+import { IMAGE_STYLES } from "@/components/admin/ocoya/OcoyaCreatePost";
+import { trackEvent } from "@/lib/analytics";
+
+const MODES = [
+  { id: "now", label: "Publish now" },
+  { id: "schedule", label: "Schedule" },
+  { id: "draft", label: "Save as draft" },
+];
+
+export default function OcoyaSuggest({ workspaceId }) {
+  const [ideas, setIdeas] = useState([]);
+  const [loadingIdeas, setLoadingIdeas] = useState(false);
+  const [selected, setSelected] = useState([]);
+  const [includeImage, setIncludeImage] = useState(true);
+  const [imageStyle, setImageStyle] = useState("brand");
+  const [generating, setGenerating] = useState(false);
+  const [progress, setProgress] = useState("");
+  const [drafts, setDrafts] = useState([]);
+  const [profiles, setProfiles] = useState([]);
+  const [mode, setMode] = useState("now");
+  const [scheduledAt, setScheduledAt] = useState("");
+  const [error, setError] = useState(null);
+
+  const loadIdeas = async () => {
+    setLoadingIdeas(true);
+    setError(null);
+    setIdeas([]);
+    setSelected([]);
+    const res = await base44.functions.invoke("suggestOcoyaPostIdeas", {});
+    setLoadingIdeas(false);
+    if (res.data?.error) {
+      setError(res.data.error);
+      return;
+    }
+    setIdeas(res.data.ideas || []);
+    trackEvent("ocoya_ideas_generated");
+  };
+
+  const toggleIdea = (i) => {
+    setSelected((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]));
+  };
+
+  const generateSelected = async () => {
+    setGenerating(true);
+    setError(null);
+    const newDrafts = [];
+    for (let n = 0; n < selected.length; n++) {
+      const idea = ideas[selected[n]];
+      setProgress(`Creating post ${n + 1} of ${selected.length}: ${idea.title}...`);
+      const res = await base44.functions.invoke("generateOcoyaPostContent", {
+        instructions: idea.instructions,
+        includeImage,
+        imageStyle,
+      });
+      if (res.data?.caption) {
+        newDrafts.push({
+          id: `${Date.now()}-${n}`,
+          ideaTitle: idea.title,
+          caption: res.data.caption,
+          imagePrompt: res.data.imagePrompt,
+          imageUrl: res.data.imageUrl,
+          status: "ready",
+        });
+        setDrafts([...newDrafts]);
+      }
+    }
+    setGenerating(false);
+    setProgress("");
+    setIdeas([]);
+    setSelected([]);
+  };
+
+  const updateDraft = (updated) => {
+    setDrafts((prev) => prev.map((d) => (d.id === updated.id ? updated : d)));
+  };
+
+  const regenImage = async (draft) => {
+    updateDraft({ ...draft, busy: "image" });
+    const res = await base44.functions.invoke("generateOcoyaPostContent", {
+      imagePrompt: draft.imagePrompt,
+      imageStyle,
+    });
+    updateDraft({ ...draft, busy: null, imageUrl: res.data?.imageUrl || draft.imageUrl });
+  };
+
+  const sendDraft = async (draft) => {
+    if (mode !== "draft" && profiles.length === 0) {
+      updateDraft({ ...draft, error: "Select at least one social profile below, or use draft mode." });
+      return;
+    }
+    if (mode === "schedule" && !scheduledAt) {
+      updateDraft({ ...draft, error: "Pick a schedule date and time below first." });
+      return;
+    }
+    updateDraft({ ...draft, busy: "send", error: null });
+    const payload = { action: "createPost", workspaceId, caption: draft.caption };
+    if (draft.imageUrl) payload.mediaUrls = [draft.imageUrl];
+    if (profiles.length) payload.socialProfileIds = profiles;
+    if (mode === "now") payload.scheduledAt = new Date().toISOString();
+    if (mode === "schedule") payload.scheduledAt = new Date(scheduledAt).toISOString();
+    const res = await base44.functions.invoke("ocoyaRequest", payload);
+    if (res.data?.error) {
+      updateDraft({ ...draft, busy: null, error: res.data.error });
+      return;
+    }
+    trackEvent("ocoya_suggested_post_sent", { mode });
+    updateDraft({ ...draft, busy: null, status: "sent" });
+  };
+
+  return (
+    <div className="space-y-6 max-w-3xl">
+      {/* Ideas */}
+      <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
+        <div>
+          <h3 className="font-sora font-semibold mb-1">AI post ideas from your content</h3>
+          <p className="text-xs text-muted-foreground">
+            Scans your products, tools, services, blog posts, and free resources — then suggests 7 post ideas.
+          </p>
+        </div>
+        <div className="flex items-center flex-wrap gap-4">
+          <Button onClick={loadIdeas} disabled={loadingIdeas || generating}>
+            {loadingIdeas ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Sparkles className="w-4 h-4 mr-1.5" />}
+            {loadingIdeas ? "Scanning your app..." : ideas.length ? "Suggest new ideas" : "Suggest 7 post ideas"}
+          </Button>
+          <label className="flex items-center gap-2 text-sm">
+            <Switch checked={includeImage} onCheckedChange={setIncludeImage} />
+            AI images
+          </label>
+          {includeImage && (
+            <Select value={imageStyle} onValueChange={setImageStyle}>
+              <SelectTrigger className="w-52">
+                <SelectValue placeholder="Image style" />
+              </SelectTrigger>
+              <SelectContent>
+                {IMAGE_STYLES.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        </div>
+        {error && <p className="text-sm text-destructive">{error}</p>}
+
+        {ideas.length > 0 && (
+          <div className="space-y-2">
+            {ideas.map((idea, i) => (
+              <label
+                key={i}
+                className={`flex items-start gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${
+                  selected.includes(i) ? "border-primary bg-primary/5" : "border-border hover:bg-secondary/40"
+                }`}
+              >
+                <Checkbox checked={selected.includes(i)} onCheckedChange={() => toggleIdea(i)} className="mt-0.5" />
+                <span className="min-w-0">
+                  <span className="block text-sm font-medium">{idea.title}</span>
+                  <span className="block text-xs text-muted-foreground">{idea.description}</span>
+                </span>
+              </label>
+            ))}
+            <Button onClick={generateSelected} disabled={selected.length === 0 || generating} className="mt-2">
+              {generating ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Wand2 className="w-4 h-4 mr-1.5" />}
+              {generating ? "Creating..." : `Create ${selected.length || ""} selected post${selected.length === 1 ? "" : "s"}`}
+            </Button>
+          </div>
+        )}
+        {generating && progress && <p className="text-sm text-muted-foreground">{progress}</p>}
+      </div>
+
+      {/* Drafts to review */}
+      {drafts.length > 0 && (
+        <>
+          <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
+            <h3 className="font-sora font-semibold">Publish settings (applies to each post you approve)</h3>
+            <OcoyaProfilePicker workspaceId={workspaceId} selected={profiles} onChange={setProfiles} />
+            <div className="flex flex-wrap gap-2">
+              {MODES.map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => setMode(m.id)}
+                  className={`px-3.5 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
+                    mode === m.id ? "border-primary bg-primary/10 text-foreground" : "border-border text-muted-foreground hover:bg-secondary/40"
+                  }`}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+            {mode === "schedule" && (
+              <div className="space-y-2 max-w-xs">
+                <Label>Schedule for</Label>
+                <Input type="datetime-local" value={scheduledAt} onChange={(e) => setScheduledAt(e.target.value)} />
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="font-sora font-semibold">Review & approve ({drafts.filter((d) => d.status !== "sent").length} remaining)</h3>
+            {drafts.map((d) => (
+              <OcoyaDraftCard
+                key={d.id}
+                draft={d}
+                onChange={updateDraft}
+                onRegenImage={() => regenImage(d)}
+                onSend={() => sendDraft(d)}
+                onDiscard={() => setDrafts((prev) => prev.filter((x) => x.id !== d.id))}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Share2, PenSquare, ListChecks, Settings } from "lucide-react";
+import { Share2, PenSquare, ListChecks, Settings, Sparkles } from "lucide-react";
 import LoadingState from "@/components/shared/LoadingState";
 import OcoyaCreatePost from "@/components/admin/ocoya/OcoyaCreatePost";
+import OcoyaSuggest from "@/components/admin/ocoya/OcoyaSuggest";
 import OcoyaPostsList from "@/components/admin/ocoya/OcoyaPostsList";
 import OcoyaSettings from "@/components/admin/ocoya/OcoyaSettings";
 
@@ -62,6 +63,9 @@ export default function OcoyaSocial() {
               <TabsTrigger value="create" className="gap-1.5">
                 <PenSquare className="w-4 h-4" /> Create
               </TabsTrigger>
+              <TabsTrigger value="suggest" className="gap-1.5">
+                <Sparkles className="w-4 h-4" /> AI Suggest
+              </TabsTrigger>
               <TabsTrigger value="posts" className="gap-1.5">
                 <ListChecks className="w-4 h-4" /> Posts
               </TabsTrigger>
@@ -71,6 +75,9 @@ export default function OcoyaSocial() {
             </TabsList>
             <TabsContent value="create">
               <OcoyaCreatePost workspaceId={workspaceId} />
+            </TabsContent>
+            <TabsContent value="suggest">
+              <OcoyaSuggest workspaceId={workspaceId} />
             </TabsContent>
             <TabsContent value="posts">
               <OcoyaPostsList workspaceId={workspaceId} />
