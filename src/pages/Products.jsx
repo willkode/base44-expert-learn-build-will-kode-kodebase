@@ -14,8 +14,7 @@ import Seo from "@/components/seo/Seo";
 import { softwareApplicationSchema } from "@/lib/seo";
 import { trackSelectItem } from "@/lib/analytics";
 import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
-import { isFlashSaleActive, getFlashSalePriceCents } from "@/lib/flashSale";
-import FlashSaleBanner from "@/components/products/FlashSaleBanner";
+import SummerSaleBanner from "@/components/products/SummerSaleBanner";
 
 export default function Products() {
   const navigate = useNavigate();
@@ -40,7 +39,6 @@ export default function Products() {
   const visibleProducts = useMemo(() => {
     const q = search.trim().toLowerCase();
     let list = products.filter((p) => {
-      if (p.slug === "complete-builder-bundle") return false;
       const matchesCategory = category === "all" || p.category === category;
       const matchesSearch =
         !q ||
@@ -66,7 +64,7 @@ export default function Products() {
         jsonLd={[softwareApplicationSchema()]}
       />
       <div className="max-w-7xl mx-auto">
-        <FlashSaleBanner />
+        <SummerSaleBanner />
         <div className="max-w-3xl mx-auto text-center mb-16">
           <span className="text-sm font-semibold text-primary uppercase tracking-widest">Products</span>
           <h1 className="font-sora font-bold text-3xl md:text-5xl tracking-tight mt-4 mb-5">
@@ -152,19 +150,7 @@ export default function Products() {
                   <div className="flex flex-col gap-4">
                     <div className="flex items-end justify-between gap-4">
                       <div>
-                        {isFlashSaleActive() && p.priceCents > 0 ? (
-                          <>
-                            <Badge className="mb-1.5 text-[10px] bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
-                              🎆 Flash Sale · $2.50
-                            </Badge>
-                            <div className="flex items-end gap-1.5">
-                              <span className="font-sora font-extrabold text-3xl">{formatUsd(getFlashSalePriceCents(p.priceCents))}</span>
-                              <span className="text-muted-foreground mb-1 text-sm line-through">{formatUsd(p.priceCents)}</span>
-                              <span className="text-muted-foreground mb-1 text-sm">one-time</span>
-                            </div>
-                            <p className="text-xs text-primary mt-1">Ends 11:59pm CST tonight</p>
-                          </>
-                        ) : isSummerSaleActive() ? (
+                        {isSummerSaleActive() ? (
                           <>
                             <Badge className="mb-1.5 text-[10px] bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
                               Summer Special · 50% off

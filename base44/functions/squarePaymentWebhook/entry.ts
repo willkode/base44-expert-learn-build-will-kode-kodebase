@@ -118,22 +118,6 @@ Deno.serve(async (req) => {
       status: 'completed',
     });
 
-    // Fire the PDF receipt email — never let a delivery failure break payment
-    // reconciliation (Square will retry the whole webhook otherwise).
-    if (userEmail) {
-      try {
-        await base44.asServiceRole.functions.invoke('sendPurchaseReceipt', {
-          email: userEmail,
-          itemName,
-          amountCents,
-          paymentId: payment.id,
-          purchaseDate: new Date().toISOString(),
-        });
-      } catch (_e) {
-        // ignore — receipt is best-effort
-      }
-    }
-
     // Complete Builder Bundle — expand into individual product access so every
     // included product shows up in My Products with its own download.
     if (productId) {

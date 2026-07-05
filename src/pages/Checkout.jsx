@@ -8,7 +8,6 @@ import LoadingState from "@/components/shared/LoadingState";
 import BundleUpsell from "@/components/checkout/BundleUpsell";
 import { trackBeginCheckout, trackPurchase } from "@/lib/analytics";
 import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
-import { isFlashSaleActive, getFlashSalePriceCents } from "@/lib/flashSale";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -39,8 +38,7 @@ export default function Checkout() {
     if (plan) {
       trackBeginCheckout({ id: planId, name: `${plan.name} plan`, category: "subscription", price: parseFloat(plan.price.replace("$", "")) || 0 });
     } else if (product) {
-      const price = isFlashSaleActive() ? getFlashSalePriceCents(product.priceCents) : getProductSalePriceCents(product.priceCents);
-      trackBeginCheckout({ id: product.id, name: product.name, category: product.category, price: price / 100 });
+      trackBeginCheckout({ id: product.id, name: product.name, category: product.category, price: getProductSalePriceCents(product.priceCents) / 100 });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planId, product?.id]);
@@ -155,10 +153,9 @@ export default function Checkout() {
     ? {
         name: product.name,
         desc: product.tagline,
-        priceLabel: (product.priceCents || 0) === 0 ? "Free" : formatUsd(isFlashSaleActive() ? getFlashSalePriceCents(product.priceCents) : getProductSalePriceCents(product.priceCents)),
+        priceLabel: (product.priceCents || 0) === 0 ? "Free" : formatUsd(getProductSalePriceCents(product.priceCents)),
         fullPriceLabel: formatUsd(product.priceCents),
-        onSale: (isFlashSaleActive() || isSummerSaleActive()) && (product.priceCents || 0) > 0,
-        isFlashSale: isFlashSaleActive() && (product.priceCents || 0) > 0,
+        onSale: isSummerSaleActive() && (product.priceCents || 0) > 0,
         periodLabel: " one-time",
         features: product.features || [],
         supportNote: product.supportNote,
@@ -254,9 +251,7 @@ export default function Checkout() {
               <span className="text-muted-foreground mb-1.5">{item.periodLabel}</span>
             </div>
             {item.onSale && (
-              <p className="text-xs text-primary mb-1">
-                {item.isFlashSale ? "🎆 Flash Sale · $2.50 · ends 11:59pm CST tonight" : `Summer Special · 50% off · ends ${SUMMER_SALE_END_LABEL}`}
-              </p>
+              <p className="text-xs text-primary mb-1">Summer Special · 50% off · ends {SUMMER_SALE_END_LABEL}</p>
             )}
             {item.supportNote && <p className="text-xs text-muted-foreground mb-4">{item.supportNote}</p>}
             <ul className="space-y-2.5 mt-4">
