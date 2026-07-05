@@ -15,6 +15,9 @@ import { softwareApplicationSchema } from "@/lib/seo";
 import { trackSelectItem } from "@/lib/analytics";
 import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 import SummerSaleBanner from "@/components/products/SummerSaleBanner";
+import FeaturedBundleCard from "@/components/products/FeaturedBundleCard";
+
+const FEATURED_SLUG = "complete-builder-bundle";
 
 export default function Products() {
   const navigate = useNavigate();
@@ -52,6 +55,15 @@ export default function Products() {
     else if (sort === "name") list = [...list].sort((a, b) => a.name.localeCompare(b.name));
     return list;
   }, [products, search, category, sort]);
+
+  const featuredProduct = useMemo(
+    () => visibleProducts.find((p) => p.slug === FEATURED_SLUG),
+    [visibleProducts]
+  );
+  const gridProducts = useMemo(
+    () => visibleProducts.filter((p) => p.slug !== FEATURED_SLUG),
+    [visibleProducts]
+  );
 
   return (
     <div className="pt-28 pb-24 px-6">
@@ -115,8 +127,10 @@ export default function Products() {
           {visibleProducts.length === 0 ? (
             <p className="text-center text-muted-foreground py-16">No products match your search.</p>
           ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {visibleProducts.map((p, i) => (
+          <>
+          {featuredProduct && <FeaturedBundleCard product={featuredProduct} />}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {gridProducts.map((p, i) => (
               <MotionLink
                 key={p.id}
                 to={`/products/${p.slug}`}
@@ -199,6 +213,7 @@ export default function Products() {
               </MotionLink>
             ))}
           </div>
+          </>
           )}
           </>
         )}
