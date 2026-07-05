@@ -38,6 +38,7 @@ export default function OcoyaCreatePost({ workspaceId }) {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
   const [sent, setSent] = useState(false);
+  const [draftId, setDraftId] = useState(null);
 
   const handleGenerate = async () => {
     if (!instructions.trim()) return;
@@ -55,6 +56,21 @@ export default function OcoyaCreatePost({ workspaceId }) {
       return;
     }
     setContent(res.data);
+    const draftData = {
+      source: "create",
+      ideaTitle: instructions.trim().slice(0, 60),
+      instructions,
+      caption: res.data.caption || "",
+      imagePrompt: res.data.imagePrompt || "",
+      imageUrl: res.data.imageUrl || "",
+      status: "ready",
+    };
+    if (draftId) {
+      await base44.entities.OcoyaDraft.update(draftId, draftData);
+    } else {
+      const record = await base44.entities.OcoyaDraft.create(draftData);
+      setDraftId(record.id);
+    }
     trackEvent("ocoya_content_generated", { with_image: includeImage });
   };
 
@@ -66,7 +82,16 @@ export default function OcoyaCreatePost({ workspaceId }) {
       imageStyle,
     });
     setRegenImage(false);
-    if (res.data?.imageUrl) setContent({ ...content, imageUrl: res.data.imageUrl });
+    if (res.data?.imageUrl) {
+      setContent({ ...content, imageUrl: res.data.imageUrl });
+      if (draftId) base44.entities.OcoyaDraft.update(draftId, { imageUrl: res.data.imageUrl });
+    }
+  };
+
+  const persistCaption = () => {
+    if (draftId && content?.caption) {
+      base44.entities.OcoyaDraft.update(draftId, { caption: content.caption });
+    }
   };
 
   const handleSend = async () => {
@@ -101,6 +126,13 @@ export default function OcoyaCreatePost({ workspaceId }) {
       return;
     }
     trackEvent("ocoya_post_created", { mode });
+    if (draftId) {
+      base44.entities.OcoyaDraft.update(draftId, {
+        caption: content.caption,
+        status: "sent",
+        sentAt: new Date().toISOString(),
+      });
+    }
     setSent(true);
   };
 
@@ -112,6 +144,7 @@ export default function OcoyaCreatePost({ workspaceId }) {
     setMode("now");
     setSent(false);
     setError(null);
+    setDraftId(null);
   };
 
   if (sent) {
@@ -183,6 +216,7 @@ export default function OcoyaCreatePost({ workspaceId }) {
               <Textarea
                 value={content.caption}
                 onChange={(e) => setContent({ ...content, caption: e.target.value })}
+                onBlur={persistCaption}
                 rows={7}
               />
             </div>

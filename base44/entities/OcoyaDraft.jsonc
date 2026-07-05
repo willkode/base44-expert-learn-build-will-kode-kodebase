@@ -1,0 +1,59 @@
+{
+  "name": "OcoyaDraft",
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": [
+        "create",
+        "suggest"
+      ],
+      "default": "suggest",
+      "description": "Which flow generated this draft"
+    },
+    "ideaTitle": {
+      "type": "string",
+      "description": "Short label for the draft"
+    },
+    "instructions": {
+      "type": "string",
+      "description": "The brief used to generate the post"
+    },
+    "caption": {
+      "type": "string"
+    },
+    "imagePrompt": {
+      "type": "string"
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ready",
+        "sent"
+      ],
+      "default": "ready"
+    },
+    "sentAt": {
+      "type": "string",
+      "description": "ISO timestamp when sent to Ocoya"
+    }
+  },
+  "required": [
+    "caption"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

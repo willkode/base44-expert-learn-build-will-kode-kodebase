@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { RefreshCw, Send, Trash2, Loader2, CheckCircle2 } from "lucide-react";
 
-export default function OcoyaDraftCard({ draft, onChange, onRegenImage, onSend, onDiscard }) {
+export default function OcoyaDraftCard({ draft, onChange, onPersist, onRegenImage, onSend, onDiscard }) {
   if (draft.status === "sent") {
     return (
       <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 flex items-center gap-3">
@@ -32,6 +32,7 @@ export default function OcoyaDraftCard({ draft, onChange, onRegenImage, onSend, 
         <Textarea
           value={draft.caption}
           onChange={(e) => onChange({ ...draft, caption: e.target.value })}
+          onBlur={() => onPersist?.()}
           rows={6}
         />
         {draft.imageUrl && (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,21 @@ export default function OcoyaSuggest({ workspaceId }) {
   const [scheduledAt, setScheduledAt] = useState("");
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    base44.entities.OcoyaDraft.filter({ status: "ready" }, "-created_date", 50).then((records) => {
+      setDrafts(
+        records.map((r) => ({
+          id: r.id,
+          ideaTitle: r.ideaTitle || "Draft",
+          caption: r.caption,
+          imagePrompt: r.imagePrompt,
+          imageUrl: r.imageUrl,
+          status: "ready",
+        }))
+      );
+    });
+  }, []);
+
   const loadIdeas = async () => {
     setLoadingIdeas(true);
     setError(null);
@@ -54,7 +69,6 @@ export default function OcoyaSuggest({ workspaceId }) {
   const generateSelected = async () => {
     setGenerating(true);
     setError(null);
-    const newDrafts = [];
     for (let n = 0; n < selected.length; n++) {
       const idea = ideas[selected[n]];
       setProgress(`Creating post ${n + 1} of ${selected.length}: ${idea.title}...`);
@@ -64,15 +78,26 @@ export default function OcoyaSuggest({ workspaceId }) {
         imageStyle,
       });
       if (res.data?.caption) {
-        newDrafts.push({
-          id: `${Date.now()}-${n}`,
+        const record = await base44.entities.OcoyaDraft.create({
+          source: "suggest",
           ideaTitle: idea.title,
+          instructions: idea.instructions,
           caption: res.data.caption,
-          imagePrompt: res.data.imagePrompt,
-          imageUrl: res.data.imageUrl,
+          imagePrompt: res.data.imagePrompt || "",
+          imageUrl: res.data.imageUrl || "",
           status: "ready",
         });
-        setDrafts([...newDrafts]);
+        setDrafts((prev) => [
+          {
+            id: record.id,
+            ideaTitle: idea.title,
+            caption: res.data.caption,
+            imagePrompt: res.data.imagePrompt,
+            imageUrl: res.data.imageUrl,
+            status: "ready",
+          },
+          ...prev,
+        ]);
       }
     }
     setGenerating(false);
@@ -85,13 +110,19 @@ export default function OcoyaSuggest({ workspaceId }) {
     setDrafts((prev) => prev.map((d) => (d.id === updated.id ? updated : d)));
   };
 
+  const persistDraft = (draft) => {
+    base44.entities.OcoyaDraft.update(draft.id, { caption: draft.caption });
+  };
+
   const regenImage = async (draft) => {
     updateDraft({ ...draft, busy: "image" });
     const res = await base44.functions.invoke("generateOcoyaPostContent", {
       imagePrompt: draft.imagePrompt,
       imageStyle,
     });
-    updateDraft({ ...draft, busy: null, imageUrl: res.data?.imageUrl || draft.imageUrl });
+    const imageUrl = res.data?.imageUrl || draft.imageUrl;
+    updateDraft({ ...draft, busy: null, imageUrl });
+    if (res.data?.imageUrl) await base44.entities.OcoyaDraft.update(draft.id, { imageUrl });
   };
 
   const sendDraft = async (draft) => {
@@ -116,6 +147,16 @@ export default function OcoyaSuggest({ workspaceId }) {
     }
     trackEvent("ocoya_suggested_post_sent", { mode });
     updateDraft({ ...draft, busy: null, status: "sent" });
+    await base44.entities.OcoyaDraft.update(draft.id, {
+      caption: draft.caption,
+      status: "sent",
+      sentAt: new Date().toISOString(),
+    });
+  };
+
+  const discardDraft = (draft) => {
+    setDrafts((prev) => prev.filter((x) => x.id !== draft.id));
+    base44.entities.OcoyaDraft.delete(draft.id);
   };
 
   return (
@@ -211,9 +252,10 @@ export default function OcoyaSuggest({ workspaceId }) {
                 key={d.id}
                 draft={d}
                 onChange={updateDraft}
+                onPersist={() => persistDraft(d)}
                 onRegenImage={() => regenImage(d)}
                 onSend={() => sendDraft(d)}
-                onDiscard={() => setDrafts((prev) => prev.filter((x) => x.id !== d.id))}
+                onDiscard={() => discardDraft(d)}
               />
             ))}
           </div>
