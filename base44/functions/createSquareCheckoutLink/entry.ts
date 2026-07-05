@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { planId, productId, serviceId, donationCents, promptSessionId, redirectUrl } = await req.json();
+    const { planId, productId, productIds, serviceId, donationCents, promptSessionId, redirectUrl } = await req.json();
 
     // Pro members get 40% off products and one-time services (not subscriptions,
     // donations, or prompt packs). Plan is resolved server-side from the profile.
@@ -54,8 +54,37 @@ Deno.serve(async (req) => {
     } catch (_e) { isProMember = false; }
     const applyProDiscount = (cents) => isProMember ? Math.round(cents * 0.6) : cents;
 
-    let amountCents, itemName, productIdResolved = null, isDonation = false, promptSessionResolved = null;
-    if (serviceId) {
+    let amountCents, itemName, productIdResolved = null, isDonation = false, promptSessionResolved = null, cartItems = null;
+    if (Array.isArray(productIds) && productIds.length > 0) {
+      // Cart checkout — multiple products in one Square order, one line item each.
+      // Prices are always resolved server-side from the catalog.
+      const uniqueIds = [...new Set(productIds.map(String))];
+      if (uniqueIds.length > 10) {
+        return Response.json({ error: 'Carts are limited to 10 products.' }, { status: 400 });
+      }
+      const all = await base44.asServiceRole.entities.Product.filter({ active: true });
+      const resolved = [];
+      for (const id of uniqueIds) {
+        const product = all.find((p) => p.id === id);
+        if (!product) return Response.json({ error: 'One of the products in your cart is no longer available.' }, { status: 404 });
+        if ((product.priceCents || 0) === 0) continue; // free products are claimed directly, not purchased
+        let cents, name;
+        if (isSummerProductSaleActive()) {
+          cents = Math.round(product.priceCents * 0.5);
+          name = `${product.name} (Summer Special 50% off)`;
+        } else {
+          cents = applyProDiscount(product.priceCents);
+          name = isProMember ? `${product.name} (Pro 40% off)` : product.name;
+        }
+        resolved.push({ id: product.id, name, cents });
+      }
+      if (resolved.length === 0) {
+        return Response.json({ error: 'Your cart has no paid products to check out.' }, { status: 400 });
+      }
+      cartItems = resolved;
+      amountCents = resolved.reduce((sum, i) => sum + i.cents, 0);
+      itemName = `Cart — ${resolved.length} product${resolved.length > 1 ? 's' : ''}`;
+    } else if (serviceId) {
       const service = SERVICE_PRICING[serviceId];
       if (!service) return Response.json({ error: 'Invalid service.' }, { status: 400 });
       // These services are already half-price promos — the Pro discount must not stack on top.
@@ -121,6 +150,7 @@ Deno.serve(async (req) => {
     if (serviceId) metadata.serviceId = serviceId;
     if (planId) metadata.planId = planId;
     if (productIdResolved) metadata.productId = productIdResolved;
+    if (cartItems) metadata.cartProductIds = cartItems.map((i) => i.id).join(',');
     if (promptSessionResolved) metadata.promptSessionId = promptSessionResolved;
     if (isDonation) metadata.donation = 'true';
 
@@ -144,13 +174,19 @@ Deno.serve(async (req) => {
         order: {
           location_id: Deno.env.get('SQUARE_LOCATION_ID'),
           metadata,
-          line_items: [
-            {
-              name: itemName,
-              quantity: '1',
-              base_price_money: { amount: amountCents, currency: 'USD' },
-            },
-          ],
+          line_items: cartItems
+            ? cartItems.map((i) => ({
+                name: i.name,
+                quantity: '1',
+                base_price_money: { amount: i.cents, currency: 'USD' },
+              }))
+            : [
+                {
+                  name: itemName,
+                  quantity: '1',
+                  base_price_money: { amount: amountCents, currency: 'USD' },
+                },
+              ],
         },
       }),
     });

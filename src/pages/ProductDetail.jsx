@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Lock, RefreshCw } from "lucide-react";
+import { ArrowLeft, Lock, RefreshCw, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
@@ -22,12 +22,14 @@ import AgentWorkforceDetails from "@/components/products/AgentWorkforceDetails";
 import ClientPortalDetails from "@/components/products/ClientPortalDetails";
 import MobileApprovalKitDetails from "@/components/products/MobileApprovalKitDetails";
 import CompleteBundleDetails from "@/components/products/CompleteBundleDetails";
-import { trackViewItem, trackSelectItem } from "@/lib/analytics";
+import { trackViewItem, trackSelectItem, trackAddToCart } from "@/lib/analytics";
+import { useCart } from "@/components/cart/CartContext";
 import { getProductSalePriceCents, formatUsd, isSummerSaleActive } from "@/lib/summerSale";
 
 export default function ProductDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const { addItem, openCart } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -64,6 +66,11 @@ export default function ProductDetail() {
   const handleBuy = () => {
     trackSelectItem({ id: product.id, name: product.name, category: product.category, price: product.priceCents / 100 });
     navigate(`/checkout?product=${product.id}`);
+  };
+  const handleAddToCart = () => {
+    trackAddToCart({ id: product.id, name: product.name, category: product.category, price: product.priceCents / 100 });
+    addItem(product.id);
+    openCart();
   };
 
   return (
@@ -147,13 +154,20 @@ export default function ProductDetail() {
               : <>Ready to install your <span className="text-gradient-orange">marketing engine?</span></>}
           </h2>
           <p className="text-muted-foreground mb-6">{product.supportNote || "One-time fee · Free support included"}</p>
-          <Button
-            size="lg"
-            onClick={handleBuy}
-            className="font-semibold text-base px-8 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
-          >
-            Buy Now — {onSale && <span className="line-through opacity-60 mr-1.5">{fullPrice}</span>}{price}
-          </Button>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {(product.priceCents || 0) > 0 && (
+              <Button size="lg" variant="outline" onClick={handleAddToCart} className="font-semibold text-base px-6">
+                <ShoppingCart className="w-4 h-4 mr-1.5" /> Add to Cart
+              </Button>
+            )}
+            <Button
+              size="lg"
+              onClick={handleBuy}
+              className="font-semibold text-base px-8 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
+            >
+              Buy Now — {onSale && <span className="line-through opacity-60 mr-1.5">{fullPrice}</span>}{price}
+            </Button>
+          </div>
           <p className="text-xs text-muted-foreground mt-3 flex items-center justify-center gap-1">
             <Lock className="w-3 h-3" /> Secure checkout powered by Square
           </p>

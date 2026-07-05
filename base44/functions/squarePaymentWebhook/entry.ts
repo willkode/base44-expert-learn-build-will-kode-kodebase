@@ -18,6 +18,26 @@ async function isValidSignature(signatureKey, notificationUrl, rawBody, signatur
   return expected === signatureHeader;
 }
 
+// Complete Builder Bundle — expand into individual product access so every
+// included product shows up in My Products with its own download.
+async function expandBundleAccess(base44, product, userId, userEmail, paymentId) {
+  if (product?.slug !== 'complete-builder-bundle') return;
+  const all = await base44.asServiceRole.entities.Product.filter({ active: true });
+  const included = all.filter((p) => p.slug !== 'complete-builder-bundle' && (p.priceCents || 0) > 0);
+  for (const p of included) {
+    await base44.asServiceRole.entities.Payment.create({
+      userId,
+      userEmail: userEmail || '',
+      productId: p.id,
+      itemName: `${p.name} (Complete Builder Bundle)`,
+      amountCents: 0,
+      currency: 'USD',
+      squarePaymentId: `${paymentId}-bundle-${p.id}`,
+      status: 'completed',
+    });
+  }
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -45,6 +65,7 @@ Deno.serve(async (req) => {
     // Fetch the order to read the metadata we attached at checkout-link creation.
     let metadata = {};
     let lineItemName = '';
+    let orderLineItems = [];
     if (payment.order_id) {
       const orderRes = await fetch(`${baseUrl}/v2/orders/${payment.order_id}`, {
         headers: {
@@ -54,7 +75,8 @@ Deno.serve(async (req) => {
       });
       const orderBody = await orderRes.json();
       metadata = orderBody?.order?.metadata || {};
-      lineItemName = orderBody?.order?.line_items?.[0]?.name || '';
+      orderLineItems = orderBody?.order?.line_items || [];
+      lineItemName = orderLineItems[0]?.name || '';
     }
 
     let userId = metadata.base44UserId || null;
@@ -104,6 +126,41 @@ Deno.serve(async (req) => {
       return Response.json({ received: true, unattributed: true });
     }
 
+    // Cart checkout — multiple products in one Square order. Create one Payment
+    // per product so each shows up in My Products with its own download.
+    const stripPromo = (n) => (n || '').replace(/\s*\((Summer Special 50% off|Pro 40% off)\)\s*$/, '').trim();
+    let cartIds = (metadata.cartProductIds || '').split(',').filter(Boolean);
+    if (cartIds.length === 0 && orderLineItems.length > 1) {
+      // Metadata wasn't echoed back — resolve each line item by product name.
+      const catalog = await base44.asServiceRole.entities.Product.list('-created_date', 500);
+      cartIds = orderLineItems
+        .map((l) => catalog.find((p) => p.name === stripPromo(l.name))?.id)
+        .filter(Boolean);
+    }
+    if (cartIds.length > 0) {
+      let first = true;
+      for (const pid of cartIds) {
+        const prods = await base44.asServiceRole.entities.Product.filter({ id: pid });
+        const product = prods[0];
+        if (!product) continue;
+        const li = orderLineItems.find((l) => stripPromo(l.name) === product.name);
+        await base44.asServiceRole.entities.Payment.create({
+          userId,
+          userEmail: userEmail || '',
+          productId: pid,
+          itemName: li?.name || product.name,
+          amountCents: li?.total_money?.amount ?? li?.base_price_money?.amount ?? 0,
+          currency: 'USD',
+          squarePaymentId: first ? payment.id : `${payment.id}-cart-${pid}`,
+          squareReceiptUrl: first ? (payment.receipt_url || '') : '',
+          status: 'completed',
+        });
+        first = false;
+        await expandBundleAccess(base44, product, userId, userEmail, payment.id);
+      }
+      return Response.json({ received: true, cartItems: cartIds.length });
+    }
+
     await base44.asServiceRole.entities.Payment.create({
       userId,
       userEmail: userEmail || '',
@@ -118,26 +175,10 @@ Deno.serve(async (req) => {
       status: 'completed',
     });
 
-    // Complete Builder Bundle — expand into individual product access so every
-    // included product shows up in My Products with its own download.
+    // Bundle purchases expand into individual product access.
     if (productId) {
       const prods = await base44.asServiceRole.entities.Product.filter({ id: productId });
-      if (prods[0]?.slug === 'complete-builder-bundle') {
-        const all = await base44.asServiceRole.entities.Product.filter({ active: true });
-        const included = all.filter((p) => p.slug !== 'complete-builder-bundle' && (p.priceCents || 0) > 0);
-        for (const p of included) {
-          await base44.asServiceRole.entities.Payment.create({
-            userId,
-            userEmail: userEmail || '',
-            productId: p.id,
-            itemName: `${p.name} (Complete Builder Bundle)`,
-            amountCents: 0,
-            currency: 'USD',
-            squarePaymentId: `${payment.id}-bundle-${p.id}`,
-            status: 'completed',
-          });
-        }
-      }
+      if (prods[0]) await expandBundleAccess(base44, prods[0], userId, userEmail, payment.id);
     }
 
     // Prompt Engine: unlock the prompt pack for this session.

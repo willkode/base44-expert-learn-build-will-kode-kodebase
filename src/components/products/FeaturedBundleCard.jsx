@@ -1,16 +1,18 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Check, Sparkles, Crown } from "lucide-react";
+import { Check, Sparkles, Crown, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { trackSelectItem } from "@/lib/analytics";
+import { trackSelectItem, trackAddToCart } from "@/lib/analytics";
+import { useCart } from "@/components/cart/CartContext";
 import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 
 const MotionLink = motion(Link);
 
 export default function FeaturedBundleCard({ product: p }) {
   const navigate = useNavigate();
+  const { addItem, openCart } = useCart();
   if (!p) return null;
 
   return (
@@ -69,7 +71,7 @@ export default function FeaturedBundleCard({ product: p }) {
               )}
               {p.supportNote && <p className="text-xs text-muted-foreground mt-1">{p.supportNote}</p>}
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               <Button
                 onClick={(e) => {
                   e.preventDefault();
@@ -79,6 +81,18 @@ export default function FeaturedBundleCard({ product: p }) {
                 variant="outline"
               >
                 Learn More
+              </Button>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  trackAddToCart({ id: p.id, name: p.name, category: p.category, price: p.priceCents / 100 });
+                  addItem(p.id);
+                  openCart();
+                }}
+                variant="outline"
+              >
+                <ShoppingCart className="w-4 h-4 mr-1.5" /> Add to Cart
               </Button>
               <Button
                 onClick={(e) => {

@@ -77,6 +77,8 @@ export const trackPricingPlanClick = ({ planId, planName, price }) =>
   });
 
 export const trackSelectItem = (item) => trackEvent("select_item", itemPayload(item));
+export const trackAddToCart = (item) => trackEvent("add_to_cart", itemPayload(item));
+export const trackRemoveFromCart = (item) => trackEvent("remove_from_cart", itemPayload(item));
 export const trackViewItem = (item) => trackEvent("view_item", itemPayload(item));
 export const trackBeginCheckout = (item) => trackEvent("begin_checkout", itemPayload(item));
 

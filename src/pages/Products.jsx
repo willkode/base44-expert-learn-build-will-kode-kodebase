@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const MotionLink = motion(Link);
-import { Check, Sparkles, Search } from "lucide-react";
+import { Check, Sparkles, Search, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,8 @@ import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
 import Seo from "@/components/seo/Seo";
 import { softwareApplicationSchema } from "@/lib/seo";
-import { trackSelectItem } from "@/lib/analytics";
+import { trackSelectItem, trackAddToCart } from "@/lib/analytics";
+import { useCart } from "@/components/cart/CartContext";
 import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 import SummerSaleBanner from "@/components/products/SummerSaleBanner";
 import FeaturedBundleCard from "@/components/products/FeaturedBundleCard";
@@ -21,6 +22,7 @@ const FEATURED_SLUG = "complete-builder-bundle";
 
 export default function Products() {
   const navigate = useNavigate();
+  const { addItem, openCart } = useCart();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -196,18 +198,35 @@ export default function Products() {
                         Buy Now
                       </Button>
                     </div>
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        navigate(`/products/${p.slug}`);
-                      }}
-                      variant="outline"
-                      size="sm"
-                      className="w-full"
-                    >
-                      Learn More
-                    </Button>
+                    <div className="grid grid-cols-2 gap-2">
+                      {(p.priceCents || 0) > 0 && (
+                        <Button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            trackAddToCart({ id: p.id, name: p.name, category: p.category, price: p.priceCents / 100 });
+                            addItem(p.id);
+                            openCart();
+                          }}
+                          variant="outline"
+                          size="sm"
+                        >
+                          <ShoppingCart className="w-4 h-4 mr-1" /> Add to Cart
+                        </Button>
+                      )}
+                      <Button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          navigate(`/products/${p.slug}`);
+                        }}
+                        variant="outline"
+                        size="sm"
+                        className={(p.priceCents || 0) > 0 ? "" : "col-span-2"}
+                      >
+                        Learn More
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </MotionLink>

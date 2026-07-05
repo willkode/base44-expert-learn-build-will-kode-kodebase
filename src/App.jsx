@@ -7,6 +7,7 @@ import { AuthProvider } from '@/lib/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
 import GoogleAnalytics from './components/analytics/GoogleAnalytics';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import { CartProvider } from '@/components/cart/CartContext';
 
 // Public pages
 import Home from '@/pages/Home';
@@ -267,11 +268,13 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
-        <Router>
-          <ScrollToTop />
-          <GoogleAnalytics />
-          <AuthenticatedApp />
-        </Router>
+        <CartProvider>
+          <Router>
+            <ScrollToTop />
+            <GoogleAnalytics />
+            <AuthenticatedApp />
+          </Router>
+        </CartProvider>
         <Toaster />
       </QueryClientProvider>
     </AuthProvider>

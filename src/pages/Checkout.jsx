@@ -8,16 +8,20 @@ import LoadingState from "@/components/shared/LoadingState";
 import BundleUpsell from "@/components/checkout/BundleUpsell";
 import { trackBeginCheckout, trackPurchase } from "@/lib/analytics";
 import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
+import { useCart } from "@/components/cart/CartContext";
 
 export default function Checkout() {
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
   const planId = urlParams.get("plan");
   const productId = urlParams.get("product");
+  const isCart = urlParams.get("cart") === "1";
   const status = urlParams.get("status"); // "success" when returning from Square
   const plan = planId ? PLANS[planId] : null;
+  const { items: cartIds, clearCart } = useCart();
+  const [cartProducts, setCartProducts] = useState([]);
   const [product, setProduct] = useState(null);
-  const [loadingProduct, setLoadingProduct] = useState(!!productId);
+  const [loadingProduct, setLoadingProduct] = useState(!!productId || isCart);
   const [redirecting, setRedirecting] = useState(false);
   const [error, setError] = useState(null);
   const [done, setDone] = useState(null);
@@ -32,6 +36,16 @@ export default function Checkout() {
     }
   }, [productId]);
 
+  // Cart mode — load every product currently in the cart.
+  useEffect(() => {
+    if (!isCart) return;
+    base44.entities.Product.filter({ active: true }).then((all) => {
+      setCartProducts(all.filter((p) => cartIds.includes(p.id) && (p.priceCents || 0) > 0));
+      setLoadingProduct(false);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCart]);
+
   // GA4: begin_checkout once the item is known
   useEffect(() => {
     if (status === "success") return;
@@ -39,9 +53,12 @@ export default function Checkout() {
       trackBeginCheckout({ id: planId, name: `${plan.name} plan`, category: "subscription", price: parseFloat(plan.price.replace("$", "")) || 0 });
     } else if (product) {
       trackBeginCheckout({ id: product.id, name: product.name, category: product.category, price: getProductSalePriceCents(product.priceCents) / 100 });
+    } else if (isCart && cartProducts.length > 0) {
+      const totalCents = cartProducts.reduce((s, p) => s + getProductSalePriceCents(p.priceCents), 0);
+      trackBeginCheckout({ id: "cart", name: `Cart (${cartProducts.length} products)`, category: "cart", price: totalCents / 100 });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [planId, product?.id]);
+  }, [planId, product?.id, isCart, cartProducts.length]);
 
   // Returning from Square's hosted checkout — poll for the Payment record the
   // webhook creates, then route to download/success.
@@ -55,7 +72,8 @@ export default function Checkout() {
       try {
         const me = await base44.auth.me();
         const query = { userId: me.id, status: "completed" };
-        if (productId) query.productId = productId;
+        if (isCart && cartIds.length > 0) query.productId = cartIds[0];
+        else if (productId) query.productId = productId;
         else if (planId) query.planId = planId;
         const payments = await base44.entities.Payment.filter(query, "-created_date", 1);
         if (!active) return;
@@ -68,6 +86,12 @@ export default function Checkout() {
             category: plan ? "subscription" : product?.category,
             price: (pay.amountCents || 0) / 100,
           });
+          if (isCart) {
+            const label = cartIds.length > 1 ? `${pay.itemName} + ${cartIds.length - 1} more` : pay.itemName;
+            clearCart();
+            navigate(`/dashboard?purchase=success&item=${encodeURIComponent(label || "")}`);
+            return;
+          }
           if (productId) {
             // Product purchases land on the dashboard, where My Products lists
             // everything they own with download access.
@@ -93,6 +117,21 @@ export default function Checkout() {
   const startCheckout = async () => {
     setRedirecting(true);
     setError(null);
+    // Cart checkout — all cart products in a single Square order.
+    if (isCart) {
+      const returnUrl = `${window.location.origin}/checkout?cart=1&status=success`;
+      const res = await base44.functions.invoke("createSquareCheckoutLink", {
+        productIds: cartIds,
+        redirectUrl: returnUrl,
+      });
+      if (res.data?.checkoutUrl) {
+        window.location.href = res.data.checkoutUrl;
+      } else {
+        setRedirecting(false);
+        setError(res.data?.error || "Could not start checkout. Please try again.");
+      }
+      return;
+    }
     // Free products skip Square entirely — access is granted server-side.
     if (product && (product.priceCents || 0) === 0) {
       const res = await base44.functions.invoke("claimFreeProduct", { productId });
@@ -162,14 +201,26 @@ export default function Checkout() {
         backTo: "/products",
         backLabel: "Back to products",
       }
+    : isCart && cartProducts.length > 0
+    ? {
+        name: `Your cart — ${cartProducts.length} product${cartProducts.length > 1 ? "s" : ""}`,
+        desc: "One checkout, every product delivered separately in your dashboard.",
+        priceLabel: formatUsd(cartProducts.reduce((s, p) => s + getProductSalePriceCents(p.priceCents), 0)),
+        fullPriceLabel: formatUsd(cartProducts.reduce((s, p) => s + (p.priceCents || 0), 0)),
+        onSale: isSummerSaleActive(),
+        periodLabel: " one-time",
+        features: cartProducts.map((p) => p.name),
+        backTo: "/products",
+        backLabel: "Back to products",
+      }
     : null;
 
   if (!item) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <p className="text-muted-foreground mb-4">We couldn't find that item.</p>
-          <Button onClick={() => navigate("/pricing")}>View plans</Button>
+          <p className="text-muted-foreground mb-4">{isCart ? "Your cart is empty." : "We couldn't find that item."}</p>
+          <Button onClick={() => navigate(isCart ? "/products" : "/pricing")}>{isCart ? "Browse products" : "View plans"}</Button>
         </div>
       </div>
     );

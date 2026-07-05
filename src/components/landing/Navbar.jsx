@@ -12,6 +12,8 @@ import {
 import SocialLinks from "@/components/landing/SocialLinks";
 import { trackCTA } from "@/lib/analytics";
 import SummerSaleBar from "@/components/landing/SummerSaleBar";
+import CartButton from "@/components/cart/CartButton";
+import CartSheet from "@/components/cart/CartSheet";
 
 const links = [
   { label: "Contact Me", to: "/contact" },
@@ -195,6 +197,7 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
+          <CartButton />
           <SocialLinks className="mr-1" />
           {isAuthenticated ? (
             <>
@@ -217,14 +220,18 @@ export default function Navbar() {
           )}
         </div>
 
-        <button
-          className="md:hidden text-foreground p-2 -mr-2 rounded-lg hover:bg-secondary/50 transition-colors"
-          onClick={() => setOpen(!open)}
-          aria-label={open ? "Close menu" : "Open menu"}
-        >
-          {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="md:hidden flex items-center gap-1">
+          <CartButton />
+          <button
+            className="text-foreground p-2 -mr-2 rounded-lg hover:bg-secondary/50 transition-colors"
+            onClick={() => setOpen(!open)}
+            aria-label={open ? "Close menu" : "Open menu"}
+          >
+            {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
+      <CartSheet />
 
       {open && (
         <div className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border px-6 py-5 space-y-1 max-h-[calc(100vh-4rem)] overflow-y-auto overscroll-contain">
