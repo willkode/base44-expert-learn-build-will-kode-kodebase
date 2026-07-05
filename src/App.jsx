@@ -103,18 +103,7 @@ import EmailAnalytics from '@/pages/admin/email/EmailAnalytics';
 import EmailResendSettings from '@/pages/admin/email/EmailResendSettings';
 import EmailSuppressionPage from '@/pages/admin/email/EmailSuppressionPage';
 import EmailLogs from '@/pages/admin/email/EmailLogs';
-import SocialMarketingLayout from '@/components/admin/social/SocialMarketingLayout';
-import SocialDashboard from '@/pages/admin/social/SocialDashboard';
-import SocialBrandProfile from '@/pages/admin/social/SocialBrandProfile';
-import SocialCampaigns from '@/pages/admin/social/SocialCampaigns';
-import SocialCampaignDetail from '@/pages/admin/social/SocialCampaignDetail';
-import SocialStudio from '@/pages/admin/social/SocialStudio';
-import SocialApprovals from '@/pages/admin/social/SocialApprovals';
-import SocialCalendar from '@/pages/admin/social/SocialCalendar';
-import SocialConnections from '@/pages/admin/social/SocialConnections';
-import SocialAnalytics from '@/pages/admin/social/SocialAnalytics';
-import SocialLogs from '@/pages/admin/social/SocialLogs';
-import SocialSettings from '@/pages/admin/social/SocialSettings';
+import OcoyaSocial from '@/pages/admin/ocoya/OcoyaSocial';
 import SecurityDashboard from '@/pages/admin/security/SecurityDashboard';
 import AdminSettings from '@/pages/admin/AdminSettings';
 import AdminSales from '@/pages/admin/AdminSales';
@@ -233,19 +222,7 @@ const AuthenticatedApp = () => {
               <Route path="logs" element={<EmailLogs />} />
               <Route path="settings" element={<EmailResendSettings />} />
             </Route>
-            <Route path="/admin/marketing/social" element={<SocialMarketingLayout />}>
-              <Route index element={<SocialDashboard />} />
-              <Route path="brand" element={<SocialBrandProfile />} />
-              <Route path="campaigns" element={<SocialCampaigns />} />
-              <Route path="campaigns/:id" element={<SocialCampaignDetail />} />
-              <Route path="studio" element={<SocialStudio />} />
-              <Route path="approvals" element={<SocialApprovals />} />
-              <Route path="calendar" element={<SocialCalendar />} />
-              <Route path="connections" element={<SocialConnections />} />
-              <Route path="analytics" element={<SocialAnalytics />} />
-              <Route path="logs" element={<SocialLogs />} />
-              <Route path="settings" element={<SocialSettings />} />
-            </Route>
+            <Route path="/admin/marketing/social/*" element={<OcoyaSocial />} />
             <Route path="/admin/security" element={<SecurityDashboard />} />
             <Route path="/admin/settings" element={<AdminSettings />} />
             <Route path="/admin/sales" element={<AdminSales />} />
