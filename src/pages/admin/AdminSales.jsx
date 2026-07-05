@@ -11,6 +11,28 @@ const STATUS_STYLES = {
   failed: "bg-destructive/15 text-destructive",
 };
 
+// Classify how access was obtained — several legitimate $0 record types exist.
+const getOrderType = (p) => {
+  if (p.errorMessage === "Access granted by admin") return "admin_grant";
+  if ((p.squarePaymentId || "").startsWith("free-")) return "free_claim";
+  if ((p.squarePaymentId || "").includes("-bundle-")) return "bundle_item";
+  if ((p.amountCents || 0) > 0) return "paid";
+  return "other";
+};
+
+const TYPE_LABELS = {
+  paid: { label: "Paid", cls: "bg-green-500/15 text-green-400" },
+  admin_grant: { label: "Admin grant", cls: "bg-blue-500/15 text-blue-400" },
+  free_claim: { label: "Free claim", cls: "bg-secondary text-muted-foreground" },
+  bundle_item: { label: "Bundle item", cls: "bg-purple-500/15 text-purple-400" },
+  other: { label: "Other", cls: "bg-secondary text-muted-foreground" },
+};
+
+const TypeBadge = ({ type }) => {
+  const t = TYPE_LABELS[type] || TYPE_LABELS.other;
+  return <span className={`text-xs px-2.5 py-1 rounded-full font-medium whitespace-nowrap ${t.cls}`}>{t.label}</span>;
+};
+
 const StatusBadge = ({ status }) => (
   <span className={`text-xs px-2.5 py-1 rounded-full capitalize font-medium ${STATUS_STYLES[status] || "bg-secondary text-muted-foreground"}`}>
     {status}
@@ -112,6 +134,7 @@ export default function AdminSales() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
   const [showSendModal, setShowSendModal] = useState(false);
 
   useEffect(() => {
@@ -137,7 +160,8 @@ export default function AdminSales() {
       (p.userEmail || "").toLowerCase().includes(q) ||
       (p.itemName || "").toLowerCase().includes(q);
     const matchesStatus = statusFilter === "all" || p.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesType = typeFilter === "all" || getOrderType(p) === typeFilter;
+    return matchesSearch && matchesStatus && matchesType;
   });
 
   const totalRevenue = payments
@@ -163,7 +187,7 @@ export default function AdminSales() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         {[
           { label: "Total Revenue", value: formatCents(totalRevenue), icon: DollarSign, color: "text-green-400" },
-          { label: "Completed Orders", value: payments.filter((p) => p.status === "completed").length, icon: CheckCircle2, color: "text-green-400" },
+          { label: "Paid Orders", value: payments.filter((p) => p.status === "completed" && getOrderType(p) === "paid").length, icon: CheckCircle2, color: "text-green-400" },
           { label: "Pending / Failed", value: payments.filter((p) => p.status !== "completed").length, icon: Clock, color: "text-amber-400" },
         ].map(({ label, value, icon: Icon, color }) => (
           <div key={label} className="rounded-2xl border border-border bg-card/60 p-5 flex items-center gap-4">
@@ -190,6 +214,17 @@ export default function AdminSales() {
           />
         </div>
         <select
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+          className="rounded-lg border border-input bg-background text-sm px-3 py-2.5 focus:outline-none focus:ring-1 focus:ring-ring text-foreground"
+        >
+          <option value="all">All types</option>
+          <option value="paid">Paid</option>
+          <option value="admin_grant">Admin grants</option>
+          <option value="free_claim">Free claims</option>
+          <option value="bundle_item">Bundle items</option>
+        </select>
+        <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
           className="rounded-lg border border-input bg-background text-sm px-3 py-2.5 focus:outline-none focus:ring-1 focus:ring-ring text-foreground"
@@ -206,7 +241,7 @@ export default function AdminSales() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border text-left">
-              {["Date", "Customer", "Item", "Amount", "Status", "Receipt"].map((h) => (
+              {["Date", "Customer", "Item", "Amount", "Type", "Status", "Receipt"].map((h) => (
                 <th key={h} className="px-5 py-3.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{h}</th>
               ))}
             </tr>
@@ -214,7 +249,7 @@ export default function AdminSales() {
           <tbody className="divide-y divide-border">
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-5 py-10 text-center text-muted-foreground text-sm">No orders found.</td>
+                <td colSpan={7} className="px-5 py-10 text-center text-muted-foreground text-sm">No orders found.</td>
               </tr>
             ) : (
               filtered.map((p) => {
@@ -235,6 +270,9 @@ export default function AdminSales() {
                     </td>
                     <td className="px-5 py-3.5 font-sora font-semibold whitespace-nowrap">
                       {formatCents(p.amountCents)}
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <TypeBadge type={getOrderType(p)} />
                     </td>
                     <td className="px-5 py-3.5">
                       <StatusBadge status={p.status} />
