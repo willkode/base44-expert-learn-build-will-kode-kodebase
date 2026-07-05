@@ -118,10 +118,17 @@ export default function ExploreResources() {
               to="/learn/blog"
               linkLabel="View all posts"
             />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {posts.map((post) => (
-                <BlogCard key={post.id} post={post} />
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="h-full">
+                <BlogCard post={posts[0]} />
+              </div>
+              {posts.length > 1 && (
+                <div className="flex flex-col gap-6">
+                  {posts.slice(1, 3).map((post) => (
+                    <BlogCard key={post.id} post={post} compact />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
