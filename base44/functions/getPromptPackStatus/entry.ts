@@ -49,7 +49,9 @@ Deno.serve(async (req) => {
 
     const canSeeBodies = unlocked || isAdmin || isPro;
 
-    const prompts = await base44.entities.GeneratedPrompt.filter({ session_id: sessionId }, 'order_number');
+    // GeneratedPrompt is admin-only at the RLS level (paywalled content) —
+    // read with the service role; this endpoint enforces ownership + unlock above.
+    const prompts = await base44.asServiceRole.entities.GeneratedPrompt.filter({ session_id: sessionId }, 'order_number');
     const safePrompts = prompts.map((p) => {
       const base = {
         id: p.id,

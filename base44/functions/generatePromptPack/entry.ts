@@ -88,10 +88,8 @@ Deno.serve(async (req) => {
     }
 
     // Clear any prior prompts for this session (regeneration safety).
-    const prior = await base44.entities.GeneratedPrompt.filter({ session_id: sessionId });
-    for (const p of prior) {
-      await base44.entities.GeneratedPrompt.delete(p.id);
-    }
+    // GeneratedPrompt is admin-only at the RLS level (paywalled content) — use the service role.
+    await base44.asServiceRole.entities.GeneratedPrompt.deleteMany({ session_id: sessionId });
 
     const groups = [
       { key: 'build_prompts', group: 'build' },
@@ -104,7 +102,7 @@ Deno.serve(async (req) => {
     for (const { key, group } of groups) {
       const list = arr(result[key]);
       for (const p of list) {
-        await base44.entities.GeneratedPrompt.create({
+        await base44.asServiceRole.entities.GeneratedPrompt.create({
           session_id: sessionId,
           blueprint_id: blueprint.id,
           user_id: user.id,
