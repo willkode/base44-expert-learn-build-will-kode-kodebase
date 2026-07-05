@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { planId, productId, productIds, serviceId, donationCents, promptSessionId, redirectUrl } = await req.json();
+    const { planId, productId, productIds, serviceId, donationCents, promptSessionId, redirectUrl, couponCode } = await req.json();
 
     // Pro members get 40% off products and one-time services (not subscriptions,
     // donations, or prompt packs). Plan is resolved server-side from the profile.
@@ -54,13 +54,24 @@ Deno.serve(async (req) => {
     } catch (_e) { isProMember = false; }
     const applyProDiscount = (cents) => isProMember ? Math.round(cents * 0.6) : cents;
 
-    let amountCents, itemName, productIdResolved = null, isDonation = false, promptSessionResolved = null, cartItems = null;
+    let amountCents, itemName, productIdResolved = null, isDonation = false, promptSessionResolved = null, cartItems = null, metadataCouponCode = null;
     if (Array.isArray(productIds) && productIds.length > 0) {
       // Cart checkout — multiple products in one Square order, one line item each.
       // Prices are always resolved server-side from the catalog.
       const uniqueIds = [...new Set(productIds.map(String))];
       if (uniqueIds.length > 10) {
         return Response.json({ error: 'Carts are limited to 10 products.' }, { status: 400 });
+      }
+      // Coupon — re-validated server-side; the code is never trusted from the client.
+      let coupon = null;
+      if (couponCode) {
+        const found = await base44.asServiceRole.entities.Coupon.filter({ code: String(couponCode).trim().toUpperCase() });
+        const c = found[0];
+        const exhausted = c && c.singleUse !== false && (c.usedCount || 0) > 0;
+        if (!c || c.active === false || exhausted) {
+          return Response.json({ error: 'This coupon is no longer valid. Remove it and try again.' }, { status: 400 });
+        }
+        coupon = c;
       }
       const all = await base44.asServiceRole.entities.Product.filter({ active: true });
       const resolved = [];
@@ -69,7 +80,11 @@ Deno.serve(async (req) => {
         if (!product) return Response.json({ error: 'One of the products in your cart is no longer available.' }, { status: 404 });
         if ((product.priceCents || 0) === 0) continue; // free products are claimed directly, not purchased
         let cents, name;
-        if (isSummerProductSaleActive()) {
+        const override = coupon?.productPrices?.find((o) => o.productId === product.id);
+        if (override && Number.isFinite(override.priceCents)) {
+          cents = Math.max(0, Math.round(override.priceCents));
+          name = `${product.name} (Coupon ${coupon.code})`;
+        } else if (isSummerProductSaleActive()) {
           cents = Math.round(product.priceCents * 0.5);
           name = `${product.name} (Summer Special 50% off)`;
         } else {
@@ -83,7 +98,11 @@ Deno.serve(async (req) => {
       }
       cartItems = resolved;
       amountCents = resolved.reduce((sum, i) => sum + i.cents, 0);
+      if (amountCents <= 0) {
+        return Response.json({ error: 'Order total must be greater than $0. Adjust the coupon or cart.' }, { status: 400 });
+      }
       itemName = `Cart — ${resolved.length} product${resolved.length > 1 ? 's' : ''}`;
+      if (coupon) metadataCouponCode = coupon.code;
     } else if (serviceId) {
       const service = SERVICE_PRICING[serviceId];
       if (!service) return Response.json({ error: 'Invalid service.' }, { status: 400 });
@@ -151,6 +170,7 @@ Deno.serve(async (req) => {
     if (planId) metadata.planId = planId;
     if (productIdResolved) metadata.productId = productIdResolved;
     if (cartItems) metadata.cartProductIds = cartItems.map((i) => i.id).join(',');
+    if (metadataCouponCode) metadata.couponCode = metadataCouponCode;
     if (promptSessionResolved) metadata.promptSessionId = promptSessionResolved;
     if (isDonation) metadata.donation = 'true';
 

@@ -1,0 +1,66 @@
+{
+  "name": "Coupon",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "Uppercase coupon code (unique)"
+    },
+    "description": {
+      "type": "string"
+    },
+    "singleUse": {
+      "type": "boolean",
+      "default": true,
+      "description": "Deactivates automatically after the first completed purchase"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    },
+    "productPrices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string"
+          },
+          "priceCents": {
+            "type": "number",
+            "description": "Override price in cents for this product"
+          }
+        }
+      },
+      "default": [],
+      "description": "Per-product override prices this coupon applies"
+    },
+    "usedCount": {
+      "type": "number",
+      "default": 0
+    },
+    "usedBy": {
+      "type": "string",
+      "description": "Email of the last redeemer"
+    },
+    "usedAt": {
+      "type": "string",
+      "description": "ISO timestamp of the last redemption"
+    }
+  },
+  "required": [
+    "code"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

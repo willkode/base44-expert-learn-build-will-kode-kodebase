@@ -14,6 +14,7 @@ export function CartProvider({ children }) {
     }
   });
   const [isOpen, setIsOpen] = useState(false);
+  const [coupon, setCoupon] = useState(null); // { code, prices: { productId: cents } }
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
@@ -29,13 +30,14 @@ export function CartProvider({ children }) {
     setItems((prev) => prev.filter((id) => id !== productId));
   }, []);
 
-  const clearCart = useCallback(() => setItems([]), []);
+  const clearCart = useCallback(() => { setItems([]); setCoupon(null); }, []);
+  const clearCoupon = useCallback(() => setCoupon(null), []);
   const inCart = useCallback((productId) => items.includes(productId), [items]);
   const openCart = useCallback(() => setIsOpen(true), []);
   const closeCart = useCallback(() => setIsOpen(false), []);
 
   return (
-    <CartContext.Provider value={{ items, count: items.length, addItem, removeItem, clearCart, inCart, isOpen, openCart, closeCart, setIsOpen }}>
+    <CartContext.Provider value={{ items, count: items.length, addItem, removeItem, clearCart, inCart, isOpen, openCart, closeCart, setIsOpen, coupon, setCoupon, clearCoupon }}>
       {children}
     </CartContext.Provider>
   );

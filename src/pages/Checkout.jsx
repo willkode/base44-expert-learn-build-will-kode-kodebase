@@ -18,7 +18,8 @@ export default function Checkout() {
   const isCart = urlParams.get("cart") === "1";
   const status = urlParams.get("status"); // "success" when returning from Square
   const plan = planId ? PLANS[planId] : null;
-  const { items: cartIds, clearCart } = useCart();
+  const { items: cartIds, clearCart, coupon } = useCart();
+  const cartPriceFor = (p) => coupon?.prices?.[p.id] ?? getProductSalePriceCents(p.priceCents);
   const [cartProducts, setCartProducts] = useState([]);
   const [product, setProduct] = useState(null);
   const [loadingProduct, setLoadingProduct] = useState(!!productId || isCart);
@@ -54,7 +55,7 @@ export default function Checkout() {
     } else if (product) {
       trackBeginCheckout({ id: product.id, name: product.name, category: product.category, price: getProductSalePriceCents(product.priceCents) / 100 });
     } else if (isCart && cartProducts.length > 0) {
-      const totalCents = cartProducts.reduce((s, p) => s + getProductSalePriceCents(p.priceCents), 0);
+      const totalCents = cartProducts.reduce((s, p) => s + cartPriceFor(p), 0);
       trackBeginCheckout({ id: "cart", name: `Cart (${cartProducts.length} products)`, category: "cart", price: totalCents / 100 });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -122,6 +123,7 @@ export default function Checkout() {
       const returnUrl = `${window.location.origin}/checkout?cart=1&status=success`;
       const res = await base44.functions.invoke("createSquareCheckoutLink", {
         productIds: cartIds,
+        couponCode: coupon?.code || undefined,
         redirectUrl: returnUrl,
       });
       if (res.data?.checkoutUrl) {
@@ -205,9 +207,10 @@ export default function Checkout() {
     ? {
         name: `Your cart — ${cartProducts.length} product${cartProducts.length > 1 ? "s" : ""}`,
         desc: "One checkout, every product delivered separately in your dashboard.",
-        priceLabel: formatUsd(cartProducts.reduce((s, p) => s + getProductSalePriceCents(p.priceCents), 0)),
+        priceLabel: formatUsd(cartProducts.reduce((s, p) => s + cartPriceFor(p), 0)),
         fullPriceLabel: formatUsd(cartProducts.reduce((s, p) => s + (p.priceCents || 0), 0)),
-        onSale: isSummerSaleActive(),
+        onSale: isSummerSaleActive() || !!coupon,
+        couponCode: isCart ? coupon?.code : undefined,
         periodLabel: " one-time",
         features: cartProducts.map((p) => p.name),
         backTo: "/products",
@@ -301,9 +304,11 @@ export default function Checkout() {
               {item.onSale && <span className="text-muted-foreground mb-1.5 text-xl line-through">{item.fullPriceLabel}</span>}
               <span className="text-muted-foreground mb-1.5">{item.periodLabel}</span>
             </div>
-            {item.onSale && (
+            {item.couponCode ? (
+              <p className="text-xs text-primary mb-1">Coupon {item.couponCode} applied</p>
+            ) : item.onSale ? (
               <p className="text-xs text-primary mb-1">Summer Special · 50% off · ends {SUMMER_SALE_END_LABEL}</p>
-            )}
+            ) : null}
             {item.supportNote && <p className="text-xs text-muted-foreground mb-4">{item.supportNote}</p>}
             <ul className="space-y-2.5 mt-4">
               {item.features.map((f) => (

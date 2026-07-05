@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
     // suffixes) against the product catalog so buyers get assigned the product.
     if (!productId && !planId && !promptSessionId && !metadata.serviceId && !metadata.donation) {
       const cleanName = (metadata.itemName || lineItemName || '')
-        .replace(/\s*\((Summer Special 50% off|Pro 40% off)\)\s*$/, '')
+        .replace(/\s*\((Summer Special 50% off|Pro 40% off|Coupon [A-Z0-9_-]+)\)\s*$/, '')
         .trim();
       if (cleanName) {
         const products = await base44.asServiceRole.entities.Product.list('-created_date', 500);
@@ -126,9 +126,24 @@ Deno.serve(async (req) => {
       return Response.json({ received: true, unattributed: true });
     }
 
+    // Coupon redemption — mark the coupon used after a completed payment.
+    // Single-use coupons deactivate so they can never be redeemed twice.
+    if (metadata.couponCode) {
+      const coupons = await base44.asServiceRole.entities.Coupon.filter({ code: metadata.couponCode });
+      const coupon = coupons[0];
+      if (coupon) {
+        await base44.asServiceRole.entities.Coupon.update(coupon.id, {
+          usedCount: (coupon.usedCount || 0) + 1,
+          usedBy: userEmail || '',
+          usedAt: new Date().toISOString(),
+          ...(coupon.singleUse !== false ? { active: false } : {}),
+        });
+      }
+    }
+
     // Cart checkout — multiple products in one Square order. Create one Payment
     // per product so each shows up in My Products with its own download.
-    const stripPromo = (n) => (n || '').replace(/\s*\((Summer Special 50% off|Pro 40% off)\)\s*$/, '').trim();
+    const stripPromo = (n) => (n || '').replace(/\s*\((Summer Special 50% off|Pro 40% off|Coupon [A-Z0-9_-]+)\)\s*$/, '').trim();
     let cartIds = (metadata.cartProductIds || '').split(',').filter(Boolean);
     if (cartIds.length === 0 && orderLineItems.length > 1) {
       // Metadata wasn't echoed back — resolve each line item by product name.

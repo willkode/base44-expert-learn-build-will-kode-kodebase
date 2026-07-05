@@ -22,6 +22,7 @@ import {
   Vault,
   Crown,
   Package,
+  Ticket,
 } from "lucide-react";
 
 export const userNav = [
@@ -57,6 +58,7 @@ export const adminNav = [
   { label: "Agent Skills", to: "/admin/agent-skills", icon: Sparkles },
   { label: "Sales & Orders", to: "/admin/sales", icon: DollarSign },
   { label: "Products & Downloads", to: "/admin/products", icon: Package },
+  { label: "Coupons", to: "/admin/coupons", icon: Ticket },
   { label: "Security", to: "/admin/security", icon: ShieldHalf },
   { label: "System Settings", to: "/admin/settings", icon: Cog },
 ];
