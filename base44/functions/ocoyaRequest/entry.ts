@@ -16,7 +16,8 @@ async function ocoya(path, { method = 'GET', body } = {}) {
   let data = null;
   try { data = text ? JSON.parse(text) : null; } catch { data = { raw: text }; }
   if (!res.ok) {
-    throw new Error(data?.message || data?.error || `Ocoya API error (${res.status})`);
+    const detail = data?.message || data?.error || (data ? JSON.stringify(data).slice(0, 300) : '');
+    throw new Error(detail ? `Ocoya API error (${res.status}): ${detail}` : `Ocoya API error (${res.status})`);
   }
   return data;
 }

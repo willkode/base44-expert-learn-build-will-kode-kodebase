@@ -140,7 +140,17 @@ export default function OcoyaSuggest({ workspaceId }) {
     if (profiles.length) payload.socialProfileIds = profiles;
     if (mode === "now") payload.scheduledAt = new Date().toISOString();
     if (mode === "schedule") payload.scheduledAt = new Date(scheduledAt).toISOString();
-    const res = await base44.functions.invoke("ocoyaRequest", payload);
+    let res;
+    try {
+      res = await base44.functions.invoke("ocoyaRequest", payload);
+    } catch (e) {
+      updateDraft({
+        ...draft,
+        busy: null,
+        error: e?.response?.data?.error || e.message || "Sending to Ocoya failed.",
+      });
+      return;
+    }
     if (res.data?.error) {
       updateDraft({ ...draft, busy: null, error: res.data.error });
       return;

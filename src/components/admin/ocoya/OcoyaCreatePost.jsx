@@ -119,7 +119,14 @@ export default function OcoyaCreatePost({ workspaceId }) {
     if (mode === "now") payload.scheduledAt = new Date().toISOString();
     if (mode === "schedule") payload.scheduledAt = new Date(scheduledAt).toISOString();
 
-    const res = await base44.functions.invoke("ocoyaRequest", payload);
+    let res;
+    try {
+      res = await base44.functions.invoke("ocoyaRequest", payload);
+    } catch (e) {
+      setSending(false);
+      setError(e?.response?.data?.error || e.message || "Sending to Ocoya failed.");
+      return;
+    }
     setSending(false);
     if (res.data?.error) {
       setError(res.data.error);
