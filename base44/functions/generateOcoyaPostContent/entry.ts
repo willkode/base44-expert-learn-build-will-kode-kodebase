@@ -1,15 +1,17 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-const BRAND_PALETTE =
-  'Deep navy background (#0d1326 / #0a0f1e) with glowing orange-to-red gradient accents transitioning through coral, orange, and amber (#f87171, #fb923c, #facc15). No text, no logos, no watermarks. Consistent lighting, high contrast, ample negative space.';
+// Mandatory brand rules — every generated image must follow these, regardless of style.
+const BRAND_RULES =
+  'Dark tech aesthetic on a deep navy background (#0d1326 / #0a0f1e). Glowing orange-to-red gradient accents transitioning through coral, orange, and amber (#f87171, #fb923c, #facc15). Minimal flat vector style with subtle blueprint grid lines and soft glows. Clean, modern, premium SaaS/developer-tool look. No logos, no watermarks. Consistent lighting, high contrast, ample negative space.';
 
+// Styles are variations WITHIN the brand system — they never override the brand rules.
 const IMAGE_STYLES = {
-  brand: `Dark tech aesthetic. Minimal flat vector style with subtle blueprint grid lines and soft glows. Clean, modern, premium SaaS/developer-tool look. ${BRAND_PALETTE}`,
-  photoreal: `Photorealistic, cinematic photography style with dramatic moody lighting. ${BRAND_PALETTE}`,
-  threeD: `Premium 3D render, glossy materials, soft studio lighting, depth of field. ${BRAND_PALETTE}`,
-  illustration: `Detailed digital illustration, bold shapes, stylized characters and scenes. ${BRAND_PALETTE}`,
-  minimal: `Ultra-minimal abstract composition, simple geometric shapes, generous empty space. ${BRAND_PALETTE}`,
-  isometric: `Isometric flat design scene with clean lines, subtle blueprint grid, soft glows. ${BRAND_PALETTE}`,
+  brand: `${BRAND_RULES}`,
+  photoreal: `Cinematic, dramatic moody lighting with realistic depth. ${BRAND_RULES}`,
+  threeD: `Subtle 3D depth, glossy materials, soft studio lighting. ${BRAND_RULES}`,
+  illustration: `Bold shapes and stylized scenes. ${BRAND_RULES}`,
+  minimal: `Ultra-minimal abstract composition, simple geometric shapes, extra generous empty space. ${BRAND_RULES}`,
+  isometric: `Isometric scene with clean lines. ${BRAND_RULES}`,
 };
 
 const styleFor = (key) => IMAGE_STYLES[key] || IMAGE_STYLES.brand;
