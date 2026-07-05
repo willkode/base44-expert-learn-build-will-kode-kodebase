@@ -9,8 +9,17 @@ const VAULT_PRODUCT_ID = '6a36c8c785752800bd7580be';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    // auth.me() throws for anonymous visitors — the vault landing page is
+    // public, so treat that as "no access" instead of erroring with a 500.
+    let user = null;
+    try {
+      user = await base44.auth.me();
+    } catch (_e) {
+      user = null;
+    }
+    if (!user) {
+      return Response.json({ hasAccess: false, isPro: false, hasPurchase: false, via: null, prompts: [] });
+    }
 
     // Pro members get vault access included.
     const profiles = await base44.asServiceRole.entities.UserProfile.filter({ userId: user.id });
