@@ -30,21 +30,22 @@ Deno.serve(async (req) => {
     const profiles = await base44.asServiceRole.entities.UserProfile.filter({ userId: user.id });
     const isPro = profiles[0]?.plan === 'pro';
 
-    // Reconcile unlock from a completed Payment (in case the webhook flipped the
-    // Payment but not the session, or vice versa).
-    let unlocked = !!session.unlocked;
-    if (!unlocked) {
-      const paid = await base44.asServiceRole.entities.Payment.filter({
-        promptSessionId: sessionId,
-        status: 'completed',
+    // NEVER trust session.unlocked — the session record is owner-writable, so a
+    // user could flip the flag themselves. The only source of truth for an
+    // unlock is a completed Payment record (admin-write-only, set by the
+    // Square webhook).
+    const paid = await base44.asServiceRole.entities.Payment.filter({
+      promptSessionId: sessionId,
+      status: 'completed',
+    });
+    const unlocked = paid.length > 0;
+
+    // Keep the session's display flag in sync with the verified state.
+    if (unlocked && !session.unlocked) {
+      await base44.asServiceRole.entities.PromptGeneratorSession.update(sessionId, {
+        unlocked: true,
+        unlocked_at: session.unlocked_at || new Date().toISOString(),
       });
-      if (paid.length > 0) {
-        unlocked = true;
-        await base44.entities.PromptGeneratorSession.update(sessionId, {
-          unlocked: true,
-          unlocked_at: session.unlocked_at || new Date().toISOString(),
-        });
-      }
     }
 
     const canSeeBodies = unlocked || isAdmin || isPro;
@@ -82,7 +83,7 @@ Deno.serve(async (req) => {
         current_stage: session.current_stage,
         completion_score: session.completion_score,
         generated_prompt_count: session.generated_prompt_count,
-        unlocked: session.unlocked,
+        unlocked,
       },
       prompts: safePrompts,
     });
