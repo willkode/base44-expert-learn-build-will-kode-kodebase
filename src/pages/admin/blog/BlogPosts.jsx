@@ -36,7 +36,16 @@ export default function BlogPosts() {
   const handleDelete = async () => {
     if (!deletePost) return;
     setDeleting(true);
-    await base44.entities.BlogPost.delete(deletePost.id);
+    try {
+      await base44.entities.BlogPost.delete(deletePost.id);
+    } catch (e) {
+      // Post already deleted — just remove it from the list
+      if (!/not found/i.test(e?.message || "")) {
+        setDeleting(false);
+        setDeletePost(null);
+        throw e;
+      }
+    }
     setPosts((prev) => prev.filter((p) => p.id !== deletePost.id));
     setDeleting(false);
     setDeletePost(null);
