@@ -52,6 +52,7 @@ Rules:
 - FORMATTING IS CRITICAL: break the caption into short paragraphs of 1-2 sentences each, separated by a BLANK LINE (two newline characters "\\n\\n"). Never return one solid block of text.
 - Put the hashtags on their own line at the very end, separated from the body by a blank line.
 - The hashtags MUST always include #Base44.
+- If the instructions mention a page URL (e.g. https://kodebase.us/...), include that exact link in the caption as the call to action — never say "link in bio". If no URL is given, use https://kodebase.us as the link.
 - Use emojis sparingly and only where they add energy.
 - Do not use placeholder text, markdown formatting, or quotation marks around the caption.
 - Also write a detailed image generation prompt (subject, composition, mood) that visually matches the post topic.`,
