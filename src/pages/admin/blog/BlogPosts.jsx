@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { FileText, Plus, ExternalLink, Sparkles, Pencil, Share2, Trash2 } from "lucide-react";
 import ShareToOcoyaDialog from "@/components/admin/blog/ShareToOcoyaDialog";
+import SuggestPostIdeasDialog from "@/components/admin/blog/SuggestPostIdeasDialog";
 import {
   AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription,
   AlertDialogFooter, AlertDialogCancel, AlertDialogAction,
@@ -30,6 +31,7 @@ export default function BlogPosts() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [sharePost, setSharePost] = useState(null);
+  const [ideasOpen, setIdeasOpen] = useState(false);
   const [deletePost, setDeletePost] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
@@ -72,6 +74,9 @@ export default function BlogPosts() {
         description="Search, edit, approve, schedule, publish, and archive your posts."
         actions={
           <div className="flex gap-2">
+            <Button variant="outline" className="gap-2" onClick={() => setIdeasOpen(true)}>
+              <Sparkles className="w-4 h-4" /> Suggest ideas
+            </Button>
             <Button asChild variant="outline" className="gap-2">
               <Link to="/admin/marketing/blog/generator"><Sparkles className="w-4 h-4" /> Generate</Link>
             </Button>
@@ -143,6 +148,12 @@ export default function BlogPosts() {
       />
 
       <ShareToOcoyaDialog post={sharePost} open={!!sharePost} onOpenChange={(o) => !o && setSharePost(null)} />
+
+      <SuggestPostIdeasDialog
+        open={ideasOpen}
+        onOpenChange={setIdeasOpen}
+        onDraftsCreated={(created) => setPosts((prev) => [...created, ...prev])}
+      />
 
       <AlertDialog open={!!deletePost} onOpenChange={(o) => !o && setDeletePost(null)}>
         <AlertDialogContent>
