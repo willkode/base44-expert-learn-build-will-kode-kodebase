@@ -30,7 +30,7 @@
     },
     "defaultAuthorName": {
       "type": "string",
-      "default": "KodeBase Team"
+      "default": "Will Kode"
     },
     "defaultAuthorBio": {
       "type": "string"
