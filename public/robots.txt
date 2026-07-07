@@ -9,5 +9,9 @@ Disallow: /login
 Disallow: /register
 Disallow: /forgot-password
 Disallow: /reset-password
+Disallow: /checkout
+Disallow: /download
+Disallow: /service-onboarding
+Disallow: /vault/access
 
-Sitemap: https://forgebase.us/sitemap.xml
+Sitemap: https://kodebase.us/sitemap.xml
