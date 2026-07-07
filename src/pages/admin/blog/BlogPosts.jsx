@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { FileText, Plus, ExternalLink, Sparkles, Pencil } from "lucide-react";
+import { FileText, Plus, ExternalLink, Sparkles, Pencil, Share2 } from "lucide-react";
+import ShareToOcoyaDialog from "@/components/admin/blog/ShareToOcoyaDialog";
 import PageHeader from "@/components/shared/PageHeader";
 import AdminTable from "@/components/admin/AdminTable";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ export default function BlogPosts() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [sharePost, setSharePost] = useState(null);
 
   useEffect(() => {
     base44.entities.BlogPost.list("-created_date", 1000).then((d) => {
@@ -103,10 +105,17 @@ export default function BlogPosts() {
                   <Button variant="ghost" size="icon" title="View post"><ExternalLink className="w-4 h-4" /></Button>
                 </a>
               )}
+              {p.slug && (
+                <Button variant="ghost" size="icon" title="Send to Ocoya" onClick={() => setSharePost(p)}>
+                  <Share2 className="w-4 h-4 text-primary" />
+                </Button>
+              )}
             </div>,
           ];
         }}
       />
+
+      <ShareToOcoyaDialog post={sharePost} open={!!sharePost} onOpenChange={(o) => !o && setSharePost(null)} />
     </div>
   );
 }
