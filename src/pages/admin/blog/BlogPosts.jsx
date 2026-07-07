@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { FileText, Plus, ExternalLink, Sparkles, Pencil, Share2 } from "lucide-react";
+import { FileText, Plus, ExternalLink, Sparkles, Pencil, Share2, Trash2 } from "lucide-react";
 import ShareToOcoyaDialog from "@/components/admin/blog/ShareToOcoyaDialog";
+import {
+  AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription,
+  AlertDialogFooter, AlertDialogCancel, AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 import PageHeader from "@/components/shared/PageHeader";
 import AdminTable from "@/components/admin/AdminTable";
 import { Button } from "@/components/ui/button";
@@ -26,6 +30,17 @@ export default function BlogPosts() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [sharePost, setSharePost] = useState(null);
+  const [deletePost, setDeletePost] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    if (!deletePost) return;
+    setDeleting(true);
+    await base44.entities.BlogPost.delete(deletePost.id);
+    setPosts((prev) => prev.filter((p) => p.id !== deletePost.id));
+    setDeleting(false);
+    setDeletePost(null);
+  };
 
   useEffect(() => {
     base44.entities.BlogPost.list("-created_date", 1000).then((d) => {
@@ -110,12 +125,36 @@ export default function BlogPosts() {
                   <Share2 className="w-4 h-4 text-primary" />
                 </Button>
               )}
+              <Button variant="ghost" size="icon" title="Delete post" onClick={() => setDeletePost(p)}>
+                <Trash2 className="w-4 h-4 text-destructive" />
+              </Button>
             </div>,
           ];
         }}
       />
 
       <ShareToOcoyaDialog post={sharePost} open={!!sharePost} onOpenChange={(o) => !o && setSharePost(null)} />
+
+      <AlertDialog open={!!deletePost} onOpenChange={(o) => !o && setDeletePost(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this post?</AlertDialogTitle>
+            <AlertDialogDescription>
+              "{deletePost?.title}" will be permanently deleted. This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
