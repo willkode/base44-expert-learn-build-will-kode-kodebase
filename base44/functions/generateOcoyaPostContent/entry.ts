@@ -49,6 +49,8 @@ ${instructions}
 
 Rules:
 - The caption must be complete and ready to paste — engaging hook in the first line, short punchy lines, and 3-6 relevant hashtags at the end.
+- FORMATTING IS CRITICAL: break the caption into short paragraphs of 1-2 sentences each, separated by a BLANK LINE (two newline characters "\\n\\n"). Never return one solid block of text.
+- Put the hashtags on their own line at the very end, separated from the body by a blank line.
 - The hashtags MUST always include #Base44.
 - Use emojis sparingly and only where they add energy.
 - Do not use placeholder text, markdown formatting, or quotation marks around the caption.
