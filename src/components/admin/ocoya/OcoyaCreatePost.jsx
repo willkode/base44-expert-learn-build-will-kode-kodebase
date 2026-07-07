@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Wand2, RefreshCw, Send, Loader2, CheckCircle2 } from "lucide-react";
 import OcoyaProfilePicker from "@/components/admin/ocoya/OcoyaProfilePicker";
+import OcoyaSlotPicker from "@/components/admin/ocoya/OcoyaSlotPicker";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { trackEvent } from "@/lib/analytics";
 
@@ -265,12 +266,7 @@ export default function OcoyaCreatePost({ workspaceId }) {
                 </button>
               ))}
             </div>
-            {mode === "schedule" && (
-              <div className="space-y-2 max-w-xs">
-                <Label>Schedule for</Label>
-                <Input type="datetime-local" value={scheduledAt} onChange={(e) => setScheduledAt(e.target.value)} />
-              </div>
-            )}
+            {mode === "schedule" && <OcoyaSlotPicker value={scheduledAt} onChange={setScheduledAt} />}
             {error && <p className="text-sm text-destructive">{error}</p>}
             <Button
               onClick={handleSend}

@@ -9,6 +9,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Sparkles, Wand2, Loader2 } from "lucide-react";
 import OcoyaProfilePicker from "@/components/admin/ocoya/OcoyaProfilePicker";
 import OcoyaDraftCard from "@/components/admin/ocoya/OcoyaDraftCard";
+import OcoyaSlotPicker from "@/components/admin/ocoya/OcoyaSlotPicker";
 import { IMAGE_STYLES } from "@/components/admin/ocoya/OcoyaCreatePost";
 import { trackEvent } from "@/lib/analytics";
 
@@ -247,12 +248,7 @@ export default function OcoyaSuggest({ workspaceId }) {
                 </button>
               ))}
             </div>
-            {mode === "schedule" && (
-              <div className="space-y-2 max-w-xs">
-                <Label>Schedule for</Label>
-                <Input type="datetime-local" value={scheduledAt} onChange={(e) => setScheduledAt(e.target.value)} />
-              </div>
-            )}
+            {mode === "schedule" && <OcoyaSlotPicker value={scheduledAt} onChange={setScheduledAt} />}
           </div>
 
           <div className="space-y-4">

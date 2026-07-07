@@ -49,6 +49,7 @@ ${instructions}
 
 Rules:
 - The caption must be complete and ready to paste — engaging hook in the first line, short punchy lines, and 3-6 relevant hashtags at the end.
+- The hashtags MUST always include #Base44.
 - Use emojis sparingly and only where they add energy.
 - Do not use placeholder text, markdown formatting, or quotation marks around the caption.
 - Also write a detailed image generation prompt (subject, composition, mood) that visually matches the post topic.`,
@@ -62,6 +63,10 @@ Rules:
       },
     });
 
+    // Guarantee the #Base44 hashtag is present even if the model omits it.
+    let caption = result.caption || '';
+    if (!/#base44\b/i.test(caption)) caption = `${caption.trimEnd()} #Base44`;
+
     let imageUrl = null;
     if (includeImage) {
       const img = await base44.integrations.Core.GenerateImage({
@@ -70,7 +75,7 @@ Rules:
       imageUrl = img.url;
     }
 
-    return Response.json({ caption: result.caption, imagePrompt: result.image_prompt, imageUrl });
+    return Response.json({ caption, imagePrompt: result.image_prompt, imageUrl });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
