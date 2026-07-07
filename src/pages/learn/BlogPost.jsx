@@ -214,15 +214,22 @@ export default function BlogPost() {
                 <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                   Generate your data model, roles, security rules, and copy-paste build prompts in minutes.
                 </p>
-                <Button
-                  asChild
-                  size="lg"
-                  className="font-semibold gap-2 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] hover:opacity-90 text-white border-0"
-                >
-                  <Link to="/pricing" onClick={() => trackBlogClick(post.slug, "cta")}>
-                    Get started free
-                  </Link>
-                </Button>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="font-semibold gap-2 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] hover:opacity-90 text-white border-0"
+                  >
+                    <Link to="/pricing" onClick={() => trackBlogClick(post.slug, "cta")}>
+                      Get started free
+                    </Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline" className="font-semibold">
+                    <Link to="/products" onClick={() => trackBlogClick(post.slug, "products_cta")}>
+                      Browse our products
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
 

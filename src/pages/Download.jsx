@@ -203,6 +203,18 @@ export default function Download() {
             )}
           </div>
         </div>
+
+        <div className="mt-6 text-center">
+          <Button
+            variant="outline"
+            onClick={() => {
+              trackEvent("cta_view_products", { location: "download_page" });
+              navigate("/products");
+            }}
+          >
+            Explore more products
+          </Button>
+        </div>
       </div>
     </div>
   );

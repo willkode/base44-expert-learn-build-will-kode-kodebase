@@ -67,6 +67,9 @@ export default function PageNotFound({}) {
                             </svg>
                             Go Home
                         </button>
+                        <p className="text-sm text-slate-500 mt-4">
+                            While you're here, <a href="/products" className="text-slate-700 underline hover:text-slate-900">check out our products</a>.
+                        </p>
                     </div>
                 </div>
             </div>

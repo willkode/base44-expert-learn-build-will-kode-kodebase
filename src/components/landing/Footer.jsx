@@ -19,6 +19,7 @@ export default function Footer() {
             <a href="#agents" className="hover:text-foreground transition-colors">Agents</a>
             <a href="#blueprint" className="hover:text-foreground transition-colors">Blueprint</a>
             <a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a>
+            <Link to="/products" className="hover:text-foreground transition-colors">Products</Link>
             <Link to="/coffee" className="hover:text-foreground transition-colors">Buy Me a Coffee</Link>
           </nav>
           <SocialLinks />

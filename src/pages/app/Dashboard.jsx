@@ -13,6 +13,7 @@ import RecentPromptPacks from "@/components/dashboard/RecentPromptPacks";
 import PromptVaultBanner from "@/components/dashboard/PromptVaultBanner";
 import MyProducts from "@/components/dashboard/MyProducts";
 import PurchaseThankYouDialog from "@/components/dashboard/PurchaseThankYouDialog";
+import ProductsCtaBanner from "@/components/shared/ProductsCtaBanner";
 
 export default function Dashboard() {
   const { user } = useOutletContext();
@@ -89,6 +90,12 @@ export default function Dashboard() {
       <MyProducts userId={user?.id} />
 
       <StartBlueprintCard />
+
+      <ProductsCtaBanner
+        location="dashboard"
+        title="Level up your builds"
+        description="Ready-made prompt packs and complete systems to take your next app from idea to launch faster."
+      />
 
       <section>
         <h2 className="font-sora font-semibold text-lg mb-4">Recent Projects</h2>

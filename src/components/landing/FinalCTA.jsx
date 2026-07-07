@@ -2,7 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { trackEvent } from "@/lib/analytics";
 
 export default function FinalCTA() {
   const navigate = useNavigate();
@@ -32,14 +33,26 @@ export default function FinalCTA() {
               prompts, permissions, and build order before you start building in Base44. Stop guessing.
               Stop wasting credits. Stop chasing preventable bugs.
             </p>
-            <Button
-              onClick={getStarted}
-              size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base px-10 py-6 glow-orange group transition-transform hover:-translate-y-0.5"
-            >
-              Build My Blueprint Free
-              <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Button
+                onClick={getStarted}
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base px-10 py-6 glow-orange group transition-transform hover:-translate-y-0.5"
+              >
+                Build My Blueprint Free
+                <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="font-semibold text-base px-8 py-6"
+              >
+                <Link to="/products" onClick={() => trackEvent("cta_view_products", { location: "home_final_cta" })}>
+                  Browse Our Products
+                </Link>
+              </Button>
+            </div>
             <p className="text-xs text-muted-foreground mt-5">No credit card required · Start in seconds</p>
           </div>
         </motion.div>

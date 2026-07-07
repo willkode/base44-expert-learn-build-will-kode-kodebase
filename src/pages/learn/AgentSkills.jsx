@@ -7,6 +7,7 @@ import Seo from "@/components/seo/Seo";
 import LoadingState from "@/components/shared/LoadingState";
 import AgentSkillCard from "@/components/learn/AgentSkillCard";
 import SkillReviewPanel from "@/components/learn/SkillReviewPanel";
+import ProductsCtaBanner from "@/components/shared/ProductsCtaBanner";
 import { trackEvent } from "@/lib/analytics";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/b1ec637c7_generated_image.png";
@@ -121,6 +122,14 @@ export default function AgentSkills() {
                   {filtered.map((s) => <AgentSkillCard key={s.id} skill={s} />)}
                 </div>
               )}
+
+              <div className="mt-14">
+                <ProductsCtaBanner
+                  location="agent_skills"
+                  title="Want the complete systems?"
+                  description="These skills are free — our products give you full prompt packs and systems to build smarter agents and apps."
+                />
+              </div>
             </>
           )}
         </div>

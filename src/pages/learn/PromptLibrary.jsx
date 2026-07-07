@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import PromptCard from "@/components/learn/PromptCard";
 import NewsletterGateDialog from "@/components/learn/NewsletterGateDialog";
 import LoadingState from "@/components/shared/LoadingState";
+import ProductsCtaBanner from "@/components/shared/ProductsCtaBanner";
 
 const STORAGE_KEY = "kb_newsletter_subscribed";
 
@@ -127,6 +128,14 @@ export default function PromptLibrary() {
                   onCopyRequest={handleCopyRequest}
                 />
               ))}
+            </div>
+
+            <div className="mt-14">
+              <ProductsCtaBanner
+                location="prompt_library"
+                title="Want the complete systems?"
+                description="These prompts are free — our products give you the full prompt packs and systems to build entire features fast."
+              />
             </div>
           </>
         )}
