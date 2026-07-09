@@ -55,7 +55,7 @@ export default function SummerSaleBanner() {
           <Sparkles className="w-6 h-6 text-[#0a0f1e] shrink-0" />
           <div>
             <p className="font-sora font-extrabold text-lg md:text-xl text-[#0a0f1e] leading-tight">
-              Summer Special — 50% off everything
+              Summer Special — 50% off everything · 75% off the bundle
             </p>
             <p className="text-sm text-[#0a0f1e]/80 font-medium">Ends {SUMMER_SALE_END_LABEL}. One-time pricing, locked in.</p>
           </div>

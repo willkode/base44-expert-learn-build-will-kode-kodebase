@@ -30,7 +30,7 @@ export default function CartSheet() {
 
   const cartProducts = products.filter((p) => items.includes(p.id));
   const onSale = isSummerSaleActive();
-  const priceFor = (p) => coupon?.prices?.[p.id] ?? getProductSalePriceCents(p.priceCents);
+  const priceFor = (p) => coupon?.prices?.[p.id] ?? getProductSalePriceCents(p.priceCents, p.slug);
   const totalCents = cartProducts.reduce((sum, p) => sum + priceFor(p), 0);
   const fullTotalCents = cartProducts.reduce((sum, p) => sum + (p.priceCents || 0), 0);
 

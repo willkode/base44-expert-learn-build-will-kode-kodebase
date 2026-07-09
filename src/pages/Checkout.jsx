@@ -7,7 +7,7 @@ import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
 import BundleUpsell from "@/components/checkout/BundleUpsell";
 import { trackBeginCheckout, trackPurchase } from "@/lib/analytics";
-import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
+import { isSummerSaleActive, getProductSalePriceCents, getSaleDiscountPercent, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 import { useCart } from "@/components/cart/CartContext";
 
 export default function Checkout() {
@@ -19,7 +19,7 @@ export default function Checkout() {
   const status = urlParams.get("status"); // "success" when returning from Square
   const plan = planId ? PLANS[planId] : null;
   const { items: cartIds, clearCart, coupon } = useCart();
-  const cartPriceFor = (p) => coupon?.prices?.[p.id] ?? getProductSalePriceCents(p.priceCents);
+  const cartPriceFor = (p) => coupon?.prices?.[p.id] ?? getProductSalePriceCents(p.priceCents, p.slug);
   const [cartProducts, setCartProducts] = useState([]);
   const [product, setProduct] = useState(null);
   const [loadingProduct, setLoadingProduct] = useState(!!productId || isCart);
@@ -53,7 +53,7 @@ export default function Checkout() {
     if (plan) {
       trackBeginCheckout({ id: planId, name: `${plan.name} plan`, category: "subscription", price: parseFloat(plan.price.replace("$", "")) || 0 });
     } else if (product) {
-      trackBeginCheckout({ id: product.id, name: product.name, category: product.category, price: getProductSalePriceCents(product.priceCents) / 100 });
+      trackBeginCheckout({ id: product.id, name: product.name, category: product.category, price: getProductSalePriceCents(product.priceCents, product.slug) / 100 });
     } else if (isCart && cartProducts.length > 0) {
       const totalCents = cartProducts.reduce((s, p) => s + cartPriceFor(p), 0);
       trackBeginCheckout({ id: "cart", name: `Cart (${cartProducts.length} products)`, category: "cart", price: totalCents / 100 });
@@ -194,7 +194,7 @@ export default function Checkout() {
     ? {
         name: product.name,
         desc: product.tagline,
-        priceLabel: (product.priceCents || 0) === 0 ? "Free" : formatUsd(getProductSalePriceCents(product.priceCents)),
+        priceLabel: (product.priceCents || 0) === 0 ? "Free" : formatUsd(getProductSalePriceCents(product.priceCents, product.slug)),
         fullPriceLabel: formatUsd(product.priceCents),
         onSale: isSummerSaleActive() && (product.priceCents || 0) > 0,
         periodLabel: " one-time",
@@ -307,7 +307,7 @@ export default function Checkout() {
             {item.couponCode ? (
               <p className="text-xs text-primary mb-1">Coupon {item.couponCode} applied</p>
             ) : item.onSale ? (
-              <p className="text-xs text-primary mb-1">Summer Special · 50% off · ends {SUMMER_SALE_END_LABEL}</p>
+              <p className="text-xs text-primary mb-1">Summer Special · {product ? `${getSaleDiscountPercent(product.slug)}% off` : "on sale"} · ends {SUMMER_SALE_END_LABEL}</p>
             ) : null}
             {item.supportNote && <p className="text-xs text-muted-foreground mb-4">{item.supportNote}</p>}
             <ul className="space-y-2.5 mt-4">

@@ -19,7 +19,7 @@ export default function BundleUpsell({ currentProductId }) {
 
   if (!bundle || bundle.id === currentProductId) return null;
 
-  const price = formatUsd(getProductSalePriceCents(bundle.priceCents));
+  const price = formatUsd(getProductSalePriceCents(bundle.priceCents, bundle.slug));
   const upgrade = () => {
     trackEvent("bundle_upsell_click", { from_product_id: currentProductId });
     navigate(`/checkout?product=${bundle.id}`);

@@ -4,11 +4,11 @@ import { Sparkles, Lock, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
-import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
+import { isSummerSaleActive, getProductSalePriceCents, getSaleDiscountPercent, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 
 export default function ProductDetailHero({ product, onBuy }) {
   const onSale = isSummerSaleActive();
-  const salePriceCents = getProductSalePriceCents(product.priceCents);
+  const salePriceCents = getProductSalePriceCents(product.priceCents, product.slug);
   const price = formatUsd(salePriceCents);
   const fullPrice = formatUsd(product.priceCents);
   const [vaultCount, setVaultCount] = useState(null);
@@ -75,7 +75,7 @@ export default function ProductDetailHero({ product, onBuy }) {
         </p>
         {onSale && (
           <Badge className="mb-2 text-xs bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
-            <Sparkles className="w-3 h-3 mr-1" /> Summer Special · 50% off · ends {SUMMER_SALE_END_LABEL}
+            <Sparkles className="w-3 h-3 mr-1" /> Summer Special · {getSaleDiscountPercent(product.slug)}% off · ends {SUMMER_SALE_END_LABEL}
           </Badge>
         )}
         <div className="flex items-end gap-2 mb-2">

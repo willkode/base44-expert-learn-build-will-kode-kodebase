@@ -17,8 +17,16 @@ export function isSummerSaleActive(now = new Date()) {
   return now.getTime() < summerSaleEndAt(now);
 }
 
-export function getProductSalePriceCents(priceCents) {
-  return isSummerSaleActive() ? Math.round(priceCents * 0.5) : priceCents;
+// The Complete Builder Bundle gets a deeper 75% discount; everything else is 50%.
+const BUNDLE_SLUG = "complete-builder-bundle";
+
+export function getSaleDiscountPercent(slug) {
+  return slug === BUNDLE_SLUG ? 75 : 50;
+}
+
+export function getProductSalePriceCents(priceCents, slug) {
+  if (!isSummerSaleActive()) return priceCents;
+  return Math.round(priceCents * (1 - getSaleDiscountPercent(slug) / 100));
 }
 
 export function formatUsd(cents) {
