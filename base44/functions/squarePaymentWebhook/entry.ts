@@ -47,11 +47,25 @@ Deno.serve(async (req) => {
     const signatureHeader = req.headers.get('x-square-hmacsha256-signature');
     const notificationUrl = req.url;
     const valid = await isValidSignature(signatureKey, notificationUrl, rawBody, signatureHeader);
-    if (!valid) return Response.json({ error: 'Invalid signature' }, { status: 401 });
+    if (!valid) {
+      console.error('[squareWebhook] Signature validation FAILED', {
+        hasSignatureKey: !!signatureKey,
+        hasSignatureHeader: !!signatureHeader,
+        notificationUrl,
+      });
+      return Response.json({ error: 'Invalid signature' }, { status: 401 });
+    }
 
     const event = JSON.parse(rawBody);
     const payment = event?.data?.object?.payment;
+    console.log('[squareWebhook] Event received', {
+      eventType: event?.type,
+      paymentId: payment?.id,
+      paymentStatus: payment?.status,
+      orderId: payment?.order_id,
+    });
     if (!payment || payment.status !== 'COMPLETED') {
+      console.log('[squareWebhook] Skipping — no payment or not COMPLETED');
       return Response.json({ received: true });
     }
 
@@ -67,16 +81,35 @@ Deno.serve(async (req) => {
     let lineItemName = '';
     let orderLineItems = [];
     if (payment.order_id) {
-      const orderRes = await fetch(`${baseUrl}/v2/orders/${payment.order_id}`, {
-        headers: {
-          Authorization: `Bearer ${Deno.env.get('SQUARE_ACCESS_TOKEN')}`,
-          'Square-Version': '2025-01-23',
-        },
-      });
-      const orderBody = await orderRes.json();
-      metadata = orderBody?.order?.metadata || {};
-      orderLineItems = orderBody?.order?.line_items || [];
-      lineItemName = orderLineItems[0]?.name || '';
+      try {
+        const orderRes = await fetch(`${baseUrl}/v2/orders/${payment.order_id}`, {
+          headers: {
+            Authorization: `Bearer ${Deno.env.get('SQUARE_ACCESS_TOKEN')}`,
+            'Square-Version': '2025-01-23',
+          },
+        });
+        const orderBody = await orderRes.json();
+        if (!orderRes.ok) {
+          console.error('[squareWebhook] Square order fetch FAILED', {
+            status: orderRes.status,
+            orderId: payment.order_id,
+            errors: orderBody?.errors,
+          });
+        }
+        metadata = orderBody?.order?.metadata || {};
+        orderLineItems = orderBody?.order?.line_items || [];
+        lineItemName = orderLineItems[0]?.name || '';
+        console.log('[squareWebhook] Order resolved', {
+          orderId: payment.order_id,
+          metadataKeys: Object.keys(metadata),
+          lineItemNames: orderLineItems.map((l) => l.name),
+        });
+      } catch (orderError) {
+        console.error('[squareWebhook] Square order fetch THREW', {
+          orderId: payment.order_id,
+          error: orderError.message,
+        });
+      }
     }
 
     let userId = metadata.base44UserId || null;
@@ -108,7 +141,14 @@ Deno.serve(async (req) => {
       }
     }
 
+    console.log('[squareWebhook] Attribution result', {
+      userId, userEmail, planId, productId, promptSessionId, itemName, amountCents,
+    });
+
     if (!userId) {
+      console.error('[squareWebhook] UNATTRIBUTED payment — no matching user', {
+        paymentId: payment.id, userEmail, itemName,
+      });
       // Could not match a user — record it anyway for admin review instead of
       // dropping the payment, then acknowledge so Square stops retrying.
       await base44.asServiceRole.entities.Payment.create({
@@ -225,8 +265,10 @@ Deno.serve(async (req) => {
       }
     }
 
+    console.log('[squareWebhook] SUCCESS — payment recorded', { paymentId: payment.id, userId, productId, planId });
     return Response.json({ received: true });
   } catch (error) {
+    console.error('[squareWebhook] Handler THREW', { error: error.message, stack: error.stack });
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
