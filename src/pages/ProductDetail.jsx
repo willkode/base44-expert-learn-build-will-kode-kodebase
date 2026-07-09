@@ -151,6 +151,8 @@ export default function ProductDetail() {
               ? <>Ready to get <span className="text-gradient-orange">approved?</span></>
               : product.slug === "complete-builder-bundle"
               ? <>Ready to own <span className="text-gradient-orange">everything?</span></>
+              : product.slug === "complete-base44-knowledge-kit"
+              ? <>Ready to make your AI <span className="text-gradient-orange">Base44-fluent?</span></>
               : <>Ready to install your <span className="text-gradient-orange">marketing engine?</span></>}
           </h2>
           <p className="text-muted-foreground mb-6">{product.supportNote || "One-time fee · Free support included"}</p>
