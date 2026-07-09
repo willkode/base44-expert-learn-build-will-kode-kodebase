@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
           cents = Math.max(0, Math.round(override.priceCents));
           name = `${product.name} (Coupon ${coupon.code})`;
         } else if (isSummerProductSaleActive()) {
-          const pct = product.slug === 'complete-builder-bundle' ? 75 : 50;
+          const pct = product.slug === 'complete-builder-bundle' ? 86 : 50;
           cents = Math.round(product.priceCents * (1 - pct / 100));
           name = `${product.name} (Summer Special ${pct}% off)`;
         } else {
@@ -146,7 +146,7 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'This product is free — claim it directly, no payment needed.' }, { status: 400 });
       }
       if (isSummerProductSaleActive()) {
-        const pct = product.slug === 'complete-builder-bundle' ? 75 : 50;
+        const pct = product.slug === 'complete-builder-bundle' ? 86 : 50;
         amountCents = Math.round(product.priceCents * (1 - pct / 100));
         itemName = `${product.name} (Summer Special ${pct}% off)`;
       } else {
