@@ -60,7 +60,7 @@ export default function ProductDetail() {
   }
 
   const onSale = isSummerSaleActive();
-  const salePriceCents = getProductSalePriceCents(product.priceCents);
+  const salePriceCents = getProductSalePriceCents(product.priceCents, product.slug);
   const price = formatUsd(salePriceCents);
   const fullPrice = formatUsd(product.priceCents);
   const handleBuy = () => {
@@ -117,7 +117,7 @@ export default function ProductDetail() {
 
         {product.slug === "mobile-app-store-approval-kit" && <MobileApprovalKitDetails />}
 
-        {product.slug === "complete-builder-bundle" && <CompleteBundleDetails bundlePriceCents={product.priceCents} />}
+        {product.slug === "complete-builder-bundle" && <CompleteBundleDetails bundlePriceCents={salePriceCents} />}
 
         {product.description && (
           <div className="max-w-3xl mx-auto text-center mt-24 mb-16">
