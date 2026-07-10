@@ -18,7 +18,7 @@ import { isSummerSaleActive, getProductSalePriceCents, getSaleDiscountPercent, f
 import SummerSaleBanner from "@/components/products/SummerSaleBanner";
 import FeaturedBundleCard from "@/components/products/FeaturedBundleCard";
 
-const FEATURED_SLUG = "complete-builder-bundle";
+const FEATURED_SLUG = "complete-base44-knowledge-kit";
 
 export default function Products() {
   const navigate = useNavigate();
