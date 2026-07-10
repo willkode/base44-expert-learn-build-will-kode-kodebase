@@ -29,7 +29,7 @@ const fadeUp = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
 
 export default function KnowledgeKitDetails() {
   return (
-    <div className="mt-24 space-y-0">
+    <div className="mt-24 space-y-20">
       <KitProblem />
       <KitFailures />
       <KitSolutions />
