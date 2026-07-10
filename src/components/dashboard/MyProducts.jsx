@@ -33,7 +33,7 @@ export default function MyProducts({ userId }) {
 
   const handleOpen = (product) => {
     trackEvent("my_products_open", { item_id: product.id, item_name: product.name });
-    navigate(`/download/${product.id}`);
+    navigate(product.slug === "complete-builder-bundle" ? "/bundle-downloads" : `/download/${product.id}`);
   };
 
   return (

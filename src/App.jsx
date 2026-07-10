@@ -47,6 +47,7 @@ import AdminRoute from '@/components/layout/AdminRoute';
 
 // Authenticated user pages
 import Dashboard from '@/pages/app/Dashboard';
+import BundleDownloads from '@/pages/app/BundleDownloads';
 import Projects from '@/pages/app/Projects';
 import NewProject from '@/pages/app/NewProject';
 import ProjectDetail from '@/pages/app/ProjectDetail';
@@ -163,6 +164,7 @@ const AuthenticatedApp = () => {
         <Route path="/download/:productId" element={<Download />} />
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/bundle-downloads" element={<BundleDownloads />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/new" element={<NewProject />} />
           <Route path="/projects/:id" element={<ProjectDetail />}>

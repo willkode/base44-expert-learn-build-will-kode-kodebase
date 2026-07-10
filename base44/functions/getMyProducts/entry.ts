@@ -10,22 +10,29 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
+    const { bundleOnly = false } = await req.json();
     const payments = await base44.asServiceRole.entities.Payment.filter(
       { userId: user.id, status: 'completed' },
       '-created_date',
       500
     );
-    const productIds = [...new Set(payments.map((p) => p.productId).filter(Boolean))];
-    if (productIds.length === 0) {
-      return Response.json({ products: [] });
+    const all = await base44.asServiceRole.entities.Product.list('-created_date', 500);
+    const purchasedIds = [...new Set(payments.map((p) => p.productId).filter(Boolean))];
+    const bundle = all.find((p) => p.slug === 'complete-builder-bundle');
+    const hasBundle = !!bundle && purchasedIds.includes(bundle.id);
+    if (bundleOnly && !hasBundle) {
+      return Response.json({ error: 'Complete Builder Bundle access is required.' }, { status: 403 });
     }
 
-    const all = await base44.asServiceRole.entities.Product.list('-created_date', 500);
+    const productIds = bundleOnly
+      ? all.filter((p) => p.active !== false && p.slug !== 'complete-builder-bundle' && p.slug !== 'complete-base44-knowledge-kit' && (p.priceCents || 0) > 0).map((p) => p.id)
+      : purchasedIds;
+    if (productIds.length === 0) return Response.json({ products: [] });
+
     const owned = all
       .filter((p) => productIds.includes(p.id))
-      // Prompt Vault has its own dedicated CTA on the dashboard above My Products,
-      // so it should not also appear in the My Products list.
       .filter((p) => p.slug !== 'prompt-vault')
+      .filter((p) => !bundleOnly || (p.deliversPdf && ((p.pdfFiles || []).some((f) => f?.fileUri) || p.pdfFileUri)))
       .map((p) => ({
         id: p.id,
         name: p.name,
@@ -33,6 +40,7 @@ Deno.serve(async (req) => {
         tagline: p.tagline,
         imageUrl: p.imageUrl,
         deliversPdf: !!p.deliversPdf,
+        fileCount: (p.pdfFiles || []).filter((f) => f?.fileUri).length || (p.pdfFileUri ? 1 : 0),
       }));
 
     return Response.json({ products: owned });

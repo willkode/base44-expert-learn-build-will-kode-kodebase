@@ -27,7 +27,19 @@ Deno.serve(async (req) => {
       status: 'completed',
     });
     if (payments.length === 0) {
-      return Response.json({ error: 'No completed purchase found for this product.' }, { status: 403 });
+      const bundles = await base44.asServiceRole.entities.Product.filter({ slug: 'complete-builder-bundle' });
+      const bundlePayments = bundles[0] ? await base44.asServiceRole.entities.Payment.filter({
+        userId: user.id,
+        productId: bundles[0].id,
+        status: 'completed',
+      }) : [];
+      const includedInBundle = product.active !== false
+        && product.slug !== 'complete-builder-bundle'
+        && product.slug !== 'complete-base44-knowledge-kit'
+        && (product.priceCents || 0) > 0;
+      if (bundlePayments.length === 0 || !includedInBundle) {
+        return Response.json({ error: 'No completed purchase found for this product.' }, { status: 403 });
+      }
     }
 
     // Resolve the deliverable list, merging the legacy single-file fields with

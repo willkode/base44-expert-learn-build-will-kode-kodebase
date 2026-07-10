@@ -23,7 +23,7 @@ async function isValidSignature(signatureKey, notificationUrl, rawBody, signatur
 async function expandBundleAccess(base44, product, userId, userEmail, paymentId) {
   if (product?.slug !== 'complete-builder-bundle') return;
   const all = await base44.asServiceRole.entities.Product.filter({ active: true });
-  const included = all.filter((p) => p.slug !== 'complete-builder-bundle' && (p.priceCents || 0) > 0);
+  const included = all.filter((p) => p.slug !== 'complete-builder-bundle' && p.slug !== 'complete-base44-knowledge-kit' && (p.priceCents || 0) > 0);
   for (const p of included) {
     await base44.asServiceRole.entities.Payment.create({
       userId,
