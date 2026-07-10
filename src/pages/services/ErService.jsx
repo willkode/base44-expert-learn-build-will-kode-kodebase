@@ -28,20 +28,20 @@ const included = [
 ];
 
 const inspection = [
-  { icon: MousePointerClick, label: "Broken Flows", desc: "Buttons, forms, and navigation that don't work" },
-  { icon: Layout, label: "UI & Layout Issues", desc: "Visual bugs, responsiveness, and design problems" },
-  { icon: Sparkles, label: "Prompt Problems", desc: "AI prompts producing bad or inconsistent results" },
-  { icon: GitBranch, label: "Poor App Structure", desc: "Messy code, missing components, bad architecture" },
-  { icon: Bug, label: "Logic Errors", desc: "Conditions and workflows that produce wrong results" },
-  { icon: AlertTriangle, label: "Workflow Gaps", desc: "Missing steps or incomplete user flows" },
-  { icon: Lock, label: "Permissions Issues", desc: "RLS rules and access control problems" },
-  { icon: Gauge, label: "Performance Concerns", desc: "Slow loading, redundant queries, heavy pages" },
-  { icon: Code2, label: "Code Quality Scan", desc: "Anti-patterns, unused code, and maintainability issues" },
-  { icon: Trash2, label: "Codebase Cleanup", desc: "Bloat, dead code, redundant logic, and lean optimization" },
-  { icon: ShieldCheck, label: "RLS Audit", desc: "Row Level Security rules, access control, and permissions" },
-  { icon: Bug, label: "Error Logging & Debugging", desc: "Silent failures, runtime errors, and error tracing" },
-  { icon: Smartphone, label: "Mobile Optimization", desc: "Responsiveness, touch targets, and layout breakpoints" },
-  { icon: Monitor, label: "Desktop UI Review", desc: "Layout, spacing, visual hierarchy, and design consistency" },
+  { label: "Broken Flows", desc: "Buttons, forms, and navigation that don't work", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/c9f5fbea1_generated_image.png" },
+  { label: "UI & Layout Issues", desc: "Visual bugs, responsiveness, and design problems", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a25cbc84f_generated_image.png" },
+  { label: "Prompt Problems", desc: "AI prompts producing bad or inconsistent results", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/048b31608_generated_image.png" },
+  { label: "Poor App Structure", desc: "Messy code, missing components, bad architecture", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/5b072866c_generated_image.png" },
+  { label: "Logic Errors", desc: "Conditions and workflows that produce wrong results", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/0ba4f7055_generated_image.png" },
+  { label: "Workflow Gaps", desc: "Missing steps or incomplete user flows", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/5cf06b243_generated_image.png" },
+  { label: "Permissions Issues", desc: "RLS rules and access control problems", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/81e7c0a82_generated_image.png" },
+  { label: "Performance Concerns", desc: "Slow loading, redundant queries, heavy pages", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a25cc6ec3_generated_image.png" },
+  { label: "Code Quality Scan", desc: "Anti-patterns, unused code, and maintainability issues", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/906fdf0b7_generated_image.png" },
+  { label: "Codebase Cleanup", desc: "Bloat, dead code, redundant logic, and lean optimization", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/ee555eca6_generated_image.png" },
+  { label: "RLS Audit", desc: "Row Level Security rules, access control, and permissions", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/b39b856f8_generated_image.png" },
+  { label: "Error Logging & Debugging", desc: "Silent failures, runtime errors, and error tracing", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/6f9075a4b_generated_image.png" },
+  { label: "Mobile Optimization", desc: "Responsiveness, touch targets, and layout breakpoints", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/61cce5878_generated_image.png" },
+  { label: "Desktop UI Review", desc: "Layout, spacing, visual hierarchy, and design consistency", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/8e150ec8a_generated_image.png" },
 ];
 
 const plans = [
@@ -218,16 +218,17 @@ export default function ErService() {
             <p className="text-muted-foreground max-w-xl mx-auto">A thorough sweep across UX, code, security, and performance — nothing slips through.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {inspection.map(({ icon: Icon, label, desc }, i) => (
+            {inspection.map(({ label, desc, image }, i) => (
               <motion.div
                 key={label}
                 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.3}
-                className="flex items-start gap-4 p-5 rounded-xl border border-border bg-card/60 hover:border-primary/40 transition-colors"
+                className="flex items-stretch rounded-xl border border-border bg-card/60 hover:border-primary/40 transition-colors overflow-hidden group"
               >
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <Icon className="w-4 h-4 text-primary" />
+                <div className="relative w-28 sm:w-32 shrink-0 overflow-hidden">
+                  <img src={image} alt={label} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/80" />
                 </div>
-                <div>
+                <div className="flex flex-col justify-center p-4 flex-1">
                   <p className="font-semibold text-sm text-foreground">{label}</p>
                   <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
                 </div>
