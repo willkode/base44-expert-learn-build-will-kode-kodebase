@@ -17,11 +17,9 @@ export function isSummerSaleActive(now = new Date()) {
   return now.getTime() < summerSaleEndAt(now);
 }
 
-// The Complete Builder Bundle gets a deeper 86% discount; everything else is 50%.
-const BUNDLE_SLUG = "complete-builder-bundle";
-
-export function getSaleDiscountPercent(slug) {
-  return slug === BUNDLE_SLUG ? 86 : 50;
+// Summer Special: 50% off everything.
+export function getSaleDiscountPercent(_slug) {
+  return 50;
 }
 
 export function getProductSalePriceCents(priceCents, slug) {
