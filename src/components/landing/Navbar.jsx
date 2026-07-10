@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, ShieldCheck, DraftingCompass, Wand2, Headphones, Wrench, Shield, TrendingUp, Monitor, Heart } from "lucide-react";
+import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, ShieldCheck, DraftingCompass, Wand2, Headphones, Wrench, Shield, TrendingUp, Monitor, Heart, ArrowRight, BookOpen } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import {
   DropdownMenu,
@@ -100,6 +100,11 @@ export default function Navbar() {
                <ChevronDown className="w-4 h-4" />
              </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-[34rem] p-3">
+              <Link to="/learn" className="flex items-center gap-2 rounded-lg px-3 py-2.5 mb-1 hover:bg-secondary/60 transition-colors group">
+                <BookOpen className="w-4 h-4 text-primary" />
+                <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">Learn Hub — All Resources</span>
+                <ArrowRight className="w-3.5 h-3.5 ml-auto text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+              </Link>
               <div className="grid grid-cols-2 gap-1">
                 {learnLinks.map((l) => (
                   <DropdownMenuItem key={l.to} asChild className="p-0 focus:bg-transparent">
@@ -236,8 +241,18 @@ export default function Navbar() {
       {open && (
         <div className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border px-6 py-5 space-y-1 max-h-[calc(100vh-4rem)] overflow-y-auto overscroll-contain">
           <div className="pt-2 pb-1">
-             <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Learn</p>
-            {learnLinks.map((l) => (
+           <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1">Learn</p>
+          <Link
+            to="/learn"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
+          >
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
+              <BookOpen className="h-4 w-4" />
+            </span>
+            <span className="text-sm font-semibold text-foreground">Learn Hub — All Resources</span>
+          </Link>
+          {learnLinks.map((l) => (
               <Link
                 key={l.to}
                 to={l.to}

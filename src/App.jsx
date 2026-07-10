@@ -19,6 +19,7 @@ import Pricing from '@/pages/Pricing';
 import Products from '@/pages/Products';
 import ProductDetail from '@/pages/ProductDetail';
 import Contact from '@/pages/Contact';
+import LearnIndex from '@/pages/learn/LearnIndex';
 import Blog from '@/pages/learn/Blog';
 import BlogPost from '@/pages/learn/BlogPost';
 import BlogCategory from '@/pages/learn/BlogCategory';
@@ -122,6 +123,7 @@ const AuthenticatedApp = () => {
     <Routes>
       {/* Public marketing pages */}
       <Route element={<PublicLayout />}>
+        <Route path="/learn" element={<LearnIndex />} />
         <Route path="/features" element={<Features />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/products" element={<Products />} />
