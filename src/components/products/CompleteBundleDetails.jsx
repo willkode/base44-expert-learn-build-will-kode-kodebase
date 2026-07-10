@@ -13,7 +13,7 @@ export default function CompleteBundleDetails({ bundlePriceCents }) {
     base44.entities.Product.filter({ active: true }, "order", 100)
       .then((all) =>
         setItems(
-          all.filter((p) => p.slug !== "complete-builder-bundle" && (p.priceCents || 0) > 0)
+          all.filter((p) => p.slug !== "complete-builder-bundle" && p.slug !== "complete-base44-knowledge-kit" && (p.priceCents || 0) > 0)
         )
       )
       .catch(() => {});
