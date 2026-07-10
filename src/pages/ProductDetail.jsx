@@ -22,6 +22,7 @@ import AgentWorkforceDetails from "@/components/products/AgentWorkforceDetails";
 import ClientPortalDetails from "@/components/products/ClientPortalDetails";
 import MobileApprovalKitDetails from "@/components/products/MobileApprovalKitDetails";
 import CompleteBundleDetails from "@/components/products/CompleteBundleDetails";
+import KnowledgeKitDetails from "@/components/products/KnowledgeKitDetails";
 import { trackViewItem, trackSelectItem, trackAddToCart } from "@/lib/analytics";
 import { useCart } from "@/components/cart/CartContext";
 import { getProductSalePriceCents, formatUsd, isSummerSaleActive } from "@/lib/summerSale";
@@ -118,6 +119,8 @@ export default function ProductDetail() {
         {product.slug === "mobile-app-store-approval-kit" && <MobileApprovalKitDetails />}
 
         {product.slug === "complete-builder-bundle" && <CompleteBundleDetails bundlePriceCents={salePriceCents} />}
+
+        {product.slug === "complete-base44-knowledge-kit" && <KnowledgeKitDetails />}
 
         {product.description && (
           <div className="max-w-3xl mx-auto text-center mt-24 mb-16">
