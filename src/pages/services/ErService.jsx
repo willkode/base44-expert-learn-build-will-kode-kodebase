@@ -19,12 +19,12 @@ const fadeUp = {
 };
 
 const included = [
-  { icon: FileSearch, label: "App Review", desc: "Complete walkthrough of your entire app" },
-  { icon: AlertTriangle, label: "Issue Discovery", desc: "Every bug and problem identified" },
-  { icon: FileText, label: "Written Report", desc: "Detailed findings grouped by priority" },
-  { icon: Zap, label: "Fix Prompts", desc: "Copy-paste prompts to fix every issue" },
-  { icon: Layers, label: "Grouped Findings", desc: "Issues organized by category and severity" },
-  { icon: ArrowRight, label: "Next Steps", desc: "Recommended action plan" },
+  { icon: FileSearch, label: "App Review", desc: "Complete walkthrough of your entire app", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/ac996ceed_generated_image.png" },
+  { icon: AlertTriangle, label: "Issue Discovery", desc: "Every bug and problem identified", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/fe85d6aef_generated_image.png" },
+  { icon: FileText, label: "Written Report", desc: "Detailed findings grouped by priority", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/f9b36e264_generated_image.png" },
+  { icon: Zap, label: "Fix Prompts", desc: "Copy-paste prompts to fix every issue", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/82a98428d_generated_image.png" },
+  { icon: Layers, label: "Grouped Findings", desc: "Issues organized by category and severity", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/da7523819_generated_image.png" },
+  { icon: ArrowRight, label: "Next Steps", desc: "Recommended action plan", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/f79ccb56b_generated_image.png" },
 ];
 
 const inspection = [
@@ -185,16 +185,20 @@ export default function ErService() {
             <p className="text-muted-foreground max-w-xl mx-auto">Every issue identified, prioritized, and paired with a fix prompt you can use right away.</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {included.map(({ icon: Icon, label, desc }, i) => (
+            {included.map(({ icon: Icon, label, desc, image }, i) => (
               <motion.div
                 key={label}
                 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.5}
-                className="flex flex-col items-center text-center gap-3 p-6 rounded-2xl border border-border bg-card/60 hover:border-primary/40 transition-colors"
+                className="flex flex-col rounded-2xl border border-border bg-card/60 hover:border-primary/40 transition-colors overflow-hidden group"
               >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Icon className="w-5 h-5 text-primary" />
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img src={image} alt={label} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
+                  <div className="absolute bottom-3 left-3 w-10 h-10 rounded-xl bg-primary/15 backdrop-blur-sm flex items-center justify-center border border-primary/30">
+                    <Icon className="w-4 h-4 text-primary" />
+                  </div>
                 </div>
-                <div>
+                <div className="p-5 text-center">
                   <p className="font-semibold text-sm text-foreground">{label}</p>
                   <p className="text-xs text-muted-foreground mt-1">{desc}</p>
                 </div>
