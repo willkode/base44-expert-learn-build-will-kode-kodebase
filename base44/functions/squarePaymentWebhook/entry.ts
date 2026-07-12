@@ -46,7 +46,23 @@ Deno.serve(async (req) => {
     const signatureKey = Deno.env.get('SQUARE_WEBHOOK_SIGNATURE_KEY');
     const signatureHeader = req.headers.get('x-square-hmacsha256-signature');
     const notificationUrl = req.url;
+
+    // Early diagnostic log — fires on EVERY request so we can confirm Square
+    // is reaching the endpoint and see what headers/body arrive on test events.
+    console.log('[squareWebhook] REQUEST RECEIVED', {
+      method: req.method,
+      url: notificationUrl,
+      hasSignatureHeader: !!signatureHeader,
+      signatureHeaderLength: signatureHeader?.length || 0,
+      hasSignatureKey: !!signatureKey,
+      bodyLength: rawBody.length,
+      bodyPreview: rawBody.slice(0, 500),
+      contentType: req.headers.get('content-type'),
+      userAgent: req.headers.get('user-agent'),
+    });
+
     const valid = await isValidSignature(signatureKey, notificationUrl, rawBody, signatureHeader);
+    console.log('[squareWebhook] Signature validation result', { valid });
     if (!valid) {
       console.error('[squareWebhook] Signature validation FAILED', {
         hasSignatureKey: !!signatureKey,
