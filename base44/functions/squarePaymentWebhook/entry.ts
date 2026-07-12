@@ -6,16 +6,51 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 // Called without user auth — request authenticity is verified via the
 // Square webhook signature (HMAC-SHA256 over notificationUrl + raw body).
 
-async function isValidSignature(signatureKey, notificationUrl, rawBody, signatureHeader) {
-  if (!signatureKey || !signatureHeader) return false;
+async function hmacBase64(signatureKey, message) {
   const enc = new TextEncoder();
   const key = await crypto.subtle.importKey(
     'raw', enc.encode(signatureKey),
     { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
   );
-  const sigBytes = await crypto.subtle.sign('HMAC', key, enc.encode(notificationUrl + rawBody));
-  const expected = btoa(String.fromCharCode(...new Uint8Array(sigBytes)));
-  return expected === signatureHeader;
+  const sigBytes = await crypto.subtle.sign('HMAC', key, enc.encode(message));
+  return btoa(String.fromCharCode(...new Uint8Array(sigBytes)));
+}
+
+// Square signs webhooks with HMAC-SHA256 over (notificationUrl + rawBody),
+// where notificationUrl is EXACTLY the URL registered on the webhook
+// subscription — which may differ from req.url behind proxies. We fetch the
+// registered URL from Square using the subscription ID and validate against
+// every candidate URL.
+async function resolveRegisteredNotificationUrl(baseUrl) {
+  const subscriptionId = Deno.env.get('SQUARE_WEBHOOK_SUBSCRIPTION_ID');
+  if (!subscriptionId) return null;
+  try {
+    const res = await fetch(`${baseUrl}/v2/webhooks/subscriptions/${subscriptionId}`, {
+      headers: {
+        Authorization: `Bearer ${Deno.env.get('SQUARE_ACCESS_TOKEN')}`,
+        'Square-Version': '2025-01-23',
+      },
+    });
+    const body = await res.json();
+    if (!res.ok) {
+      console.error('[squareWebhook] Subscription fetch FAILED', { status: res.status, errors: body?.errors });
+      return null;
+    }
+    return body?.subscription?.notification_url || null;
+  } catch (e) {
+    console.error('[squareWebhook] Subscription fetch THREW', { error: e.message });
+    return null;
+  }
+}
+
+async function isValidSignature(signatureKey, candidateUrls, rawBody, signatureHeader) {
+  if (!signatureKey || !signatureHeader) return false;
+  for (const url of candidateUrls) {
+    if (!url) continue;
+    const expected = await hmacBase64(signatureKey, url + rawBody);
+    if (expected === signatureHeader) return true;
+  }
+  return false;
 }
 
 // Complete Builder Bundle — expand into individual product access so every
@@ -61,12 +96,23 @@ Deno.serve(async (req) => {
       userAgent: req.headers.get('user-agent'),
     });
 
-    const valid = await isValidSignature(signatureKey, notificationUrl, rawBody, signatureHeader);
-    console.log('[squareWebhook] Signature validation result', { valid });
+    const envName = Deno.env.get('SQUARE_ENVIRONMENT') === 'production' ? 'production' : 'sandbox';
+    const squareBaseUrl = envName === 'production' ? 'https://connect.squareup.com' : 'https://connect.squareupsandbox.com';
+
+    // Candidate URLs for signature validation: the URL Square has registered on
+    // the subscription (authoritative), plus req.url and its https variant as
+    // fallbacks in case the subscription lookup fails.
+    const registeredUrl = await resolveRegisteredNotificationUrl(squareBaseUrl);
+    const httpsUrl = notificationUrl.replace(/^http:/, 'https:');
+    const candidateUrls = [...new Set([registeredUrl, notificationUrl, httpsUrl].filter(Boolean))];
+
+    const valid = await isValidSignature(signatureKey, candidateUrls, rawBody, signatureHeader);
+    console.log('[squareWebhook] Signature validation result', { valid, registeredUrl, candidateCount: candidateUrls.length });
     if (!valid) {
       console.error('[squareWebhook] Signature validation FAILED', {
         hasSignatureKey: !!signatureKey,
         hasSignatureHeader: !!signatureHeader,
+        registeredUrl,
         notificationUrl,
       });
       return Response.json({ error: 'Invalid signature' }, { status: 401 });
@@ -89,8 +135,7 @@ Deno.serve(async (req) => {
     const existing = await base44.asServiceRole.entities.Payment.filter({ squarePaymentId: payment.id });
     if (existing.length > 0) return Response.json({ received: true, duplicate: true });
 
-    const env = Deno.env.get('SQUARE_ENVIRONMENT') === 'production' ? 'production' : 'sandbox';
-    const baseUrl = env === 'production' ? 'https://connect.squareup.com' : 'https://connect.squareupsandbox.com';
+    const baseUrl = squareBaseUrl;
 
     // Fetch the order to read the metadata we attached at checkout-link creation.
     let metadata = {};
