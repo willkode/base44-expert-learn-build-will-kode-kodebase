@@ -25,7 +25,12 @@ export default function Dashboard() {
   const [security, setSecurity] = useState([]);
   const [hasVaultAccess, setHasVaultAccess] = useState(false);
 
+  // Admins always land on the admin dashboard.
   useEffect(() => {
+    if (user?.role === "admin") {
+      navigate("/admin", { replace: true });
+      return;
+    }
     const init = async () => {
       const [p, b, pk, s] = await Promise.all([
         base44.entities.Project.list("-updated_date", 50),
@@ -50,7 +55,7 @@ export default function Dashboard() {
   const completedBlueprints = blueprints.filter((b) => b.status === "completed").length;
   const reviewedProjects = new Set(security.map((s) => s.projectId)).size;
 
-  if (loading) return <LoadingState label="Loading dashboard..." />;
+  if (loading || user?.role === "admin") return <LoadingState label="Loading dashboard..." />;
 
   return (
     <div className="space-y-6">
