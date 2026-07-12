@@ -136,6 +136,8 @@ export default function AdminSales() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [showSendModal, setShowSendModal] = useState(false);
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
   const [syncing, setSyncing] = useState(false);
   const [syncResult, setSyncResult] = useState(null);
 
@@ -170,7 +172,32 @@ export default function AdminSales() {
     setSyncing(false);
   };
 
-  const filtered = payments.filter((p) => {
+  // Date-range scoping — applied to both the summary cards and the table.
+  const inRange = (p) => {
+    if (!p.created_date) return !fromDate && !toDate;
+    const d = new Date(p.created_date);
+    if (fromDate && d < new Date(`${fromDate}T00:00:00`)) return false;
+    if (toDate && d > new Date(`${toDate}T23:59:59.999`)) return false;
+    return true;
+  };
+  const rangedPayments = payments.filter(inRange);
+
+  const setPreset = (days) => {
+    const now = new Date();
+    const toIso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    if (days === "all") { setFromDate(""); setToDate(""); return; }
+    if (days === "month") {
+      setFromDate(toIso(new Date(now.getFullYear(), now.getMonth(), 1)));
+      setToDate(toIso(now));
+      return;
+    }
+    const from = new Date(now);
+    from.setDate(now.getDate() - (days - 1));
+    setFromDate(toIso(from));
+    setToDate(toIso(now));
+  };
+
+  const filtered = rangedPayments.filter((p) => {
     const user = users[p.userId] || {};
     const q = search.toLowerCase();
     const matchesSearch =
@@ -184,7 +211,7 @@ export default function AdminSales() {
     return matchesSearch && matchesStatus && matchesType;
   });
 
-  const totalRevenue = payments
+  const totalRevenue = rangedPayments
     .filter((p) => p.status === "completed")
     .reduce((sum, p) => sum + (p.amountCents || 0), 0);
 
@@ -213,9 +240,9 @@ export default function AdminSales() {
       {/* Summary cards - note: PageHeader is now inside the flex row above */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         {[
-          { label: "Total Revenue", value: formatCents(totalRevenue), icon: DollarSign, color: "text-green-400" },
-          { label: "Paid Orders", value: payments.filter((p) => p.status === "completed" && getOrderType(p) === "paid").length, icon: CheckCircle2, color: "text-green-400" },
-          { label: "Pending / Failed", value: payments.filter((p) => p.status !== "completed").length, icon: Clock, color: "text-amber-400" },
+          { label: fromDate || toDate ? "Revenue (selected range)" : "Total Revenue", value: formatCents(totalRevenue), icon: DollarSign, color: "text-green-400" },
+          { label: "Paid Orders", value: rangedPayments.filter((p) => p.status === "completed" && getOrderType(p) === "paid").length, icon: CheckCircle2, color: "text-green-400" },
+          { label: "Pending / Failed", value: rangedPayments.filter((p) => p.status !== "completed").length, icon: Clock, color: "text-amber-400" },
         ].map(({ label, value, icon: Icon, color }) => (
           <div key={label} className="rounded-2xl border border-border bg-card/60 p-5 flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center shrink-0">
@@ -227,6 +254,42 @@ export default function AdminSales() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Date range */}
+      <div className="flex flex-wrap items-center gap-2 mb-4">
+        <input
+          type="date"
+          value={fromDate}
+          onChange={(e) => setFromDate(e.target.value)}
+          className="rounded-lg border border-input bg-background text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-ring text-foreground"
+          aria-label="From date"
+        />
+        <span className="text-muted-foreground text-sm">to</span>
+        <input
+          type="date"
+          value={toDate}
+          onChange={(e) => setToDate(e.target.value)}
+          className="rounded-lg border border-input bg-background text-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-ring text-foreground"
+          aria-label="To date"
+        />
+        <div className="flex flex-wrap gap-1.5 sm:ml-2">
+          {[
+            { label: "Today", v: 1 },
+            { label: "7 days", v: 7 },
+            { label: "30 days", v: 30 },
+            { label: "This month", v: "month" },
+            { label: "All time", v: "all" },
+          ].map(({ label, v }) => (
+            <button
+              key={label}
+              onClick={() => setPreset(v)}
+              className="text-xs px-3 py-1.5 rounded-full border border-border bg-secondary/40 text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Filters */}
