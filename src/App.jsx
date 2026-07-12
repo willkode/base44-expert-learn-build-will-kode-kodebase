@@ -34,6 +34,8 @@ import KodeSessions from '@/pages/services/KodeSessions';
 import ErService from '@/pages/services/ErService';
 import SecurityAudit from '@/pages/services/SecurityAudit';
 import SeoAudit from '@/pages/services/SeoAudit';
+import SentinelPro from '@/pages/services/SentinelPro';
+import KodeCare from '@/pages/services/KodeCare';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -140,6 +142,8 @@ const AuthenticatedApp = () => {
         <Route path="/services/er-service" element={<ErService />} />
         <Route path="/services/security-audit" element={<SecurityAudit />} />
         <Route path="/services/seo-audit" element={<SeoAudit />} />
+        <Route path="/services/sentinel-pro" element={<SentinelPro />} />
+        <Route path="/services/kodecare" element={<KodeCare />} />
       </Route>
       <Route path="/" element={<Home />} />
       <Route path="/tools/prompt-generator" element={<PromptGenerator />} />

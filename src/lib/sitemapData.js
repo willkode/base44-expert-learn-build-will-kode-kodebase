@@ -57,6 +57,8 @@ export const sitemapTree = [
       { label: "ER Service", path: "/services/er-service", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
       { label: "Security Audit", path: "/services/security-audit", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
       { label: "SEO Audit", path: "/services/seo-audit", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
+      { label: "Sentinel Pro", path: "/services/sentinel-pro", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
+      { label: "KodeCare", path: "/services/kodecare", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
     ],
   },
   {
@@ -186,10 +188,7 @@ export const sitemapTree = [
 ];
 
 // Nav links that exist in the Navbar but have NO matching route in App.jsx.
-export const brokenNavLinks = [
-  { label: "Sentinel Pro", path: "/services/sentinel-pro", source: "navbar-dropdown, mobile-menu" },
-  { label: "KodeCare", path: "/services/kodecare", source: "navbar-dropdown, mobile-menu" },
-];
+export const brokenNavLinks = [];
 
 export const typeStyles = {
   public: { label: "Public", color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20", dot: "bg-emerald-400" },
