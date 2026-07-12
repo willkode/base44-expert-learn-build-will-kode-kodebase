@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/shared/PageHeader";
 import LoadingState from "@/components/shared/LoadingState";
-import { DollarSign, Search, ExternalLink, CheckCircle2, Clock, XCircle, Send, X, Loader2 } from "lucide-react";
+import { DollarSign, Search, ExternalLink, CheckCircle2, Clock, XCircle, Send, X, Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const STATUS_STYLES = {
@@ -136,8 +136,10 @@ export default function AdminSales() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [showSendModal, setShowSendModal] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState(null);
 
-  useEffect(() => {
+  const loadData = () =>
     Promise.all([
       base44.entities.Payment.list("-created_date", 500),
       base44.entities.User.list("-created_date", 500),
@@ -148,7 +150,25 @@ export default function AdminSales() {
       setUsers(userMap);
       setLoading(false);
     });
-  }, []);
+
+  useEffect(() => { loadData(); }, []);
+
+  const syncFromSquare = async () => {
+    setSyncing(true);
+    setSyncResult(null);
+    try {
+      const res = await base44.functions.invoke("syncSquarePayments", {});
+      if (res.data?.success) {
+        setSyncResult(`Synced — ${res.data.created} new order${res.data.created !== 1 ? "s" : ""} imported, ${res.data.alreadyRecorded} already recorded.`);
+        await loadData();
+      } else {
+        setSyncResult(res.data?.error || "Sync failed.");
+      }
+    } catch (e) {
+      setSyncResult(e?.response?.data?.error || "Sync failed.");
+    }
+    setSyncing(false);
+  };
 
   const filtered = payments.filter((p) => {
     const user = users[p.userId] || {};
@@ -178,10 +198,17 @@ export default function AdminSales() {
       {showSendModal && <SendPdfsModal onClose={() => setShowSendModal(false)} />}
       <div className="flex items-start justify-between gap-4 mb-6">
         <PageHeader title="Sales & Orders" description="All product and service purchases across users." />
-        <Button onClick={() => setShowSendModal(true)} className="shrink-0 mt-1">
-          <Send className="w-4 h-4 mr-2" /> Send PDFs
-        </Button>
+        <div className="flex gap-2 shrink-0 mt-1">
+          <Button variant="outline" onClick={syncFromSquare} disabled={syncing}>
+            {syncing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+            {syncing ? "Syncing…" : "Sync from Square"}
+          </Button>
+          <Button onClick={() => setShowSendModal(true)}>
+            <Send className="w-4 h-4 mr-2" /> Send PDFs
+          </Button>
+        </div>
       </div>
+      {syncResult && <p className="text-sm text-primary mb-4">{syncResult}</p>}
 
       {/* Summary cards - note: PageHeader is now inside the flex row above */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
