@@ -110,6 +110,7 @@ import AdminCoupons from '@/pages/admin/AdminCoupons';
 import AdminPromptVault from '@/pages/admin/AdminPromptVault';
 import AdminAgentSkills from '@/pages/admin/AdminAgentSkills';
 import AdminAnalyticsPlan from '@/pages/admin/AdminAnalyticsPlan';
+import AdminSitemap from '@/pages/admin/AdminSitemap';
 import PromptVault from '@/pages/PromptVault';
 import VaultAccess from '@/pages/VaultAccess';
 
@@ -225,6 +226,7 @@ const AuthenticatedApp = () => {
             <Route path="/admin/prompt-vault" element={<AdminPromptVault />} />
             <Route path="/admin/agent-skills" element={<AdminAgentSkills />} />
             <Route path="/admin/analytics" element={<AdminAnalyticsPlan />} />
+            <Route path="/admin/sitemap" element={<AdminSitemap />} />
           </Route>
         </Route>
       </Route>

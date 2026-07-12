@@ -20,6 +20,7 @@ import {
   Vault,
   Package,
   Ticket,
+  Network,
 } from "lucide-react";
 
 export const userNav = [
@@ -55,4 +56,5 @@ export const adminNav = [
   { label: "Coupons", to: "/admin/coupons", icon: Ticket },
   { label: "Security", to: "/admin/security", icon: ShieldHalf },
   { label: "System Settings", to: "/admin/settings", icon: Cog },
+  { label: "Visual Sitemap", to: "/admin/sitemap", icon: Network },
 ];
