@@ -5,9 +5,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import LoadingState from "@/components/shared/LoadingState";
 import EmptyState from "@/components/shared/EmptyState";
-import UpgradeCard from "@/components/plan/UpgradeCard";
 import PromptCard from "@/components/blueprint/PromptCard";
-import { getPlan } from "@/lib/plans";
 import { promptPackMarkdown, allPromptsText, copyText, downloadMarkdown } from "@/lib/exporters";
 
 export default function PromptPackViewer() {
@@ -16,15 +14,12 @@ export default function PromptPackViewer() {
   const [loading, setLoading] = useState(true);
   const [pack, setPack] = useState(null);
   const [items, setItems] = useState([]);
-  const [plan, setPlan] = useState(null);
 
   const loadData = () => {
     Promise.all([
-      base44.entities.UserProfile.filter({ userId: user.id }, "-created_date", 1),
       base44.entities.PromptPack.filter({ projectId: project.id }, "-created_date", 1),
       base44.entities.PromptItem.filter({ projectId: project.id }, "promptNumber"),
-    ]).then(([profiles, p, i]) => {
-      setPlan(getPlan(profiles[0]?.plan));
+    ]).then(([p, i]) => {
       setPack(p[0] || null);
       setItems(i);
       setLoading(false);
@@ -47,16 +42,6 @@ export default function PromptPackViewer() {
   };
 
   if (loading) return <LoadingState label="Loading prompt pack..." />;
-
-  if (plan?.promptPack === "locked") {
-    return (
-      <UpgradeCard
-        title="Prompt packs are a paid feature"
-        description="Upgrade to Pro or Agency to unlock the full prompt pack for this project — step-by-step prompts ready to paste into Base44."
-        suggestedPlan="Pro"
-      />
-    );
-  }
 
   if (!pack || items.length === 0) {
     return (

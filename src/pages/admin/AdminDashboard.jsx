@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Users, FolderKanban, Boxes, ScrollText, Wand2, ShieldAlert, ClipboardCheck, DollarSign } from "lucide-react";
+import { Users, FolderKanban, ScrollText, Wand2, ShieldAlert, ClipboardCheck, DollarSign } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/shared/PageHeader";
 import StatCard from "@/components/shared/StatCard";
@@ -14,19 +14,17 @@ export default function AdminDashboard() {
     Promise.all([
       base44.entities.User.list("-created_date", 500),
       base44.entities.Project.list("-created_date", 500),
-      base44.entities.Blueprint.list("-created_date", 500),
       base44.entities.PromptPack.list("-created_date", 500),
       base44.entities.SecurityFinding.list("-created_date", 500),
       base44.entities.QAItem.list("-created_date", 500),
       base44.entities.AgentRun.list("-created_date", 500),
       base44.entities.Payment.filter({ status: "completed" }, "-created_date", 500),
-    ]).then(([users, projects, blueprints, packs, findings, qa, runs, sales]) => {
+    ]).then(([users, projects, packs, findings, qa, runs, sales]) => {
       setStats({
         sales: sales.length,
         revenue: sales.reduce((s, p) => s + (p.amountCents || 0), 0),
         users: users.length,
         projects: projects.length,
-        blueprints: blueprints.length,
         packs: packs.length,
         findings: findings.length,
         qa: qa.length,
@@ -46,7 +44,6 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             <Link to="/admin/users"><StatCard icon={Users} label="Total Users" value={stats.users} /></Link>
             <Link to="/admin/projects"><StatCard icon={FolderKanban} label="Total Projects" value={stats.projects} /></Link>
-            <Link to="/admin/blueprints"><StatCard icon={Boxes} label="Blueprints Generated" value={stats.blueprints} /></Link>
             <StatCard icon={Wand2} label="Prompt Packs" value={stats.packs} />
             <StatCard icon={ShieldAlert} label="Security Findings" value={stats.findings} />
             <StatCard icon={ClipboardCheck} label="QA Items" value={stats.qa} />

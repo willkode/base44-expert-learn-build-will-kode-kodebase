@@ -4,14 +4,13 @@ import Seo from "@/components/seo/Seo";
 import PageHeader from "@/components/shared/PageHeader";
 import LoadingState from "@/components/shared/LoadingState";
 import { Button } from "@/components/ui/button";
-import { Sparkles, ArrowLeft, FileText, MessageSquare, Lock, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowLeft, FileText, MessageSquare } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import BlueprintProgressRing from "@/components/promptengine/BlueprintProgressRing";
 import DiscoveryChat from "@/components/promptengine/DiscoveryChat";
 import BlueprintReview from "@/components/promptengine/BlueprintReview";
 import PromptPackView from "@/components/promptengine/PromptPackView";
 import UnlockedPacksList from "@/components/promptengine/UnlockedPacksList";
-import { Link } from "react-router-dom";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/6935b73f9_generated_image.png";
 
@@ -24,7 +23,6 @@ export default function PromptEngine() {
   const [packStatus, setPackStatus] = useState(null);
   const [view, setView] = useState("discovery"); // discovery | review | pack
   const [allSessions, setAllSessions] = useState([]);
-  const [userPlan, setUserPlan] = useState(null);
 
   const sessionIdFromUrl = new URLSearchParams(window.location.search).get("session");
 
@@ -61,20 +59,11 @@ export default function PromptEngine() {
     (async () => {
       setLoading(true);
       try {
-        const user = await base44.auth.me();
-        const profiles = await base44.entities.UserProfile.filter({ userId: user.id });
-        const plan = profiles[0]?.plan || "free";
-        setUserPlan(plan);
-
-        if (plan !== "pro" && plan !== "agency") return; // gate — don't load sessions for non-pro
-
-        // Load all of the user's sessions so they can return to any unlocked pack.
         const all = await base44.entities.PromptGeneratorSession.list("-created_date", 100);
         setAllSessions(all);
         if (sessionIdFromUrl) {
           await loadSession(sessionIdFromUrl);
         } else if (all[0]) {
-          // Resume the most recent session.
           await loadSession(all[0].id);
         }
       } finally {
@@ -128,36 +117,6 @@ export default function PromptEngine() {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
         <LoadingState label="Loading the Prompt Engine…" />
-      </div>
-    );
-  }
-
-  const isPro = userPlan === "pro" || userPlan === "agency";
-
-  if (!isPro) {
-    return (
-      <div className="max-w-2xl mx-auto px-4 py-16 text-center">
-        <Seo title="Prompt Engine — Pro Feature | KodeBase" path="/tools/prompt-engine" noindex />
-        <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-6">
-          <Lock className="w-8 h-8 text-primary" />
-        </div>
-        <h1 className="font-sora font-bold text-2xl md:text-3xl mb-3">Prompt Engine is a Pro feature</h1>
-        <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-          Upgrade to the <strong className="text-foreground">Pro</strong> or <strong className="text-foreground">Agency</strong> plan to access the Prompt Engine and generate ordered prompt packs from your app ideas.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link to="/pricing">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 font-semibold px-8">
-              Upgrade to Pro <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
-          </Link>
-          <Link to="/dashboard">
-            <Button size="lg" variant="outline">Back to Dashboard</Button>
-          </Link>
-        </div>
-        <p className="text-xs text-muted-foreground mt-6">
-          Already upgraded? <button onClick={() => window.location.reload()} className="underline hover:text-foreground">Refresh the page.</button>
-        </p>
       </div>
     );
   }

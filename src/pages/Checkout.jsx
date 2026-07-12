@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Check, CheckCircle2, Loader2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PLANS } from "@/lib/plans";
 import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
 import BundleUpsell from "@/components/checkout/BundleUpsell";
@@ -13,11 +12,9 @@ import { useCart } from "@/components/cart/CartContext";
 export default function Checkout() {
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
-  const planId = urlParams.get("plan");
   const productId = urlParams.get("product");
   const isCart = urlParams.get("cart") === "1";
   const status = urlParams.get("status"); // "success" when returning from Square
-  const plan = planId ? PLANS[planId] : null;
   const { items: cartIds, clearCart, coupon } = useCart();
   const cartPriceFor = (p) => coupon?.prices?.[p.id] ?? getProductSalePriceCents(p.priceCents, p.slug);
   const [cartProducts, setCartProducts] = useState([]);
@@ -50,16 +47,14 @@ export default function Checkout() {
   // GA4: begin_checkout once the item is known
   useEffect(() => {
     if (status === "success") return;
-    if (plan) {
-      trackBeginCheckout({ id: planId, name: `${plan.name} plan`, category: "subscription", price: parseFloat(plan.price.replace("$", "")) || 0 });
-    } else if (product) {
+    if (product) {
       trackBeginCheckout({ id: product.id, name: product.name, category: product.category, price: getProductSalePriceCents(product.priceCents, product.slug) / 100 });
     } else if (isCart && cartProducts.length > 0) {
       const totalCents = cartProducts.reduce((s, p) => s + cartPriceFor(p), 0);
       trackBeginCheckout({ id: "cart", name: `Cart (${cartProducts.length} products)`, category: "cart", price: totalCents / 100 });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [planId, product?.id, isCart, cartProducts.length]);
+  }, [product?.id, isCart, cartProducts.length]);
 
   // Returning from Square's hosted checkout — poll for the Payment record the
   // webhook creates, then route to download/success.
@@ -75,16 +70,15 @@ export default function Checkout() {
         const query = { userId: me.id, status: "completed" };
         if (isCart && cartIds.length > 0) query.productId = cartIds[0];
         else if (productId) query.productId = productId;
-        else if (planId) query.planId = planId;
         const payments = await base44.entities.Payment.filter(query, "-created_date", 1);
         if (!active) return;
         if (payments.length > 0) {
           const pay = payments[0];
           trackPurchase({
             transactionId: pay.squarePaymentId || undefined,
-            id: plan ? planId : product?.id || productId,
-            name: plan ? `${plan.name} plan` : pay.itemName,
-            category: plan ? "subscription" : product?.category,
+            id: product?.id || productId,
+            name: pay.itemName,
+            category: product?.category,
             price: (pay.amountCents || 0) / 100,
           });
           if (isCart) {
@@ -93,14 +87,7 @@ export default function Checkout() {
             navigate(`/dashboard?purchase=success&item=${encodeURIComponent(label || "")}`);
             return;
           }
-          if (productId) {
-            // Product purchases land on the dashboard, where My Products lists
-            // everything they own with download access.
-            navigate(`/dashboard?purchase=success&item=${encodeURIComponent(product?.name || pay.itemName || "")}`);
-            return;
-          }
-          setDone(pay);
-          setConfirming(false);
+          navigate(`/dashboard?purchase=success&item=${encodeURIComponent(product?.name || pay.itemName || "")}`);
           return;
         }
       } catch (_e) { /* keep polling */ }
@@ -145,9 +132,8 @@ export default function Checkout() {
       }
       return;
     }
-    const returnUrl = `${window.location.origin}/checkout?${planId ? `plan=${planId}` : `product=${productId}`}&status=success`;
+    const returnUrl = `${window.location.origin}/checkout?product=${productId}&status=success`;
     const res = await base44.functions.invoke("createSquareCheckoutLink", {
-      planId: planId || undefined,
       productId: productId || undefined,
       redirectUrl: returnUrl,
     });
@@ -180,17 +166,7 @@ export default function Checkout() {
     );
   }
 
-  const item = plan
-    ? {
-        name: `${plan.name} plan`,
-        desc: plan.desc,
-        priceLabel: plan.price,
-        periodLabel: plan.period,
-        features: plan.features,
-        backTo: "/pricing",
-        backLabel: "Back to pricing",
-      }
-    : product
+  const item = product
     ? {
         name: product.name,
         desc: product.tagline,
@@ -223,7 +199,7 @@ export default function Checkout() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <p className="text-muted-foreground mb-4">{isCart ? "Your cart is empty." : "We couldn't find that item."}</p>
-          <Button onClick={() => navigate(isCart ? "/products" : "/pricing")}>{isCart ? "Browse products" : "View plans"}</Button>
+          <Button onClick={() => navigate("/products")}>Browse products</Button>
         </div>
       </div>
     );
@@ -235,12 +211,10 @@ export default function Checkout() {
         <div className="max-w-md w-full rounded-2xl border border-border bg-card p-8 text-center">
           <CheckCircle2 className="w-14 h-14 text-green-400 mx-auto mb-4" />
           <h1 className="font-sora font-bold text-2xl mb-2">
-            {plan ? `You're on ${plan.name}!` : `You've got ${item.name}!`}
+            You've got {item.name}!
           </h1>
           <p className="text-muted-foreground text-sm mb-6">
-            {plan
-              ? "Your payment went through and your plan is active."
-              : "Your payment went through. We'll be in touch with your purchase details — and support is always free."}
+            Your payment went through. We'll be in touch with your purchase details — and support is always free.
           </p>
           {done.squareReceiptUrl && (
             <a href={done.squareReceiptUrl} target="_blank" rel="noreferrer" className="block text-sm text-primary hover:underline mb-4">
@@ -282,23 +256,6 @@ export default function Checkout() {
           <div className="rounded-2xl border border-border bg-card/60 p-8">
             <h2 className="font-sora font-bold text-xl mb-1">{item.name}</h2>
             {item.desc && <p className="text-sm text-muted-foreground mb-5">{item.desc}</p>}
-            {(planId === "pro" || planId === "pro_annual") && (
-              <div className="flex gap-2 mb-5">
-                <button
-                  onClick={() => navigate("/checkout?plan=pro", { replace: true })}
-                  className={`flex-1 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${planId === "pro" ? "border-primary bg-primary/10 text-foreground" : "border-border text-muted-foreground hover:text-foreground"}`}
-                >
-                  Monthly · $25/mo
-                </button>
-                <button
-                  onClick={() => navigate("/checkout?plan=pro_annual", { replace: true })}
-                  className={`flex-1 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${planId === "pro_annual" ? "border-primary bg-primary/10 text-foreground" : "border-border text-muted-foreground hover:text-foreground"}`}
-                >
-                  Annual · $250/yr
-                  <span className="block font-normal text-[10px] text-primary">2 months free</span>
-                </button>
-              </div>
-            )}
             <div className="flex items-end gap-2 mb-2">
               <span className="font-sora font-extrabold text-4xl">{item.priceLabel}</span>
               {item.onSale && <span className="text-muted-foreground mb-1.5 text-xl line-through">{item.fullPriceLabel}</span>}
@@ -332,7 +289,7 @@ export default function Checkout() {
             <div className="rounded-xl border border-border bg-background/40 p-4 mb-6">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Total due</span>
-                <span className="font-sora font-bold text-lg">{item.priceLabel}{plan ? item.periodLabel : ""}</span>
+                <span className="font-sora font-bold text-lg">{item.priceLabel}</span>
               </div>
             </div>
 

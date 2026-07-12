@@ -72,7 +72,7 @@ export default function Sidebar({ user, onNavigate }) {
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium truncate">{user?.full_name || "User"}</p>
-            <p className="text-xs text-muted-foreground truncate capitalize">{user?.plan || "free"} plan</p>
+            <p className="text-xs text-muted-foreground truncate">{user?.email || ""}</p>
           </div>
         </div>
         <button

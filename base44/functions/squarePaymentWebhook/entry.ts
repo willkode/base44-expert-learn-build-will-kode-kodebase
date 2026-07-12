@@ -263,25 +263,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Plan purchases upgrade the user's profile.
-    const PLAN_LIMITS = { free: 1, pro: 25, agency: 60, pro_annual: 25 };
-    if (planId && PLAN_LIMITS[planId] !== undefined) {
-      const profiles = await base44.asServiceRole.entities.UserProfile.filter({ userId });
-      const planData = {
-        plan: planId === 'pro_annual' ? 'pro' : planId,
-        blueprintLimit: PLAN_LIMITS[planId],
-        usagePeriodStart: new Date().toISOString(),
-      };
-      if (profiles.length > 0) {
-        await base44.asServiceRole.entities.UserProfile.update(profiles[0].id, planData);
-      } else {
-        await base44.asServiceRole.entities.UserProfile.create({
-          userId, email: metadata.base44UserEmail || '', ...planData,
-        });
-      }
-    }
-
-    console.log('[squareWebhook] SUCCESS — payment recorded', { paymentId: payment.id, userId, productId, planId });
+    console.log('[squareWebhook] SUCCESS — payment recorded', { paymentId: payment.id, userId, productId });
     return Response.json({ received: true });
   } catch (error) {
     console.error('[squareWebhook] Handler THREW', { error: error.message, stack: error.stack });

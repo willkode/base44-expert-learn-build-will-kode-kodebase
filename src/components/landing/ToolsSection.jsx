@@ -8,14 +8,6 @@ import { trackCTA } from "@/lib/analytics";
 // Matches the Workspace card pattern: full-bleed AI image top + card gradient overlay.
 const TOOLS = [
   {
-    icon: DraftingCompass,
-    title: "App Blueprint",
-    badge: "NEW",
-    to: "/tools/blueprint",
-    desc: "Plan your entire app before you build it — entities, roles, pages, workflows, and a recommended build order from a single idea.",
-    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/0bbacc099_generated_image.png",
-  },
-  {
     icon: Wand2,
     title: "Prompt Engine",
     badge: "NEW",

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
-import { FolderKanban, FileText, Package, ShieldCheck, FolderPlus } from "lucide-react";
+import { FolderKanban, Package, ShieldCheck, FolderPlus } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/shared/PageHeader";
 import StatCard from "@/components/shared/StatCard";
 import LoadingState from "@/components/shared/LoadingState";
 import { Button } from "@/components/ui/button";
 import RecentProjects from "@/components/dashboard/RecentProjects";
-import StartBlueprintCard from "@/components/dashboard/StartBlueprintCard";
 import HowItWorks from "@/components/dashboard/HowItWorks";
 import RecentPromptPacks from "@/components/dashboard/RecentPromptPacks";
 import PromptVaultBanner from "@/components/dashboard/PromptVaultBanner";
@@ -20,7 +19,6 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState([]);
-  const [blueprints, setBlueprints] = useState([]);
   const [packs, setPacks] = useState([]);
   const [security, setSecurity] = useState([]);
   const [hasVaultAccess, setHasVaultAccess] = useState(false);
@@ -32,17 +30,14 @@ export default function Dashboard() {
       return;
     }
     const init = async () => {
-      const [p, b, pk, s] = await Promise.all([
+      const [p, pk, s] = await Promise.all([
         base44.entities.Project.list("-updated_date", 50),
-        base44.entities.Blueprint.list("-created_date", 100),
         base44.entities.PromptPack.list("-created_date", 50),
         base44.entities.SecurityFinding.list("-created_date", 200),
       ]);
       setProjects(p);
-      setBlueprints(b);
       setPacks(pk);
       setSecurity(s);
-      // Check vault access (Pro membership OR one-time vault purchase)
       if (user?.id) {
         const res = await base44.functions.invoke("checkVaultAccess", {});
         setHasVaultAccess(!!res.data?.hasAccess);
@@ -52,7 +47,6 @@ export default function Dashboard() {
     init().catch(() => setLoading(false));
   }, [user?.id]);
 
-  const completedBlueprints = blueprints.filter((b) => b.status === "completed").length;
   const reviewedProjects = new Set(security.map((s) => s.projectId)).size;
 
   if (loading || user?.role === "admin") return <LoadingState label="Loading dashboard..." />;
@@ -83,9 +77,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <StatCard icon={FolderKanban} label="Total Projects" value={projects.length} />
-        <StatCard icon={FileText} label="Completed Blueprints" value={completedBlueprints} />
         <StatCard icon={Package} label="Prompt Packs Generated" value={packs.length} />
         <StatCard icon={ShieldCheck} label="Security Reviews" value={reviewedProjects} />
       </div>
@@ -93,8 +86,6 @@ export default function Dashboard() {
       <PromptVaultBanner hasAccess={hasVaultAccess} />
 
       <MyProducts userId={user?.id} />
-
-      <StartBlueprintCard />
 
       <ProductsCtaBanner
         location="dashboard"

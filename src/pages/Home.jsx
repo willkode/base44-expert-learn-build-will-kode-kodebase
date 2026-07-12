@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Seo from "@/components/seo/Seo";
-import NewUserPlanModal from "@/components/plan/NewUserPlanModal";
 import GlitchPreloader from "@/components/landing/GlitchPreloader";
 import { SITE, softwareApplicationSchema, faqSchema } from "@/lib/seo";
 import { faqs } from "@/components/landing/FAQ";
@@ -11,21 +10,12 @@ import ExploreResources from "@/components/landing/ExploreResources";
 import ToolsSection from "@/components/landing/ToolsSection";
 import PromptsSection from "@/components/landing/PromptsSection";
 import FAQ from "@/components/landing/FAQ";
-import Pricing from "@/components/landing/Pricing";
 import Testimonials from "@/components/landing/Testimonials";
 import FinalCTA from "@/components/landing/FinalCTA";
 import Footer from "@/components/landing/Footer";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
-  const [showPlanModal, setShowPlanModal] = useState(false);
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("is_new_user") === "true") {
-      setShowPlanModal(true);
-    }
-  }, []);
 
   const handleComplete = () => {
     setLoading(false);
@@ -41,7 +31,6 @@ export default function Home() {
         type="website"
         jsonLd={[softwareApplicationSchema(), faqSchema(faqs)]}
       />
-      <NewUserPlanModal open={showPlanModal} onClose={() => setShowPlanModal(false)} />
       <Navbar />
       <main>
         <Hero />
@@ -49,7 +38,6 @@ export default function Home() {
         <ExploreResources />
         <ToolsSection />
         <PromptsSection />
-        <Pricing />
         <Testimonials />
         <FAQ />
         <FinalCTA />

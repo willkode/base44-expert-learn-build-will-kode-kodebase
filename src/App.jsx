@@ -11,11 +11,9 @@ import { CartProvider } from '@/components/cart/CartContext';
 
 // Public pages
 import Home from '@/pages/Home';
-import BlueprintTool from '@/pages/tools/Blueprint';
 import PromptEngine from '@/pages/tools/PromptEngine';
 import PromptGenerator from '@/pages/tools/PromptGenerator';
 import Features from '@/pages/Features';
-import Pricing from '@/pages/Pricing';
 import Products from '@/pages/Products';
 import ProductDetail from '@/pages/ProductDetail';
 import Contact from '@/pages/Contact';
@@ -53,7 +51,6 @@ import Projects from '@/pages/app/Projects';
 import NewProject from '@/pages/app/NewProject';
 import ProjectDetail from '@/pages/app/ProjectDetail';
 import ProjectOverview from '@/pages/app/ProjectOverview';
-import BlueprintViewer from '@/pages/app/BlueprintViewer';
 import PromptPackViewer from '@/pages/app/PromptPackViewer';
 import OptimizationPrompts from '@/pages/app/OptimizationPrompts';
 import LaunchAudit from '@/pages/app/LaunchAudit';
@@ -70,7 +67,6 @@ import Help from '@/pages/app/Help';
 import AdminDashboard from '@/pages/admin/AdminDashboard';
 import AdminUsers from '@/pages/admin/AdminUsers';
 import AdminProjects from '@/pages/admin/AdminProjects';
-import AdminBlueprints from '@/pages/admin/AdminBlueprints';
 import AdminLogs from '@/pages/admin/AdminLogs';
 import AdminTemplates from '@/pages/admin/AdminTemplates';
 import AdminVideos from '@/pages/admin/AdminVideos';
@@ -116,7 +112,6 @@ import AdminAgentSkills from '@/pages/admin/AdminAgentSkills';
 import AdminAnalyticsPlan from '@/pages/admin/AdminAnalyticsPlan';
 import PromptVault from '@/pages/PromptVault';
 import VaultAccess from '@/pages/VaultAccess';
-import ProMembership from '@/pages/ProMembership';
 
 const AuthenticatedApp = () => {
   return (
@@ -125,7 +120,6 @@ const AuthenticatedApp = () => {
       <Route element={<PublicLayout />}>
         <Route path="/learn" element={<LearnIndex />} />
         <Route path="/features" element={<Features />} />
-        <Route path="/pricing" element={<Pricing />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:slug" element={<ProductDetail />} />
         <Route path="/contact" element={<Contact />} />
@@ -147,11 +141,8 @@ const AuthenticatedApp = () => {
         <Route path="/services/seo-audit" element={<SeoAudit />} />
       </Route>
       <Route path="/" element={<Home />} />
-      <Route path="/tools/blueprint" element={<BlueprintTool />} />
       <Route path="/tools/prompt-generator" element={<PromptGenerator />} />
       <Route path="/vault" element={<PromptVault />} />
-      <Route path="/pro" element={<ProMembership />} />
-
       {/* Auth pages */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
@@ -172,7 +163,6 @@ const AuthenticatedApp = () => {
           <Route path="/projects/:id" element={<ProjectDetail />}>
             <Route index element={<Navigate to="overview" replace />} />
             <Route path="overview" element={<ProjectOverview />} />
-            <Route path="blueprint" element={<BlueprintViewer />} />
             <Route path="prompts" element={<PromptPackViewer />} />
             <Route path="optimize" element={<OptimizationPrompts />} />
             <Route path="security" element={<SecurityReview />} />
@@ -189,7 +179,6 @@ const AuthenticatedApp = () => {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AdminUsers />} />
             <Route path="/admin/projects" element={<AdminProjects />} />
-            <Route path="/admin/blueprints" element={<AdminBlueprints />} />
             <Route path="/admin/logs" element={<AdminLogs />} />
             <Route path="/admin/templates" element={<AdminTemplates />} />
             <Route path="/admin/videos" element={<AdminVideos />} />

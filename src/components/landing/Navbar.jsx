@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, ShieldCheck, DraftingCompass, Wand2, Headphones, Wrench, Shield, TrendingUp, Monitor, Heart, ArrowRight, BookOpen } from "lucide-react";
+import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, ShieldCheck, Wand2, Headphones, Wrench, Shield, TrendingUp, Monitor, Heart, ArrowRight, BookOpen } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import {
   DropdownMenu,
@@ -20,7 +20,6 @@ const links = [
 ];
 
 const toolItems = [
-  { label: "App Blueprint", to: "/tools/blueprint", icon: DraftingCompass, desc: "Plan your entire app before you build it", badge: "NEW" },
   { label: "Prompt Engine", to: "/tools/prompt-generator", icon: Wand2, desc: "Turn your idea into an ordered prompt pack", badge: "NEW" },
 ];
 

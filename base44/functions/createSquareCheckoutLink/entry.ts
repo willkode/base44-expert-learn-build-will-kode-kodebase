@@ -4,13 +4,6 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 // The browser redirects the buyer to Square's hosted page; payment completion
 // is recorded asynchronously by the squarePaymentWebhook function.
 // Amounts are ALWAYS resolved server-side — never trusted from the client.
-const PLAN_PRICING = {
-  free: { amountCents: 1299, name: 'Solo', blueprintLimit: 1 },
-  pro: { amountCents: 2500, name: 'Pro', blueprintLimit: 25 },
-  pro_annual: { amountCents: 25000, name: 'Pro Annual', blueprintLimit: 25 },
-  agency: { amountCents: 14900, name: 'Agency', blueprintLimit: 60 },
-};
-
 // One-time service pricing — amounts resolved server-side only
 const SERVICE_PRICING = {
   // ER Service
@@ -43,16 +36,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { planId, productId, productIds, serviceId, donationCents, promptSessionId, redirectUrl, couponCode } = await req.json();
-
-    // Pro members get 40% off products and one-time services (not subscriptions,
-    // donations, or prompt packs). Plan is resolved server-side from the profile.
-    let isProMember = false;
-    try {
-      const profiles = await base44.asServiceRole.entities.UserProfile.filter({ userId: user.id });
-      isProMember = profiles[0]?.plan === 'pro';
-    } catch (_e) { isProMember = false; }
-    const applyProDiscount = (cents) => isProMember ? Math.round(cents * 0.6) : cents;
+    const { productId, productIds, serviceId, donationCents, promptSessionId, redirectUrl, couponCode } = await req.json();
 
     let amountCents, itemName, productIdResolved = null, isDonation = false, promptSessionResolved = null, cartItems = null, metadataCouponCode = null;
     if (Array.isArray(productIds) && productIds.length > 0) {
@@ -89,8 +73,8 @@ Deno.serve(async (req) => {
           cents = Math.round(product.priceCents * (1 - pct / 100));
           name = `${product.name} (Summer Special ${pct}% off)`;
         } else {
-          cents = applyProDiscount(product.priceCents);
-          name = isProMember ? `${product.name} (Pro 40% off)` : product.name;
+          cents = product.priceCents;
+          name = product.name;
         }
         resolved.push({ id: product.id, name, cents });
       }
@@ -108,10 +92,8 @@ Deno.serve(async (req) => {
       const service = SERVICE_PRICING[serviceId];
       if (!service) return Response.json({ error: 'Invalid service.' }, { status: 400 });
       // These services are already half-price promos — the Pro discount must not stack on top.
-      const noStackServices = ['er_audit_fix', 'security_audit_fix'];
-      const proEligible = isProMember && !noStackServices.includes(serviceId);
-      amountCents = proEligible ? Math.round(service.amountCents * 0.6) : service.amountCents;
-      itemName = proEligible ? `${service.name} (Pro 40% off)` : service.name;
+      amountCents = service.amountCents;
+      itemName = service.name;
     } else if (promptSessionId) {
       // Prompt Engine prompt pack — fixed $10 unlock. Verify the session belongs
       // to this user and has prompts generated before charging.
@@ -133,11 +115,6 @@ Deno.serve(async (req) => {
       amountCents = cents;
       itemName = 'Buy Me a Coffee — Support';
       isDonation = true;
-    } else if (planId) {
-      const plan = PLAN_PRICING[planId];
-      if (!plan) return Response.json({ error: 'Invalid plan.' }, { status: 400 });
-      amountCents = plan.amountCents;
-      itemName = `ForgeBase ${plan.name} plan`;
     } else if (productId) {
       const products = await base44.asServiceRole.entities.Product.filter({ id: productId });
       const product = products[0];
@@ -150,8 +127,8 @@ Deno.serve(async (req) => {
         amountCents = Math.round(product.priceCents * (1 - pct / 100));
         itemName = `${product.name} (Summer Special ${pct}% off)`;
       } else {
-        amountCents = applyProDiscount(product.priceCents);
-        itemName = isProMember ? `${product.name} (Pro 40% off)` : product.name;
+        amountCents = product.priceCents;
+        itemName = product.name;
       }
       productIdResolved = product.id;
     } else {
@@ -169,7 +146,6 @@ Deno.serve(async (req) => {
       itemName,
     };
     if (serviceId) metadata.serviceId = serviceId;
-    if (planId) metadata.planId = planId;
     if (productIdResolved) metadata.productId = productIdResolved;
     if (cartItems) metadata.cartProductIds = cartItems.map((i) => i.id).join(',');
     if (metadataCouponCode) metadata.couponCode = metadataCouponCode;

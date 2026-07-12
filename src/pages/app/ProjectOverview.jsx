@@ -1,209 +1,44 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { toast } from "sonner";
 import LoadingState from "@/components/shared/LoadingState";
-import ProjectActions from "@/components/project/ProjectActions";
-import GenerationProgressDialog from "@/components/project/GenerationProgressDialog";
 import ProjectSummary from "@/components/project/ProjectSummary";
-import ProjectMetrics, { getLaunchReady } from "@/components/project/ProjectMetrics";
-import LaunchAuditBanner from "@/components/project/LaunchAuditBanner";
-import LaunchCelebrationDialog from "@/components/project/LaunchCelebrationDialog";
-import BlueprintProgress from "@/components/project/BlueprintProgress";
+import ProjectMetrics from "@/components/project/ProjectMetrics";
 import ProjectActivity from "@/components/project/ProjectActivity";
-import PlanUsageCard from "@/components/plan/PlanUsageCard";
-import UpgradeCard from "@/components/plan/UpgradeCard";
-import { getBlueprintUsage } from "@/lib/plans";
 
 export default function ProjectOverview() {
   const { project, reload } = useOutletContext();
   const [loading, setLoading] = useState(true);
   const [intake, setIntake] = useState(null);
-  const [blueprint, setBlueprint] = useState(null);
-  const [promptPack, setPromptPack] = useState(null);
   const [promptItems, setPromptItems] = useState([]);
   const [security, setSecurity] = useState([]);
   const [qa, setQa] = useState([]);
   const [runs, setRuns] = useState([]);
-  const [profile, setProfile] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [generating, setGenerating] = useState(false);
-  const [showProgress, setShowProgress] = useState(false);
-  const [progress, setProgress] = useState(null);
-  const [celebrate, setCelebrate] = useState(false);
-  const [rerunning, setRerunning] = useState(null);
 
   const loadData = () => {
     Promise.all([
       base44.entities.ProjectIntake.filter({ projectId: project.id }),
-      base44.entities.Blueprint.filter({ projectId: project.id }, "-created_date", 1),
-      base44.entities.PromptPack.filter({ projectId: project.id }, "-created_date", 1),
       base44.entities.PromptItem.filter({ projectId: project.id }),
       base44.entities.SecurityFinding.filter({ projectId: project.id }),
       base44.entities.QAItem.filter({ projectId: project.id }),
       base44.entities.AgentRun.filter({ projectId: project.id }, "-created_date", 10),
-      base44.entities.UserProfile.filter({ userId: project.ownerId }, "-created_date", 1),
-      base44.auth.me(),
-    ]).then(([i, b, pp, pi, s, q, r, prof, me]) => {
+    ]).then(([i, pi, s, q, r]) => {
       setIntake(i[0] || null);
-      setBlueprint(b[0] || null);
-      setPromptPack(pp[0] || null);
       setPromptItems(pi);
       setSecurity(s);
       setQa(q);
       setRuns(r);
-      setProfile(prof[0] || null);
-      setIsAdmin(me?.role === "admin");
-      // Resume the progress view if generation is still running server-side.
-      if (project.status === "generating") { setGenerating(true); setShowProgress(true); }
       setLoading(false);
     });
   };
 
   useEffect(loadData, [project.id]);
 
-  // Celebrate the first time this project hits 100% launch ready (once per project).
-  useEffect(() => {
-    if (loading || !blueprint) return;
-    if (getLaunchReady(promptItems, security, qa) !== 100) return;
-    const key = `launchCelebrated_${project.id}`;
-    if (localStorage.getItem(key)) return;
-    localStorage.setItem(key, "1");
-    setCelebrate(true);
-  }, [loading, blueprint, promptItems, security, qa, project.id]);
-
-  // While generation runs server-side, poll the project status + agent runs so the
-  // UI updates progress and detects completion even if the user reloads or leaves.
-  useEffect(() => {
-    if (!generating) return;
-    const interval = setInterval(async () => {
-      try {
-        const [proj, bp, runRecords] = await Promise.all([
-          base44.entities.Project.get(project.id),
-          base44.entities.Blueprint.filter({ projectId: project.id }, "-created_date", 1),
-          base44.entities.AgentRun.filter({ projectId: project.id }, "-created_date", 50),
-        ]);
-        const completed = runRecords.filter((r) => r.status === "success").length;
-        const running = runRecords.find((r) => r.status === "pending");
-        setProgress({ completed, total: 10, currentAgent: running?.agentName });
-
-        if (proj.status === "completed" && bp[0]) {
-          setGenerating(false);
-          toast.success("Blueprint generated successfully");
-          if (reload) reload();
-          loadData();
-        } else if (proj.status === "draft") {
-          setGenerating(false);
-          toast.error("Blueprint generation failed. Please try again.");
-          loadData();
-        }
-      } catch (_e) { /* keep polling */ }
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [generating, project.id]);
-
-  const handleGenerate = async () => {
-    setGenerating(true);
-    setShowProgress(true);
-    setProgress(null);
-    // Clear stale results from the previous blueprint immediately so the
-    // "100% complete" banner/metrics don't linger while the new one generates.
-    setBlueprint(null);
-    setPromptPack(null);
-    setPromptItems([]);
-    setSecurity([]);
-    setQa([]);
-    localStorage.removeItem(`launchCelebrated_${project.id}`);
-    try {
-      // Generation now runs fully in the background on the server. We just kick it off;
-      // the polling effect above tracks progress and detects completion.
-      const res = await base44.functions.invoke("generateBlueprint", {
-        projectId: project.id,
-        intake,
-        profile,
-        restart: true,
-      });
-      if (res.data?.error) throw new Error(res.data.error);
-      toast.success("Generation started — this can take up to 30 minutes. You can safely leave this page.");
-    } catch (err) {
-      setGenerating(false);
-      toast.error(err?.response?.data?.error || err.message || "Could not start blueprint generation");
-    }
-  };
-
-  const handleRerun = async (agentName) => {
-    setRerunning(agentName);
-    try {
-      if (agentName === "Security Agent") {
-        const res = await base44.functions.invoke("runSecurityReview", { projectId: project.id });
-        if (res.data?.error) throw new Error(res.data.error);
-        toast.success("Security review re-run completed");
-      } else if (agentName === "QA Agent") {
-        const res = await base44.functions.invoke("runQAChecklist", { projectId: project.id });
-        if (res.data?.error) throw new Error(res.data.error);
-        toast.success("QA checklist re-run completed");
-      } else {
-        // Architect, Prompt Engineer and Optimization agents run as part of blueprint generation.
-        await handleGenerate();
-      }
-    } catch (err) {
-      toast.error(err?.response?.data?.error || err.message || "Re-run failed");
-    } finally {
-      setRerunning(null);
-      loadData();
-    }
-  };
-
   if (loading) return <LoadingState label="Loading project overview..." />;
-
-  const usage = getBlueprintUsage(profile);
-  // Existing blueprint can always be re-viewed; the limit only blocks NEW generation.
-  const limitReached = !isAdmin && !blueprint && usage.reached;
-
-  const bp = blueprint || {};
-  const steps = [
-    { label: "Intake completed", done: !!intake },
-    { label: "Architecture generated", done: !!bp.appArchitecture },
-    { label: "Entity plan generated", done: !!bp.entityPlan },
-    { label: "Permission plan generated", done: !!bp.rolePermissionPlan },
-    { label: "Prompt pack generated", done: !!promptPack },
-    { label: "Security review generated", done: security.length > 0 },
-    { label: "QA checklist generated", done: qa.length > 0 },
-  ];
 
   return (
     <div className="space-y-6">
-      <LaunchCelebrationDialog
-        open={celebrate}
-        onOpenChange={setCelebrate}
-        appName={project.projectName}
-        appUrl={project.appUrl}
-      />
-
-      {limitReached ? (
-        <UpgradeCard
-          title="Blueprint limit reached"
-          description={`Your ${profile?.plan || "free"} plan allows ${usage.limit} blueprint${usage.limit === 1 ? "" : "s"}. Upgrade to generate more.`}
-          suggestedPlan={(profile?.plan || "free") === "free" ? "Pro" : "Agency"}
-        />
-      ) : (
-        <ProjectActions
-          project={project}
-          hasBlueprint={!!blueprint}
-          hasPromptPack={!!promptPack}
-          generating={generating}
-          progress={progress}
-          onGenerate={handleGenerate}
-        />
-      )}
-
-      <GenerationProgressDialog open={generating && showProgress} progress={progress} onOpenChange={setShowProgress} />
-
-      {blueprint && getLaunchReady(promptItems, security, qa) === 100 && (
-        <LaunchAuditBanner projectId={project.id} onOrder={() => toast.success("Audit request received — our team will reach out shortly.")} />
-      )}
-
-      {blueprint && (
+      {promptItems.length > 0 && (
         <ProjectMetrics prompts={promptItems} security={security} qa={qa} />
       )}
 
@@ -212,9 +47,7 @@ export default function ProjectOverview() {
           <ProjectSummary project={project} intake={intake} />
         </div>
         <div className="space-y-6">
-          {!isAdmin && <PlanUsageCard profile={profile} />}
-          <BlueprintProgress steps={steps} />
-          <ProjectActivity runs={runs} projectStatus={project.status} onRerun={handleRerun} rerunning={rerunning} />
+          <ProjectActivity runs={runs} projectStatus={project.status} />
         </div>
       </div>
     </div>
