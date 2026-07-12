@@ -13,12 +13,14 @@ const SECTIONS = [
     icon: BookOpen,
     desc: "Articles, tutorials, and deep dives on building production-grade apps with Base44 — from data models to launch.",
     badge: "UPDATED",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/d429220f7_generated_image.png",
   },
   {
     label: "Videos",
     to: "/learn/videos",
     icon: Video,
     desc: "Walkthroughs, demos, and step-by-step video guides for mastering the Base44 platform.",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/bbf0b54fa_generated_image.png",
   },
   {
     label: "Agent Skills",
@@ -26,6 +28,7 @@ const SECTIONS = [
     icon: Sparkles,
     desc: "Expert playbooks the AI uses on demand — skill-driven automation for every part of your build.",
     badge: "NEW",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/1db2354a6_generated_image.png",
   },
   {
     label: "Prompt Library",
@@ -33,6 +36,7 @@ const SECTIONS = [
     icon: Library,
     desc: "A growing collection of expert-crafted prompts by Will Kode, organized by category and use case.",
     badge: "NEW",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/e76703f7b_generated_image.png",
   },
   {
     label: "AI LLM Guide",
@@ -40,6 +44,7 @@ const SECTIONS = [
     icon: Settings2,
     desc: "Compare AI models side-by-side and pick the right one for each task in your build workflow.",
     badge: "NEW",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/22b4cf4a6_generated_image.png",
   },
   {
     label: "AI Controls",
@@ -47,12 +52,14 @@ const SECTIONS = [
     icon: ShieldCheck,
     desc: "Free prompts and guardrails to keep your AI builds on track, secure, and production-ready.",
     badge: "NEW",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/c0a77e76e_generated_image.png",
   },
   {
     label: "SuperAgent Explained",
     to: "/learn/superagent",
     icon: Bot,
     desc: "Understand the Base44 AI Agent — its capabilities, boundaries, security model, and automation patterns.",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/8efa469df_generated_image.png",
   },
 ];
 
@@ -118,26 +125,36 @@ export default function LearnIndex() {
                 <Link
                   to={s.to}
                   onClick={() => handleClick(s.label)}
-                  className="group block h-full rounded-xl border border-border bg-card/50 hover:bg-card hover:border-primary/40 transition-all duration-300 p-6 focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="group block h-full overflow-hidden rounded-xl border border-border bg-card/50 hover:bg-card hover:border-primary/40 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-ring"
                 >
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                      <s.icon className="w-5 h-5" />
-                    </span>
+                  <div className="relative aspect-[16/10] overflow-hidden border-b border-border">
+                    <img
+                      src={s.image}
+                      alt={`${s.label} featured`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
                     {s.badge && (
-                      <span className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-bold leading-none bg-primary text-primary-foreground">
+                      <span className="absolute top-3 right-3 inline-flex items-center rounded px-2 py-0.5 text-[10px] font-bold leading-none bg-primary text-primary-foreground shadow-lg">
                         {s.badge}
                       </span>
                     )}
                   </div>
-                  <h3 className="font-sora font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
-                    {s.label}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">{s.desc}</p>
-                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
-                    Explore
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </span>
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                        <s.icon className="w-4 h-4" />
+                      </span>
+                      <h3 className="font-sora font-semibold text-lg group-hover:text-primary transition-colors">
+                        {s.label}
+                      </h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">{s.desc}</p>
+                    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+                      Explore
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </div>
                 </Link>
               </motion.div>
             ))}
