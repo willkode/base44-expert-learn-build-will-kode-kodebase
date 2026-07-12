@@ -338,7 +338,7 @@ export default function KodeCare() {
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { tag: "Continuous monitoring", title: "Sentinel Pro", desc: "Premium monitoring and security hardening for serious apps.", to: "/services/sentinel-pro", cta: "Learn more" },
+              { tag: "Security review", title: "Security Audit + Fix", desc: "Full security review of your app with fixes for what we find.", to: "/services/security-audit", cta: "Learn more" },
               { tag: "1-on-1 guidance", title: "Kode Sessions", desc: "Book a 1-2 hour expert session for specific questions or guidance.", to: "/services/kode-sessions", cta: "Learn more" },
               { tag: "Emergency repair", title: "ER Service", desc: "App already broken? Get a full audit and fix for bugs and architecture.", to: "/services/er-service", cta: "Learn more" },
             ].map((card) => (

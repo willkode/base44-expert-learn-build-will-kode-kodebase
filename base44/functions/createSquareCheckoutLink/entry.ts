@@ -19,9 +19,6 @@ const SERVICE_PRICING = {
   // Kode Sessions
   kode_session_1hr: { amountCents: 7500, name: 'Kode Session — 1 Hour' },
   kode_session_2hr: { amountCents: 15000, name: 'Kode Session — 2 Hours' },
-  // Sentinel Pro — Premium monitoring + security hardening
-  sentinel_pro_setup: { amountCents: 5000, name: 'Sentinel Pro — Monitoring Setup + Security Hardening' },
-  sentinel_pro_monthly: { amountCents: 15000, name: 'Sentinel Pro — Monthly Monitoring Retainer' },
   // KodeCare — Ongoing monthly support retainers
   kodecare_starter: { amountCents: 12000, name: 'KodeCare Starter — Monthly Support Retainer' },
   kodecare_growth: { amountCents: 25000, name: 'KodeCare Growth — Monthly Support Retainer' },

@@ -57,7 +57,6 @@ export const sitemapTree = [
       { label: "ER Service", path: "/services/er-service", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
       { label: "Security Audit", path: "/services/security-audit", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
       { label: "SEO Audit", path: "/services/seo-audit", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
-      { label: "Sentinel Pro", path: "/services/sentinel-pro", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
       { label: "KodeCare", path: "/services/kodecare", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
     ],
   },

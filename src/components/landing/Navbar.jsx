@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, ShieldCheck, Wand2, Headphones, Wrench, Shield, TrendingUp, Monitor, Heart, ArrowRight, BookOpen } from "lucide-react";
+import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, ShieldCheck, Wand2, Headphones, Wrench, Shield, TrendingUp, Heart, ArrowRight, BookOpen } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import {
   DropdownMenu,
@@ -28,7 +28,6 @@ const serviceItems = [
   { label: "ER Service", to: "/services/er-service", icon: Wrench, desc: "Emergency app repair" },
   { label: "Security Audit + Fix", to: "/services/security-audit", icon: Shield, desc: "Full security review" },
   { label: "SEO Audit + Fix", to: "/services/seo-audit", icon: TrendingUp, desc: "Find and fix what hurts your rankings", badge: "NEW" },
-  { label: "Sentinel Pro", to: "/services/sentinel-pro", icon: Monitor, desc: "Premium monitoring", badge: "NEW" },
   { label: "KodeCare", to: "/services/kodecare", icon: Heart, desc: "Ongoing monthly support retainers" },
 ];
 
