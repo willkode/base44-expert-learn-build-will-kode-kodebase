@@ -54,7 +54,7 @@ export default function FeaturedBundleCard({ product: p }) {
               {isSummerSaleActive() ? (
                 <>
                   <Badge className="mb-1.5 text-[10px] bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
-                    Summer Special · {getSaleDiscountPercent(p.slug)}% off
+                    Will's Birthday Sale · {getSaleDiscountPercent(p.slug)}% off
                   </Badge>
                   <div className="flex items-end gap-1.5">
                     <span className="font-sora font-extrabold text-4xl">{formatUsd(getProductSalePriceCents(p.priceCents, p.slug))}</span>

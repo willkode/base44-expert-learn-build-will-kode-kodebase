@@ -19,6 +19,7 @@ import SummerSaleBanner from "@/components/products/SummerSaleBanner";
 import FeaturedBundleCard from "@/components/products/FeaturedBundleCard";
 
 const FEATURED_SLUG = "complete-base44-knowledge-kit";
+const HIDDEN_SLUGS = ["complete-builder-bundle"];
 
 export default function Products() {
   const navigate = useNavigate();
@@ -44,6 +45,7 @@ export default function Products() {
   const visibleProducts = useMemo(() => {
     const q = search.trim().toLowerCase();
     let list = products.filter((p) => {
+      if (HIDDEN_SLUGS.includes(p.slug)) return false;
       const matchesCategory = category === "all" || p.category === category;
       const matchesSearch =
         !q ||
@@ -169,7 +171,7 @@ export default function Products() {
                         {isSummerSaleActive() ? (
                           <>
                             <Badge className="mb-1.5 text-[10px] bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
-                              Summer Special · {getSaleDiscountPercent(p.slug)}% off
+                              Will's Birthday Sale · {getSaleDiscountPercent(p.slug)}% off
                             </Badge>
                             <div className="flex items-end gap-1.5">
                               <span className="font-sora font-extrabold text-3xl">{formatUsd(getProductSalePriceCents(p.priceCents, p.slug))}</span>

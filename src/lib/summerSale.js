@@ -1,25 +1,28 @@
-export const SUMMER_SALE_END_LABEL = "July 31";
+export const SUMMER_SALE_END_LABEL = "October 19 at 11:59 AM";
 
-// The Summer Special runs through July 31. We anchor the deadline to the
-// current calendar year so the window is correct regardless of the runtime clock.
-function summerSaleEndAt(now = new Date()) {
+// Will's Birthday Sale — 86% off everything, ends October 19 at 11:59 AM local
+// (Will's 40th birthday). Anchored to the current calendar year so the window
+// is correct regardless of the runtime clock.
+export function saleEndDate(now = new Date()) {
   const year = now.getFullYear();
-  // Aug 1, 00:00 local — i.e. end of July 31.
-  let end = new Date(year, 7, 1, 0, 0, 0, 0).getTime();
-  // If we're already in Aug–Dec, the sale targets next year's window.
-  if (now.getMonth() > 6) {
-    end = new Date(year + 1, 7, 1, 0, 0, 0, 0).getTime();
+  let end = new Date(year, 9, 19, 11, 59, 0, 0);
+  // If we're already past this year's window, the sale targets next year's.
+  if (now.getTime() >= end.getTime()) {
+    end = new Date(year + 1, 9, 19, 11, 59, 0, 0);
   }
   return end;
 }
 
 export function isSummerSaleActive(now = new Date()) {
-  return now.getTime() < summerSaleEndAt(now);
+  // Active from now through Oct 19, 11:59 AM of the current year.
+  const year = now.getFullYear();
+  const end = new Date(year, 9, 19, 11, 59, 0, 0);
+  return now.getTime() < end.getTime();
 }
 
-// Summer Special: 50% off everything.
+// Will's Birthday Sale: 86% off everything.
 export function getSaleDiscountPercent(_slug) {
-  return 50;
+  return 86;
 }
 
 export function getProductSalePriceCents(priceCents, slug) {

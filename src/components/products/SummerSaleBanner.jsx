@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
-import { isSummerSaleActive, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
-
-// End of the sale window — Aug 1 local (end of July 31), anchored to current year.
-function summerSaleEndDate() {
-  const now = new Date();
-  const year = now.getMonth() > 6 ? now.getFullYear() + 1 : now.getFullYear();
-  return new Date(year, 7, 1, 0, 0, 0, 0);
-}
+import { isSummerSaleActive, SUMMER_SALE_END_LABEL, saleEndDate } from "@/lib/summerSale";
 
 function getRemaining(end) {
   const diff = Math.max(0, end.getTime() - Date.now());
@@ -32,7 +25,7 @@ function TimeBox({ value, label }) {
 }
 
 export default function SummerSaleBanner() {
-  const end = summerSaleEndDate();
+  const end = saleEndDate();
   const [remaining, setRemaining] = useState(() => getRemaining(end));
 
   useEffect(() => {
@@ -55,7 +48,7 @@ export default function SummerSaleBanner() {
           <Sparkles className="w-6 h-6 text-[#0a0f1e] shrink-0" />
           <div>
             <p className="font-sora font-extrabold text-lg md:text-xl text-[#0a0f1e] leading-tight">
-              Summer Special — 50% off everything
+              Will's Birthday Sale — 86% off everything
             </p>
             <p className="text-sm text-[#0a0f1e]/80 font-medium">Ends {SUMMER_SALE_END_LABEL}. One-time pricing, locked in.</p>
           </div>

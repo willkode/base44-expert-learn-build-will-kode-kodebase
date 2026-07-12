@@ -25,12 +25,11 @@ const SERVICE_PRICING = {
   kodecare_pro: { amountCents: 50000, name: 'KodeCare Pro — Monthly Support Retainer' },
 };
 
-// Summer Special: 50% off all products through July 31, anchored to the current
-// calendar year so the window is correct regardless of when checkout runs.
-const isSummerProductSaleActive = () => {
+// Will's Birthday Sale: 86% off all products through Oct 19, 11:59 AM Central
+// (16:59 UTC), anchored to the current calendar year.
+const isBirthdaySaleActive = () => {
   const now = new Date();
-  const year = now.getMonth() > 6 ? now.getFullYear() + 1 : now.getFullYear();
-  const end = new Date(year, 7, 1, 0, 0, 0, 0); // Aug 1 local = end of Jul 31
+  const end = new Date(Date.UTC(now.getUTCFullYear(), 9, 19, 16, 59, 0, 0));
   return now < end;
 };
 
@@ -72,10 +71,9 @@ Deno.serve(async (req) => {
         if (override && Number.isFinite(override.priceCents)) {
           cents = Math.max(0, Math.round(override.priceCents));
           name = `${product.name} (Coupon ${coupon.code})`;
-        } else if (isSummerProductSaleActive()) {
-          const pct = product.slug === 'complete-builder-bundle' ? 86 : 50;
-          cents = Math.round(product.priceCents * (1 - pct / 100));
-          name = `${product.name} (Summer Special ${pct}% off)`;
+        } else if (isBirthdaySaleActive()) {
+          cents = Math.round(product.priceCents * 0.14);
+          name = `${product.name} (Will's Birthday Sale 86% off)`;
         } else {
           cents = product.priceCents;
           name = product.name;
@@ -126,10 +124,9 @@ Deno.serve(async (req) => {
       if ((product.priceCents || 0) === 0) {
         return Response.json({ error: 'This product is free — claim it directly, no payment needed.' }, { status: 400 });
       }
-      if (isSummerProductSaleActive()) {
-        const pct = product.slug === 'complete-builder-bundle' ? 86 : 50;
-        amountCents = Math.round(product.priceCents * (1 - pct / 100));
-        itemName = `${product.name} (Summer Special ${pct}% off)`;
+      if (isBirthdaySaleActive()) {
+        amountCents = Math.round(product.priceCents * 0.14);
+        itemName = `${product.name} (Will's Birthday Sale 86% off)`;
       } else {
         amountCents = product.priceCents;
         itemName = product.name;

@@ -264,7 +264,7 @@ export default function Checkout() {
             {item.couponCode ? (
               <p className="text-xs text-primary mb-1">Coupon {item.couponCode} applied</p>
             ) : item.onSale ? (
-              <p className="text-xs text-primary mb-1">Summer Special · {product ? `${getSaleDiscountPercent(product.slug)}% off` : "on sale"} · ends {SUMMER_SALE_END_LABEL}</p>
+              <p className="text-xs text-primary mb-1">Will's Birthday Sale · {product ? `${getSaleDiscountPercent(product.slug)}% off` : "on sale"} · ends {SUMMER_SALE_END_LABEL}</p>
             ) : null}
             {item.supportNote && <p className="text-xs text-muted-foreground mb-4">{item.supportNote}</p>}
             <ul className="space-y-2.5 mt-4">
