@@ -60,7 +60,7 @@ const deliverables = [
 const packages = [
   {
     title: "BaaS Foundation",
-    price: "$2,500",
+    price: "$500",
     priceNote: "starting at",
     subtitle: "The core backend layer",
     badge: null,
@@ -75,7 +75,7 @@ const packages = [
   },
   {
     title: "BaaS Growth",
-    price: "$5,000",
+    price: "$2,000",
     priceNote: "starting at",
     subtitle: "Production-ready infrastructure",
     badge: "Most Popular",
@@ -90,7 +90,7 @@ const packages = [
   },
   {
     title: "BaaS Enterprise",
-    price: "$10,000+",
+    price: "$5,000+",
     priceNote: "starting at",
     subtitle: "Complex, high-volume systems",
     badge: null,
@@ -131,7 +131,7 @@ const faqs = [
   { q: "Do I have to rebuild my app?", a: "No. Base44 BaaS does not require rebuilding your application. Your existing Base44 frontend stays in place while critical backend functionality is moved into a standalone infrastructure layer." },
   { q: "Why move backend functionality out of Base44?", a: "Greater control, portability, performance, security, and scalability. You own your data and infrastructure, can support future web and mobile apps from the same backend, and reduce platform lock-in — while your team keeps building the UI inside Base44." },
   { q: "What technologies do you use?", a: "Supabase, PostgreSQL, Cloudflare Workers, Node.js, Amazon S3, Cloudflare R2, and third-party authentication providers — chosen based on your app's needs." },
-  { q: "How is pricing determined?", a: "Packages start at $2,500. Exact pricing depends on your entities, integrations, roles, data volume, automations, and security requirements. Every project starts with a discovery call to scope it accurately." },
+  { q: "How is pricing determined?", a: "Packages start at $500. Exact pricing depends on your entities, integrations, roles, data volume, automations, and security requirements. Every project starts with a discovery call to scope it accurately." },
   { q: "Can you migrate my existing Base44 data?", a: "Yes. Data migration is a standard deliverable — we move your entities into the external database with testing and validation so nothing is lost." },
   { q: "What if I plan to leave Base44 eventually?", a: "Base44 BaaS is ideal for that. Because your data, auth, and business logic live in infrastructure you own, a future migration away from Base44 only requires rebuilding the frontend — the backend comes with you." },
   { q: "Do you offer ongoing support after the build?", a: "Yes. The Managed Backend plan ($500–$2,500/month) covers monitoring, maintenance, backups, updates, and ongoing backend development." },
@@ -150,7 +150,7 @@ export default function Base44Baas() {
     <>
       <Seo
         title="Base44 BaaS — Scalable External Backend for Your Base44 App | KodeBase"
-        description="Keep your Base44 frontend, upgrade your backend. Professional external backend builds with Supabase, PostgreSQL, Cloudflare Workers, S3, and more. Control, security, and scalability — from $2,500."
+        description="Keep your Base44 frontend, upgrade your backend. Professional external backend builds with Supabase, PostgreSQL, Cloudflare Workers, S3, and more. Control, security, and scalability — from $500."
         path="/services/base44-baas"
         image={OG_IMAGE}
         jsonLd={[faqSchema(faqs)]}
