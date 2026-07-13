@@ -8,10 +8,10 @@ export default function MigrationSaleBanner() {
       </div>
       <div>
         <p className="font-sora font-bold text-sm md:text-base">
-          Limited time: <span className="text-gradient-orange">50% off all migration quotes</span>
+          Limited time: <span className="text-gradient-orange">50% off migration quotes & the report unlock</span>
         </p>
         <p className="text-xs md:text-sm text-muted-foreground">
-          Every quote generated right now is automatically discounted by half — no code needed.
+          Unlock your full migration plan for $12.50 (reg. $25) and every quote is automatically discounted by half — no code needed.
         </p>
       </div>
     </div>

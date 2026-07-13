@@ -25,7 +25,7 @@ export default function MigrationPlanner() {
     <div className="max-w-6xl mx-auto space-y-24 md:space-y-32 px-4 sm:px-6 pt-6 md:pt-10 pb-20">
       <Seo
         title="Plan Your Base44 Migration Before You Spend Thousands | KodeBase"
-        description="Scan your Base44 GitHub repository, get a free readiness preview, and unlock a complete migration roadmap, security review, and professional quote for $25."
+        description="Scan your Base44 GitHub repository, get a free readiness preview, and unlock a complete migration roadmap, security review, and professional quote for $12.50 — 50% off for a limited time."
         path="/migration-planner"
         image={OG}
         jsonLd={[faqSchema(plannerFaqs.map((f) => ({ q: f.question, a: f.answer })))]}

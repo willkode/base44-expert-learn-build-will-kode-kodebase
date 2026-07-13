@@ -27,8 +27,9 @@ Deno.serve(async (req) => {
         await base44.asServiceRole.entities.MigrationAuditLog.create({ user_id: user.id, project_id, action: 'moderator_coupon_applied', entity_type: 'ReportEntitlement', entity_id: report.id, metadata: { payment_id: payment.id } });
         return Response.json({ already_unlocked: true, coupon_applied: true });
       }
-      amount = Math.max(2500, Number(settings.report_price || 2500));
-      itemName = `Migration Plan — ${project.application_name}`;
+      const basePrice = Math.max(2500, Number(settings.report_price || 2500));
+      amount = Math.round(basePrice / 2); // 50% off sale
+      itemName = `Migration Plan (50% Off) — ${project.application_name}`;
     } else {
       const quotes = await base44.asServiceRole.entities.MigrationQuote.filter({ project_id, user_id: user.id }, '-version', 1);
       quote = quotes[0];

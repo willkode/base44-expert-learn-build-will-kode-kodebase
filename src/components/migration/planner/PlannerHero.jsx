@@ -34,7 +34,7 @@ export default function PlannerHero() {
 
           <motion.div {...fade(0.3)} className="mx-auto max-w-md rounded-2xl border border-primary/25 bg-background/60 backdrop-blur-sm px-6 py-5 mb-8">
             <p className="font-sora font-semibold text-foreground">
-              Unlock your complete migration plan for a one-time payment of <span className="text-gradient-orange text-2xl align-middle font-extrabold">$25</span>.
+              Unlock your complete migration plan for a one-time payment of <span className="text-muted-foreground line-through mr-1">$25</span><span className="text-gradient-orange text-2xl align-middle font-extrabold">$12.50</span> <span className="text-primary text-sm font-bold uppercase">50% off</span>.
             </p>
           </motion.div>
 

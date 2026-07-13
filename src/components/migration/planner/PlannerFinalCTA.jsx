@@ -15,7 +15,7 @@ export default function PlannerFinalCTA() {
       <div className="pointer-events-none absolute -top-28 left-1/2 h-64 w-[32rem] -translate-x-1/2 rounded-full bg-primary/20 blur-[100px]" />
       <div className="relative px-5 py-14 md:px-12 md:py-20 text-center max-w-3xl mx-auto">
         <h2 className="font-sora text-3xl md:text-[2.6rem] md:leading-[1.15] font-bold tracking-tight mb-4">
-          Start With a <span className="text-gradient-orange">$25 Migration Assessment</span>
+          Start With a <span className="text-gradient-orange">$12.50 Migration Assessment</span>
         </h2>
         <p className="text-muted-foreground mb-8">Understand your application before committing to a migration. Receive:</p>
         <ul className="flex flex-wrap justify-center gap-2.5 mb-9">
@@ -25,7 +25,7 @@ export default function PlannerFinalCTA() {
             </li>
           ))}
         </ul>
-        <p className="font-sora font-semibold mb-7">Unlock the complete report for a one-time payment of $25.</p>
+        <p className="font-sora font-semibold mb-7">Unlock the complete report for a one-time payment of <span className="text-muted-foreground line-through">$25</span> <span className="text-gradient-orange font-extrabold">$12.50</span> — 50% off for a limited time.</p>
         <div className="flex justify-center mb-5"><PlannerCTA location="final_cta" /></div>
         <p className="text-sm text-muted-foreground">Professional Base44 migrations start at <span className="font-semibold text-foreground">$2,000</span>.</p>
       </div>

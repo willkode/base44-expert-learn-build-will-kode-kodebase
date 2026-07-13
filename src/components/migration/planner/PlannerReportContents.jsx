@@ -5,7 +5,7 @@ import { reportSections } from "./plannerData";
 
 export default function PlannerReportContents() {
   return (
-    <PlannerSection eyebrow="$25 one-time unlock" title="What You Get for $25" intro="Your complete migration report includes:">
+    <PlannerSection eyebrow="$12.50 one-time unlock — 50% off" title="What You Get for $12.50" intro="Your complete migration report includes:">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
