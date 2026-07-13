@@ -21,6 +21,7 @@ const links = [
 
 const toolItems = [
   { label: "Prompt Engine", to: "/tools/prompt-generator", icon: Wand2, desc: "Turn your idea into an ordered prompt pack", badge: "NEW" },
+  { label: "Migration Planner", to: "/migration-planner", icon: Rocket, desc: "Assess your Base44 app and plan its migration", badge: "NEW" },
 ];
 
 const serviceItems = [
