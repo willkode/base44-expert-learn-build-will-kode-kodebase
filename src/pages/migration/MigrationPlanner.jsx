@@ -5,6 +5,7 @@ import { trackEvent } from "@/lib/analytics";
 import MigrationDisclaimer from "@/components/migration/MigrationDisclaimer";
 import PlannerFAQ, { plannerFaqs } from "@/components/migration/PlannerFAQ";
 import PlannerHero from "@/components/migration/planner/PlannerHero";
+import MigrationSaleBanner from "@/components/migration/MigrationSaleBanner";
 import PlannerDependencies from "@/components/migration/planner/PlannerDependencies";
 import PlannerJourney from "@/components/migration/planner/PlannerJourney";
 import PlannerFreePreview from "@/components/migration/planner/PlannerFreePreview";
@@ -29,6 +30,7 @@ export default function MigrationPlanner() {
         image={OG}
         jsonLd={[faqSchema(plannerFaqs.map((f) => ({ q: f.question, a: f.answer })))]}
       />
+      <div className="!mt-0"><MigrationSaleBanner /></div>
       <PlannerHero />
       <PlannerDependencies />
       <PlannerJourney />
