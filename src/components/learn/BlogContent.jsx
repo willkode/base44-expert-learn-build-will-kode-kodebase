@@ -34,9 +34,20 @@ export default function BlogContent({ content, onLinkClick }) {
             {children}
           </a>
         ),
-        blockquote: ({ children }) => (
-          <blockquote className="border-l-2 border-primary/50 pl-4 my-5 italic text-foreground/80">{children}</blockquote>
-        ),
+        blockquote: ({ node, children }) => {
+          // Blockquotes containing a heading are CTA blocks — render as a standout card.
+          const isCta = node?.children?.some((c) => /^h[1-6]$/.test(c.tagName || ""));
+          if (isCta) {
+            return (
+              <div className="blog-cta my-10 rounded-2xl border border-primary/40 bg-gradient-to-br from-primary/15 via-card to-card p-6 md:p-8 glow-orange">
+                {children}
+              </div>
+            );
+          }
+          return (
+            <blockquote className="border-l-2 border-primary/50 pl-4 my-5 italic text-foreground/80">{children}</blockquote>
+          );
+        },
         code: ({ inline, children }) =>
           inline ? (
             <code className="px-1.5 py-0.5 rounded bg-secondary text-primary text-sm font-mono">{children}</code>

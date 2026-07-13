@@ -85,6 +85,34 @@
   .glow-orange {
     box-shadow: 0 0 40px -8px hsl(0 84% 60% / 0.5);
   }
+  .blog-cta > :first-child {
+    margin-top: 0;
+  }
+  .blog-cta p {
+    color: hsl(var(--foreground) / 0.85);
+  }
+  .blog-cta p:last-of-type {
+    margin-bottom: 0;
+  }
+  .blog-cta p:last-of-type a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(to right, #f87171, #fb923c, #facc15);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.65rem 1.5rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    margin-right: 0.75rem;
+    margin-top: 0.25rem;
+    box-shadow: 0 0 28px -6px hsl(0 84% 60% / 0.55);
+    transition: opacity 0.2s ease;
+  }
+  .blog-cta p:last-of-type a:hover {
+    opacity: 0.9;
+  }
   .text-gradient-orange {
     background: linear-gradient(to right, #f87171, #fb923c, #facc15);
     -webkit-background-clip: text;
