@@ -19,7 +19,7 @@ const unique = (a) => [...new Set(a.filter(Boolean))];
 
 async function loadGithub(base44, project) {
   const { accessToken } = await base44.asServiceRole.connectors.getCurrentAppUserConnection(CONNECTOR_ID);
-  const headers = { Authorization: `Bearer ${accessToken}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+  const headers = { Authorization: `Bearer ${accessToken}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'KodeBase-Migration-Planner' };
   const ref = await fetch(`https://api.github.com/repos/${encodeURIComponent(project.github_owner)}/${encodeURIComponent(project.github_repository)}/git/ref/heads/${encodeURIComponent(project.github_branch)}`, { headers });
   if (!ref.ok) throw new Error(ref.status === 404 ? 'Repository or branch is missing or no longer authorized.' : 'GitHub connection failed.');
   const refData = await ref.json();

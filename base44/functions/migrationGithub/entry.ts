@@ -9,10 +9,14 @@ Deno.serve(async (req) => {
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
     const { action, owner, repo } = await req.json();
     const { accessToken } = await base44.asServiceRole.connectors.getCurrentAppUserConnection(CONNECTOR_ID);
-    const headers = { Authorization: `Bearer ${accessToken}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+    const headers = { Authorization: `Bearer ${accessToken}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'KodeBase-Migration-Planner' };
     if (action === 'repositories') {
       const response = await fetch('https://api.github.com/user/repos?per_page=100&sort=updated&affiliation=owner,collaborator,organization_member', { headers });
-      if (!response.ok) throw new Error(response.status === 401 ? 'GitHub connection expired.' : 'Could not load repositories.');
+      if (!response.ok) {
+        const body = await response.text();
+        console.error('GitHub repos error', response.status, body.slice(0, 500));
+        throw new Error(response.status === 401 ? 'GitHub connection expired.' : 'Could not load repositories.');
+      }
       const rows = await response.json();
       return Response.json({ repositories: rows.map((r) => ({ id: String(r.id), name: r.name, full_name: r.full_name, owner: r.owner.login, private: r.private, default_branch: r.default_branch, updated_at: r.updated_at })) });
     }
