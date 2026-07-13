@@ -27,41 +27,49 @@ export const compatFocus = [
 
 export const includedSections = [
   {
+    img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a70543f54_generated_image.png",
     title: "Complete Application Discovery",
     intro: "Before changing the application, we map its existing architecture. This discovery phase produces a clear migration plan before major development begins.",
     items: ["All Base44 entities and data fields", "Entity relationships", "Backend functions", "Authentication flows", "User roles and permissions", "External integrations", "Webhooks", "Scheduled functions", "Entity-triggered automations", "File storage", "Realtime subscriptions", "AI agents and LLM features", "Payment workflows", "Frontend dependencies", "Environment variables and secrets"],
   },
   {
+    img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a137d2a77_generated_image.png",
     title: "Standalone Database",
     intro: "Your Base44 entities are migrated to a database you control — PostgreSQL, Supabase, Neon, Firebase, or another database selected for your application's requirements. Where Base44 uses loosely connected string identifiers, we can convert appropriate relationships into indexed database references.",
     items: ["Entity schema conversion", "Relationship mapping", "Database indexes", "Audit fields", "Data validation", "Existing record migration", "User data migration", "Development and production environments", "Backup planning"],
   },
   {
+    img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/68944d2bd_generated_image.png",
     title: "Independent Authentication",
     intro: "We replace Base44 authentication with an authentication system that your application controls — rebuilt to match the requirements of the existing application rather than forcing users into an entirely new experience.",
     items: ["Email and password registration", "Email verification", "One-time passcodes", "Login and logout", "Password recovery and reset", "Refresh tokens and secure sessions", "Role-based access", "Administrative permissions", "Google or Microsoft OAuth", "Additional social login providers", "User invitation workflows"],
   },
   {
+    img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/27bdc601d_generated_image.png",
     title: "Backend Function Migration",
     intro: "Base44 backend functions are reviewed and migrated individually. Duplicate or inconsistent business logic may be consolidated into shared backend services — preserving intended behavior while improving maintainability.",
     items: ["Payment processing", "Stripe webhooks", "Transaction calculations", "Notifications", "Email and SMS delivery", "User verification", "Reporting", "Administrative actions", "Data processing", "AI requests", "Scheduled jobs", "External API integrations", "Entity-triggered workflows"],
   },
   {
+    img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/f277e42f9_generated_image.png",
     title: "File Storage",
     intro: "Base44 file storage can be replaced with independent storage such as Amazon S3, Cloudflare R2, Supabase Storage, private server storage, or another compatible object-storage provider.",
     items: ["Public file uploads", "Private file uploads", "Signed download links", "Access-controlled files", "Image storage", "Document storage", "Existing file migration", "Storage permission rules"],
   },
   {
+    img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/592513902_generated_image.png",
     title: "Integrations",
     intro: "Existing Base44 integrations can be replaced with direct provider integrations. Each integration is reviewed to determine whether it should be migrated, replaced, improved, or removed.",
     items: ["Resend, SendGrid, Postmark, Amazon SES", "Twilio", "OpenAI and Anthropic", "Google APIs", "Stripe and Square", "Cloudflare", "Slack", "GitHub", "CRM platforms", "Accounting platforms", "Custom REST APIs"],
   },
   {
+    img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/6dc15bb3a_generated_image.png",
     title: "Realtime Features",
     intro: "Applications using Base44 subscriptions or realtime messaging can be migrated to an independent realtime system — Socket.IO, Supabase Realtime, native WebSockets, or managed pub/sub services.",
     items: ["Chat messages", "Notifications", "Status changes", "Live dashboards", "Entity updates", "Support conversations", "User activity", "Collaborative features"],
   },
   {
+    img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/0996e8f28_generated_image.png",
     title: "Automations and Scheduled Jobs",
     intro: "Base44 automations can be rebuilt using cron jobs, background workers, queue systems, database-backed workflow runners, external automation services, or durable workflow platforms.",
     items: ["Scheduled emails", "Payment reminders", "Follow-up sequences", "Expiration checks", "Data synchronization", "Reporting jobs", "Entity-change triggers", "Webhook-triggered workflows", "Delayed actions"],

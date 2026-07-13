@@ -23,8 +23,10 @@ export default function MigrationIncluded() {
             <motion.div
               key={section.title}
               initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-              className="rounded-2xl border border-border bg-card/60 p-6"
+              className="rounded-2xl border border-border bg-card/60 overflow-hidden"
             >
+              <img src={section.img} alt={section.title} loading="lazy" className="w-full aspect-[16/9] object-cover" />
+              <div className="p-6">
               <h3 className="font-sora font-bold text-lg mb-2">{section.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">{section.intro}</p>
               <ul className="grid sm:grid-cols-2 gap-x-4 gap-y-2">
@@ -35,6 +37,7 @@ export default function MigrationIncluded() {
                   </li>
                 ))}
               </ul>
+              </div>
             </motion.div>
           ))}
         </div>
