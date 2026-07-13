@@ -7,8 +7,8 @@ export default function PlannerDeterministic() {
   return (
     <PlannerSection
       eyebrow="Real analysis"
-      title="More Than a Static AI Report"
-      intro="The Migration Planner does not rely only on AI-generated assumptions."
+      title="Real Code Analysis First. AI Explains — It Doesn't Guess."
+      intro="Anyone can paste a repo into a chatbot and get a confident-sounding checklist. This isn't that."
     >
       <div className="grid md:grid-cols-2 gap-4 max-w-5xl mx-auto">
         <motion.div
@@ -20,7 +20,7 @@ export default function PlannerDeterministic() {
         >
           <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary mb-5"><ScanSearch className="w-5 h-5" /></span>
           <h3 className="font-sora font-semibold text-lg mb-3">Deterministic repository analysis first</h3>
-          <p className="text-sm text-muted-foreground mb-4">It first performs deterministic repository analysis to identify actual:</p>
+          <p className="text-sm text-muted-foreground mb-4">The planner reads your actual code before any AI touches it, identifying real:</p>
           <ul className="grid grid-cols-2 gap-x-4 gap-y-2">
             {deterministicItems.map((item) => (
               <li key={item} className="text-sm text-muted-foreground flex items-start gap-2">
@@ -39,7 +39,7 @@ export default function PlannerDeterministic() {
           <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary mb-5"><Sparkles className="w-5 h-5" /></span>
           <h3 className="font-sora font-semibold text-lg mb-3">AI explains — it doesn't guess</h3>
           <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-            AI is then used to organize, explain, and prioritize the findings. This makes the final report more accurate, traceable, and useful than a generic AI-generated migration checklist.
+            AI is only used to organize, explain, and prioritize verified findings. That's why every section of your report is traceable to your code — not hallucinated around it.
           </p>
         </motion.div>
       </div>

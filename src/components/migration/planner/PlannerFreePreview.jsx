@@ -5,7 +5,7 @@ import { previewItems } from "./plannerData";
 
 export default function PlannerFreePreview() {
   return (
-    <PlannerSection eyebrow="Free preview" title="What Your Free Preview Includes" intro="Your free assessment preview shows:">
+    <PlannerSection eyebrow="Free preview" title="Know Where You Stand Before Spending a Dollar" intro="Your free preview shows the real shape of your project:">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -32,7 +32,7 @@ export default function PlannerFreePreview() {
         </ul>
         {/* Locked footer */}
         <div className="flex items-center justify-center gap-2 border-t border-border/70 bg-background/50 px-6 py-4 text-sm text-muted-foreground">
-          <Lock className="w-4 h-4 text-primary" /> Your full technical roadmap remains locked until you purchase the report.
+          <Lock className="w-4 h-4 text-primary" /> The full technical roadmap stays locked until you unlock it — the free preview alone tells you if this is a weekend job or a serious project.
         </div>
       </motion.div>
     </PlannerSection>

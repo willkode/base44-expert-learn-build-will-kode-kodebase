@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/AuthContext";
 import { trackEvent } from "@/lib/analytics";
 
-export default function PlannerCTA({ label = "Start Your Migration Assessment", location = "hero" }) {
+export default function PlannerCTA({ label = "Get My Free Assessment", location = "hero" }) {
   const { isAuthenticated } = useAuth();
   return (
     <Button

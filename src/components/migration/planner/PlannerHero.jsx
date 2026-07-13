@@ -22,19 +22,16 @@ export default function PlannerHero() {
           </motion.div>
 
           <motion.h1 {...fade(0.08)} className="font-sora text-[2.4rem] leading-[1.08] md:text-6xl font-extrabold tracking-tight mb-6">
-            Plan Your <span className="text-gradient-orange">Base44 Migration</span> Before You Spend Thousands
+            Don't Guess What Leaving Base44 Will Cost. <span className="text-gradient-orange">Know</span> — Before You Spend Thousands.
           </motion.h1>
 
           <motion.p {...fade(0.16)} className="text-lg md:text-xl text-muted-foreground mb-4">
-            Connect your Base44 GitHub repository and receive a detailed technical roadmap for moving your app to independent infrastructure.
-          </motion.p>
-          <motion.p {...fade(0.22)} className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-            See what needs to be migrated, what can remain unchanged, which systems create the most risk, and how much a professional migration is likely to cost.
+            Connect your Base44 GitHub repository and get an exact technical roadmap: what must be migrated, what can stay untouched, where the risk hides, and what a professional migration will actually cost.
           </motion.p>
 
           <motion.div {...fade(0.3)} className="mx-auto max-w-md rounded-2xl border border-primary/25 bg-background/60 backdrop-blur-sm px-6 py-5 mb-8">
             <p className="font-sora font-semibold text-foreground">
-              Unlock your complete migration plan for a one-time payment of <span className="text-gradient-orange text-2xl align-middle font-extrabold">$25</span>.
+              Your complete migration plan — one-time payment of <span className="text-gradient-orange text-2xl align-middle font-extrabold">$25</span>.
             </p>
           </motion.div>
 

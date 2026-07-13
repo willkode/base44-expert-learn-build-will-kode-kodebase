@@ -4,7 +4,7 @@ import { reportSections } from "./plannerData";
 
 export default function PlannerReportContents() {
   return (
-    <PlannerSection eyebrow="$25 one-time unlock" title="What You Get for $25" intro="Your complete migration report includes:">
+    <PlannerSection eyebrow="$25 one-time unlock" title="A $25 Report That Prevents $10,000 Mistakes" intro="Fourteen sections of migration intelligence, built from your actual code:">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
         {reportSections.map((section, idx) => (
           <motion.div

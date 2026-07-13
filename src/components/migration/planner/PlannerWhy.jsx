@@ -4,7 +4,7 @@ import { whyItems } from "./plannerData";
 
 export default function PlannerWhy() {
   return (
-    <PlannerSection eyebrow="Why it matters" title="Why Use the Migration Planner?">
+    <PlannerSection eyebrow="Why it matters" title="The Five Expensive Mistakes This Report Prevents">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
         {whyItems.map((item, i) => (
           <motion.div

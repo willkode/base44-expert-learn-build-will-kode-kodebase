@@ -5,7 +5,7 @@ import { trustItems, legalityExclusions } from "./plannerData";
 
 export default function PlannerTrust() {
   return (
-    <PlannerSection eyebrow="Trust & ownership" title="Your Repository Stays Yours">
+    <PlannerSection eyebrow="Trust & ownership" title="Read-Only Access. Your Code Never Stops Being Yours.">
       <div className="grid md:grid-cols-2 gap-4 max-w-5xl mx-auto items-start">
         <motion.div
           initial={{ opacity: 0, x: -20 }}

@@ -7,8 +7,8 @@ export default function PlannerDependencies() {
   return (
     <PlannerSection
       eyebrow="Hidden dependencies"
-      title="Know Exactly What It Will Take to Leave Base44"
-      intro="Exporting your Base44 app to GitHub is only the first step. Your application may still depend on Base44 for:"
+      title="Your Exported Code Isn't as Independent as It Looks"
+      intro="Exporting to GitHub feels like freedom — but your app may still call home to Base44 for:"
     >
       <ChipGrid items={baasDependencies} />
       <motion.div
@@ -20,7 +20,7 @@ export default function PlannerDependencies() {
       >
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
         <p className="text-muted-foreground leading-relaxed mb-3">
-          The Base44 Migration Planner scans your repository, identifies these dependencies, and creates a complete migration roadmap based on your actual application.
+          Miss one and your "finished" migration breaks in production. The planner scans your actual repository, exposes every dependency, and builds your roadmap from real code.
         </p>
         <p className="font-sora font-semibold text-lg">
           No generic checklist. No guesswork. <span className="text-gradient-orange">No one-size-fits-all estimate.</span>

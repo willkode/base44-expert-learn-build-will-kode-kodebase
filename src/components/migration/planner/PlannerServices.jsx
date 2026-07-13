@@ -8,8 +8,8 @@ export default function PlannerServices() {
   return (
     <PlannerSection
       eyebrow="Done-for-you"
-      title="Professional Migration Services"
-      intro="Need help completing the migration? We can move your Base44 application to independent infrastructure that you control. Migration services may include:"
+      title="Want It Done for You? We Migrate It — You Own Everything."
+      intro="If the roadmap looks like more than you want to handle, our team moves your app to infrastructure you control. Migration services may include:"
     >
       <motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -27,7 +27,7 @@ export default function PlannerServices() {
           ))}
         </ul>
         <p className="font-sora font-semibold text-lg mb-6">
-          Professional migrations start at <span className="text-gradient-orange">$2,000</span>.
+          Migrations start at <span className="text-gradient-orange">$2,000</span> — and your quote is built from your scan, not a sales call.
         </p>
         <p className="text-sm text-muted-foreground mb-3">After your report is generated, you can:</p>
         <ul className="flex flex-wrap gap-2 mb-8">
@@ -35,7 +35,7 @@ export default function PlannerServices() {
             <li key={a} className="rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary">{a}</li>
           ))}
         </ul>
-        <PlannerCTA label="Start Your Assessment" location="services" />
+        <PlannerCTA label="Get My Quote" location="services" />
       </motion.div>
     </PlannerSection>
   );
