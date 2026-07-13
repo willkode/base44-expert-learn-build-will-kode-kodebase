@@ -11,6 +11,7 @@ import MigrationIncluded from "@/components/services/migration/MigrationIncluded
 import MigrationStacks from "@/components/services/migration/MigrationStacks";
 import MigrationReadiness from "@/components/services/migration/MigrationReadiness";
 import { replacedItems, compatFocus, processSteps, deliverables, pricingFactors, faqs } from "@/components/services/migration/migrationData";
+import ContactForm from "@/components/contact/ContactForm";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/bab7cb2ec_generated_image.png";
 
@@ -78,11 +79,11 @@ export default function Base44Migration() {
             ))}
           </motion.div>
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={5} className="flex flex-wrap items-center justify-center gap-3">
-            <Link to="/migration-planner" onClick={() => handleCTA("hero_primary")}>
+            <a href="#contact" onClick={() => handleCTA("hero_contact")}>
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8">
-                Start Your Migration Assessment <ArrowRight className="w-4 h-4 ml-1" />
+                Contact Me About Your Migration <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
-            </Link>
+            </a>
             <a
               href="https://calendar.app.google/HkWivU8RSamGuGUcA"
               target="_blank"
@@ -132,6 +133,25 @@ export default function Base44Migration() {
           <p className="text-center text-muted-foreground text-sm mt-8 max-w-2xl mx-auto">
             The goal is not to rebuild your application unnecessarily. The goal is to <span className="text-foreground font-semibold">preserve the working product</span> while replacing the Base44 runtime dependencies behind it.
           </p>
+        </div>
+      </section>
+
+      {/* Migration Assessment CTA */}
+      <section className="py-12">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="rounded-2xl border border-primary/40 bg-gradient-to-br from-primary/15 via-card to-card p-8 md:p-10 text-center glow-orange">
+            <h2 className="font-sora font-extrabold text-2xl md:text-3xl tracking-tight mb-3">
+              Not sure what your migration involves?
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
+              Run your repository through the free Migration Planner. It scans your codebase, counts every entity, function, and integration, and gives you a readiness score and quote in minutes.
+            </p>
+            <Link to="/migration-planner" onClick={() => handleCTA("assessment_banner")}>
+              <Button size="lg" className="bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] hover:opacity-90 text-white border-0 font-semibold px-8">
+                Start Your Free Migration Assessment <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -328,6 +348,19 @@ export default function Base44Migration() {
               </Button>
             </a>
           </div>
+        </div>
+      </section>
+
+      {/* Contact form */}
+      <section id="contact" className="py-20 relative scroll-mt-24">
+        <div className="absolute inset-0 blueprint-grid opacity-10" />
+        <div className="relative max-w-5xl mx-auto px-6">
+          <div className="text-center mb-10">
+            <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Contact</p>
+            <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">Tell me about your migration.</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">Share a few details about your app and I'll get back to you within 24 hours.</p>
+          </div>
+          <ContactForm />
         </div>
       </section>
     </>
