@@ -3,10 +3,7 @@ import Seo from "@/components/seo/Seo";
 import { faqSchema } from "@/lib/seo";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import {
-  Database, ArrowRight, CheckCircle, Server, Lock, Shield, HardDrive,
-  Bell, Clock, Webhook, CreditCard, ScrollText, Plug, Archive, Layers, Activity,
-} from "lucide-react";
+import { Database, ArrowRight, CheckCircle, Shield, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ServiceFAQ from "@/components/services/ServiceFAQ";
 import { trackEvent } from "@/lib/analytics";
@@ -19,20 +16,20 @@ const fadeUp = {
 };
 
 const capabilities = [
-  { icon: Database, label: "External Database", desc: "PostgreSQL or Supabase database you own" },
-  { icon: Server, label: "API & Serverless Layer", desc: "Secure endpoints and Cloudflare Workers" },
-  { icon: Lock, label: "Auth & User Management", desc: "Third-party auth providers, sessions, roles" },
-  { icon: Shield, label: "RBAC & Row-Level Security", desc: "Fine-grained access control policies" },
-  { icon: HardDrive, label: "File & Image Storage", desc: "Amazon S3 or Cloudflare R2 storage" },
-  { icon: Bell, label: "Email, SMS & Notifications", desc: "Transactional messaging systems" },
-  { icon: Clock, label: "Jobs & Background Processing", desc: "Scheduled tasks and async queues" },
-  { icon: Webhook, label: "Webhook Processing", desc: "Reliable inbound & outbound webhooks" },
-  { icon: CreditCard, label: "Payments & Subscriptions", desc: "Billing infrastructure that scales" },
-  { icon: ScrollText, label: "Audit Logs & Tracking", desc: "Activity trails and compliance logging" },
-  { icon: Plug, label: "Third-Party Integrations", desc: "Any external API, wired in properly" },
-  { icon: Activity, label: "Monitoring & Error Reporting", desc: "Logging, alerts, and observability" },
-  { icon: Archive, label: "Backups & Recovery", desc: "Automated backups and restore processes" },
-  { icon: Layers, label: "Staging & Production", desc: "Separate environments, safe deploys" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/0f0fa08f4_generated_image.png", label: "External Database", desc: "PostgreSQL or Supabase database you own" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/18d46716d_generated_image.png", label: "API & Serverless Layer", desc: "Secure endpoints and Cloudflare Workers" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/c182e5b29_generated_image.png", label: "Auth & User Management", desc: "Third-party auth providers, sessions, roles" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a2d17505e_generated_image.png", label: "RBAC & Row-Level Security", desc: "Fine-grained access control policies" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/48e354c1c_generated_image.png", label: "File & Image Storage", desc: "Amazon S3 or Cloudflare R2 storage" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/c014d8203_generated_image.png", label: "Email, SMS & Notifications", desc: "Transactional messaging systems" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/dcf1bd36a_generated_image.png", label: "Jobs & Background Processing", desc: "Scheduled tasks and async queues" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/b1b1ec510_generated_image.png", label: "Webhook Processing", desc: "Reliable inbound & outbound webhooks" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/9073105c4_generated_image.png", label: "Payments & Subscriptions", desc: "Billing infrastructure that scales" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/58be709e2_generated_image.png", label: "Audit Logs & Tracking", desc: "Activity trails and compliance logging" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/313361e63_generated_image.png", label: "Third-Party Integrations", desc: "Any external API, wired in properly" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a2d94e4f9_generated_image.png", label: "Monitoring & Error Reporting", desc: "Logging, alerts, and observability" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/e8ea3b23f_generated_image.png", label: "Backups & Recovery", desc: "Automated backups and restore processes" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/4f695316d_generated_image.png", label: "Staging & Production", desc: "Separate environments, safe deploys" },
 ];
 
 const idealFor = [
@@ -236,16 +233,14 @@ export default function Base44Baas() {
             <p className="text-muted-foreground max-w-xl mx-auto">Everything your app needs behind the scenes — built with Supabase, PostgreSQL, Cloudflare Workers, Node.js, S3, and R2.</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {capabilities.map(({ icon: Icon, label, desc }, i) => (
+            {capabilities.map(({ img, label, desc }, i) => (
               <motion.div
                 key={label}
                 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={(i % 4) * 0.4}
-                className="flex flex-col items-center text-center gap-3 p-6 rounded-2xl border border-border bg-card/60 hover:border-primary/40 transition-colors"
+                className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card/60 hover:border-primary/40 transition-colors"
               >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Icon className="w-5 h-5 text-primary" />
-                </div>
-                <div>
+                <img src={img} alt={label} loading="lazy" className="w-full aspect-square object-cover" />
+                <div className="p-4 text-center">
                   <p className="font-semibold text-sm text-foreground">{label}</p>
                   <p className="text-xs text-muted-foreground mt-1">{desc}</p>
                 </div>
