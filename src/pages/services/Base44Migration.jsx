@@ -86,12 +86,7 @@ export default function Base44Migration() {
                 Contact Me About Your Migration <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </a>
-            <a
-              href="https://calendar.app.google/HkWivU8RSamGuGUcA"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => handleCTA("hero_book_call")}
-            >
+            <a href="#contact" onClick={() => handleCTA("hero_book_call")}>
               <Button size="lg" variant="outline" className="font-semibold px-8">
                 <CalendarDays className="w-4 h-4 mr-1" /> Book a Free Call
               </Button>
@@ -339,12 +334,7 @@ export default function Base44Migration() {
                 Start Your Migration Assessment <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>
-            <a
-              href="https://calendar.app.google/HkWivU8RSamGuGUcA"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => handleCTA("final_book_call")}
-            >
+            <a href="#contact" onClick={() => handleCTA("final_book_call")}>
               <Button size="lg" variant="outline" className="font-semibold px-8">
                 <CalendarDays className="w-4 h-4 mr-1" /> Book a Free Call
               </Button>
@@ -360,9 +350,9 @@ export default function Base44Migration() {
           <div className="text-center mb-10">
             <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Contact</p>
             <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">Tell me about your migration.</h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">Share a few details about your app and I'll get back to you within 24 hours.</p>
+            <p className="text-muted-foreground max-w-xl mx-auto">Share a few details about your app first — once your message is sent, you'll get a link to book your free call.</p>
           </div>
-          <ContactForm />
+          <ContactForm bookingUrl="https://calendar.app.google/HkWivU8RSamGuGUcA" />
         </div>
       </section>
     </>

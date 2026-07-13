@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, CheckCircle2, Mail, MessageCircle } from "lucide-react";
-import { trackFormStart, trackFormSubmit, trackFormError, trackLead } from "@/lib/analytics";
+import { Loader2, CheckCircle2, Mail, MessageCircle, CalendarDays } from "lucide-react";
+import { trackFormStart, trackFormSubmit, trackFormError, trackLead, trackEvent } from "@/lib/analytics";
 import SocialLinks from "@/components/landing/SocialLinks";
 
-export default function ContactForm() {
+export default function ContactForm({ bookingUrl }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "", website: "" });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -52,6 +52,21 @@ export default function ContactForm() {
         <CheckCircle2 className="w-12 h-12 text-primary mx-auto mb-4" />
         <h3 className="font-sora font-bold text-xl mb-2">Message sent!</h3>
         <p className="text-muted-foreground text-sm">Thanks for reaching out — I'll get back to you soon.</p>
+        {bookingUrl && (
+          <div className="mt-6">
+            <p className="text-sm text-foreground font-semibold mb-3">Next step: book your free call.</p>
+            <a
+              href={bookingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent("booking_link_click", { source: "contact_form_success" })}
+            >
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8">
+                <CalendarDays className="w-4 h-4 mr-1" /> Book a Free Call
+              </Button>
+            </a>
+          </div>
+        )}
       </div>
     );
   }
