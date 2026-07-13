@@ -40,7 +40,13 @@ export default function BlogPost() {
   useEffect(() => {
     setLoading(true);
     // Security: getPublicBlog (service role) only ever returns published posts.
-    fetchPublishedPost(slug).then(({ post: found, settings: s }) => {
+    fetchPublishedPost(slug).then(async ({ post: found, settings: s }) => {
+      // Long-form posts store their markdown in a hosted file (entity field size limits).
+      if (found?.contentUrl && !found.content) {
+        try {
+          found = { ...found, content: await fetch(found.contentUrl).then((r) => r.text()) };
+        } catch { /* fall back to whatever content exists */ }
+      }
       setPost(found);
       setSettings(s || {});
       setLoading(false);

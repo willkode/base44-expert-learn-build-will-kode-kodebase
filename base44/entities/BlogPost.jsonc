@@ -36,6 +36,10 @@
       "type": "string",
       "description": "Full post body in markdown"
     },
+    "contentUrl": {
+      "type": "string",
+      "description": "URL of a hosted markdown file holding the full body (used for very long posts that exceed entity field size limits)"
+    },
     "published": {
       "type": "boolean",
       "default": true,

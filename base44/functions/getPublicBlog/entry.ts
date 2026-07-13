@@ -22,6 +22,7 @@ function toPublic(p) {
     slug: p.slug,
     excerpt: p.excerpt,
     content: p.content,
+    contentUrl: p.contentUrl,
     coverImageUrl: p.coverImageUrl,
     category: p.category,
     tags: p.tags || [],
