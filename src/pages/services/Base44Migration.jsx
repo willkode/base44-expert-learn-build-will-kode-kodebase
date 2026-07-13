@@ -105,15 +105,17 @@ export default function Base44Migration() {
               A Base44 migration replaces the services your application currently receives from Base44 with a standalone technology stack <span className="text-foreground font-semibold">owned and controlled by you</span>. Depending on your application, this may include replacing:
             </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {replacedItems.map((item, i) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {replacedItems.map(({ img, label }, i) => (
               <motion.div
-                key={item}
-                initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.3}
-                className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/60"
+                key={label}
+                initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={(i % 4) * 0.4}
+                className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card/60 hover:border-primary/40 transition-colors"
               >
-                <CheckCircle className="w-4 h-4 text-primary shrink-0" />
-                <span className="text-sm font-medium text-foreground">{item}</span>
+                <img src={img} alt={label} loading="lazy" className="w-full aspect-square object-cover" />
+                <div className="p-4 text-center">
+                  <p className="font-semibold text-sm text-foreground">{label}</p>
+                </div>
               </motion.div>
             ))}
           </div>

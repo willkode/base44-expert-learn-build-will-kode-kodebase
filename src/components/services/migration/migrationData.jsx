@@ -1,16 +1,16 @@
 export const replacedItems = [
-  "Base44 authentication",
-  "Base44 entities and database storage",
-  "Backend functions",
-  "File uploads and private storage",
-  "Email and SMS integrations",
-  "AI and LLM integrations",
-  "Realtime subscriptions",
-  "Scheduled automations",
-  "Webhooks",
-  "Payment processing",
-  "User roles and permissions",
-  "Analytics and application logs",
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/9ff2c70a4_generated_image.png", label: "Base44 authentication" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/e01453e74_generated_image.png", label: "Base44 entities and database storage" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/446ca7365_generated_image.png", label: "Backend functions" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/b78ea0d6d_generated_image.png", label: "File uploads and private storage" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/e95679202_generated_image.png", label: "Email and SMS integrations" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/5e654cf6f_generated_image.png", label: "AI and LLM integrations" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/7b0717b7b_generated_image.png", label: "Realtime subscriptions" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/71f0b91e6_generated_image.png", label: "Scheduled automations" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/5240760a9_generated_image.png", label: "Webhooks" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/1e1da2652_generated_image.png", label: "Payment processing" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/612a3e3fd_generated_image.png", label: "User roles and permissions" },
+  { img: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/0ea804aba_generated_image.png", label: "Analytics and application logs" },
 ];
 
 export const compatFocus = [
