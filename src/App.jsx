@@ -35,6 +35,7 @@ import ErService from '@/pages/services/ErService';
 import SecurityAudit from '@/pages/services/SecurityAudit';
 import SeoAudit from '@/pages/services/SeoAudit';
 import KodeCare from '@/pages/services/KodeCare';
+import Base44Baas from '@/pages/services/Base44Baas';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -142,6 +143,7 @@ const AuthenticatedApp = () => {
         <Route path="/services/security-audit" element={<SecurityAudit />} />
         <Route path="/services/seo-audit" element={<SeoAudit />} />
         <Route path="/services/kodecare" element={<KodeCare />} />
+        <Route path="/services/base44-baas" element={<Base44Baas />} />
       </Route>
       <Route path="/" element={<Home />} />
       <Route path="/tools/prompt-generator" element={<PromptGenerator />} />
