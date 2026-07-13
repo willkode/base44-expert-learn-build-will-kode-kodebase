@@ -9,25 +9,25 @@ export const baasDependencies = [
 export const journeySteps = [
   {
     title: "Connect Your Repository",
-    text: "Connect GitHub with read-only access or upload an exported ZIP. Your code, your authorization — we only analyze repositories you own or are authorized to manage.",
+    text: "Securely connect your GitHub account and select the Base44 application you want analyzed. You can also upload an exported ZIP file when GitHub access is unavailable. We only analyze repositories that you own or are authorized to manage.",
   },
   {
-    title: "Run Your Assessment",
-    text: "The scanner works through your application structure and finds every:",
+    title: "Run Your Migration Assessment",
+    text: "The planner reviews your application structure and identifies:",
     items: ["Base44 entities","Backend functions","Authentication flows","External integrations","Payment systems","File storage","Realtime features","Scheduled jobs","Entity automations","AI features","Security risks","Hardcoded dependencies","Migration complexity"],
   },
   {
-    title: "See Your Free Preview",
-    text: "Pay nothing to know where you stand. Your free summary includes:",
+    title: "Review Your Free Preview",
+    text: "Before paying anything, you receive a migration summary containing:",
     items: ["Readiness score","Complexity level","Number of entities","Number of backend functions","Integrations detected","Authentication dependencies","Payment and realtime features","Important technical findings","Recommended migration direction","Preliminary project estimate"],
   },
   {
-    title: "Unlock the Full Plan for $25",
-    text: "One payment unlocks your complete technical migration roadmap — saved to your account forever, so you can return to it any time.",
+    title: "Unlock the Complete Plan",
+    text: "Unlock the full technical migration report for a one-time payment of $25. Your report remains available in your account, so you can return to it at any time.",
   },
   {
-    title: "DIY or Hire Us",
-    text: "Use the roadmap yourself, hand it to your developer, or have us do the whole migration. You can:",
+    title: "Migrate It Yourself or Hire Us",
+    text: "Use the roadmap to manage the migration yourself, share it with your development team, or request a quote for us to complete the migration. You can:",
     items: ["Pay the migration deposit","Pay the full quote","Request a manual review","Schedule a call with Will Kode"],
   },
 ];
@@ -75,11 +75,11 @@ export const useCases = [
 ];
 
 export const whyItems = [
-  { title: "Underestimating the Project", text: "A \"simple\" repo can hide heavy backend dependencies. Find them before development starts — not after your budget is spent." },
-  { title: "Rebuilding What Already Works", text: "Most Base44 frontends can be kept. Your report shows exactly what stays and what must change, so you only pay to replace what actually needs replacing." },
-  { title: "Losing Data Mid-Migration", text: "Export, transform, import, validate, and roll back with a plan — instead of a prayer. Your report spells out every data requirement." },
-  { title: "Shipping Old Security Holes", text: "Authorization gaps, exposed secrets, and unverified webhooks get flagged before they're reproduced in your new backend." },
-  { title: "Getting a Made-Up Quote", text: "Your estimate is built from detected entities, functions, integrations, and risks. Defensible and explainable — not arbitrary." },
+  { title: "Avoid Underestimating the Project", text: "A repository may look simple while still depending heavily on Base44 services. The planner identifies hidden backend dependencies before development begins." },
+  { title: "Avoid Rebuilding the Wrong Parts", text: "Many Base44 frontends can be preserved while the backend is replaced. Your report identifies what can remain and what must be rebuilt." },
+  { title: "Avoid Losing Data", text: "The migration plan includes data export, transformation, import, validation, and rollback requirements." },
+  { title: "Avoid Weakening Security", text: "The scanner identifies authorization, secret-management, webhook, and administrative-access concerns before they are reproduced in the new backend." },
+  { title: "Get a Defensible Estimate", text: "The quote is based on detected entities, functions, integrations, authentication complexity, workflows, payments, and migration risks." },
 ];
 
 export const trustItems = [

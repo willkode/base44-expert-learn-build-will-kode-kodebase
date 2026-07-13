@@ -4,7 +4,7 @@ import { journeySteps } from "./plannerData";
 
 export default function PlannerJourney() {
   return (
-    <PlannerSection eyebrow="How it works" title={'Five Steps From "No Idea" to a Complete Migration Plan'}>
+    <PlannerSection eyebrow="How it works" title="From Repository to Roadmap in Five Steps">
       <div className="relative max-w-4xl mx-auto">
         {/* Timeline spine (desktop) */}
         <div className="hidden md:block absolute left-[27px] top-4 bottom-4 w-px bg-gradient-to-b from-primary/60 via-primary/25 to-transparent" />
