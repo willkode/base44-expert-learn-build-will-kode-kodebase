@@ -153,6 +153,7 @@ const AuthenticatedApp = () => {
         <Route path="/services/kodecare" element={<KodeCare />} />
         <Route path="/services/base44-baas" element={<Base44Baas />} />
         <Route path="/services/base44-migration" element={<Base44Migration />} />
+        <Route path="/migration-planner" element={<MigrationPlanner />} />
       </Route>
       <Route path="/" element={<Home />} />
       <Route path="/tools/prompt-generator" element={<PromptGenerator />} />
@@ -184,7 +185,6 @@ const AuthenticatedApp = () => {
             <Route path="launch-audit" element={<LaunchAudit />} />
           </Route>
           <Route path="/tools/prompt-engine" element={<PromptEngine />} />
-          <Route path="/migration-planner" element={<MigrationPlanner />} />
           <Route path="/migration-planner/assessments" element={<MigrationDashboard />} />
           <Route path="/migration-planner/new" element={<NewMigrationAssessment />} />
           <Route path="/migration-planner/projects/:id" element={<MigrationProject />} />
