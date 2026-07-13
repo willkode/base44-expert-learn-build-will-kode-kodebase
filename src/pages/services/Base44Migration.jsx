@@ -12,6 +12,7 @@ import MigrationStacks from "@/components/services/migration/MigrationStacks";
 import MigrationReadiness from "@/components/services/migration/MigrationReadiness";
 import { replacedItems, compatFocus, processSteps, deliverables, pricingFactors, faqs } from "@/components/services/migration/migrationData";
 import ContactForm from "@/components/contact/ContactForm";
+import MigrationSaleBanner from "@/components/migration/MigrationSaleBanner";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/bab7cb2ec_generated_image.png";
 
@@ -44,6 +45,7 @@ export default function Base44Migration() {
         <div className="absolute inset-0 blueprint-grid opacity-20" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative max-w-4xl mx-auto px-6 text-center">
+          <div className="mb-8 text-left"><MigrationSaleBanner /></div>
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0}>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-6">
               <Rocket className="w-3.5 h-3.5 text-primary" />
