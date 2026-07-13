@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, ShieldCheck, Wand2, Headphones, Wrench, Shield, TrendingUp, Heart, ArrowRight, BookOpen, Database } from "lucide-react";
+import { Menu, X, ChevronDown, FileText, Video, Sparkles, Library, Settings2, ShieldCheck, Wand2, Headphones, Wrench, Shield, TrendingUp, Heart, ArrowRight, BookOpen, Database, Rocket } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import {
   DropdownMenu,
@@ -30,6 +30,7 @@ const serviceItems = [
   { label: "SEO Audit + Fix", to: "/services/seo-audit", icon: TrendingUp, desc: "Find and fix what hurts your rankings", badge: "NEW" },
   { label: "KodeCare", to: "/services/kodecare", icon: Heart, desc: "Ongoing monthly support retainers" },
   { label: "Base44 BaaS", to: "/services/base44-baas", icon: Database, desc: "Scalable external backend for your app", badge: "NEW" },
+  { label: "App Migration", to: "/services/base44-migration", icon: Rocket, desc: "Move your Base44 app to your own stack", badge: "NEW" },
 ];
 
 const learnLinks = [
