@@ -3,7 +3,7 @@ import Seo from "@/components/seo/Seo";
 import { faqSchema } from "@/lib/seo";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Rocket, ArrowRight, CheckCircle, KeyRound, ServerCog, Layers } from "lucide-react";
+import { Rocket, ArrowRight, CheckCircle, KeyRound, ServerCog, Layers, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ServiceFAQ from "@/components/services/ServiceFAQ";
 import { trackEvent } from "@/lib/analytics";
@@ -83,8 +83,18 @@ export default function Base44Migration() {
                 Start Your Migration Assessment <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>
-            <a href="#pricing" onClick={() => handleCTA("hero_secondary")}>
+            <a
+              href="https://calendar.app.google/HkWivU8RSamGuGUcA"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => handleCTA("hero_book_call")}
+            >
               <Button size="lg" variant="outline" className="font-semibold px-8">
+                <CalendarDays className="w-4 h-4 mr-1" /> Book a Free Call
+              </Button>
+            </a>
+            <a href="#pricing" onClick={() => handleCTA("hero_secondary")}>
+              <Button size="lg" variant="ghost" className="font-semibold px-8">
                 See Pricing
               </Button>
             </a>
@@ -301,11 +311,23 @@ export default function Base44Migration() {
             Your application should not be permanently limited by the platform where it was originally built. We help Base44 app owners move to infrastructure they control while preserving the functionality, workflows, and customer experience they have already invested in.
           </p>
           <p className="text-sm font-semibold text-foreground mb-8">Base44 migration services start at $2,000.</p>
-          <Link to="/migration-planner" onClick={() => handleCTA("final_cta")}>
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10">
-              Start Your Migration Assessment <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link to="/migration-planner" onClick={() => handleCTA("final_cta")}>
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10">
+                Start Your Migration Assessment <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </Link>
+            <a
+              href="https://calendar.app.google/HkWivU8RSamGuGUcA"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => handleCTA("final_book_call")}
+            >
+              <Button size="lg" variant="outline" className="font-semibold px-8">
+                <CalendarDays className="w-4 h-4 mr-1" /> Book a Free Call
+              </Button>
+            </a>
+          </div>
         </div>
       </section>
     </>
