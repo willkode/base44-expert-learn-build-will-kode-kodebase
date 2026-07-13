@@ -1,25 +1,34 @@
+import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import PlannerCTA from "./PlannerCTA";
 import { finalCtaItems } from "./plannerData";
 
 export default function PlannerFinalCTA() {
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-border bg-card/60 px-6 py-14 text-center blueprint-grid">
-      <div className="absolute inset-0 bg-primary/5" />
-      <div className="relative max-w-3xl mx-auto">
-        <h2 className="font-sora text-3xl md:text-4xl font-bold mb-4">Start With a $25 Migration Assessment</h2>
-        <p className="text-muted-foreground mb-6">Understand your application before committing to a migration. Receive:</p>
-        <ul className="flex flex-wrap justify-center gap-2 mb-7">
+    <motion.section
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.55 }}
+      className="relative overflow-hidden rounded-[2rem] border border-primary/25 bg-card/50 blueprint-grid"
+    >
+      <div className="pointer-events-none absolute -top-28 left-1/2 h-64 w-[32rem] -translate-x-1/2 rounded-full bg-primary/20 blur-[100px]" />
+      <div className="relative px-5 py-14 md:px-12 md:py-20 text-center max-w-3xl mx-auto">
+        <h2 className="font-sora text-3xl md:text-[2.6rem] md:leading-[1.15] font-bold tracking-tight mb-4">
+          Start With a <span className="text-gradient-orange">$25 Migration Assessment</span>
+        </h2>
+        <p className="text-muted-foreground mb-8">Understand your application before committing to a migration. Receive:</p>
+        <ul className="flex flex-wrap justify-center gap-2.5 mb-9">
           {finalCtaItems.map((item) => (
-            <li key={item} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1.5 text-sm text-muted-foreground">
-              <CheckCircle2 className="w-3.5 h-3.5 text-primary" />{item}
+            <li key={item} className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-background/60 px-4 py-2 text-sm text-foreground/80 backdrop-blur-sm">
+              <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0" />{item}
             </li>
           ))}
         </ul>
-        <p className="font-semibold mb-6">Unlock the complete report for a one-time payment of $25.</p>
-        <div className="flex justify-center mb-4"><PlannerCTA location="final_cta" /></div>
+        <p className="font-sora font-semibold mb-7">Unlock the complete report for a one-time payment of $25.</p>
+        <div className="flex justify-center mb-5"><PlannerCTA location="final_cta" /></div>
         <p className="text-sm text-muted-foreground">Professional Base44 migrations start at <span className="font-semibold text-foreground">$2,000</span>.</p>
       </div>
-    </section>
+    </motion.section>
   );
 }

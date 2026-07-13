@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import PlannerSection from "./PlannerSection";
 import PlannerCTA from "./PlannerCTA";
@@ -10,23 +11,32 @@ export default function PlannerServices() {
       title="Professional Migration Services"
       intro="Need help completing the migration? We can move your Base44 application to independent infrastructure that you control. Migration services may include:"
     >
-      <div className="rounded-2xl border border-border bg-card/60 p-6 max-w-4xl mx-auto">
-        <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-2 mb-6">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.5 }}
+        className="relative max-w-4xl mx-auto overflow-hidden rounded-[1.5rem] border border-primary/25 bg-card/60 p-6 md:p-10"
+      >
+        <div className="pointer-events-none absolute -top-24 right-0 h-48 w-48 rounded-full bg-primary/15 blur-[80px]" />
+        <ul className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2.5 mb-8">
           {serviceItems.map((item) => (
-            <li key={item} className="text-sm text-muted-foreground flex items-start gap-2">
+            <li key={item} className="text-sm text-foreground/80 flex items-start gap-2.5">
               <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />{item}
             </li>
           ))}
         </ul>
-        <p className="font-semibold mb-4">Professional migrations start at $2,000.</p>
-        <p className="text-sm text-muted-foreground mb-2">After your report is generated, you can:</p>
-        <ul className="flex flex-wrap gap-2 mb-6">
+        <p className="font-sora font-semibold text-lg mb-6">
+          Professional migrations start at <span className="text-gradient-orange">$2,000</span>.
+        </p>
+        <p className="text-sm text-muted-foreground mb-3">After your report is generated, you can:</p>
+        <ul className="flex flex-wrap gap-2 mb-8">
           {postReportActions.map((a) => (
-            <li key={a} className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">{a}</li>
+            <li key={a} className="rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary">{a}</li>
           ))}
         </ul>
         <PlannerCTA label="Start Your Assessment" location="services" />
-      </div>
+      </motion.div>
     </PlannerSection>
   );
 }

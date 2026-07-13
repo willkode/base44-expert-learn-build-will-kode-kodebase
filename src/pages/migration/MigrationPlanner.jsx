@@ -21,7 +21,7 @@ const OG = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/559f
 export default function MigrationPlanner() {
   useEffect(() => trackEvent("migration_planner_view"), []);
   return (
-    <div className="max-w-6xl mx-auto space-y-20 px-6 pt-8 pb-16">
+    <div className="max-w-6xl mx-auto space-y-24 md:space-y-32 px-4 sm:px-6 pt-6 md:pt-10 pb-20">
       <Seo
         title="Plan Your Base44 Migration Before You Spend Thousands | KodeBase"
         description="Scan your Base44 GitHub repository, get a free readiness preview, and unlock a complete migration roadmap, security review, and professional quote for $25."
@@ -40,7 +40,10 @@ export default function MigrationPlanner() {
       <PlannerWhy />
       <PlannerTrust />
       <section className="max-w-3xl mx-auto">
-        <h2 className="font-sora text-3xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+        <div className="text-center mb-10">
+          <span className="inline-flex items-center rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.15em] text-primary mb-4">Answers</span>
+          <h2 className="font-sora text-3xl md:text-[2.6rem] md:leading-[1.15] font-bold tracking-tight">Frequently Asked Questions</h2>
+        </div>
         <PlannerFAQ />
       </section>
       <PlannerFinalCTA />
