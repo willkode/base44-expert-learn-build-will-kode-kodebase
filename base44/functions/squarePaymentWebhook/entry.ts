@@ -173,11 +173,15 @@ Deno.serve(async (req) => {
       }
     }
 
-    let userId = metadata.base44UserId || null;
+    let userId = metadata.base44UserId || metadata.migrationUserId || null;
     let userEmail = metadata.base44UserEmail || payment.buyer_email_address || '';
     const planId = metadata.planId || null;
     let productId = metadata.productId || null;
     const promptSessionId = metadata.promptSessionId || null;
+    const migrationProjectId = metadata.migrationProjectId || null;
+    const migrationReportId = metadata.migrationReportId || null;
+    const migrationQuoteId = metadata.migrationQuoteId || null;
+    const migrationPaymentType = metadata.migrationPaymentType || null;
     const itemName = metadata.itemName || lineItemName || 'Purchase';
     const amountCents = payment.amount_money?.amount || 0;
 
@@ -225,6 +229,64 @@ Deno.serve(async (req) => {
         errorMessage: 'Unattributed — no matching app user; review in Admin > Sales',
       });
       return Response.json({ received: true, unattributed: true });
+    }
+
+    // Migration Planner payments use their own immutable payment ledger. The
+    // signed webhook is the only path that can complete a payment or grant access.
+    if (migrationProjectId && migrationPaymentType) {
+      const pendingRows = await base44.asServiceRole.entities.PaymentRecord.filter({
+        project_id: migrationProjectId,
+        user_id: userId,
+        payment_type: migrationPaymentType,
+        status: 'pending',
+      }, '-created_date', 1);
+      const pending = pendingRows[0];
+      if (!pending) {
+        console.error('[squareWebhook] Migration payment has no matching pending record', { paymentId: payment.id, migrationProjectId, migrationPaymentType });
+        return Response.json({ error: 'Unmatched migration payment' }, { status: 409 });
+      }
+      if (Number(pending.amount) !== Number(amountCents)) {
+        console.error('[squareWebhook] Migration amount mismatch', { paymentId: payment.id, expected: pending.amount, received: amountCents });
+        await base44.asServiceRole.entities.PaymentRecord.update(pending.id, { status: 'failed', metadata: { reason: 'amount_mismatch' } });
+        return Response.json({ error: 'Payment amount mismatch' }, { status: 409 });
+      }
+      const priorTransactions = await base44.asServiceRole.entities.PaymentRecord.filter({ provider_transaction_id: payment.id });
+      if (priorTransactions.length > 0) return Response.json({ received: true, duplicate: true });
+      await base44.asServiceRole.entities.PaymentRecord.update(pending.id, {
+        provider_transaction_id: payment.id,
+        status: 'completed',
+        webhook_verified: true,
+        paid_at: new Date().toISOString(),
+        metadata: { receipt_url: payment.receipt_url || '', order_id: payment.order_id || '' },
+      });
+      if (migrationPaymentType === 'report') {
+        const existingEntitlements = await base44.asServiceRole.entities.ReportEntitlement.filter({ user_id: userId, project_id: migrationProjectId, report_id: migrationReportId });
+        if (existingEntitlements[0]) {
+          await base44.asServiceRole.entities.ReportEntitlement.update(existingEntitlements[0].id, { access_status: 'active', payment_id: pending.id, granted_at: new Date().toISOString(), revoked_at: '' });
+        } else {
+          await base44.asServiceRole.entities.ReportEntitlement.create({ user_id: userId, project_id: migrationProjectId, report_id: migrationReportId, payment_id: pending.id, access_status: 'active', granted_at: new Date().toISOString() });
+        }
+        await base44.asServiceRole.entities.MigrationReport.update(migrationReportId, { access_unlocked: true, unlocked_at: new Date().toISOString() });
+        await base44.asServiceRole.entities.MigrationProject.update(migrationProjectId, { lead_status: 'Qualified' });
+      } else if (migrationQuoteId) {
+        const quoteRows = await base44.asServiceRole.entities.MigrationQuote.filter({ id: migrationQuoteId, user_id: userId });
+        const quote = quoteRows[0];
+        if (quote) {
+          const paid = Math.min(quote.total, (quote.amount_paid || 0) + amountCents);
+          await base44.asServiceRole.entities.MigrationQuote.update(quote.id, { amount_paid: paid, balance_due: Math.max(0, quote.total - paid), payment_status: paid >= quote.total ? 'paid' : migrationPaymentType === 'deposit' ? 'deposit_paid' : 'partially_paid' });
+          await base44.asServiceRole.entities.MigrationProject.update(migrationProjectId, { lead_status: paid >= quote.total ? 'Paid in Full' : 'Deposit Paid' });
+        }
+      }
+      await base44.asServiceRole.entities.MigrationAuditLog.create({ user_id: userId, project_id: migrationProjectId, action: `migration_payment_${migrationPaymentType}_completed`, entity_type: 'PaymentRecord', entity_id: pending.id, metadata: { provider_transaction_id: payment.id, amount: amountCents } });
+      await base44.asServiceRole.entities.Payment.create({ userId, userEmail: userEmail || '', itemName, amountCents, currency: 'USD', squarePaymentId: payment.id, squareReceiptUrl: payment.receipt_url || '', status: 'completed' });
+      const migrationProjects = await base44.asServiceRole.entities.MigrationProject.filter({ id: migrationProjectId });
+      const migrationProject = migrationProjects[0];
+      const migrationSettings = (await base44.asServiceRole.entities.MigrationSettings.filter({ key: 'global' }))[0] || {};
+      const eventLabel = migrationPaymentType === 'report' ? 'Full report unlocked' : migrationPaymentType === 'deposit' ? 'Migration deposit paid' : 'Migration payment received';
+      const emailBody = `<div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif"><h2>${eventLabel}</h2><p>Application: ${migrationProject?.application_name || ''}</p><p>Amount: $${(amountCents / 100).toLocaleString()}</p><p>Payment status: Completed and webhook verified</p></div>`;
+      if (userEmail) await base44.asServiceRole.integrations.Core.SendEmail({ to: userEmail, subject: `Migration Planner: ${eventLabel}`, body: emailBody });
+      if (migrationSettings.sales_notification_email) await base44.asServiceRole.integrations.Core.SendEmail({ to: migrationSettings.sales_notification_email, subject: `${eventLabel} — ${migrationProject?.application_name || migrationProjectId}`, body: emailBody });
+      return Response.json({ received: true, migrationPayment: true });
     }
 
     // Coupon redemption — mark the coupon used after a completed payment.

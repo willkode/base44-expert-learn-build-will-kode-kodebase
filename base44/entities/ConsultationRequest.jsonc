@@ -1,0 +1,64 @@
+{
+  "name": "ConsultationRequest",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "report_id": {
+      "type": "string"
+    },
+    "quote_id": {
+      "type": "string"
+    },
+    "booking_url": {
+      "type": "string"
+    },
+    "clicked_at": {
+      "type": "string"
+    },
+    "scheduled_status": {
+      "type": "string",
+      "enum": [
+        "clicked",
+        "requested",
+        "scheduled",
+        "completed",
+        "cancelled"
+      ],
+      "default": "clicked"
+    },
+    "scheduled_date": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "project_id"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

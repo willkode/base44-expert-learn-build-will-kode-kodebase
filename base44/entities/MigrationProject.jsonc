@@ -1,0 +1,180 @@
+{
+  "name": "MigrationProject",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "application_name": {
+      "type": "string"
+    },
+    "application_url": {
+      "type": "string"
+    },
+    "github_owner": {
+      "type": "string"
+    },
+    "github_repository": {
+      "type": "string"
+    },
+    "github_repository_id": {
+      "type": "string"
+    },
+    "github_branch": {
+      "type": "string"
+    },
+    "repository_visibility": {
+      "type": "string"
+    },
+    "repository_source": {
+      "type": "string",
+      "enum": [
+        "github",
+        "zip"
+      ]
+    },
+    "zip_file_uri": {
+      "type": "string"
+    },
+    "authorization_confirmed": {
+      "type": "boolean",
+      "default": false
+    },
+    "authorization_confirmed_at": {
+      "type": "string"
+    },
+    "authorization_metadata": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "current_user_count": {
+      "type": "number"
+    },
+    "estimated_record_count": {
+      "type": "number"
+    },
+    "production_status": {
+      "type": "boolean"
+    },
+    "payment_features": {
+      "type": "boolean"
+    },
+    "preferred_stack": {
+      "type": "string"
+    },
+    "preferred_hosting": {
+      "type": "string"
+    },
+    "desired_timeline": {
+      "type": "string"
+    },
+    "known_issues": {
+      "type": "string"
+    },
+    "additional_notes": {
+      "type": "string"
+    },
+    "scan_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "queued",
+        "scanning",
+        "completed",
+        "failed",
+        "unsupported"
+      ],
+      "default": "draft"
+    },
+    "scan_progress": {
+      "type": "number",
+      "default": 0
+    },
+    "scan_stage": {
+      "type": "string"
+    },
+    "scan_error": {
+      "type": "string"
+    },
+    "readiness_score": {
+      "type": "number"
+    },
+    "complexity_level": {
+      "type": "string",
+      "enum": [
+        "Low",
+        "Moderate",
+        "High",
+        "Enterprise"
+      ]
+    },
+    "manual_review_required": {
+      "type": "boolean",
+      "default": false
+    },
+    "lead_status": {
+      "type": "string",
+      "enum": [
+        "Assessment",
+        "Report Ready",
+        "Qualified",
+        "Consultation Requested",
+        "Deposit Paid",
+        "Paid in Full",
+        "Manual Review",
+        "Archived"
+      ],
+      "default": "Assessment"
+    },
+    "assigned_admin_id": {
+      "type": "string"
+    },
+    "internal_notes": {
+      "type": "string"
+    },
+    "archived": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "user_id",
+    "application_name",
+    "authorization_confirmed"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$and": [
+        {
+          "created_by_id": {
+            "$ne": "anonymous"
+          }
+        },
+        {
+          "$or": [
+            {
+              "data.user_id": "{{user.id}}"
+            },
+            {
+              "user_condition": {
+                "role": "admin"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

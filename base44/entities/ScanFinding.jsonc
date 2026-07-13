@@ -1,0 +1,79 @@
+{
+  "name": "ScanFinding",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "scan_id": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "Critical",
+        "High",
+        "Medium",
+        "Low",
+        "Informational"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "file_path": {
+      "type": "string"
+    },
+    "line_reference": {
+      "type": "string"
+    },
+    "detected_pattern": {
+      "type": "string"
+    },
+    "redacted_value": {
+      "type": "string"
+    },
+    "recommendation": {
+      "type": "string"
+    },
+    "migration_phase": {
+      "type": "string"
+    },
+    "estimated_difficulty": {
+      "type": "string",
+      "enum": [
+        "Low",
+        "Moderate",
+        "High",
+        "Enterprise"
+      ]
+    },
+    "requires_manual_review": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "project_id",
+    "scan_id",
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

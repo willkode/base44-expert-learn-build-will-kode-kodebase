@@ -1,0 +1,82 @@
+{
+  "name": "MigrationReport",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "scan_id": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "preview_ready",
+        "generating",
+        "ready",
+        "failed"
+      ],
+      "default": "preview_ready"
+    },
+    "preview_summary": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "full_report": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "readiness_score": {
+      "type": "number"
+    },
+    "complexity_level": {
+      "type": "string"
+    },
+    "recommended_stack": {
+      "type": "string"
+    },
+    "estimated_timeline": {
+      "type": "string"
+    },
+    "access_unlocked": {
+      "type": "boolean",
+      "default": false
+    },
+    "unlocked_at": {
+      "type": "string"
+    },
+    "report_version": {
+      "type": "number",
+      "default": 1
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "last_regenerated_at": {
+      "type": "string"
+    },
+    "pdf_file_uri": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "scan_id",
+    "user_id"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

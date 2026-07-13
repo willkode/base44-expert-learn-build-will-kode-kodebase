@@ -1,0 +1,2 @@
+import { Button } from "@/components/ui/button";
+export default function ProjectActionBar({onRescan,onConsult,onReview,onArchive,busy}){return <div className="flex flex-wrap gap-2"><Button variant="outline" onClick={onRescan} disabled={busy}>Rescan repository</Button><Button variant="outline" onClick={onConsult}>Schedule a call</Button><Button variant="ghost" onClick={onReview}>Request manual review</Button><Button variant="ghost" onClick={onArchive}>Archive project</Button></div>;}

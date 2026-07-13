@@ -1,0 +1,144 @@
+{
+  "name": "MigrationQuote",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "report_id": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "string"
+    },
+    "quote_number": {
+      "type": "string"
+    },
+    "version": {
+      "type": "number",
+      "default": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "presented",
+        "approved",
+        "rejected",
+        "expired",
+        "manual_review"
+      ],
+      "default": "draft"
+    },
+    "manual_review_required": {
+      "type": "boolean",
+      "default": false
+    },
+    "subtotal": {
+      "type": "number"
+    },
+    "discount_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "total": {
+      "type": "number"
+    },
+    "deposit_percentage": {
+      "type": "number",
+      "default": 33
+    },
+    "deposit_amount": {
+      "type": "number"
+    },
+    "midpoint_percentage": {
+      "type": "number",
+      "default": 33
+    },
+    "midpoint_amount": {
+      "type": "number"
+    },
+    "final_percentage": {
+      "type": "number",
+      "default": 34
+    },
+    "final_amount": {
+      "type": "number"
+    },
+    "amount_paid": {
+      "type": "number",
+      "default": 0
+    },
+    "balance_due": {
+      "type": "number"
+    },
+    "estimated_start_date": {
+      "type": "string"
+    },
+    "estimated_completion_date": {
+      "type": "string"
+    },
+    "estimated_duration": {
+      "type": "string"
+    },
+    "expiration_date": {
+      "type": "string"
+    },
+    "scope_summary": {
+      "type": "string"
+    },
+    "admin_notes": {
+      "type": "string"
+    },
+    "approved_by_admin_id": {
+      "type": "string"
+    },
+    "approved_at": {
+      "type": "string"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "unpaid",
+        "deposit_paid",
+        "partially_paid",
+        "paid",
+        "refunded"
+      ],
+      "default": "unpaid"
+    },
+    "version_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "project_id",
+    "report_id",
+    "user_id",
+    "quote_number"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

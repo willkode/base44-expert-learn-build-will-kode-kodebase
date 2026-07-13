@@ -1,0 +1,107 @@
+{
+  "name": "PaymentRecord",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "report_id": {
+      "type": "string"
+    },
+    "quote_id": {
+      "type": "string"
+    },
+    "payment_type": {
+      "type": "string",
+      "enum": [
+        "report",
+        "deposit",
+        "midpoint",
+        "final",
+        "full"
+      ]
+    },
+    "provider": {
+      "type": "string",
+      "default": "square"
+    },
+    "provider_customer_id": {
+      "type": "string"
+    },
+    "provider_checkout_id": {
+      "type": "string"
+    },
+    "provider_transaction_id": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "failed",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "idempotency_key": {
+      "type": "string"
+    },
+    "webhook_verified": {
+      "type": "boolean",
+      "default": false
+    },
+    "paid_at": {
+      "type": "string"
+    },
+    "refunded_at": {
+      "type": "string"
+    },
+    "refund_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "internal_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "project_id",
+    "payment_type",
+    "amount"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

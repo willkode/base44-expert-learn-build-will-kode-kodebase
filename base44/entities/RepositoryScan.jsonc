@@ -1,0 +1,111 @@
+{
+  "name": "RepositoryScan",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "scanning",
+        "completed",
+        "failed"
+      ],
+      "default": "queued"
+    },
+    "branch": {
+      "type": "string"
+    },
+    "commit_sha": {
+      "type": "string"
+    },
+    "started_at": {
+      "type": "string"
+    },
+    "completed_at": {
+      "type": "string"
+    },
+    "files_reviewed": {
+      "type": "number",
+      "default": 0
+    },
+    "entities_detected": {
+      "type": "number",
+      "default": 0
+    },
+    "functions_detected": {
+      "type": "number",
+      "default": 0
+    },
+    "integrations_detected": {
+      "type": "number",
+      "default": 0
+    },
+    "auth_methods_detected": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "automations_detected": {
+      "type": "number",
+      "default": 0
+    },
+    "realtime_detected": {
+      "type": "boolean",
+      "default": false
+    },
+    "payment_features_detected": {
+      "type": "boolean",
+      "default": false
+    },
+    "security_findings_count": {
+      "type": "number",
+      "default": 0
+    },
+    "critical_findings_count": {
+      "type": "number",
+      "default": 0
+    },
+    "high_findings_count": {
+      "type": "number",
+      "default": 0
+    },
+    "raw_inventory": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "scan_summary": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "error_message": {
+      "type": "string"
+    },
+    "scanner_version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "user_id"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

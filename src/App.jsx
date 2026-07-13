@@ -37,6 +37,12 @@ import SeoAudit from '@/pages/services/SeoAudit';
 import KodeCare from '@/pages/services/KodeCare';
 import Base44Baas from '@/pages/services/Base44Baas';
 import Base44Migration from '@/pages/services/Base44Migration';
+import MigrationPlanner from '@/pages/migration/MigrationPlanner';
+import MigrationDashboard from '@/pages/migration/MigrationDashboard';
+import NewMigrationAssessment from '@/pages/migration/NewMigrationAssessment';
+import MigrationProject from '@/pages/migration/MigrationProject';
+import MigrationReport from '@/pages/migration/MigrationReport';
+import MigrationQuote from '@/pages/migration/MigrationQuote';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -114,6 +120,7 @@ import AdminPromptVault from '@/pages/admin/AdminPromptVault';
 import AdminAgentSkills from '@/pages/admin/AdminAgentSkills';
 import AdminAnalyticsPlan from '@/pages/admin/AdminAnalyticsPlan';
 import AdminSitemap from '@/pages/admin/AdminSitemap';
+import AdminMigrationPlanner from '@/pages/admin/AdminMigrationPlanner';
 import PromptVault from '@/pages/PromptVault';
 import VaultAccess from '@/pages/VaultAccess';
 
@@ -177,6 +184,12 @@ const AuthenticatedApp = () => {
             <Route path="launch-audit" element={<LaunchAudit />} />
           </Route>
           <Route path="/tools/prompt-engine" element={<PromptEngine />} />
+          <Route path="/migration-planner" element={<MigrationPlanner />} />
+          <Route path="/migration-planner/assessments" element={<MigrationDashboard />} />
+          <Route path="/migration-planner/new" element={<NewMigrationAssessment />} />
+          <Route path="/migration-planner/projects/:id" element={<MigrationProject />} />
+          <Route path="/migration-planner/projects/:id/report" element={<MigrationReport />} />
+          <Route path="/migration-planner/projects/:id/quote" element={<MigrationQuote />} />
           <Route path="/vault/access" element={<VaultAccess />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />
@@ -232,6 +245,7 @@ const AuthenticatedApp = () => {
             <Route path="/admin/prompt-vault" element={<AdminPromptVault />} />
             <Route path="/admin/agent-skills" element={<AdminAgentSkills />} />
             <Route path="/admin/analytics" element={<AdminAnalyticsPlan />} />
+            <Route path="/admin/migration-planner" element={<AdminMigrationPlanner />} />
             <Route path="/admin/sitemap" element={<AdminSitemap />} />
           </Route>
         </Route>

@@ -78,9 +78,9 @@ export default function Base44Migration() {
             ))}
           </motion.div>
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={5} className="flex flex-wrap items-center justify-center gap-3">
-            <Link to="/contact" onClick={() => handleCTA("hero_primary")}>
+            <Link to="/migration-planner" onClick={() => handleCTA("hero_primary")}>
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8">
-                Schedule a Migration Review <ArrowRight className="w-4 h-4 ml-1" />
+                Start Your Migration Assessment <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>
             <a href="#pricing" onClick={() => handleCTA("hero_secondary")}>
@@ -238,9 +238,9 @@ export default function Base44Migration() {
             ))}
           </div>
           <div className="text-center">
-            <Link to="/contact" onClick={() => handleCTA("pricing_cta")}>
+            <Link to="/migration-planner" onClick={() => handleCTA("pricing_cta")}>
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8">
-                Get a Custom Estimate <ArrowRight className="w-4 h-4 ml-1" />
+                Get Your Migration Plan <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>
           </div>
@@ -301,9 +301,9 @@ export default function Base44Migration() {
             Your application should not be permanently limited by the platform where it was originally built. We help Base44 app owners move to infrastructure they control while preserving the functionality, workflows, and customer experience they have already invested in.
           </p>
           <p className="text-sm font-semibold text-foreground mb-8">Base44 migration services start at $2,000.</p>
-          <Link to="/contact" onClick={() => handleCTA("final_cta")}>
+          <Link to="/migration-planner" onClick={() => handleCTA("final_cta")}>
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10">
-              Request a Base44 Migration Review <ArrowRight className="w-4 h-4 ml-1" />
+              Start Your Migration Assessment <ArrowRight className="w-4 h-4 ml-1" />
             </Button>
           </Link>
         </div>

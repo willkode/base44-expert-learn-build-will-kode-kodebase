@@ -1,0 +1,86 @@
+{
+  "name": "MigrationSettings",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "default": "global"
+    },
+    "report_price": {
+      "type": "number",
+      "default": 2500
+    },
+    "base_migration_price": {
+      "type": "number",
+      "default": 200000
+    },
+    "booking_url": {
+      "type": "string"
+    },
+    "sales_notification_email": {
+      "type": "string"
+    },
+    "payment_provider": {
+      "type": "string",
+      "default": "square"
+    },
+    "quote_expiration_days": {
+      "type": "number",
+      "default": 30
+    },
+    "company_name": {
+      "type": "string",
+      "default": "KodeBase"
+    },
+    "company_logo": {
+      "type": "string"
+    },
+    "terms_url": {
+      "type": "string"
+    },
+    "privacy_policy_url": {
+      "type": "string"
+    },
+    "report_disclaimer": {
+      "type": "string"
+    },
+    "quote_disclaimer": {
+      "type": "string"
+    },
+    "credit_report_fee": {
+      "type": "boolean",
+      "default": true
+    },
+    "allow_full_payment_without_approval": {
+      "type": "boolean",
+      "default": false
+    },
+    "deposit_percentage": {
+      "type": "number",
+      "default": 33
+    },
+    "midpoint_percentage": {
+      "type": "number",
+      "default": 33
+    },
+    "final_percentage": {
+      "type": "number",
+      "default": 34
+    }
+  },
+  "required": [
+    "key"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

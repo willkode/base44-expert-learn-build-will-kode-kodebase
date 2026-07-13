@@ -1,0 +1,6 @@
+import { useEffect,useState } from "react";
+import { Dialog,DialogContent,DialogHeader,DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { base44 } from "@/api/base44Client";
+export default function AdminReportEditor({report,open,onOpenChange,onSaved}){const [text,setText]=useState(""),[error,setError]=useState("");useEffect(()=>setText(JSON.stringify(report?.full_report||{},null,2)),[report]);const save=async()=>{try{const full_report=JSON.parse(text);await base44.functions.invoke("migrationAdmin",{action:"update_report",report_id:report.id,full_report});onOpenChange(false);onSaved()}catch(e){setError(e.response?.data?.error||"Report content must be valid JSON.")}};return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="max-w-4xl"><DialogHeader><DialogTitle>Edit report sections and recommendations</DialogTitle></DialogHeader><Textarea className="font-mono min-h-[55vh]" value={text} onChange={e=>setText(e.target.value)}/>{error&&<p className="text-sm text-destructive">{error}</p>}<Button onClick={save}>Save new report version</Button></DialogContent></Dialog>;}

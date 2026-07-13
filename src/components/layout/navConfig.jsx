@@ -21,6 +21,7 @@ import {
   Package,
   Ticket,
   Network,
+  GitPullRequest,
 } from "lucide-react";
 
 export const userNav = [
@@ -29,6 +30,7 @@ export const userNav = [
   { label: "Projects", to: "/projects", icon: FolderKanban },
   { label: "Prompt Engine", to: "/tools/prompt-engine", icon: Wand2 },
   { label: "Prompt Vault", to: "/vault/access", icon: Vault },
+  { label: "Migration Planner", to: "/migration-planner", icon: GitPullRequest },
   { label: "Resources/Learn", to: "/help", icon: GraduationCap },
   { label: "Settings", to: "/settings", icon: Settings },
 ];
@@ -52,6 +54,7 @@ export const adminNav = [
   { label: "Prompt Vault", to: "/admin/prompt-vault", icon: Vault },
   { label: "Agent Skills", to: "/admin/agent-skills", icon: Sparkles },
   { label: "Sales & Orders", to: "/admin/sales", icon: DollarSign },
+  { label: "Migration Planner", to: "/admin/migration-planner", icon: GitPullRequest },
   { label: "Products & Downloads", to: "/admin/products", icon: Package },
   { label: "Coupons", to: "/admin/coupons", icon: Ticket },
   { label: "Security", to: "/admin/security", icon: ShieldHalf },
