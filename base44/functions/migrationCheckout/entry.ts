@@ -5,7 +5,7 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    const { project_id, payment_type, redirect_url } = await req.json();
+    const { project_id, payment_type, redirect_url, coupon_code } = await req.json();
     const ownedProjects = await base44.asServiceRole.entities.MigrationProject.filter({ user_id: user.id }, '-updated_date', 500);
     const project = ownedProjects.find((p) => p.id === project_id);
     if (!project) return Response.json({ error: 'Project not found.' }, { status: 404 });
@@ -18,6 +18,15 @@ Deno.serve(async (req) => {
     if (payment_type === 'report') {
       const grants = await base44.asServiceRole.entities.ReportEntitlement.filter({ project_id, report_id: report.id, user_id: user.id, access_status: 'active' });
       if (grants.length) return Response.json({ already_unlocked: true });
+      const normalizedCoupon = String(coupon_code || '').trim().toLowerCase();
+      if (normalizedCoupon) {
+        if (normalizedCoupon !== 'modfam4life') return Response.json({ error: 'This coupon code is not valid.' }, { status: 400 });
+        const payment = await base44.asServiceRole.entities.PaymentRecord.create({ user_id: user.id, project_id, report_id: report.id, payment_type: 'report', provider: 'coupon', amount: 0, currency: 'USD', status: 'completed', webhook_verified: false, paid_at: new Date().toISOString(), metadata: { coupon: 'moderator_full_report' } });
+        await base44.asServiceRole.entities.ReportEntitlement.create({ user_id: user.id, project_id, report_id: report.id, payment_id: payment.id, access_status: 'active', granted_at: new Date().toISOString() });
+        await base44.asServiceRole.entities.MigrationReport.update(report.id, { access_unlocked: true, unlocked_at: new Date().toISOString() });
+        await base44.asServiceRole.entities.MigrationAuditLog.create({ user_id: user.id, project_id, action: 'moderator_coupon_applied', entity_type: 'ReportEntitlement', entity_id: report.id, metadata: { payment_id: payment.id } });
+        return Response.json({ already_unlocked: true, coupon_applied: true });
+      }
       amount = Math.max(2500, Number(settings.report_price || 2500));
       itemName = `Migration Plan — ${project.application_name}`;
     } else {
