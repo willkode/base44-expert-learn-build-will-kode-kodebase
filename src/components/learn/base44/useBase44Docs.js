@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { DOC_URL, categoryForSection, slugify } from "./base44HubData";
+import { EXTRA_SECTIONS } from "./extraSections";
 
 let cache = null;
 
@@ -42,7 +43,7 @@ export default function useBase44Docs() {
         return r.text();
       })
       .then((md) => {
-        cache = parseSections(md);
+        cache = [...parseSections(md), ...EXTRA_SECTIONS];
         setSections(cache);
       })
       .catch((e) => setError(e.message))
