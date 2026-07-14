@@ -8,6 +8,14 @@ import { trackEvent } from "@/lib/analytics";
 
 const SECTIONS = [
   {
+    label: "Base44 Cheat Sheets",
+    to: "/learn/base44",
+    icon: BookOpen,
+    desc: "The complete Base44 resource hub — 40+ cheat sheets covering entities, auth, backend functions, AI agents, connectors, and every platform gotcha.",
+    badge: "NEW",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/fbe04bf89_generated_image.png",
+  },
+  {
     label: "Blog",
     to: "/learn/blog",
     icon: BookOpen,

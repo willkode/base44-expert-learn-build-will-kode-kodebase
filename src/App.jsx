@@ -30,6 +30,7 @@ import AiControls from '@/pages/learn/AiControls';
 import Videos from '@/pages/learn/Videos';
 
 import LlmGuide from '@/pages/learn/LlmGuide';
+import Base44ResourceHub from '@/pages/learn/Base44ResourceHub';
 import KodeSessions from '@/pages/services/KodeSessions';
 import ErService from '@/pages/services/ErService';
 import SecurityAudit from '@/pages/services/SecurityAudit';
@@ -146,6 +147,7 @@ const AuthenticatedApp = () => {
         <Route path="/learn/videos" element={<Videos />} />
 
         <Route path="/learn/llm-guide" element={<LlmGuide />} />
+        <Route path="/learn/base44" element={<Base44ResourceHub />} />
         <Route path="/services/kode-sessions" element={<KodeSessions />} />
         <Route path="/services/er-service" element={<ErService />} />
         <Route path="/services/security-audit" element={<SecurityAudit />} />
