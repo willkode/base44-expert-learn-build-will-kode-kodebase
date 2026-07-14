@@ -40,13 +40,13 @@ export default function Base44ResourceHub() {
             ? `Base44 cheat sheet: ${active.title}. Exact rules, SDK snippets, and gotchas so you build better Base44 apps faster.`
             : "Master every detail of Base44 — 40+ cheat sheets covering entities, auth, backend functions, AI agents, connectors, workflows, styling, deployment, and the gotchas that break builds."
         }
-        path="/learn/base44"
+        path="/learn/base44-cheat-sheet"
         image={OG_IMAGE}
         jsonLd={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
           name: "Base44 Cheat Sheets",
-          url: canonical("/learn/base44"),
+          url: canonical("/learn/base44-cheat-sheet"),
           description:
             "The complete Base44 platform resource hub — cheat sheets for entities, auth, backend functions, AI agents, connectors, workflows, styling, and deployment.",
           publisher: { "@type": "Organization", name: SITE.name, logo: SITE.logo },

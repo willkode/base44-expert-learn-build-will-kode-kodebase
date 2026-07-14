@@ -47,6 +47,7 @@ export const sitemapTree = [
       { label: "AI Controls", path: "/learn/ai-controls", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
       { label: "Videos", path: "/learn/videos", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
       { label: "LLM Guide", path: "/learn/llm-guide", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
+      { label: "Base44 Cheat Sheets", path: "/learn/base44-cheat-sheet", type: "public", navSources: ["navbar-dropdown", "mobile-menu", "learn-index"] },
     ],
   },
   {

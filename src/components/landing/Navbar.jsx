@@ -36,7 +36,7 @@ const serviceItems = [
 
 const learnLinks = [
   { label: "Blog", to: "/learn/blog", icon: FileText, desc: "Articles & tutorials" },
-  { label: "Base44 Cheat Sheets", to: "/learn/base44", icon: BookOpenCheck, desc: "The complete platform resource hub", badge: "NEW" },
+  { label: "Base44 Cheat Sheets", to: "/learn/base44-cheat-sheet", icon: BookOpenCheck, desc: "The complete platform resource hub", badge: "NEW" },
   { label: "Agent Skills", to: "/learn/agent-skills", icon: Sparkles, desc: "Expert playbooks the AI uses on demand", badge: "NEW" },
   { label: "Prompt Library", to: "/learn/prompt-library", icon: Library, desc: "Expert prompts by Will Kode", badge: "NEW" },
   { label: "AI LLM Guide", to: "/learn/llm-guide", icon: Settings2, desc: "Pick the right model for the job", badge: "NEW" },

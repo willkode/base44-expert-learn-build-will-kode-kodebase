@@ -9,7 +9,7 @@ import { trackEvent } from "@/lib/analytics";
 const SECTIONS = [
   {
     label: "Base44 Cheat Sheets",
-    to: "/learn/base44",
+    to: "/learn/base44-cheat-sheet",
     icon: BookOpen,
     desc: "The complete Base44 resource hub — 40+ cheat sheets covering entities, auth, backend functions, AI agents, connectors, and every platform gotcha.",
     badge: "NEW",
