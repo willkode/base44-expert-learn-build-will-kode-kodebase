@@ -9,6 +9,7 @@ import useBase44Docs from "@/components/learn/base44/useBase44Docs";
 import HubSidebar from "@/components/learn/base44/HubSidebar";
 import HubTopicGrid from "@/components/learn/base44/HubTopicGrid";
 import HubMarkdown from "@/components/learn/base44/HubMarkdown";
+import HubProTips from "@/components/learn/base44/HubProTips";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/fbe04bf89_generated_image.png";
 
@@ -104,6 +105,8 @@ export default function Base44ResourceHub() {
                     <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">{active.category}</p>
                     <h2 className="font-sora font-extrabold text-3xl tracking-tight mb-2">{active.title}</h2>
                     <div className="h-1 w-16 rounded-full bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] mb-6" />
+                    <HubProTips body={active.body} />
+                    <p className="font-sora font-bold text-sm uppercase tracking-wider text-muted-foreground mb-2">Cheat Sheet</p>
                     <HubMarkdown content={active.body} />
                   </div>
                 ) : (
