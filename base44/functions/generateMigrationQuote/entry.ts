@@ -35,8 +35,9 @@ Deno.serve(async (req) => {
     const version = (previous[0]?.version || 0) + 1;
     const expiration = new Date(Date.now() + Number(settings.quote_expiration_days || 30) * 86400000).toISOString();
     const depositPct = Number(settings.deposit_percentage || 33), midpointPct = Number(settings.midpoint_percentage || 33), finalPct = Number(settings.final_percentage || 34);
-    const discountAmount = Math.round(subtotal * 0.5);
-    const total = subtotal - discountAmount;
+    // Quotes range from $500 to $3,000 (after the 50% discount)
+    const total = Math.min(300000, Math.max(50000, subtotal - Math.round(subtotal * 0.5)));
+    const discountAmount = subtotal - total;
     const quote = await base44.asServiceRole.entities.MigrationQuote.create({ project_id, report_id: report.id, user_id: project.user_id, quote_number: `MIG-${new Date().getUTCFullYear()}-${project.id.slice(-6).toUpperCase()}-V${version}`, version, status: manual ? 'manual_review' : 'presented', manual_review_required: manual, subtotal, discount_amount: discountAmount, total, deposit_percentage: depositPct, deposit_amount: Math.round(total * depositPct / 100), midpoint_percentage: midpointPct, midpoint_amount: Math.round(total * midpointPct / 100), final_percentage: finalPct, final_amount: total - Math.round(total * depositPct / 100) - Math.round(total * midpointPct / 100), amount_paid: 0, balance_due: total, estimated_duration: report.estimated_timeline || '6–12 weeks', expiration_date: expiration, scope_summary: `Migration of ${project.application_name}: ${scan.entities_detected || 0} entities, ${scan.functions_detected || 0} backend functions, and ${scan.integrations_detected || 0} integrations.`, payment_status: 'unpaid', version_history: previous[0] ? [{ version: previous[0].version, total: previous[0].total, status: previous[0].status, captured_at: new Date().toISOString() }] : [] });
     await base44.asServiceRole.entities.QuoteLineItem.bulkCreate(items.map((i) => ({ ...i, quote_id: quote.id })));
     await base44.functions.invoke('migrationNotify', { project_id, event: previous[0] ? 'quote_revised' : 'quote_created' });
