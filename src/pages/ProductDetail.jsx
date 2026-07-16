@@ -23,6 +23,7 @@ import ClientPortalDetails from "@/components/products/ClientPortalDetails";
 import MobileApprovalKitDetails from "@/components/products/MobileApprovalKitDetails";
 import CompleteBundleDetails from "@/components/products/CompleteBundleDetails";
 import KnowledgeKitDetails from "@/components/products/KnowledgeKitDetails";
+import AppKnowledgeBaseDetails from "@/components/products/AppKnowledgeBaseDetails";
 import { trackViewItem, trackSelectItem, trackAddToCart } from "@/lib/analytics";
 import { useCart } from "@/components/cart/CartContext";
 import { getProductSalePriceCents, formatUsd, isSummerSaleActive } from "@/lib/summerSale";
@@ -122,6 +123,8 @@ export default function ProductDetail() {
 
         {product.slug === "complete-base44-knowledge-kit" && <KnowledgeKitDetails />}
 
+        {product.slug === "complete-app-knowledge-base" && <AppKnowledgeBaseDetails />}
+
         {product.description && (
           <div className="max-w-3xl mx-auto text-center mt-24 mb-16">
             <span className="text-sm font-semibold text-primary uppercase tracking-widest">Overview</span>
@@ -156,6 +159,8 @@ export default function ProductDetail() {
               ? <>Ready to own <span className="text-gradient-orange">everything?</span></>
               : product.slug === "complete-base44-knowledge-kit"
               ? <>Ready to make your AI <span className="text-gradient-orange">Base44-fluent?</span></>
+              : product.slug === "complete-app-knowledge-base"
+              ? <>Ready to document <span className="text-gradient-orange">everything?</span></>
               : <>Ready to install your <span className="text-gradient-orange">marketing engine?</span></>}
           </h2>
           <p className="text-muted-foreground mb-6">{product.supportNote || "One-time fee · Free support included"}</p>
