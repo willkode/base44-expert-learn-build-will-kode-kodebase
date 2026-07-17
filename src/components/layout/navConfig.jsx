@@ -22,6 +22,7 @@ import {
   Ticket,
   Network,
   GitPullRequest,
+  DownloadCloud,
 } from "lucide-react";
 
 export const userNav = [
@@ -56,6 +57,7 @@ export const adminNav = [
   { label: "Sales & Orders", to: "/admin/sales", icon: DollarSign },
   { label: "Migration Planner", to: "/admin/migration-planner", icon: GitPullRequest },
   { label: "Products & Downloads", to: "/admin/products", icon: Package },
+  { label: "Download Logs", to: "/admin/download-logs", icon: DownloadCloud },
   { label: "Coupons", to: "/admin/coupons", icon: Ticket },
   { label: "Security", to: "/admin/security", icon: ShieldHalf },
   { label: "System Settings", to: "/admin/settings", icon: Cog },

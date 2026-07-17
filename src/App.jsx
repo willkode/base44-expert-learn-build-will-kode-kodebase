@@ -119,6 +119,7 @@ import SecurityDashboard from '@/pages/admin/security/SecurityDashboard';
 import AdminSettings from '@/pages/admin/AdminSettings';
 import AdminSales from '@/pages/admin/AdminSales';
 import AdminProducts from '@/pages/admin/AdminProducts';
+import AdminDownloadLogs from '@/pages/admin/AdminDownloadLogs';
 import AdminCoupons from '@/pages/admin/AdminCoupons';
 import AdminPromptVault from '@/pages/admin/AdminPromptVault';
 import AdminAgentSkills from '@/pages/admin/AdminAgentSkills';
@@ -250,6 +251,7 @@ const AuthenticatedApp = () => {
             <Route path="/admin/settings" element={<AdminSettings />} />
             <Route path="/admin/sales" element={<AdminSales />} />
             <Route path="/admin/products" element={<AdminProducts />} />
+            <Route path="/admin/download-logs" element={<AdminDownloadLogs />} />
             <Route path="/admin/coupons" element={<AdminCoupons />} />
             <Route path="/admin/prompt-vault" element={<AdminPromptVault />} />
             <Route path="/admin/agent-skills" element={<AdminAgentSkills />} />
