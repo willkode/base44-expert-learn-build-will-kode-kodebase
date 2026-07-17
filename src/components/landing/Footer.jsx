@@ -19,6 +19,9 @@ export default function Footer() {
             <a href="#agents" className="hover:text-foreground transition-colors">Agents</a>
             <Link to="/products" className="hover:text-foreground transition-colors">Products</Link>
             <Link to="/coffee" className="hover:text-foreground transition-colors">Buy Me a Coffee</Link>
+            <Link to="/terms" className="hover:text-foreground transition-colors">Terms</Link>
+            <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
+            <Link to="/refund-policy" className="hover:text-foreground transition-colors">Refunds</Link>
           </nav>
           <SocialLinks />
           <p className="text-sm text-muted-foreground">

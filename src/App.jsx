@@ -31,6 +31,9 @@ import Videos from '@/pages/learn/Videos';
 
 import LlmGuide from '@/pages/learn/LlmGuide';
 import Base44ResourceHub from '@/pages/learn/Base44ResourceHub';
+import TermsOfService from '@/pages/legal/TermsOfService';
+import PrivacyPolicy from '@/pages/legal/PrivacyPolicy';
+import RefundPolicy from '@/pages/legal/RefundPolicy';
 import KodeSessions from '@/pages/services/KodeSessions';
 import ErService from '@/pages/services/ErService';
 import SecurityAudit from '@/pages/services/SecurityAudit';
@@ -157,6 +160,9 @@ const AuthenticatedApp = () => {
         <Route path="/services/base44-baas" element={<Base44Baas />} />
         <Route path="/services/base44-migration" element={<Base44Migration />} />
         <Route path="/migration-planner" element={<MigrationPlanner />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/refund-policy" element={<RefundPolicy />} />
       </Route>
       <Route path="/" element={<Home />} />
       <Route path="/tools/prompt-generator" element={<PromptGenerator />} />

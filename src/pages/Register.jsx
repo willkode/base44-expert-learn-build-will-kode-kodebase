@@ -225,6 +225,12 @@ export default function Register() {
             "Create account"
           )}
         </Button>
+        <p className="text-center text-xs text-muted-foreground">
+          By signing up, you agree to our{" "}
+          <Link to="/terms" className="text-primary hover:underline">Terms of Service</Link>,{" "}
+          <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>, and{" "}
+          <Link to="/refund-policy" className="text-primary hover:underline">Refund Policy</Link>.
+        </p>
       </form>
     </AuthLayout>
   );
