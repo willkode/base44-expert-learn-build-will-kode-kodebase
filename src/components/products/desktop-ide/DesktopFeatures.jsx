@@ -1,9 +1,20 @@
 import React from "react";
-import { LayoutDashboard, Boxes, FileCode2, Vault, FlaskConical, ShieldCheck, Bot, Plug, Network, ScrollText, StickyNote } from "lucide-react";
 import DesktopSection from "@/components/products/desktop-ide/DesktopSection";
 import { FEATURES } from "@/components/products/desktop-ide/desktopIdeData";
 
-const ICONS = [LayoutDashboard, Boxes, FileCode2, Vault, FlaskConical, ShieldCheck, Bot, Plug, Network, ScrollText, StickyNote];
+const IMAGES = [
+  "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/fea57ee44_generated_image.png",
+  "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/638f40ecc_generated_image.png",
+  "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/72ba228c3_generated_image.png",
+  "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/56149b803_generated_image.png",
+  "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/998043f9e_generated_image.png",
+  "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/d975c36b1_generated_image.png",
+  "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/05bd07b69_generated_image.png",
+  "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/b3bdfcd75_generated_image.png",
+  "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a6a0061a8_generated_image.png",
+  "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/bc21f9df4_generated_image.png",
+  "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/7e2a4282a_generated_image.png",
+];
 
 export default function DesktopFeatures() {
   return (
@@ -13,19 +24,12 @@ export default function DesktopFeatures() {
         headline="Built around the way serious Base44 projects are actually managed."
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {FEATURES.map((f, i) => {
-            const Icon = ICONS[i];
-            return (
-              <div key={f.name} className="rounded-2xl border border-border bg-card/60 p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] flex items-center justify-center shrink-0">
-                    <Icon className="w-5 h-5 text-[#0a0f1e]" />
-                  </div>
-                  <div>
-                    <h3 className="font-sora font-semibold text-base leading-tight">{f.name}</h3>
-                    <p className="text-xs text-primary">{f.tagline}</p>
-                  </div>
-                </div>
+          {FEATURES.map((f, i) => (
+            <div key={f.name} className="rounded-2xl border border-border bg-card/60 overflow-hidden">
+              <img src={IMAGES[i]} alt={f.name} className="w-full aspect-video object-cover" />
+              <div className="p-6">
+                <h3 className="font-sora font-semibold text-lg leading-tight">{f.name}</h3>
+                <p className="text-xs text-primary mb-3">{f.tagline}</p>
                 <p className="text-sm text-muted-foreground mb-4">{f.body}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {f.items.map((item) => (
@@ -35,8 +39,8 @@ export default function DesktopFeatures() {
                   ))}
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </DesktopSection>
     </div>
