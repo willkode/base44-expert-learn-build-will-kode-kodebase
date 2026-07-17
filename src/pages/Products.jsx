@@ -19,7 +19,7 @@ import SummerSaleBanner from "@/components/products/SummerSaleBanner";
 import FeaturedBundleCard from "@/components/products/FeaturedBundleCard";
 
 const FEATURED_SLUG = "complete-base44-knowledge-kit";
-const HIDDEN_SLUGS = ["complete-builder-bundle", "starter-prompt-pack"];
+const HIDDEN_SLUGS = ["complete-builder-bundle", "starter-prompt-pack", "hire-will-kode"];
 
 export default function Products() {
   const navigate = useNavigate();

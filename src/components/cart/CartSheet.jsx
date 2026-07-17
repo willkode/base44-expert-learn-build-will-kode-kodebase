@@ -9,6 +9,7 @@ import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
 import { isSummerSaleActive, getProductSalePriceCents, formatUsd } from "@/lib/summerSale";
 import { trackRemoveFromCart, trackEvent } from "@/lib/analytics";
+import HireWillKodeUpsell from "@/components/upsell/HireWillKodeUpsell";
 
 export default function CartSheet() {
   const { items, removeItem, isOpen, setIsOpen, closeCart, coupon, setCoupon, clearCoupon } = useCart();
@@ -112,6 +113,7 @@ export default function CartSheet() {
                   </button>
                 </div>
               ))}
+              <HireWillKodeUpsell variant="cart" />
             </div>
 
             <div className="border-t border-border pt-4 space-y-3">

@@ -6,6 +6,7 @@ import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
 import Seo from "@/components/seo/Seo";
 import { trackEvent } from "@/lib/analytics";
+import HireWillKodeUpsell from "@/components/upsell/HireWillKodeUpsell";
 
 export default function Download() {
   const { productId } = useParams();
@@ -202,6 +203,10 @@ export default function Download() {
               </Button>
             )}
           </div>
+        </div>
+
+        <div className="mt-6">
+          <HireWillKodeUpsell variant="download" />
         </div>
 
         <div className="mt-6 text-center">

@@ -25,6 +25,9 @@ const SERVICE_PRICING = {
   kodecare_pro: { amountCents: 50000, name: 'KodeCare Pro — Monthly Support Retainer' },
 };
 
+// Products never discounted by the sale (fixed-price services sold as products).
+const SALE_EXCLUDED_SLUGS = ['hire-will-kode'];
+
 // Will's Birthday Sale: 86% off all products through Oct 19, 11:59 AM Central
 // (16:59 UTC), anchored to the current calendar year.
 const isBirthdaySaleActive = () => {
@@ -71,7 +74,7 @@ Deno.serve(async (req) => {
         if (override && Number.isFinite(override.priceCents)) {
           cents = Math.max(0, Math.round(override.priceCents));
           name = `${product.name} (Coupon ${coupon.code})`;
-        } else if (isBirthdaySaleActive()) {
+        } else if (isBirthdaySaleActive() && !SALE_EXCLUDED_SLUGS.includes(product.slug)) {
           cents = Math.round(product.priceCents * 0.14);
           name = `${product.name} (Will's Birthday Sale 86% off)`;
         } else {
@@ -124,7 +127,7 @@ Deno.serve(async (req) => {
       if ((product.priceCents || 0) === 0) {
         return Response.json({ error: 'This product is free — claim it directly, no payment needed.' }, { status: 400 });
       }
-      if (isBirthdaySaleActive()) {
+      if (isBirthdaySaleActive() && !SALE_EXCLUDED_SLUGS.includes(product.slug)) {
         amountCents = Math.round(product.priceCents * 0.14);
         itemName = `${product.name} (Will's Birthday Sale 86% off)`;
       } else {
