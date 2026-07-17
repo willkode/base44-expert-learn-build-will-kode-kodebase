@@ -17,9 +17,10 @@ import { useCart } from "@/components/cart/CartContext";
 import { isSummerSaleActive, getProductSalePriceCents, getSaleDiscountPercent, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 import SummerSaleBanner from "@/components/products/SummerSaleBanner";
 import FeaturedBundleCard from "@/components/products/FeaturedBundleCard";
+import FeaturedDesktopIdeCard from "@/components/products/FeaturedDesktopIdeCard";
 
 const FEATURED_SLUG = "complete-base44-knowledge-kit";
-const HIDDEN_SLUGS = ["complete-builder-bundle", "starter-prompt-pack", "hire-will-kode"];
+const HIDDEN_SLUGS = ["complete-builder-bundle", "starter-prompt-pack", "hire-will-kode", "base44-desktop-ide"];
 
 export default function Products() {
   const navigate = useNavigate();
@@ -132,6 +133,7 @@ export default function Products() {
             <p className="text-center text-muted-foreground py-16">No products match your search.</p>
           ) : (
           <>
+          <FeaturedDesktopIdeCard />
           {featuredProduct && <FeaturedBundleCard product={featuredProduct} />}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {gridProducts.map((p, i) => (

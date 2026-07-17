@@ -16,6 +16,7 @@ import PromptGenerator from '@/pages/tools/PromptGenerator';
 import Features from '@/pages/Features';
 import Products from '@/pages/Products';
 import ProductDetail from '@/pages/ProductDetail';
+import Base44DesktopIde from '@/pages/products/Base44DesktopIde';
 import Contact from '@/pages/Contact';
 import LearnIndex from '@/pages/learn/LearnIndex';
 import Blog from '@/pages/learn/Blog';
@@ -137,6 +138,7 @@ const AuthenticatedApp = () => {
         <Route path="/learn" element={<LearnIndex />} />
         <Route path="/features" element={<Features />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/products/base44-desktop-ide" element={<Base44DesktopIde />} />
         <Route path="/products/:slug" element={<ProductDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/learn/blog" element={<Blog />} />

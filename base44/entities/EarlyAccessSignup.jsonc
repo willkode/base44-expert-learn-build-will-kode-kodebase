@@ -1,0 +1,38 @@
+{
+  "name": "EarlyAccessSignup",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Signup name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Signup email"
+    },
+    "useCase": {
+      "type": "string",
+      "description": "Primary Base44 use case"
+    },
+    "product": {
+      "type": "string",
+      "default": "base44-desktop-ide",
+      "description": "Which product this early-access signup is for"
+    }
+  },
+  "required": [
+    "email"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
