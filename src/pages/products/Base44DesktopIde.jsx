@@ -11,6 +11,7 @@ import DesktopUseCases from "@/components/products/desktop-ide/DesktopUseCases";
 import DesktopWhy from "@/components/products/desktop-ide/DesktopWhy";
 import DesktopComparison from "@/components/products/desktop-ide/DesktopComparison";
 import DesktopOutcome from "@/components/products/desktop-ide/DesktopOutcome";
+import DesktopPricing from "@/components/products/desktop-ide/DesktopPricing";
 import DesktopEarlyAccess from "@/components/products/desktop-ide/DesktopEarlyAccess";
 import DesktopFAQ from "@/components/products/desktop-ide/DesktopFAQ";
 import DesktopFinalCTA from "@/components/products/desktop-ide/DesktopFinalCTA";
@@ -50,7 +51,7 @@ export default function Base44DesktopIde() {
           },
         ]}
       />
-      <DesktopHero onEarlyAccess={() => scrollTo("early-access")} onExplore={() => scrollTo("features")} />
+      <DesktopHero onEarlyAccess={() => scrollTo("pricing")} onExplore={() => scrollTo("features")} />
       <DesktopProblem />
       <DesktopBenefits />
       <DesktopFeatures />
@@ -59,6 +60,7 @@ export default function Base44DesktopIde() {
       <DesktopWhy />
       <DesktopComparison />
       <DesktopOutcome />
+      <DesktopPricing onEarlyAccess={() => scrollTo("early-access")} />
       <DesktopEarlyAccess />
       <DesktopFAQ />
       <DesktopFinalCTA onEarlyAccess={() => scrollTo("early-access")} />

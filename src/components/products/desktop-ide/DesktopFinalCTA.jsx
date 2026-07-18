@@ -16,10 +16,10 @@ export default function DesktopFinalCTA({ onEarlyAccess }) {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Button
             size="lg"
-            onClick={() => { trackEvent("cta_early_access", { location: "final_cta" }); onEarlyAccess(); }}
+            onClick={() => { trackEvent("cta_download_free", { location: "final_cta" }); document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" }); }}
             className="font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90 glow-orange"
           >
-            Get Early Access <ArrowRight className="w-4 h-4 ml-2" />
+            Download Free <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
           <Button size="lg" variant="outline" onClick={() => { trackEvent("cta_launch_list", { location: "final_cta" }); onEarlyAccess(); }}>
             Join the Launch List
