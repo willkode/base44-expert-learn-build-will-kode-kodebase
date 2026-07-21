@@ -48,9 +48,10 @@ const plans = [
   {
     title: "Audit Only",
     subtitle: "Report + fix prompts",
-    price: "$50",
+    price: "$20",
+    originalPrice: "$50",
     billing: "one-time",
-    badge: null,
+    badge: "SPECIAL — 60% OFF",
     features: [
       "Complete 14-point app review",
       "All issues identified",
@@ -124,8 +125,8 @@ export default function ErService() {
   return (
     <>
       <Seo
-        title="Emergency App Audit — Find Every Bug in 24–48 Hours | KodeBase"
-        description="A complete 14-point Base44 app audit with a written report and copy-paste fix prompts. Get every issue identified and prioritized — delivered in 24–48 hours."
+        title="$20 Emergency App Audit — Find Every Bug in 24–48 Hours | KodeBase"
+        description="Limited-time special: a complete 14-point Base44 app audit with a written report and copy-paste fix prompts for just $20 — delivered in 24–48 hours."
         path="/services/er-service"
         image="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/49ee2fc44_generated_image.png"
         jsonLd={[faqSchema(faqs)]}
@@ -138,7 +139,7 @@ export default function ErService() {
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0}>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-6">
               <AlertTriangle className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-semibold text-primary uppercase tracking-wider">Emergency Audit · 24–48hr Turnaround</span>
+              <span className="text-xs font-semibold text-primary uppercase tracking-wider">Special: $20 Audit + Report · 24–48hr Turnaround</span>
             </div>
           </motion.div>
           <motion.h1

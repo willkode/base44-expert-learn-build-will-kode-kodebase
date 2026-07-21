@@ -7,7 +7,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 // One-time service pricing — amounts resolved server-side only
 const SERVICE_PRICING = {
   // ER Service
-  er_audit: { amountCents: 5000, name: 'App Audit — Report + Fix Prompts' },
+  er_audit: { amountCents: 2000, name: 'App Audit — Report + Fix Prompts (Special $20)' },
   er_audit_fix: { amountCents: 6250, name: 'App Audit + Fix (50% off)' },
   // Security Audit
   security_audit: { amountCents: 5000, name: 'Security Audit — Report + Fix Prompts' },
