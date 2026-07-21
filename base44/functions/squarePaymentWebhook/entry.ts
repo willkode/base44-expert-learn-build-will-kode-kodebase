@@ -210,6 +210,24 @@ Deno.serve(async (req) => {
       userId, userEmail, planId, productId, promptSessionId, itemName, amountCents,
     });
 
+    // Guest service purchases — no account exists, record under 'guest' with
+    // the buyer's details captured at checkout so admins can follow up.
+    if (!userId && metadata.guestCheckout === 'true') {
+      const guestDetails = [metadata.guestName, metadata.appUrl].filter(Boolean).join(' · ');
+      await base44.asServiceRole.entities.Payment.create({
+        userId: 'guest',
+        userEmail: userEmail || 'unknown',
+        itemName: guestDetails ? `${itemName} — ${guestDetails}` : itemName,
+        amountCents,
+        currency: 'USD',
+        squarePaymentId: payment.id,
+        squareReceiptUrl: payment.receipt_url || '',
+        status: 'completed',
+      });
+      console.log('[squareWebhook] Guest service payment recorded', { paymentId: payment.id, userEmail });
+      return Response.json({ received: true, guest: true });
+    }
+
     if (!userId) {
       console.error('[squareWebhook] UNATTRIBUTED payment — no matching user', {
         paymentId: payment.id, userEmail, itemName,

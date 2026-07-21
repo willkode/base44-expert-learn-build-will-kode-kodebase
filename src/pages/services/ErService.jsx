@@ -82,9 +82,9 @@ const plans = [
 
 const steps = [
   { num: "01", title: "Choose your package", desc: "Audit Only or Audit + Fix." },
-  { num: "02", title: "Add to cart & pay", desc: "Quick checkout via Stripe." },
-  { num: "03", title: "Complete intake", desc: "Share app details and known issues." },
-  { num: "04", title: "Schedule intake call", desc: "Pick a time for the kickoff." },
+  { num: "02", title: "Enter your details", desc: "Name, email, and your app URL — no signup needed." },
+  { num: "03", title: "Pay securely", desc: "Quick one-time checkout via Square." },
+  { num: "04", title: "Add me as collaborator", desc: "Invite iamwillkode@gmail.com to your app so I can scan it." },
   { num: "05", title: "Audit begins", desc: "I review your app and identify all issues." },
   { num: "06", title: "Get your report", desc: "Findings + fix prompts delivered in 24–48hrs." },
 ];

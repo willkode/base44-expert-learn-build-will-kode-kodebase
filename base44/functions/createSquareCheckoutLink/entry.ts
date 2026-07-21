@@ -39,10 +39,19 @@ const isBirthdaySaleActive = () => {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    const user = await base44.auth.me().catch(() => null);
 
-    const { productId, productIds, serviceId, donationCents, promptSessionId, redirectUrl, couponCode } = await req.json();
+    const { productId, productIds, serviceId, donationCents, promptSessionId, redirectUrl, couponCode, guestName, guestEmail, appUrl } = await req.json();
+
+    // Services can be ordered as a guest (no account needed) — everything else
+    // still requires an authenticated user.
+    if (!user && !serviceId) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!user && serviceId) {
+      const emailOk = typeof guestEmail === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.trim());
+      if (!guestName?.trim() || !emailOk) {
+        return Response.json({ error: 'Please provide your name and a valid email.' }, { status: 400 });
+      }
+    }
 
     let amountCents, itemName, productIdResolved = null, isDonation = false, promptSessionResolved = null, cartItems = null, metadataCouponCode = null;
     if (Array.isArray(productIds) && productIds.length > 0) {
@@ -144,11 +153,18 @@ Deno.serve(async (req) => {
 
     // metadata is echoed back on the webhook order so we can attribute the payment.
     // Square rejects empty-string metadata values, so only include set keys.
+    const buyerEmail = user?.email || guestEmail?.trim();
     const metadata = {
-      base44UserId: user.id,
-      base44UserEmail: user.email,
+      base44UserEmail: buyerEmail,
       itemName,
     };
+    if (user) {
+      metadata.base44UserId = user.id;
+    } else {
+      metadata.guestCheckout = 'true';
+      metadata.guestName = guestName.trim();
+    }
+    if (appUrl?.trim()) metadata.appUrl = appUrl.trim();
     if (serviceId) metadata.serviceId = serviceId;
     if (productIdResolved) metadata.productId = productIdResolved;
     if (cartItems) metadata.cartProductIds = cartItems.map((i) => i.id).join(',');
@@ -170,9 +186,9 @@ Deno.serve(async (req) => {
           ask_for_shipping_address: false,
         },
         pre_populated_data: {
-          buyer_email: user.email,
+          buyer_email: buyerEmail,
         },
-        payment_note: `${itemName} — ${user.email}`,
+        payment_note: `${itemName} — ${buyerEmail}`,
         order: {
           location_id: Deno.env.get('SQUARE_LOCATION_ID'),
           metadata,

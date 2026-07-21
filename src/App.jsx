@@ -42,6 +42,7 @@ import SeoAudit from '@/pages/services/SeoAudit';
 import KodeCare from '@/pages/services/KodeCare';
 import Base44Baas from '@/pages/services/Base44Baas';
 import Base44Migration from '@/pages/services/Base44Migration';
+import ServiceThankYou from '@/pages/services/ServiceThankYou';
 import MigrationPlanner from '@/pages/migration/MigrationPlanner';
 import MigrationDashboard from '@/pages/migration/MigrationDashboard';
 import NewMigrationAssessment from '@/pages/migration/NewMigrationAssessment';
@@ -162,6 +163,7 @@ const AuthenticatedApp = () => {
         <Route path="/services/kodecare" element={<KodeCare />} />
         <Route path="/services/base44-baas" element={<Base44Baas />} />
         <Route path="/services/base44-migration" element={<Base44Migration />} />
+        <Route path="/services/thank-you" element={<ServiceThankYou />} />
         <Route path="/migration-planner" element={<MigrationPlanner />} />
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />

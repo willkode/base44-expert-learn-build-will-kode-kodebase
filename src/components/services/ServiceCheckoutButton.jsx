@@ -2,15 +2,31 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import { Loader2 } from "lucide-react";
+import GuestCheckoutDialog from "@/components/services/GuestCheckoutDialog";
 
 /**
  * Handles dynamic Square checkout for service pages.
- * - Unauthenticated users are redirected to /login first (Square link needs user context).
- * - On success, redirects the browser to the Square-hosted checkout page.
+ * - Logged-in users go straight to checkout (redirect → service onboarding).
+ * - Guests get a quick name/email (+ app URL for ER) form — no signup needed —
+ *   then are redirected to a public thank-you page after payment.
  */
 export default function ServiceCheckoutButton({ serviceId, label, size = "lg", className = "", onClick }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [guestOpen, setGuestOpen] = useState(false);
+  const [guestLoading, setGuestLoading] = useState(false);
+  const [guestError, setGuestError] = useState(null);
+
+  const startCheckout = async (payload, redirectUrl) => {
+    const response = await base44.functions.invoke("createSquareCheckoutLink", {
+      serviceId,
+      redirectUrl,
+      ...payload,
+    });
+    const { checkoutUrl, error: apiError } = response.data;
+    if (apiError) throw new Error(apiError);
+    window.location.href = checkoutUrl;
+  };
 
   const handleClick = async () => {
     if (onClick) onClick();
@@ -19,20 +35,28 @@ export default function ServiceCheckoutButton({ serviceId, label, size = "lg", c
     try {
       const isAuthed = await base44.auth.isAuthenticated();
       if (!isAuthed) {
-        window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`;
+        setLoading(false);
+        setGuestError(null);
+        setGuestOpen(true);
         return;
       }
       const onboardingUrl = `${window.location.origin}/service-onboarding?service=${encodeURIComponent(serviceId)}`;
-      const response = await base44.functions.invoke("createSquareCheckoutLink", {
-        serviceId,
-        redirectUrl: onboardingUrl,
-      });
-      const { checkoutUrl, error: apiError } = response.data;
-      if (apiError) throw new Error(apiError);
-      window.location.href = checkoutUrl;
+      await startCheckout({}, onboardingUrl);
     } catch (err) {
       setError(err.message || "Something went wrong. Please try again.");
       setLoading(false);
+    }
+  };
+
+  const handleGuestSubmit = async ({ name, email, appUrl }) => {
+    setGuestError(null);
+    setGuestLoading(true);
+    try {
+      const thankYouUrl = `${window.location.origin}/services/thank-you?service=${encodeURIComponent(serviceId)}`;
+      await startCheckout({ guestName: name, guestEmail: email, appUrl }, thankYouUrl);
+    } catch (err) {
+      setGuestError(err.message || "Something went wrong. Please try again.");
+      setGuestLoading(false);
     }
   };
 
@@ -54,6 +78,14 @@ export default function ServiceCheckoutButton({ serviceId, label, size = "lg", c
         )}
       </Button>
       {error && <p className="mt-2 text-xs text-destructive text-center">{error}</p>}
+      <GuestCheckoutDialog
+        open={guestOpen}
+        onOpenChange={setGuestOpen}
+        serviceId={serviceId}
+        onSubmit={handleGuestSubmit}
+        loading={guestLoading}
+        error={guestError}
+      />
     </div>
   );
 }
