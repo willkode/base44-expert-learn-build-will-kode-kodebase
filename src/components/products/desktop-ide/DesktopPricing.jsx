@@ -38,10 +38,18 @@ export default function DesktopPricing({ onEarlyAccess }) {
               <div className="flex items-center gap-2 mb-2">
                 {tier.highlight ? <Sparkles className="w-5 h-5 text-primary" /> : <Download className="w-5 h-5 text-muted-foreground" />}
                 <h3 className="font-sora font-semibold text-lg">{tier.name}</h3>
+                {tier.badge && (
+                  <span className="ml-auto text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e]">
+                    {tier.badge}
+                  </span>
+                )}
               </div>
               <p className="text-sm text-muted-foreground mb-5">{tier.tagline}</p>
-              <div className="mb-1">
+              <div className="mb-1 flex items-baseline gap-2">
                 <span className="font-sora font-bold text-4xl">{tier.price}</span>
+                {tier.compareAt && (
+                  <span className="text-lg text-muted-foreground line-through">{tier.compareAt}</span>
+                )}
               </div>
               <p className="text-xs text-muted-foreground mb-6">{tier.priceNote}</p>
               <ul className="space-y-2.5 mb-8 flex-1">
@@ -68,8 +76,8 @@ export default function DesktopPricing({ onEarlyAccess }) {
           ))}
         </div>
         <p className="text-[11px] text-muted-foreground text-center mt-6">
-          Pro access unlocks all prompts, audits, agent testing systems, and skills inside Base44 Desktop.
-          Cancel the monthly plan anytime — or pay once and keep it for life.
+          Launch special: pay $15 once and keep Pro access for life. On August 1, 2026, Pro Access
+          moves to $25/month — lifetime buyers keep everything, forever.
         </p>
       </div>
     </section>
