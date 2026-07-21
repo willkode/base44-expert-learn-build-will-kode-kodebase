@@ -27,17 +27,17 @@ export default function DesktopHero({ onEarlyAccess, onExplore }) {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
             <Button
               size="lg"
-              onClick={() => { trackEvent("cta_download_free", { location: "hero" }); onEarlyAccess(); }}
+              onClick={() => { trackEvent("cta_get_lifetime", { location: "hero" }); onEarlyAccess(); }}
               className="font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90 glow-orange"
             >
-              Download Free <ArrowRight className="w-4 h-4 ml-2" />
+              Get Lifetime Access — $15 <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
             <Button size="lg" variant="outline" onClick={() => { trackEvent("cta_explore_features", { location: "hero" }); onExplore(); }}>
               Explore the Features
             </Button>
           </div>
           <p className="text-sm text-muted-foreground">
-            Free desktop app. Optional Pro access unlocks all prompts, audits, agent testing, and skills for $25/mo or a one-time $240.
+            Launch special: one-time $15 for lifetime access — pricing changes to $25/mo on August 1, 2026.
           </p>
         </motion.div>
 

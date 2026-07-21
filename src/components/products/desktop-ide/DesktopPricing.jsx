@@ -20,14 +20,14 @@ export default function DesktopPricing({ onEarlyAccess }) {
         <div className="text-center mb-12">
           <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">Simple, Honest Pricing</p>
           <h2 className="font-sora font-bold text-3xl md:text-4xl tracking-tight mb-4">
-            The desktop app is <span className="text-gradient-orange">free.</span> The arsenal is optional.
+            One payment. <span className="text-gradient-orange">Lifetime access.</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Download Base44 Desktop for free and manage your projects forever. Upgrade to Pro when you want
-            every prompt, audit, agent test, and skill in your toolkit.
+            Get the full desktop IDE plus every prompt, audit, agent test, and skill —
+            for a one-time $15 before pricing moves to $25/month on August 1, 2026.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 max-w-xl mx-auto">
           {PRICING.map((tier) => (
             <div
               key={tier.name}

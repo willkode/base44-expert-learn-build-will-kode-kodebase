@@ -7,22 +7,6 @@ export const DOWNLOAD_URL = "";
 
 export const PRICING = [
   {
-    name: "Base44 Desktop",
-    price: "Free",
-    priceNote: "Free download. Yours forever.",
-    tagline: "The full desktop IDE for managing your Base44 projects.",
-    cta: "Download Free",
-    highlight: false,
-    features: [
-      "Project Command Center",
-      "Base44 Resource Explorer",
-      "Files IDE with reviewable AI patches",
-      "Connectors, APIs & MCP management",
-      "Logs, diagnostics, notes & decisions",
-      "Safe deployment previews",
-    ],
-  },
-  {
     name: "Desktop Pro Access",
     badge: "🚀 Launch Special",
     price: "$15",
@@ -32,6 +16,8 @@ export const PRICING = [
     cta: "Claim Lifetime Access — $15",
     highlight: true,
     features: [
+      "Full Base44 Desktop IDE",
+      "Project Command Center & Resource Explorer",
       "Full Prompt Vault — every proven prompt",
       "Prompt Lab testing & comparisons",
       "Security & production audits",
@@ -140,7 +126,7 @@ export const FAQS = [
   { q: "Can it modify my application automatically?", a: "Not without your approval. AI-generated edits are shown as reviewable patches. Operations that can remove resources, expose data, delete secrets, or affect production require explicit confirmation." },
   { q: "Can it run security audits?", a: "Yes. Base44 Desktop is designed to check entity permissions, authentication, role access, secrets, functions, connectors, routes, application behavior, and production-readiness risks. Findings include evidence and recommended verification steps." },
   { q: "Can it test the application like a real user?", a: "Yes. The Agent User Testing system can run browser-based journeys using defined personas, goals, devices, permissions, and expected outcomes. It can capture screenshots, errors, failed requests, dead ends, and unexpected application behavior." },
-  { q: "How much does Base44 Desktop cost?", a: "The Base44 Desktop application is a free download. Pro Access — which unlocks the complete Prompt Vault, security and production audits, agent user testing, and the full Agent Skills library — is available as a launch special for a one-time payment of $15 with lifetime access. On August 1, 2026, pricing changes to $25 per month." },
+  { q: "How much does Base44 Desktop cost?", a: "Base44 Desktop Pro Access — including the full desktop IDE, complete Prompt Vault, security and production audits, agent user testing, and the full Agent Skills library — is available as a launch special for a one-time payment of $15 with lifetime access. On August 1, 2026, pricing changes to $25 per month." },
   { q: "Will it work offline?", a: "Local features such as files, notes, cached prompts, project metadata, and previously downloaded results can remain available offline. Features that require Base44, MCP, APIs, cloud synchronization, or remote logs require an internet connection." },
   { q: "Which operating systems will be supported?", a: "The planned desktop application targets Windows and macOS first, with Linux support evaluated based on runtime and packaging compatibility." },
   { q: "When will Base44 Desktop be available?", a: "Base44 Desktop is currently being developed. Join the early-access list to receive launch updates and access opportunities." },
