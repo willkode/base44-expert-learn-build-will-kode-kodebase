@@ -56,7 +56,7 @@ Requirements:
 - Write short preview/preheader text (under 100 characters).
 - Write ONLY the inner content blocks as INLINE-styled HTML (headings, paragraphs, button). Do NOT include <html>, <head>, <body>, any wrapping <div>/<table> container, or any background color — those are added automatically. Just the content elements stacked vertically.
 ${imageInstruction}
-- Use href="#" placeholders for any links/buttons. Do not invent real URLs.
+- Every link/button MUST use a real absolute URL on https://kodebase.us. Choose the most relevant page: https://kodebase.us/products (store), https://kodebase.us/products/base44-desktop-ide (Base44 Desktop IDE), https://kodebase.us/vault (Prompt Vault), https://kodebase.us/learn/blog (blog), https://kodebase.us/learn/base44-cheat-sheet (Base44 resource hub), https://kodebase.us/services/er-service (emergency app audit), https://kodebase.us/migration-planner (migration planner), or https://kodebase.us (home). If the brief mentions a specific URL, use that. NEVER use href="#" or invented URLs.
 - Do not include an unsubscribe footer; it is appended automatically.
 
 Write the plain-text version as clean readable text (no HTML).`;

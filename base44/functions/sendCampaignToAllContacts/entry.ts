@@ -10,7 +10,12 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { subject, html_content, text_content, campaign_id } = await req.json();
+    const { subject, html_content: rawHtml, text_content, campaign_id } = await req.json();
+    // Safety net: replace dead "#" placeholder links (Gmail renders them as broken
+    // in-mail anchors) with the site homepage.
+    const html_content = rawHtml
+      ? rawHtml.replace(/href=(["'])#\1/g, 'href="https://kodebase.us"')
+      : rawHtml;
     if (!subject) return Response.json({ error: 'Subject is required.' }, { status: 400 });
     if (!html_content && !text_content) {
       return Response.json({ error: 'Email content is required.' }, { status: 400 });
