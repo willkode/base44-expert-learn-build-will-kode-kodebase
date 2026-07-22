@@ -73,6 +73,21 @@ async function expandBundleAccess(base44, product, userId, userEmail, paymentId)
   }
 }
 
+// Notify Will about every completed order — never blocks payment processing.
+async function notifyAdminOfOrder(base44, { itemName, amountCents, buyerEmail, buyerName, orderType, extra = {} }) {
+  try {
+    const rows = Object.entries({ Item: itemName, Amount: `$${((amountCents || 0) / 100).toLocaleString()}`, Buyer: [buyerName, buyerEmail].filter(Boolean).join(' — ') || 'Unknown', Type: orderType, ...extra })
+      .map(([k, v]) => `<p style="margin:4px 0"><strong>${k}:</strong> ${v}</p>`).join('');
+    await base44.asServiceRole.integrations.Core.SendEmail({
+      to: 'iamwillkode@gmail.com',
+      subject: `🛒 New order: ${itemName} — $${((amountCents || 0) / 100).toLocaleString()}`,
+      body: `<div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif"><h2>New Order Received</h2>${rows}</div>`,
+    });
+  } catch (e) {
+    console.error('[squareWebhook] Admin order notification failed', { error: e.message });
+  }
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -225,6 +240,7 @@ Deno.serve(async (req) => {
         status: 'completed',
       });
       console.log('[squareWebhook] Guest service payment recorded', { paymentId: payment.id, userEmail });
+      await notifyAdminOfOrder(base44, { itemName, amountCents, buyerEmail: userEmail, buyerName: metadata.guestName || '', orderType: 'Service (guest checkout)', extra: metadata.appUrl ? { 'App URL': metadata.appUrl } : {} });
       return Response.json({ received: true, guest: true });
     }
 
@@ -246,6 +262,7 @@ Deno.serve(async (req) => {
         status: 'completed',
         errorMessage: 'Unattributed — no matching app user; review in Admin > Sales',
       });
+      await notifyAdminOfOrder(base44, { itemName, amountCents, buyerEmail: userEmail, orderType: 'Unattributed (review in Admin > Sales)' });
       return Response.json({ received: true, unattributed: true });
     }
 
@@ -304,6 +321,7 @@ Deno.serve(async (req) => {
       const emailBody = `<div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif"><h2>${eventLabel}</h2><p>Application: ${migrationProject?.application_name || ''}</p><p>Amount: $${(amountCents / 100).toLocaleString()}</p><p>Payment status: Completed and webhook verified</p></div>`;
       if (userEmail) await base44.asServiceRole.integrations.Core.SendEmail({ to: userEmail, subject: `Migration Planner: ${eventLabel}`, body: emailBody });
       if (migrationSettings.sales_notification_email) await base44.asServiceRole.integrations.Core.SendEmail({ to: migrationSettings.sales_notification_email, subject: `${eventLabel} — ${migrationProject?.application_name || migrationProjectId}`, body: emailBody });
+      await notifyAdminOfOrder(base44, { itemName, amountCents, buyerEmail: userEmail, orderType: `Migration payment (${migrationPaymentType})`, extra: { Application: migrationProject?.application_name || migrationProjectId } });
       return Response.json({ received: true, migrationPayment: true });
     }
 
@@ -354,6 +372,7 @@ Deno.serve(async (req) => {
         first = false;
         await expandBundleAccess(base44, product, userId, userEmail, payment.id);
       }
+      await notifyAdminOfOrder(base44, { itemName: `Cart order (${cartIds.length} products)`, amountCents, buyerEmail: userEmail, orderType: 'Products (cart)', extra: { Products: orderLineItems.map((l) => l.name).join(', ') } });
       return Response.json({ received: true, cartItems: cartIds.length });
     }
 
@@ -389,6 +408,7 @@ Deno.serve(async (req) => {
     }
 
     console.log('[squareWebhook] SUCCESS — payment recorded', { paymentId: payment.id, userId, productId });
+    await notifyAdminOfOrder(base44, { itemName, amountCents, buyerEmail: userEmail, orderType: metadata.serviceId ? 'Service' : promptSessionId ? 'Prompt pack unlock' : planId ? 'Plan' : metadata.donation ? 'Donation' : 'Product' });
     return Response.json({ received: true });
   } catch (error) {
     console.error('[squareWebhook] Handler THREW', { error: error.message, stack: error.stack });
