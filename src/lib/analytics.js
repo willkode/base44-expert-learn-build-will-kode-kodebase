@@ -76,6 +76,16 @@ export const trackPricingPlanClick = ({ planId, planName, price }) =>
     page_path: window.location.pathname,
   });
 
+const multiItemPayload = (products) => ({
+  currency: "USD",
+  value: products.reduce((s, p) => s + (p.price || 0), 0),
+  items: products.map((p) => ({ item_id: p.id, item_name: p.name, item_category: p.category, price: p.price })),
+});
+
+export const trackViewCart = (products) => trackEvent("view_cart", multiItemPayload(products));
+export const trackAddPaymentInfo = (item) =>
+  trackEvent("add_payment_info", { payment_type: "square_hosted_checkout", ...itemPayload(item) });
+
 export const trackSelectItem = (item) => trackEvent("select_item", itemPayload(item));
 export const trackAddToCart = (item) => trackEvent("add_to_cart", itemPayload(item));
 export const trackRemoveFromCart = (item) => trackEvent("remove_from_cart", itemPayload(item));

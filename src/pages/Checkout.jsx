@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
 import BundleUpsell from "@/components/checkout/BundleUpsell";
-import { trackBeginCheckout, trackPurchase } from "@/lib/analytics";
+import { trackBeginCheckout, trackPurchase, trackAddPaymentInfo } from "@/lib/analytics";
 import { isSummerSaleActive, getProductSalePriceCents, getSaleDiscountPercent, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 import { useCart } from "@/components/cart/CartContext";
 
@@ -105,6 +105,12 @@ export default function Checkout() {
   const startCheckout = async () => {
     setRedirecting(true);
     setError(null);
+    // GA4: user is proceeding to Square's hosted payment page
+    if (isCart && cartProducts.length > 0) {
+      trackAddPaymentInfo({ id: "cart", name: `Cart (${cartProducts.length} products)`, category: "cart", price: cartProducts.reduce((s, p) => s + cartPriceFor(p), 0) / 100 });
+    } else if (product) {
+      trackAddPaymentInfo({ id: product.id, name: product.name, category: product.category, price: getProductSalePriceCents(product.priceCents, product.slug) / 100 });
+    }
     // Cart checkout — all cart products in a single Square order.
     if (isCart) {
       const returnUrl = `${window.location.origin}/checkout?cart=1&status=success`;

@@ -8,7 +8,7 @@ import { useCart } from "@/components/cart/CartContext";
 import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
 import { isSummerSaleActive, getProductSalePriceCents, formatUsd } from "@/lib/summerSale";
-import { trackRemoveFromCart, trackEvent } from "@/lib/analytics";
+import { trackRemoveFromCart, trackViewCart, trackEvent } from "@/lib/analytics";
 import HireWillKodeUpsell from "@/components/upsell/HireWillKodeUpsell";
 
 export default function CartSheet() {
@@ -59,7 +59,15 @@ export default function CartSheet() {
     removeItem(p.id);
   };
 
+  // GA4: view_cart when the cart opens with items in it
+  useEffect(() => {
+    if (!isOpen || cartProducts.length === 0) return;
+    trackViewCart(cartProducts.map((p) => ({ id: p.id, name: p.name, category: p.category, price: priceFor(p) / 100 })));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, cartProducts.length]);
+
   const handleCheckout = () => {
+    trackEvent("checkout_click", { cart_size: items.length, value: totalCents / 100, currency: "USD" });
     closeCart();
     navigate("/checkout?cart=1");
   };

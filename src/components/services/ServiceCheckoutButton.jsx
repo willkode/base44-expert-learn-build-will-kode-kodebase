@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import { Loader2 } from "lucide-react";
 import GuestCheckoutDialog from "@/components/services/GuestCheckoutDialog";
+import { trackEvent } from "@/lib/analytics";
 
 /**
  * Handles dynamic Square checkout for service pages.
@@ -30,6 +31,7 @@ export default function ServiceCheckoutButton({ serviceId, label, size = "lg", c
 
   const handleClick = async () => {
     if (onClick) onClick();
+    trackEvent("begin_checkout", { checkout_type: "service", service_id: serviceId });
     setError(null);
     setLoading(true);
     try {
@@ -51,6 +53,7 @@ export default function ServiceCheckoutButton({ serviceId, label, size = "lg", c
   const handleGuestSubmit = async ({ name, email, appUrl }) => {
     setGuestError(null);
     setGuestLoading(true);
+    trackEvent("add_payment_info", { checkout_type: "service_guest", service_id: serviceId, payment_type: "square_hosted_checkout" });
     try {
       const thankYouUrl = `${window.location.origin}/services/thank-you?service=${encodeURIComponent(serviceId)}`;
       await startCheckout({ guestName: name, guestEmail: email, appUrl }, thankYouUrl);
