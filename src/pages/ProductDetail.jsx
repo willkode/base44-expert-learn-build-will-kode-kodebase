@@ -24,6 +24,7 @@ import MobileApprovalKitDetails from "@/components/products/MobileApprovalKitDet
 import CompleteBundleDetails from "@/components/products/CompleteBundleDetails";
 import KnowledgeKitDetails from "@/components/products/KnowledgeKitDetails";
 import AppKnowledgeBaseDetails from "@/components/products/AppKnowledgeBaseDetails";
+import AiAgentRecommenderDetails from "@/components/products/AiAgentRecommenderDetails";
 import { trackViewItem, trackSelectItem, trackAddToCart } from "@/lib/analytics";
 import { useCart } from "@/components/cart/CartContext";
 import { getProductSalePriceCents, formatUsd, isSummerSaleActive } from "@/lib/summerSale";
@@ -125,6 +126,8 @@ export default function ProductDetail() {
 
         {product.slug === "complete-app-knowledge-base" && <AppKnowledgeBaseDetails />}
 
+        {product.slug === "ai-agent-recommender" && <AiAgentRecommenderDetails />}
+
         {product.description && (
           <div className="max-w-3xl mx-auto text-center mt-24 mb-16">
             <span className="text-sm font-semibold text-primary uppercase tracking-widest">Overview</span>
@@ -161,6 +164,8 @@ export default function ProductDetail() {
               ? <>Ready to make your AI <span className="text-gradient-orange">Base44-fluent?</span></>
               : product.slug === "complete-app-knowledge-base"
               ? <>Ready to document <span className="text-gradient-orange">everything?</span></>
+              : product.slug === "ai-agent-recommender"
+              ? <>Ready to find your <span className="text-gradient-orange">AI agents?</span></>
               : <>Ready to install your <span className="text-gradient-orange">marketing engine?</span></>}
           </h2>
           <p className="text-muted-foreground mb-6">{product.supportNote || "One-time fee · Free support included"}</p>
