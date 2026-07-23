@@ -13,6 +13,7 @@ import MigrationReadiness from "@/components/services/migration/MigrationReadine
 import { replacedItems, compatFocus, processSteps, deliverables, pricingFactors, faqs } from "@/components/services/migration/migrationData";
 import ContactForm from "@/components/contact/ContactForm";
 import MigrationSaleBanner from "@/components/migration/MigrationSaleBanner";
+import Migration500Special, { isMigrationSpecialActive } from "@/components/services/migration/Migration500Special";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/bab7cb2ec_generated_image.png";
 
@@ -65,9 +66,14 @@ export default function Base44Migration() {
           >
             Your application may have started on Base44, but it does not have to remain dependent on Base44 forever. We migrate Base44 applications to independent infrastructure that you control — backend, database, authentication, storage, integrations, automation, and deployment.
           </motion.p>
-          <motion.p initial="hidden" animate="visible" variants={fadeUp} custom={3} className="text-sm font-semibold text-foreground mb-8">
+          <motion.p initial="hidden" animate="visible" variants={fadeUp} custom={3} className="text-sm font-semibold text-foreground mb-6">
             Base44 migrations start at <span className="text-gradient-orange">$2,000</span>.
           </motion.p>
+          {isMigrationSpecialActive() && (
+            <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={3.5} className="mb-8">
+              <Migration500Special />
+            </motion.div>
+          )}
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={4} className="flex flex-wrap items-center justify-center gap-6 mb-10">
             {[
               { icon: KeyRound, label: "Own your infrastructure" },
@@ -245,9 +251,19 @@ export default function Base44Migration() {
         <div className="relative max-w-4xl mx-auto px-6">
           <div className="text-center mb-10">
             <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Pricing</p>
-            <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">
-              Starting at <span className="text-gradient-orange">$2,000</span>
-            </h2>
+            {isMigrationSpecialActive() ? (
+              <>
+                <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">
+                  <span className="text-muted-foreground line-through mr-3">$2,000</span>
+                  <span className="text-gradient-orange">$500 Migration Special</span>
+                </h2>
+                <p className="text-sm font-semibold text-primary mb-3">Limited time — offer ends 07/25/2026.</p>
+              </>
+            ) : (
+              <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">
+                Starting at <span className="text-gradient-orange">$2,000</span>
+              </h2>
+            )}
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Migration pricing depends on the size and complexity of the application. A smaller application with limited entities and backend functionality may remain close to the starting price. Applications with complex payments, extensive backend functions, realtime systems, large datasets, AI agents, or multiple integrations will require a custom estimate.
             </p>
@@ -327,7 +343,11 @@ export default function Base44Migration() {
           <p className="text-muted-foreground mb-2">
             Your application should not be permanently limited by the platform where it was originally built. We help Base44 app owners move to infrastructure they control while preserving the functionality, workflows, and customer experience they have already invested in.
           </p>
-          <p className="text-sm font-semibold text-foreground mb-8">Base44 migration services start at $2,000.</p>
+          <p className="text-sm font-semibold text-foreground mb-8">
+            {isMigrationSpecialActive()
+              ? <>Limited time: $500 Migration Special — offer ends 07/25/2026.</>
+              : <>Base44 migration services start at $2,000.</>}
+          </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link to="/migration-planner" onClick={() => handleCTA("final_cta")}>
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10">
