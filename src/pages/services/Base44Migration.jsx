@@ -137,25 +137,6 @@ export default function Base44Migration() {
         </div>
       </section>
 
-      {/* Migration Assessment CTA */}
-      <section className="py-12">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="rounded-2xl border border-primary/40 bg-gradient-to-br from-primary/15 via-card to-card p-8 md:p-10 text-center glow-orange">
-            <h2 className="font-sora font-extrabold text-2xl md:text-3xl tracking-tight mb-3">
-              Not sure what your migration involves?
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
-              Run your repository through the free Migration Planner. It scans your codebase, counts every entity, function, and integration, and gives you a readiness score and quote in minutes.
-            </p>
-            <Link to="/migration-planner" onClick={() => handleCTA("assessment_banner")}>
-              <Button size="lg" className="bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] hover:opacity-90 text-white border-0 font-semibold px-8">
-                Start Your Free Migration Assessment <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Compatibility layer */}
       <section className="py-20 relative">
         <div className="absolute inset-0 blueprint-grid opacity-10" />
