@@ -17,6 +17,7 @@ import { useCart } from "@/components/cart/CartContext";
 import { isSummerSaleActive, getProductSalePriceCents, getSaleDiscountPercent, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 import SummerSaleBanner from "@/components/products/SummerSaleBanner";
 import FeaturedDesktopIdeCard from "@/components/products/FeaturedDesktopIdeCard";
+import ProductStars from "@/components/products/ProductStars";
 
 const HIDDEN_SLUGS = ["complete-builder-bundle", "starter-prompt-pack", "hire-will-kode", "base44-desktop-ide"];
 
@@ -148,6 +149,7 @@ export default function Products() {
                     )}
                   </div>
                   <h2 className="font-sora font-bold text-xl mb-1.5">{p.name}</h2>
+                  <ProductStars seed={p.slug || p.id} className="mb-2" />
                   {p.tagline && <p className="text-sm text-muted-foreground mb-4">{p.tagline}</p>}
                   <ul className="space-y-2.5 mb-6 flex-1">
                     {(p.features || []).map((f) => (
