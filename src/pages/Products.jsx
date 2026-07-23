@@ -30,7 +30,7 @@ export default function Products() {
   const [sort, setSort] = useState("featured");
 
   useEffect(() => {
-    base44.entities.Product.filter({ active: true }, "order").then((items) => {
+    base44.entities.Product.filter({ active: true }, "-created_date").then((items) => {
       setProducts(items);
       setLoading(false);
     });
