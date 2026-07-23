@@ -16,10 +16,8 @@ import { trackSelectItem, trackAddToCart } from "@/lib/analytics";
 import { useCart } from "@/components/cart/CartContext";
 import { isSummerSaleActive, getProductSalePriceCents, getSaleDiscountPercent, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 import SummerSaleBanner from "@/components/products/SummerSaleBanner";
-import FeaturedBundleCard from "@/components/products/FeaturedBundleCard";
 import FeaturedDesktopIdeCard from "@/components/products/FeaturedDesktopIdeCard";
 
-const FEATURED_SLUG = "complete-base44-knowledge-kit";
 const HIDDEN_SLUGS = ["complete-builder-bundle", "starter-prompt-pack", "hire-will-kode", "base44-desktop-ide"];
 
 export default function Products() {
@@ -61,14 +59,7 @@ export default function Products() {
     return list;
   }, [products, search, category, sort]);
 
-  const featuredProduct = useMemo(
-    () => visibleProducts.find((p) => p.slug === FEATURED_SLUG),
-    [visibleProducts]
-  );
-  const gridProducts = useMemo(
-    () => visibleProducts.filter((p) => p.slug !== FEATURED_SLUG),
-    [visibleProducts]
-  );
+  const gridProducts = visibleProducts;
 
   return (
     <div className="pt-28 pb-24 px-6">
@@ -134,7 +125,6 @@ export default function Products() {
           ) : (
           <>
           <FeaturedDesktopIdeCard />
-          {featuredProduct && <FeaturedBundleCard product={featuredProduct} />}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {gridProducts.map((p, i) => (
               <MotionLink
