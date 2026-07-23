@@ -23,8 +23,8 @@ export default function DesktopPricing({ onEarlyAccess }) {
             One payment. <span className="text-gradient-orange">Lifetime access.</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Get the full desktop IDE plus every prompt, audit, agent test, and skill —
-            for a one-time $15 before pricing moves to $25/month on August 1, 2026.
+            Base44 Desktop releases August 1, 2026. Lock in the full desktop IDE plus every prompt,
+            audit, agent test, and skill for a one-time $15 — before launch pricing becomes $25/month.
           </p>
         </div>
         <div className="grid grid-cols-1 gap-6 max-w-xl mx-auto">
@@ -76,8 +76,8 @@ export default function DesktopPricing({ onEarlyAccess }) {
           ))}
         </div>
         <p className="text-[11px] text-muted-foreground text-center mt-6">
-          Launch special: pay $15 once and keep Pro access for life. On August 1, 2026, Pro Access
-          moves to $25/month — lifetime buyers keep everything, forever.
+          Pre-launch special: pay $15 once and keep Pro access for life. When Base44 Desktop releases
+          on August 1, 2026, Pro Access becomes $25/month — lifetime buyers keep everything, forever.
         </p>
       </div>
     </section>

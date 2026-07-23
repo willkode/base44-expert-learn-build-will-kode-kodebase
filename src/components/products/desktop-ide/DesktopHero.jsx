@@ -37,7 +37,7 @@ export default function DesktopHero({ onEarlyAccess, onExplore }) {
             </Button>
           </div>
           <p className="text-sm text-muted-foreground">
-            Launch special: one-time $15 for lifetime access — pricing changes to $25/mo on August 1, 2026.
+            Releasing August 1, 2026 — claim the pre-launch special now: one-time $15 for lifetime access. After launch, pricing becomes $25/mo.
           </p>
         </motion.div>
 
