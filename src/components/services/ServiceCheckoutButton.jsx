@@ -11,7 +11,7 @@ import { trackEvent } from "@/lib/analytics";
  * - Guests get a quick name/email (+ app URL for ER) form — no signup needed —
  *   then are redirected to a public thank-you page after payment.
  */
-export default function ServiceCheckoutButton({ serviceId, label, size = "lg", className = "", onClick }) {
+export default function ServiceCheckoutButton({ serviceId, label, size = "lg", className = "", onClick, redirectPath }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [guestOpen, setGuestOpen] = useState(false);
@@ -42,7 +42,9 @@ export default function ServiceCheckoutButton({ serviceId, label, size = "lg", c
         setGuestOpen(true);
         return;
       }
-      const onboardingUrl = `${window.location.origin}/service-onboarding?service=${encodeURIComponent(serviceId)}`;
+      const onboardingUrl = redirectPath
+        ? `${window.location.origin}${redirectPath}`
+        : `${window.location.origin}/service-onboarding?service=${encodeURIComponent(serviceId)}`;
       await startCheckout({}, onboardingUrl);
     } catch (err) {
       setError(err.message || "Something went wrong. Please try again.");
@@ -55,7 +57,9 @@ export default function ServiceCheckoutButton({ serviceId, label, size = "lg", c
     setGuestLoading(true);
     trackEvent("add_payment_info", { checkout_type: "service_guest", service_id: serviceId, payment_type: "square_hosted_checkout" });
     try {
-      const thankYouUrl = `${window.location.origin}/services/thank-you?service=${encodeURIComponent(serviceId)}`;
+      const thankYouUrl = redirectPath
+        ? `${window.location.origin}${redirectPath}`
+        : `${window.location.origin}/services/thank-you?service=${encodeURIComponent(serviceId)}`;
       await startCheckout({ guestName: name, guestEmail: email, appUrl }, thankYouUrl);
     } catch (err) {
       setGuestError(err.message || "Something went wrong. Please try again.");

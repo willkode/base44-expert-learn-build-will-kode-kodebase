@@ -102,6 +102,13 @@ Deno.serve(async (req) => {
       }
       itemName = `Cart — ${resolved.length} product${resolved.length > 1 ? 's' : ''}`;
       if (coupon) metadataCouponCode = coupon.code;
+    } else if (serviceId === 'base44_migration') {
+      // Base44 Migration — $500 special through 07/25/2026 (CT), then $2,000.
+      const specialActive = new Date() < new Date('2026-07-26T05:00:00Z');
+      amountCents = specialActive ? 50000 : 200000;
+      itemName = specialActive
+        ? 'Base44 App Migration — $500 Special (reg. $2,000)'
+        : 'Base44 App Migration';
     } else if (serviceId) {
       const service = SERVICE_PRICING[serviceId];
       if (!service) return Response.json({ error: 'Invalid service.' }, { status: 400 });

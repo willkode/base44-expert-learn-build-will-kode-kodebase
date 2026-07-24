@@ -3,7 +3,7 @@ import Seo from "@/components/seo/Seo";
 import { faqSchema } from "@/lib/seo";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Rocket, ArrowRight, CheckCircle, KeyRound, ServerCog, Layers, CalendarDays } from "lucide-react";
+import { Rocket, ArrowRight, CheckCircle, KeyRound, ServerCog, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ServiceFAQ from "@/components/services/ServiceFAQ";
 import { trackEvent } from "@/lib/analytics";
@@ -11,7 +11,7 @@ import MigrationIncluded from "@/components/services/migration/MigrationIncluded
 import MigrationStacks from "@/components/services/migration/MigrationStacks";
 import MigrationReadiness from "@/components/services/migration/MigrationReadiness";
 import { replacedItems, compatFocus, processSteps, deliverables, pricingFactors, faqs } from "@/components/services/migration/migrationData";
-import ContactForm from "@/components/contact/ContactForm";
+import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 import Migration500Special, { isMigrationSpecialActive } from "@/components/services/migration/Migration500Special";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/bab7cb2ec_generated_image.png";
@@ -84,17 +84,16 @@ export default function Base44Migration() {
               </div>
             ))}
           </motion.div>
-          <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={5} className="flex flex-wrap items-center justify-center gap-3">
-            <a href="#contact" onClick={() => handleCTA("hero_contact")}>
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8">
-                Contact Me About Your Migration <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </a>
-            <a href="#contact" onClick={() => handleCTA("hero_book_call")}>
-              <Button size="lg" variant="outline" className="font-semibold px-8">
-                <CalendarDays className="w-4 h-4 mr-1" /> Book a Free Call
-              </Button>
-            </a>
+          <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={5} className="flex flex-col items-center gap-3">
+            <div className="w-full max-w-sm">
+              <ServiceCheckoutButton
+                serviceId="base44_migration"
+                label={`Pay & Start Your Migration — ${isMigrationSpecialActive() ? "$500" : "$2,000"}`}
+                redirectPath="/services/migration-intake"
+                onClick={() => handleCTA("hero_pay")}
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">Pay first, then fill out a quick intake form — I'll contact you within 24 hours.</p>
             <a href="#pricing" onClick={() => handleCTA("hero_secondary")}>
               <Button size="lg" variant="ghost" className="font-semibold px-8">
                 See Pricing
@@ -327,31 +326,41 @@ export default function Base44Migration() {
               ? <>Limited time: $500 Migration Special — offer ends 07/25/2026.</>
               : <>Base44 migration services start at $2,000.</>}
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-full max-w-sm">
+              <ServiceCheckoutButton
+                serviceId="base44_migration"
+                label={`Pay & Start Your Migration — ${isMigrationSpecialActive() ? "$500" : "$2,000"}`}
+                redirectPath="/services/migration-intake"
+                onClick={() => handleCTA("final_pay")}
+              />
+            </div>
             <Link to="/migration-planner" onClick={() => handleCTA("final_cta")}>
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10">
-                Start Your Migration Assessment <ArrowRight className="w-4 h-4 ml-1" />
+              <Button size="lg" variant="ghost" className="font-semibold px-8">
+                Not sure yet? Start with a Migration Assessment <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>
-            <a href="#contact" onClick={() => handleCTA("final_book_call")}>
-              <Button size="lg" variant="outline" className="font-semibold px-8">
-                <CalendarDays className="w-4 h-4 mr-1" /> Book a Free Call
-              </Button>
-            </a>
           </div>
         </div>
       </section>
 
-      {/* Contact form */}
+      {/* Pay first, then intake */}
       <section id="contact" className="py-20 relative scroll-mt-24">
         <div className="absolute inset-0 blueprint-grid opacity-10" />
-        <div className="relative max-w-5xl mx-auto px-6">
-          <div className="text-center mb-10">
-            <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Contact</p>
-            <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">Tell me about your migration.</h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">Share a few details about your app first — once your message is sent, you'll get a link to book your free call.</p>
+        <div className="relative max-w-2xl mx-auto px-6 text-center">
+          <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">How to get started</p>
+          <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">Pay first, then tell me about your app.</h2>
+          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
+            Secure your migration with payment. Right after checkout you'll fill out a short intake form with your app details, and I'll contact you within 24 hours to kick off the migration.
+          </p>
+          <div className="max-w-sm mx-auto">
+            <ServiceCheckoutButton
+              serviceId="base44_migration"
+              label={`Pay & Start Your Migration — ${isMigrationSpecialActive() ? "$500" : "$2,000"}`}
+              redirectPath="/services/migration-intake"
+              onClick={() => handleCTA("contact_pay")}
+            />
           </div>
-          <ContactForm bookingUrl="https://calendar.app.google/HkWivU8RSamGuGUcA" />
         </div>
       </section>
     </>
