@@ -6,6 +6,7 @@ import { faqs } from "@/components/landing/FAQ";
 import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
 import HeroStats from "@/components/landing/HeroStats";
+import MigrationLastChance from "@/components/landing/MigrationLastChance";
 import ExploreResources from "@/components/landing/ExploreResources";
 import ToolsSection from "@/components/landing/ToolsSection";
 import PromptsSection from "@/components/landing/PromptsSection";
@@ -34,6 +35,7 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <MigrationLastChance />
         <HeroStats />
         <ExploreResources />
         <ToolsSection />
