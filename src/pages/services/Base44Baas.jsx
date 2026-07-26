@@ -7,6 +7,7 @@ import { Database, ArrowRight, CheckCircle, Shield, Layers } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import ServiceFAQ from "@/components/services/ServiceFAQ";
 import { trackEvent } from "@/lib/analytics";
+import ReviewsSection from "@/components/reviews/ReviewsSection";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/004d61f83_generated_image.png";
 
@@ -390,6 +391,8 @@ export default function Base44Baas() {
           </div>
         </div>
       </section>
+
+      <ReviewsSection seed="service:base44-baas" title="What clients say about Base44 BaaS" />
 
       {/* FAQ */}
       <section className="py-20">

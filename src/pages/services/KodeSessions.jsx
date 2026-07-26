@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 import PublicLayout from "@/components/layout/PublicLayout";
 import { trackEvent } from "@/lib/analytics";
+import ReviewsSection from "@/components/reviews/ReviewsSection";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -328,6 +329,8 @@ export default function KodeSessions() {
           </div>
         </div>
       </section>
+
+      <ReviewsSection seed="service:kode-sessions" title="What clients say about Kode Sessions" />
 
       {/* FAQ */}
       <section className="py-20">

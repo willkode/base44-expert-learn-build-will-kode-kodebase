@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import ServiceFAQ from "@/components/services/ServiceFAQ";
 import { trackEvent } from "@/lib/analytics";
 import { buildIncludes, idealFor, steps, credentials, faqs } from "@/components/services/custom-app/customAppData";
+import ReviewsSection from "@/components/reviews/ReviewsSection";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/66f6359a9_generated_image.png";
 
@@ -223,6 +224,8 @@ export default function CustomAppCreation() {
           </div>
         </div>
       </section>
+
+      <ReviewsSection seed="service:custom-app-creation" title="What clients say about Custom App Creation" />
 
       {/* FAQ */}
       <section className="py-20">

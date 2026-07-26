@@ -28,6 +28,7 @@ import AiAgentRecommenderDetails from "@/components/products/AiAgentRecommenderD
 import { trackViewItem, trackSelectItem, trackAddToCart } from "@/lib/analytics";
 import { useCart } from "@/components/cart/CartContext";
 import { getProductSalePriceCents, formatUsd, isSummerSaleActive } from "@/lib/summerSale";
+import ReviewsSection from "@/components/reviews/ReviewsSection";
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -141,6 +142,8 @@ export default function ProductDetail() {
         )}
 
         <ProductFeatureList features={product.features} />
+
+        <ReviewsSection seed={`product:${product.slug}`} title={`Reviews for ${product.name}`} />
 
         <div className="max-w-2xl mx-auto text-center mt-24 rounded-2xl border border-border bg-card p-10 glow-orange">
           <h2 className="font-sora font-bold text-2xl md:text-3xl mb-3">

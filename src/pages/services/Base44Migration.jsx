@@ -13,6 +13,7 @@ import MigrationReadiness from "@/components/services/migration/MigrationReadine
 import { replacedItems, compatFocus, processSteps, deliverables, pricingFactors, faqs } from "@/components/services/migration/migrationData";
 import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 import Migration500Special, { isMigrationSpecialActive } from "@/components/services/migration/Migration500Special";
+import ReviewsSection from "@/components/reviews/ReviewsSection";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/bab7cb2ec_generated_image.png";
 
@@ -282,6 +283,8 @@ export default function Base44Migration() {
       </section>
 
       <MigrationReadiness />
+
+      <ReviewsSection seed="service:base44-migration" title="What clients say about Base44 Migration" />
 
       {/* FAQ */}
       <section className="py-20">

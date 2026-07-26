@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 import { trackEvent } from "@/lib/analytics";
+import ReviewsSection from "@/components/reviews/ReviewsSection";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -312,6 +313,8 @@ export default function ErService() {
           </div>
         </div>
       </section>
+
+      <ReviewsSection seed="service:er-service" title="What clients say about the ER Service" />
 
       {/* FAQ */}
       <section className="py-20">

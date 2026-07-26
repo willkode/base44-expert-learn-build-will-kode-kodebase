@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 import { trackEvent } from "@/lib/analytics";
+import ReviewsSection from "@/components/reviews/ReviewsSection";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -631,6 +632,8 @@ export default function SeoAudit() {
           </div>
         </div>
       </section>
+
+      <ReviewsSection seed="service:seo-audit" title="What clients say about the SEO Audit" />
 
       {/* FAQ */}
       <section className="py-20 relative">
