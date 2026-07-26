@@ -17,6 +17,7 @@ import Features from '@/pages/Features';
 import Products from '@/pages/Products';
 import ProductDetail from '@/pages/ProductDetail';
 import Base44DesktopIde from '@/pages/products/Base44DesktopIde';
+import Base44Porter from '@/pages/tools/Base44Porter';
 import Contact from '@/pages/Contact';
 import LearnIndex from '@/pages/learn/LearnIndex';
 import Blog from '@/pages/learn/Blog';
@@ -169,6 +170,7 @@ const AuthenticatedApp = () => {
         <Route path="/services/thank-you" element={<ServiceThankYou />} />
         <Route path="/services/migration-intake" element={<MigrationIntake />} />
         <Route path="/migration-planner" element={<MigrationPlanner />} />
+        <Route path="/tools/base44-frontend-porter" element={<Base44Porter />} />
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
