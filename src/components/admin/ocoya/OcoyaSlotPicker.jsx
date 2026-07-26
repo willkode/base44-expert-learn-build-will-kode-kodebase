@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-// 8 posting slots per day, 8am–10pm Central Time (every 2 hours).
-export const DAILY_SLOTS = [8, 10, 12, 14, 16, 18, 20, 22];
+// Posting slots 8am–10pm Central Time, every 30 minutes (stored as minutes from midnight).
+export const DAILY_SLOTS = Array.from({ length: 29 }, (_, i) => 8 * 60 + i * 30);
 
-const slotLabel = (h) => {
+const slotLabel = (mins) => {
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
   const hr12 = h % 12 === 0 ? 12 : h % 12;
-  return `${hr12}:00 ${h < 12 ? "AM" : "PM"}`;
+  return `${hr12}:${String(m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`;
 };
 
 const CHICAGO_FMT = new Intl.DateTimeFormat("en-US", {
@@ -54,9 +56,9 @@ export default function OcoyaSlotPicker({ value, onChange }) {
   // Ocoya requires a schedule time at least 2 minutes from now.
   const earliest = new Date(Date.now() + 2 * 60 * 1000);
 
-  const pickSlot = (d, h) => {
-    if (!d || h === null) return;
-    onChange(chicagoSlotISO(d, h));
+  const pickSlot = (d, mins) => {
+    if (!d || mins === null) return;
+    onChange(chicagoSlotISO(d, Math.floor(mins / 60), mins % 60));
   };
 
   const pickManual = (d, t) => {
@@ -65,9 +67,9 @@ export default function OcoyaSlotPicker({ value, onChange }) {
     onChange(chicagoSlotISO(d, h, m));
   };
 
-  const isPast = (h) => {
+  const isPast = (mins) => {
     if (!date) return false;
-    return new Date(chicagoSlotISO(date, h)) <= earliest;
+    return new Date(chicagoSlotISO(date, Math.floor(mins / 60), mins % 60)) <= earliest;
   };
 
   const manualIsPast =
@@ -119,8 +121,8 @@ export default function OcoyaSlotPicker({ value, onChange }) {
 
           {mode === "slot" ? (
             <div className="space-y-2">
-              <Label>Time slot (CST — 8 posts per day)</Label>
-              <div className="grid grid-cols-4 gap-2 max-w-md">
+              <Label>Time slot (CST — every 30 minutes, 8:00 AM–10:00 PM)</Label>
+              <div className="grid grid-cols-4 gap-2 max-w-md max-h-64 overflow-y-auto pr-1">
                 {DAILY_SLOTS.map((h) => {
                   const disabled = isPast(h);
                   return (
