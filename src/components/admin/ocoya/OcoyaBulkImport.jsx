@@ -21,13 +21,52 @@ const TEMPLATE = `[
   }
 ]`;
 
+// Repairs common paste issues — unescaped double quotes inside string values
+// (e.g. captions that quote a prompt) get escaped so JSON.parse succeeds.
+function repairJson(raw) {
+  let out = "";
+  let inString = false;
+  for (let i = 0; i < raw.length; i++) {
+    const ch = raw[i];
+    if (!inString) {
+      if (ch === '"') inString = true;
+      out += ch;
+      continue;
+    }
+    if (ch === "\\") {
+      out += ch + (raw[i + 1] || "");
+      i++;
+      continue;
+    }
+    if (ch === '"') {
+      // A quote only closes the string if the next non-whitespace char is structural.
+      let j = i + 1;
+      while (j < raw.length && /\s/.test(raw[j])) j++;
+      const next = raw[j];
+      if (next === "," || next === "}" || next === "]" || next === ":" || next === undefined) {
+        inString = false;
+        out += ch;
+      } else {
+        out += '\\"';
+      }
+      continue;
+    }
+    out += ch;
+  }
+  return out;
+}
+
 // Parses pasted JSON into clean draft rows, or throws a friendly error.
 function parsePosts(raw) {
   let data;
   try {
     data = JSON.parse(raw);
   } catch {
-    throw new Error("That's not valid JSON. Check for missing commas, quotes, or brackets.");
+    try {
+      data = JSON.parse(repairJson(raw));
+    } catch {
+      throw new Error("That's not valid JSON. Check for missing commas, quotes, or brackets.");
+    }
   }
   if (!Array.isArray(data)) throw new Error("The JSON must be an array of posts: [ { ... }, { ... } ]");
   if (data.length === 0) throw new Error("The array is empty — add at least one post.");
