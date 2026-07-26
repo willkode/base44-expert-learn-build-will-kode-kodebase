@@ -13,10 +13,20 @@ export default function PorterCardGrid({ title, subtitle, items, columns = 3 }) 
         {items.map((item) => (
           <div
             key={item.title}
-            className="rounded-2xl border border-border bg-card p-6 hover:border-primary/40 transition-colors"
+            className="rounded-2xl border border-border bg-card overflow-hidden hover:border-primary/40 transition-colors"
           >
+            {item.image && (
+              <img
+                src={item.image}
+                alt=""
+                loading="lazy"
+                className="w-full h-40 object-cover border-b border-border"
+              />
+            )}
+            <div className="p-6">
             <h3 className="font-sora font-semibold text-foreground">{item.title}</h3>
             <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.body}</p>
+            </div>
           </div>
         ))}
       </div>
