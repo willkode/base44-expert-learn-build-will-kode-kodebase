@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import { Download, FileJson, Film, Loader2 } from "lucide-react";
+import DownloadAllButton from "./DownloadAllButton";
 import { trackEvent } from "@/lib/analytics";
 
 export default function RenderPanel({ project, scenes }) {
@@ -77,6 +78,7 @@ export default function RenderPanel({ project, scenes }) {
         <Button onClick={build} disabled={busy || ready === 0}>
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Film className="w-4 h-4" />} Build render manifest
         </Button>
+        <DownloadAllButton project={project} scenes={scenes} />
         {result && (
           <>
             <Button variant="outline" onClick={downloadManifest}><FileJson className="w-4 h-4" /> Download manifest</Button>
