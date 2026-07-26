@@ -3,7 +3,7 @@ import Seo from "@/components/seo/Seo";
 import { faqSchema } from "@/lib/seo";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Hammer, ArrowRight, CheckCircle, ShieldCheck, Users, Code2 } from "lucide-react";
+import { Hammer, ArrowRight, ShieldCheck, Users, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ServiceFAQ from "@/components/services/ServiceFAQ";
 import { trackEvent } from "@/lib/analytics";
@@ -111,10 +111,16 @@ export default function CustomAppCreation() {
               <motion.div
                 key={c.title}
                 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.4}
-                className="rounded-2xl border border-border bg-card/60 p-6"
+                className="rounded-2xl border border-border bg-card/60 overflow-hidden"
               >
-                <h3 className="font-sora font-bold text-lg mb-2">{c.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{c.desc}</p>
+                <div className="relative h-40 overflow-hidden">
+                  <img src={c.image} alt={c.title} loading="lazy" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+                </div>
+                <div className="p-6">
+                  <h3 className="font-sora font-bold text-lg mb-2">{c.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{c.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -132,12 +138,12 @@ export default function CustomAppCreation() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {buildIncludes.map((item, i) => (
               <motion.div
-                key={item}
+                key={item.label}
                 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.25}
-                className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/60"
+                className="flex items-center gap-3 p-3 rounded-xl border border-border bg-card/60"
               >
-                <CheckCircle className="w-4 h-4 text-primary shrink-0" />
-                <span className="text-sm font-medium text-foreground">{item}</span>
+                <img src={item.image} alt="" loading="lazy" className="w-12 h-12 rounded-lg object-cover shrink-0" />
+                <span className="text-sm font-medium text-foreground">{item.label}</span>
               </motion.div>
             ))}
           </div>
@@ -179,12 +185,12 @@ export default function CustomAppCreation() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {idealFor.map((item, i) => (
               <motion.div
-                key={item}
+                key={item.label}
                 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.3}
-                className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/60"
+                className="flex items-center gap-3 p-3 rounded-xl border border-border bg-card/60"
               >
-                <CheckCircle className="w-4 h-4 text-primary shrink-0" />
-                <span className="text-sm font-medium text-foreground">{item}</span>
+                <img src={item.image} alt="" loading="lazy" className="w-12 h-12 rounded-lg object-cover shrink-0" />
+                <span className="text-sm font-medium text-foreground">{item.label}</span>
               </motion.div>
             ))}
           </div>
@@ -206,8 +212,9 @@ export default function CustomAppCreation() {
                 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.4}
                 className="flex items-start gap-4 p-5 rounded-xl border border-border bg-card/60"
               >
-                <span className="font-sora font-extrabold text-2xl text-gradient-orange shrink-0">{step.num}</span>
+                <img src={step.image} alt="" loading="lazy" className="w-16 h-16 rounded-xl object-cover shrink-0" />
                 <div>
+                  <span className="font-sora font-extrabold text-lg text-gradient-orange block">{step.num}</span>
                   <p className="font-semibold text-foreground">{step.title}</p>
                   <p className="text-sm text-muted-foreground mt-0.5">{step.desc}</p>
                 </div>

@@ -1,40 +1,64 @@
+const IMG = {
+  discovery: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/afa8af7c4_generated_image.png",
+  spec: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/c8b29b357_generated_image.png",
+  schema: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/969fbe85d_generated_image.png",
+  build: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/7b2857be5_generated_image.png",
+  qa: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/793955edd_generated_image.png",
+  launch: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/6be499c57_generated_image.png",
+  integrations: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/7b7c166e1_generated_image.png",
+  automation: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/f8481453d_generated_image.png",
+  dashboard: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/b9d5dda08_generated_image.png",
+};
+
 export const buildIncludes = [
-  "Discovery and requirements definition",
-  "Entity and database architecture",
-  "Role-based access and permissions",
-  "Complete page and UI build",
-  "Backend functions and integrations",
-  "Payments, email, and notifications",
-  "Automations and scheduled workflows",
-  "AI features and agents where useful",
-  "Admin dashboard and reporting",
-  "Security review before launch",
-  "QA pass across every core flow",
-  "Deployment, documentation, and handoff",
+  { label: "Discovery and requirements definition", image: IMG.discovery },
+  { label: "Entity and database architecture", image: IMG.schema },
+  { label: "Role-based access and permissions", image: IMG.spec },
+  { label: "Complete page and UI build", image: IMG.build },
+  { label: "Backend functions and integrations", image: IMG.integrations },
+  { label: "Payments, email, and notifications", image: IMG.dashboard },
+  { label: "Automations and scheduled workflows", image: IMG.automation },
+  { label: "AI features and agents where useful", image: IMG.discovery },
+  { label: "Admin dashboard and reporting", image: IMG.dashboard },
+  { label: "Security review before launch", image: IMG.qa },
+  { label: "QA pass across every core flow", image: IMG.qa },
+  { label: "Deployment, documentation, and handoff", image: IMG.launch },
 ];
 
 export const idealFor = [
-  "Founders who want their app built right the first time",
-  "Businesses replacing spreadsheets and manual processes",
-  "Agencies needing a white-label build partner",
-  "Teams with a spec but no developer",
-  "Builders stuck halfway through a Base44 app",
-  "Internal tools, portals, and client dashboards",
+  { label: "Founders who want their app built right the first time", image: IMG.build },
+  { label: "Businesses replacing spreadsheets and manual processes", image: IMG.dashboard },
+  { label: "Agencies needing a white-label build partner", image: IMG.launch },
+  { label: "Teams with a spec but no developer", image: IMG.spec },
+  { label: "Builders stuck halfway through a Base44 app", image: IMG.qa },
+  { label: "Internal tools, portals, and client dashboards", image: IMG.schema },
 ];
 
 export const steps = [
-  { num: "01", title: "Scope call", desc: "We walk through what the app needs to do, who uses it, and what success looks like." },
-  { num: "02", title: "Written spec & quote", desc: "You get a clear feature spec with a fixed quote and timeline before any building starts." },
-  { num: "03", title: "Architecture", desc: "Entities, relationships, roles, and permissions are designed before a single page is built." },
-  { num: "04", title: "Build", desc: "Your app is built in Base44 with regular check-ins so you see progress as it happens." },
-  { num: "05", title: "Review & QA", desc: "Security review, QA pass on every flow, and revisions based on your feedback." },
-  { num: "06", title: "Launch & handoff", desc: "Deployment, documentation, and a walkthrough so you can run it confidently." },
+  { num: "01", title: "Scope call", desc: "We walk through what the app needs to do, who uses it, and what success looks like.", image: IMG.discovery },
+  { num: "02", title: "Written spec & quote", desc: "You get a clear feature spec with a fixed quote and timeline before any building starts.", image: IMG.spec },
+  { num: "03", title: "Architecture", desc: "Entities, relationships, roles, and permissions are designed before a single page is built.", image: IMG.schema },
+  { num: "04", title: "Build", desc: "Your app is built in Base44 with regular check-ins so you see progress as it happens.", image: IMG.build },
+  { num: "05", title: "Review & QA", desc: "Security review, QA pass on every flow, and revisions based on your feedback.", image: IMG.qa },
+  { num: "06", title: "Launch & handoff", desc: "Deployment, documentation, and a walkthrough so you can run it confidently.", image: IMG.launch },
 ];
 
 export const credentials = [
-  { title: "Senior full-stack developer", desc: "Years of production experience across frontend, backend, databases, and integrations — not a template shop." },
-  { title: "Base44 platform expert", desc: "Deep knowledge of entities, RLS, backend functions, workflows, and agents — apps built the way the platform intends." },
-  { title: "Base44 community moderator", desc: "Active moderator in the Base44 community, which means direct exposure to what breaks apps and how to avoid it." },
+  {
+    title: "Senior full-stack developer",
+    desc: "Years of production experience across frontend, backend, databases, and integrations — not a template shop.",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/31456ee49_generated_image.png",
+  },
+  {
+    title: "Base44 platform expert",
+    desc: "Deep knowledge of entities, RLS, backend functions, workflows, and agents — apps built the way the platform intends.",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/81eadf8a4_generated_image.png",
+  },
+  {
+    title: "Base44 community moderator",
+    desc: "Active moderator in the Base44 community, which means direct exposure to what breaks apps and how to avoid it.",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/6241ed961_generated_image.png",
+  },
 ];
 
 export const faqs = [
