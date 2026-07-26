@@ -16,17 +16,17 @@ import {
   estimateSeconds,
 } from "./longFormOptions";
 
-export default function ProjectWizard({ onCreate, creating, onCancel }) {
+export default function ProjectWizard({ onCreate, creating, onCancel, initial }) {
   const [form, setForm] = useState({
-    title: "",
-    brief: "",
+    title: initial?.title || "",
+    brief: initial?.brief || "",
     project_type: "social",
-    platform: "tiktok",
-    target_duration: 30,
-    aspect_ratio: "9:16",
+    platform: initial?.platform || "tiktok",
+    target_duration: initial?.target_duration || 30,
+    aspect_ratio: PLATFORM_OPTIONS.find((p) => p.id === initial?.platform)?.ratio || "9:16",
     resolution: "1080p",
     visual_style: "dark_tech",
-    style_notes: "",
+    style_notes: initial?.style_notes || "",
     negative_prompt: "text, letters, logos, watermarks, clutter",
     voice: "river",
     language: "en",

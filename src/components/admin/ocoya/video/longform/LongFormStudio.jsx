@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clapperboard, Plus, Trash2 } from "lucide-react";
+import { Clapperboard, Loader2, Plus, Sparkles, Trash2 } from "lucide-react";
 import LoadingState from "@/components/shared/LoadingState";
+import LongFormIdeas from "./LongFormIdeas";
 import ProjectWizard from "./ProjectWizard";
 import ProjectWorkspace from "./ProjectWorkspace";
 import { STATUS_LABELS } from "./longFormOptions";
@@ -24,6 +25,32 @@ export default function LongFormStudio() {
   const [creating, setCreating] = useState(false);
   const [filter, setFilter] = useState("all");
   const [error, setError] = useState(null);
+  const [prefill, setPrefill] = useState(null);
+  const [ideas, setIdeas] = useState(null);
+  const [ideasLoading, setIdeasLoading] = useState(false);
+  const [ideasError, setIdeasError] = useState(null);
+
+  const suggest = async () => {
+    setIdeasLoading(true);
+    setIdeasError(null);
+    setIdeas(null);
+    try {
+      const { data } = await base44.functions.invoke("suggestLongFormVideoIdeas", {});
+      if (data?.error) throw new Error(data.error);
+      setIdeas(data?.ideas || []);
+      trackEvent("video_studio_ideas_suggested", { count: (data?.ideas || []).length });
+    } catch (e) {
+      setIdeasError(e.message || "Could not generate ideas.");
+    }
+    setIdeasLoading(false);
+  };
+
+  const useIdea = (idea) => {
+    setPrefill(idea);
+    setWizard(true);
+    setIdeas(null);
+    trackEvent("video_studio_idea_used", { platform: idea.platform });
+  };
 
   useEffect(() => {
     base44.entities.VideoProject.filter({ archived: false }, "-updated_date", 50).then(setProjects);
@@ -78,11 +105,33 @@ export default function LongFormStudio() {
             Build longer narrated videos from multiple 8-second AI scenes with consistent style and continuity.
           </p>
         </div>
-        <Button onClick={() => setWizard((v) => !v)}><Plus className="w-4 h-4" /> Create new video</Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={suggest} disabled={ideasLoading}>
+            {ideasLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />} Suggest with AI
+          </Button>
+          <Button onClick={() => { setPrefill(null); setWizard((v) => !v); }}><Plus className="w-4 h-4" /> Create new video</Button>
+        </div>
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
-      {wizard && <ProjectWizard onCreate={create} creating={creating} onCancel={() => setWizard(false)} />}
+
+      <LongFormIdeas
+        ideas={ideas}
+        loading={ideasLoading}
+        error={ideasError}
+        onUse={useIdea}
+        onDismiss={() => { setIdeas(null); setIdeasError(null); }}
+      />
+
+      {wizard && (
+        <ProjectWizard
+          key={prefill?.title || "blank"}
+          initial={prefill}
+          onCreate={create}
+          creating={creating}
+          onCancel={() => setWizard(false)}
+        />
+      )}
 
       <div className="flex flex-wrap gap-2">
         {FILTERS.map((f) => (
