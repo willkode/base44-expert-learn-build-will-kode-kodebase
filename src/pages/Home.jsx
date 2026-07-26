@@ -7,6 +7,7 @@ import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
 import HeroStats from "@/components/landing/HeroStats";
 import MigrationLastChance from "@/components/landing/MigrationLastChance";
+import ServicesSection from "@/components/landing/ServicesSection";
 import ExploreResources from "@/components/landing/ExploreResources";
 import PromptsSection from "@/components/landing/PromptsSection";
 import FAQ from "@/components/landing/FAQ";
@@ -36,6 +37,7 @@ export default function Home() {
         <Hero />
         <MigrationLastChance />
         <HeroStats />
+        <ServicesSection />
         <ExploreResources />
         <PromptsSection />
         <Testimonials />
