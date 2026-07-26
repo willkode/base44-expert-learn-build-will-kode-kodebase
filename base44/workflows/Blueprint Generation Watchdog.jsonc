@@ -1,0 +1,44 @@
+{
+  "name": "Blueprint Generation Watchdog",
+  "description": "Every 5 minutes, resumes any blueprint generation that stalled because a background worker was interrupted.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "interval",
+      "cron_expression": null,
+      "one_time_date": null,
+      "timezone": "UTC",
+      "interval_value": 5,
+      "interval_unit": "minutes",
+      "interval_anchor": "2026-06-11T16:17:08.467000",
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "blueprint_generation_watchdog",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "generateBlueprint",
+            "args": {
+              "watchdog": true,
+              "watchdogKey": "wd_9f4k2x8q1z_serplyn_guard"
+            }
+          },
+          "then": "end"
+        }
+      }
+    ]
+  }
+}

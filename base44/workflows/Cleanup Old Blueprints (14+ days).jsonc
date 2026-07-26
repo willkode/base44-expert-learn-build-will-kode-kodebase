@@ -1,0 +1,41 @@
+{
+  "name": "Cleanup Old Blueprints (14+ days)",
+  "description": "Daily app-wide cleanup: deletes blueprints (and their related records) older than 14 days that are not the latest/currently-used blueprint for their project.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "interval",
+      "cron_expression": null,
+      "one_time_date": null,
+      "timezone": "UTC",
+      "interval_value": 7,
+      "interval_unit": "days",
+      "interval_anchor": "2026-05-29T08:00:00",
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "cleanup_old_blueprints_14_days",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "cleanupOldBlueprints",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  }
+}

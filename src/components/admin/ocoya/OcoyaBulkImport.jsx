@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Copy, Check, Upload, Loader2, CheckCircle2 } from "lucide-react";
+import { IMAGE_STYLES } from "@/components/admin/ocoya/OcoyaCreatePost";
 import { trackEvent } from "@/lib/analytics";
 
 const TEMPLATE = `[
@@ -50,6 +53,9 @@ export default function OcoyaBulkImport() {
   const [importing, setImporting] = useState(false);
   const [error, setError] = useState(null);
   const [importedCount, setImportedCount] = useState(0);
+  const [includeImage, setIncludeImage] = useState(true);
+  const [imageStyle, setImageStyle] = useState("brand");
+  const [progress, setProgress] = useState("");
 
   const copyTemplate = async () => {
     await navigator.clipboard.writeText(TEMPLATE);
@@ -69,14 +75,33 @@ export default function OcoyaBulkImport() {
     }
     setImporting(true);
     try {
+      // Generate an AI image for each post that doesn't already have one.
+      if (includeImage) {
+        for (let i = 0; i < posts.length; i++) {
+          const p = posts[i];
+          if (p.imageUrl) continue;
+          setProgress(`Generating image ${i + 1} of ${posts.length}...`);
+          const prompt = p.imagePrompt || `Social media graphic that visually represents this post: ${p.caption.slice(0, 300)}`;
+          const res = await base44.functions.invoke("generateOcoyaPostContent", {
+            imagePrompt: prompt,
+            imageStyle,
+          });
+          if (res.data?.imageUrl) {
+            p.imageUrl = res.data.imageUrl;
+            p.imagePrompt = prompt;
+          }
+        }
+      }
+      setProgress("Saving drafts...");
       await base44.entities.OcoyaDraft.bulkCreate(posts);
       setImportedCount(posts.length);
       setRaw("");
-      trackEvent("ocoya_bulk_import", { post_count: posts.length });
+      trackEvent("ocoya_bulk_import", { post_count: posts.length, ai_images: includeImage });
     } catch (e) {
       setError(e?.response?.data?.error || e.message || "Import failed. Please try again.");
     } finally {
       setImporting(false);
+      setProgress("");
     }
   };
 
@@ -114,6 +139,25 @@ export default function OcoyaBulkImport() {
           rows={12}
           className="font-mono text-xs"
         />
+        <div className="flex items-center flex-wrap gap-4">
+          <label className="flex items-center gap-2 text-sm">
+            <Switch checked={includeImage} onCheckedChange={setIncludeImage} />
+            AI images
+          </label>
+          {includeImage && (
+            <Select value={imageStyle} onValueChange={setImageStyle}>
+              <SelectTrigger className="w-52">
+                <SelectValue placeholder="Image style" />
+              </SelectTrigger>
+              <SelectContent>
+                {IMAGE_STYLES.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        </div>
+        {importing && progress && <p className="text-sm text-muted-foreground">{progress}</p>}
         {error && <p className="text-sm text-destructive">{error}</p>}
         {importedCount > 0 && (
           <p className="text-sm text-primary flex items-center gap-1.5">
