@@ -10,14 +10,39 @@ const slotLabel = (h) => {
   return `${hr12}:00 ${h < 12 ? "AM" : "PM"}`;
 };
 
+const CHICAGO_FMT = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/Chicago",
+  hour12: false,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+});
+
+// How far ahead of UTC Central Time is at the given instant (ms, negative).
+const chicagoOffsetMs = (date) => {
+  const p = {};
+  for (const { type, value } of CHICAGO_FMT.formatToParts(date)) p[type] = value;
+  const asUTC = Date.UTC(
+    Number(p.year),
+    Number(p.month) - 1,
+    Number(p.day),
+    Number(p.hour) % 24,
+    Number(p.minute),
+    Number(p.second)
+  );
+  return asUTC - date.getTime();
+};
+
 // Build an ISO timestamp for the given date + hour (and optional minute) in
 // America/Chicago, regardless of the browser's local timezone.
 export const chicagoSlotISO = (dateStr, hour, minute = 0) => {
-  const guess = new Date(
-    `${dateStr}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00Z`
-  );
-  const asChicago = new Date(guess.toLocaleString("en-US", { timeZone: "America/Chicago" }));
-  return new Date(guess.getTime() + (guess.getTime() - asChicago.getTime())).toISOString();
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const naive = Date.UTC(y, m - 1, d, hour, minute, 0);
+  const offset = chicagoOffsetMs(new Date(naive));
+  return new Date(naive - offset).toISOString();
 };
 
 export default function OcoyaSlotPicker({ value, onChange }) {
@@ -26,7 +51,8 @@ export default function OcoyaSlotPicker({ value, onChange }) {
   const [manualTime, setManualTime] = useState("");
   const [mode, setMode] = useState("slot");
 
-  const now = new Date();
+  // Ocoya requires a schedule time at least 2 minutes from now.
+  const earliest = new Date(Date.now() + 2 * 60 * 1000);
 
   const pickSlot = (d, h) => {
     if (!d || h === null) return;
@@ -41,11 +67,13 @@ export default function OcoyaSlotPicker({ value, onChange }) {
 
   const isPast = (h) => {
     if (!date) return false;
-    return new Date(chicagoSlotISO(date, h)) <= now;
+    return new Date(chicagoSlotISO(date, h)) <= earliest;
   };
 
   const manualIsPast =
-    date && manualTime && new Date(chicagoSlotISO(date, ...manualTime.split(":").map(Number))) <= now;
+    date &&
+    manualTime &&
+    new Date(chicagoSlotISO(date, ...manualTime.split(":").map(Number))) <= earliest;
 
   return (
     <div className="space-y-3">
@@ -130,7 +158,9 @@ export default function OcoyaSlotPicker({ value, onChange }) {
                 }}
               />
               {manualIsPast && (
-                <p className="text-xs text-destructive">That time is already in the past.</p>
+                <p className="text-xs text-destructive">
+                  Pick a time at least 2 minutes from now (Central Time).
+                </p>
               )}
             </div>
           )}
