@@ -5,14 +5,15 @@ import { AlarmClock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/analytics";
 
-// 24hr last-chance deadline (ends 07/25/2026 12:00 PM CT)
-const DEADLINE = new Date("2026-07-25T12:00:00-05:00");
+// Last-chance deadline (ends 08/07/2026 12:00 PM CT)
+const DEADLINE = new Date("2026-08-07T12:00:00-05:00");
 
 function getTimeLeft() {
   const diff = DEADLINE - new Date();
   if (diff <= 0) return null;
   return {
-    hours: Math.floor(diff / 3600000),
+    days: Math.floor(diff / 86400000),
+    hours: Math.floor((diff % 86400000) / 3600000),
     minutes: Math.floor((diff % 3600000) / 60000),
     seconds: Math.floor((diff % 60000) / 1000),
   };
@@ -47,7 +48,7 @@ export default function MigrationLastChance() {
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-gradient-orange mb-1">
-                24-Hour Notice — Last Chance
+                Extended — Ends 08/07 at Noon CST
               </p>
               <h2 className="font-sora font-bold text-xl md:text-2xl mb-1">
                 Base44 Migration for <span className="text-gradient-orange">$500</span>{" "}
@@ -56,7 +57,7 @@ export default function MigrationLastChance() {
               <p className="text-sm text-muted-foreground">
                 The $500 flat-rate migration special ends in{" "}
                 <span className="font-semibold text-foreground tabular-nums">
-                  {pad(timeLeft.hours)}:{pad(timeLeft.minutes)}:{pad(timeLeft.seconds)}
+                  {timeLeft.days}d {pad(timeLeft.hours)}:{pad(timeLeft.minutes)}:{pad(timeLeft.seconds)}
                 </span>
                 . After that, migrations return to $2,000.
               </p>

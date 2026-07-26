@@ -1,7 +1,7 @@
 import React from "react";
 import { Zap } from "lucide-react";
 
-const OFFER_END = new Date("2026-07-26T00:00:00-05:00"); // valid through 07/25/2026
+const OFFER_END = new Date("2026-08-07T12:00:00-05:00"); // valid through 08/07/2026 noon CST
 
 export function isMigrationSpecialActive() {
   return new Date() < OFFER_END;
@@ -17,7 +17,7 @@ export default function Migration500Special() {
       <p className="text-sm font-semibold text-foreground">
         $500 Migration Special — <span className="text-muted-foreground line-through">$2,000</span>{" "}
         <span className="text-gradient-orange font-extrabold text-base">$500</span>
-        <span className="block sm:inline sm:ml-2 text-xs font-medium text-muted-foreground">Offer ends 07/25/2026</span>
+        <span className="block sm:inline sm:ml-2 text-xs font-medium text-muted-foreground">Offer ends 08/07/2026 at noon CST</span>
       </p>
     </div>
   );
