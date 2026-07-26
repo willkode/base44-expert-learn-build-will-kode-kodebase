@@ -56,7 +56,9 @@ Produce:
 
     // 2. Video clip
     const videoRes = await base44.asServiceRole.integrations.Core.GenerateVideo({
-      prompt: `${videoDetails || script}. ${BRAND_STYLE} Smooth subtle camera motion, cinematic, seamless loop feel. Leave the bottom center of the frame empty for an overlay.`,
+      prompt: `${videoDetails || script}. ${BRAND_STYLE} Smooth subtle camera motion, cinematic, seamless loop feel. Leave the bottom center of the frame empty for an overlay.
+
+ABSOLUTELY CRITICAL — TEXT-FREE VIDEO: render ZERO text of any kind. No words, letters, numbers, captions, titles, headlines, labels, UI copy, brand names, logos, watermarks, signage, or handwriting anywhere in any frame. Do not attempt to spell or write anything (including "Base44" or "KodeBase") — AI-rendered lettering comes out misspelled and unusable. Any UI panels, cards, charts, or documents shown must use abstract blurred placeholder bars and shapes instead of readable characters. Purely visual, symbolic, icon-and-shape imagery only.`,
       duration,
       aspect_ratio: aspectRatio,
     });
