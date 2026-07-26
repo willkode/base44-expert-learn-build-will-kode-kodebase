@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Share2, PenSquare, ListChecks, Settings, Sparkles, Upload, Film } from "lucide-react";
+import { Share2, PenSquare, ListChecks, Settings, Sparkles, Upload, Film, Clapperboard } from "lucide-react";
 import OcoyaVideoStudio from "@/components/admin/ocoya/video/OcoyaVideoStudio";
+import LongFormStudio from "@/components/admin/ocoya/video/longform/LongFormStudio";
 import OcoyaBulkImport from "@/components/admin/ocoya/OcoyaBulkImport";
 import LoadingState from "@/components/shared/LoadingState";
 import OcoyaCreatePost from "@/components/admin/ocoya/OcoyaCreatePost";
@@ -89,7 +90,22 @@ export default function OcoyaSocial() {
               <OcoyaSuggest workspaceId={workspaceId} />
             </TabsContent>
             <TabsContent value="video">
-              <OcoyaVideoStudio workspaceId={workspaceId} />
+              <Tabs defaultValue="clip">
+                <TabsList className="mb-6">
+                  <TabsTrigger value="clip" className="gap-1.5">
+                    <Film className="w-4 h-4" /> Single clip
+                  </TabsTrigger>
+                  <TabsTrigger value="longform" className="gap-1.5">
+                    <Clapperboard className="w-4 h-4" /> Long-Form Studio
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="clip">
+                  <OcoyaVideoStudio workspaceId={workspaceId} />
+                </TabsContent>
+                <TabsContent value="longform">
+                  <LongFormStudio />
+                </TabsContent>
+              </Tabs>
             </TabsContent>
             <TabsContent value="bulk">
               <OcoyaBulkImport onViewDrafts={() => setTab("suggest")} />

@@ -1,0 +1,144 @@
+{
+  "name": "VideoProject",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "brief": {
+      "type": "string",
+      "description": "Idea, article, product description or marketing brief"
+    },
+    "project_type": {
+      "type": "string",
+      "default": "social"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "PLANNING",
+        "STORYBOARDING",
+        "READY_TO_GENERATE",
+        "GENERATING_AUDIO",
+        "GENERATING_VIDEO",
+        "NEEDS_REVIEW",
+        "READY_TO_RENDER",
+        "RENDERING",
+        "COMPLETE",
+        "FAILED",
+        "ARCHIVED"
+      ],
+      "default": "DRAFT"
+    },
+    "target_duration": {
+      "type": "number",
+      "default": 30
+    },
+    "actual_duration": {
+      "type": "number",
+      "default": 0
+    },
+    "aspect_ratio": {
+      "type": "string",
+      "default": "9:16"
+    },
+    "resolution": {
+      "type": "string",
+      "default": "1080p"
+    },
+    "language": {
+      "type": "string",
+      "default": "en"
+    },
+    "platform": {
+      "type": "string",
+      "default": "tiktok"
+    },
+    "visual_style": {
+      "type": "string",
+      "default": "dark_tech"
+    },
+    "style_notes": {
+      "type": "string"
+    },
+    "negative_prompt": {
+      "type": "string"
+    },
+    "voice": {
+      "type": "string",
+      "default": "river"
+    },
+    "script": {
+      "type": "string"
+    },
+    "continuity_bible": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Global visual style, palette, lighting, camera, mood, character/location/brand/negative rules"
+    },
+    "continuity_locked": {
+      "type": "boolean",
+      "default": false
+    },
+    "scene_count": {
+      "type": "number",
+      "default": 0
+    },
+    "approved_scene_count": {
+      "type": "number",
+      "default": 0
+    },
+    "thumbnail_url": {
+      "type": "string"
+    },
+    "final_video_url": {
+      "type": "string"
+    },
+    "render_manifest": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "render_status": {
+      "type": "string"
+    },
+    "archived": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "title"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "$and": [
+        {
+          "created_by_id": {
+            "$ne": "anonymous"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
