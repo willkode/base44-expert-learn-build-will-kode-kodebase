@@ -235,7 +235,7 @@ export default function Base44Migration() {
                   <span className="text-muted-foreground line-through mr-3">$2,000</span>
                   <span className="text-gradient-orange">$500 Migration Special</span>
                 </h2>
-                <p className="text-sm font-semibold text-primary mb-3">Limited time — offer ends 07/25/2026.</p>
+                <p className="text-sm font-semibold text-primary mb-3">Limited time — offer ends 08/07/2026 at noon CST.</p>
               </>
             ) : (
               <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">
@@ -258,17 +258,30 @@ export default function Base44Migration() {
               </motion.div>
             ))}
           </div>
-          <div className="text-center">
-            <Link to="/migration-planner" onClick={() => handleCTA("pricing_cta")}>
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8">
-                Get Your Migration Plan <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </Link>
+        </div>
+      </section>
+
+      {/* Pay first, then intake */}
+      <section id="contact" className="py-20 relative scroll-mt-24">
+        <div className="absolute inset-0 blueprint-grid opacity-10" />
+        <div className="relative max-w-2xl mx-auto px-6 text-center">
+          <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">How to get started</p>
+          <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">Pay first, then tell me about your app.</h2>
+          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
+            Secure your migration with payment. Right after checkout you'll fill out a short intake form with your app details, and I'll contact you within 24 hours to kick off the migration.
+          </p>
+          <div className="max-w-sm mx-auto">
+            <ServiceCheckoutButton
+              serviceId="base44_migration"
+              label={`Pay & Start Your Migration — ${isMigrationSpecialActive() ? "$500" : "$2,000"}`}
+              redirectPath="/services/migration-intake"
+              onClick={() => handleCTA("contact_pay")}
+            />
           </div>
         </div>
       </section>
 
-      <MigrationReadiness onCTA={handleCTA} />
+      <MigrationReadiness />
 
       {/* FAQ */}
       <section className="py-20">
@@ -323,7 +336,7 @@ export default function Base44Migration() {
           </p>
           <p className="text-sm font-semibold text-foreground mb-8">
             {isMigrationSpecialActive()
-              ? <>Limited time: $500 Migration Special — offer ends 07/25/2026.</>
+              ? <>Limited time: $500 Migration Special — offer ends 08/07/2026 at noon CST.</>
               : <>Base44 migration services start at $2,000.</>}
           </p>
           <div className="flex flex-col items-center gap-3">
@@ -335,31 +348,6 @@ export default function Base44Migration() {
                 onClick={() => handleCTA("final_pay")}
               />
             </div>
-            <Link to="/migration-planner" onClick={() => handleCTA("final_cta")}>
-              <Button size="lg" variant="ghost" className="font-semibold px-8">
-                Not sure yet? Start with a Migration Assessment <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Pay first, then intake */}
-      <section id="contact" className="py-20 relative scroll-mt-24">
-        <div className="absolute inset-0 blueprint-grid opacity-10" />
-        <div className="relative max-w-2xl mx-auto px-6 text-center">
-          <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">How to get started</p>
-          <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">Pay first, then tell me about your app.</h2>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            Secure your migration with payment. Right after checkout you'll fill out a short intake form with your app details, and I'll contact you within 24 hours to kick off the migration.
-          </p>
-          <div className="max-w-sm mx-auto">
-            <ServiceCheckoutButton
-              serviceId="base44_migration"
-              label={`Pay & Start Your Migration — ${isMigrationSpecialActive() ? "$500" : "$2,000"}`}
-              redirectPath="/services/migration-intake"
-              onClick={() => handleCTA("contact_pay")}
-            />
           </div>
         </div>
       </section>
