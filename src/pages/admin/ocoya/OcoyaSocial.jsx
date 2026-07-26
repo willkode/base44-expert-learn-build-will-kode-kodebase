@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Share2, PenSquare, ListChecks, Settings, Sparkles, Upload } from "lucide-react";
+import { Share2, PenSquare, ListChecks, Settings, Sparkles, Upload, Film } from "lucide-react";
+import OcoyaVideoStudio from "@/components/admin/ocoya/video/OcoyaVideoStudio";
 import OcoyaBulkImport from "@/components/admin/ocoya/OcoyaBulkImport";
 import LoadingState from "@/components/shared/LoadingState";
 import OcoyaCreatePost from "@/components/admin/ocoya/OcoyaCreatePost";
@@ -68,6 +69,9 @@ export default function OcoyaSocial() {
               <TabsTrigger value="suggest" className="gap-1.5">
                 <Sparkles className="w-4 h-4" /> AI Suggest
               </TabsTrigger>
+              <TabsTrigger value="video" className="gap-1.5">
+                <Film className="w-4 h-4" /> Video
+              </TabsTrigger>
               <TabsTrigger value="bulk" className="gap-1.5">
                 <Upload className="w-4 h-4" /> Bulk Import
               </TabsTrigger>
@@ -83,6 +87,9 @@ export default function OcoyaSocial() {
             </TabsContent>
             <TabsContent value="suggest">
               <OcoyaSuggest workspaceId={workspaceId} />
+            </TabsContent>
+            <TabsContent value="video">
+              <OcoyaVideoStudio workspaceId={workspaceId} />
             </TabsContent>
             <TabsContent value="bulk">
               <OcoyaBulkImport onViewDrafts={() => setTab("suggest")} />

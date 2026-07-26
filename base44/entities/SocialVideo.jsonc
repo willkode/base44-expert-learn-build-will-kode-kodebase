@@ -1,0 +1,98 @@
+{
+  "name": "SocialVideo",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Internal label for this video"
+    },
+    "platform": {
+      "type": "string",
+      "description": "Target platform (instagram, tiktok, youtube, linkedin, facebook)"
+    },
+    "script": {
+      "type": "string",
+      "description": "Voice-over script"
+    },
+    "videoDetails": {
+      "type": "string",
+      "description": "Visual direction / scene description"
+    },
+    "aspectRatio": {
+      "type": "string",
+      "default": "9:16"
+    },
+    "durationSeconds": {
+      "type": "number",
+      "default": 8
+    },
+    "voice": {
+      "type": "string",
+      "default": "river"
+    },
+    "videoUrl": {
+      "type": "string"
+    },
+    "voiceoverUrl": {
+      "type": "string"
+    },
+    "musicUrl": {
+      "type": "string",
+      "description": "Background music track URL"
+    },
+    "onScreenText": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "startSec": {
+            "type": "number"
+          },
+          "endSec": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "caption": {
+      "type": "string"
+    },
+    "hashtags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ready",
+        "sent"
+      ],
+      "default": "ready"
+    },
+    "sentAt": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "script"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
