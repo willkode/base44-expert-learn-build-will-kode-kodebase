@@ -53,8 +53,8 @@ export default function SocialVideoCard({ video, onChange, onPersist, onSend, on
               Send to Ocoya
             </Button>
             <Button size="sm" variant="outline" asChild>
-              <a href={video.videoUrl} target="_blank" rel="noreferrer">
-                <Download className="mr-1.5 h-4 w-4" /> Video
+              <a href={video.videoUrl} download={`${(video.title || "video").replace(/[^a-z0-9]+/gi, "-").toLowerCase()}.mp4`} target="_blank" rel="noreferrer">
+                <Download className="mr-1.5 h-4 w-4" /> Download video
               </a>
             </Button>
             {video.voiceoverUrl && (

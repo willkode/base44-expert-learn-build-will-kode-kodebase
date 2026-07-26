@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import OcoyaProfilePicker from "@/components/admin/ocoya/OcoyaProfilePicker";
 import SocialVideoForm from "./SocialVideoForm";
 import SocialVideoCard from "./SocialVideoCard";
+import VideoIdeaSuggestions from "./VideoIdeaSuggestions";
 import { FOOTER_CTA } from "./videoOptions";
 import { trackEvent } from "@/lib/analytics";
 
@@ -16,9 +17,7 @@ export default function OcoyaVideoStudio({ workspaceId }) {
     base44.entities.SocialVideo.list("-created_date", 30).then(setVideos);
   }, []);
 
-  const generate = async (form) => {
-    setGenerating(true);
-    setError(null);
+  const generateOne = async (form) => {
     let res;
     try {
       res = await base44.functions.invoke("generateSocialVideo", {
@@ -30,11 +29,9 @@ export default function OcoyaVideoStudio({ workspaceId }) {
         aspectRatio: form.aspectRatio,
       });
     } catch (e) {
-      setGenerating(false);
       setError(e?.response?.data?.error || e.message || "Video generation failed.");
       return;
     }
-    setGenerating(false);
     if (res.data?.error) {
       setError(res.data.error);
       return;
@@ -57,6 +54,29 @@ export default function OcoyaVideoStudio({ workspaceId }) {
     });
     setVideos((prev) => [record, ...prev]);
     trackEvent("social_video_generated", { platform: form.platform, duration: form.duration });
+  };
+
+  const generate = async (form) => {
+    setGenerating(true);
+    setError(null);
+    await generateOne(form);
+    setGenerating(false);
+  };
+
+  const generateFromIdeas = async (ideas) => {
+    setGenerating(true);
+    setError(null);
+    for (const idea of ideas) {
+      await generateOne({
+        script: idea.script,
+        videoDetails: idea.videoDetails,
+        platform: idea.platform,
+        voice: idea.voice,
+        duration: idea.duration,
+        aspectRatio: idea.platform === "linkedin" ? "16:9" : "9:16",
+      });
+    }
+    setGenerating(false);
   };
 
   const updateVideo = (updated) => setVideos((prev) => prev.map((v) => (v.id === updated.id ? updated : v)));
@@ -107,6 +127,7 @@ export default function OcoyaVideoStudio({ workspaceId }) {
 
   return (
     <div className="max-w-3xl space-y-6">
+      <VideoIdeaSuggestions onGenerateSelected={generateFromIdeas} generating={generating} />
       <SocialVideoForm onGenerate={generate} generating={generating} />
       {error && <p className="text-sm text-destructive">{error}</p>}
 
