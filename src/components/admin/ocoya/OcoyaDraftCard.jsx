@@ -2,9 +2,20 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { RefreshCw, Send, Trash2, Loader2, CheckCircle2 } from "lucide-react";
 
-export default function OcoyaDraftCard({ draft, onChange, onPersist, onRegenImage, onSend, onDiscard }) {
+export default function OcoyaDraftCard({
+  draft,
+  onChange,
+  onPersist,
+  onRegenImage,
+  onSend,
+  onDiscard,
+  selectable = false,
+  selected = false,
+  onToggleSelect,
+}) {
   if (draft.status === "sent") {
     return (
       <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 flex items-center gap-3">
@@ -17,7 +28,16 @@ export default function OcoyaDraftCard({ draft, onChange, onPersist, onRegenImag
   return (
     <div className="rounded-2xl border border-border bg-card p-5 space-y-3">
       <div className="flex items-center justify-between gap-2">
-        <Badge variant="secondary">{draft.ideaTitle}</Badge>
+        <div className="flex items-center gap-2 min-w-0">
+          {selectable && (
+            <Checkbox
+              checked={selected}
+              onCheckedChange={() => onToggleSelect?.()}
+              aria-label="Select draft"
+            />
+          )}
+          <Badge variant="secondary">{draft.ideaTitle}</Badge>
+        </div>
         <Button
           variant="ghost"
           size="icon"

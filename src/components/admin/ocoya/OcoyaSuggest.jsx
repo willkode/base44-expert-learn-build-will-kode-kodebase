@@ -10,11 +10,14 @@ import { Sparkles, Wand2, Loader2 } from "lucide-react";
 import OcoyaProfilePicker from "@/components/admin/ocoya/OcoyaProfilePicker";
 import OcoyaDraftCard from "@/components/admin/ocoya/OcoyaDraftCard";
 import OcoyaSlotPicker from "@/components/admin/ocoya/OcoyaSlotPicker";
+import OcoyaBulkApproveBar from "@/components/admin/ocoya/OcoyaBulkApproveBar";
+import { nextOpenSlots, slotLabelCST } from "@/components/admin/ocoya/ocoyaAutoSlots";
 import { IMAGE_STYLES } from "@/components/admin/ocoya/OcoyaCreatePost";
 import { trackEvent } from "@/lib/analytics";
 
 const MODES = [
   { id: "now", label: "Publish now" },
+  { id: "auto", label: "Auto schedule" },
   { id: "schedule", label: "Schedule" },
   { id: "draft", label: "Save as draft" },
 ];
@@ -32,6 +35,9 @@ export default function OcoyaSuggest({ workspaceId }) {
   const [mode, setMode] = useState("now");
   const [scheduledAt, setScheduledAt] = useState("");
   const [error, setError] = useState(null);
+  const [usedSlots, setUsedSlots] = useState([]);
+  const [selectedDrafts, setSelectedDrafts] = useState([]);
+  const [bulkSending, setBulkSending] = useState(false);
 
   useEffect(() => {
     base44.entities.OcoyaDraft.filter({ status: "ready" }, "-created_date", 50).then((records) => {
@@ -126,14 +132,19 @@ export default function OcoyaSuggest({ workspaceId }) {
     if (res.data?.imageUrl) await base44.entities.OcoyaDraft.update(draft.id, { imageUrl });
   };
 
-  const sendDraft = async (draft) => {
+  const sendDraft = async (draft, autoSlotISO) => {
     if (mode !== "draft" && profiles.length === 0) {
       updateDraft({ ...draft, error: "Select at least one social profile below, or use draft mode." });
-      return;
+      return false;
     }
     if (mode === "schedule" && !scheduledAt) {
       updateDraft({ ...draft, error: "Pick a schedule date and time below first." });
-      return;
+      return false;
+    }
+    let slot = autoSlotISO;
+    if (mode === "auto" && !slot) {
+      slot = nextOpenSlots(1, usedSlots)[0];
+      setUsedSlots((prev) => [...prev, slot]);
     }
     updateDraft({ ...draft, busy: "send", error: null });
     const payload = { action: "createPost", workspaceId, caption: draft.caption };
@@ -141,6 +152,7 @@ export default function OcoyaSuggest({ workspaceId }) {
     if (profiles.length) payload.socialProfileIds = profiles;
     if (mode === "now") payload.scheduledAt = new Date().toISOString();
     if (mode === "schedule") payload.scheduledAt = new Date(scheduledAt).toISOString();
+    if (mode === "auto") payload.scheduledAt = slot;
     let res;
     try {
       res = await base44.functions.invoke("ocoyaRequest", payload);
@@ -150,11 +162,11 @@ export default function OcoyaSuggest({ workspaceId }) {
         busy: null,
         error: e?.response?.data?.error || e.message || "Sending to Ocoya failed.",
       });
-      return;
+      return false;
     }
     if (res.data?.error) {
       updateDraft({ ...draft, busy: null, error: res.data.error });
-      return;
+      return false;
     }
     trackEvent("ocoya_suggested_post_sent", { mode });
     updateDraft({ ...draft, busy: null, status: "sent" });
@@ -163,6 +175,26 @@ export default function OcoyaSuggest({ workspaceId }) {
       status: "sent",
       sentAt: new Date().toISOString(),
     });
+    return true;
+  };
+
+  const toggleDraftSelect = (id) => {
+    setSelectedDrafts((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  };
+
+  const pendingDrafts = drafts.filter((d) => d.status !== "sent");
+
+  const sendSelected = async () => {
+    const queue = pendingDrafts.filter((d) => selectedDrafts.includes(d.id));
+    if (queue.length === 0) return;
+    setBulkSending(true);
+    const slots = mode === "auto" ? nextOpenSlots(queue.length, usedSlots) : [];
+    for (let i = 0; i < queue.length; i++) {
+      const ok = await sendDraft(queue[i], slots[i]);
+      if (ok) setSelectedDrafts((prev) => prev.filter((x) => x !== queue[i].id));
+    }
+    if (slots.length) setUsedSlots((prev) => [...prev, ...slots]);
+    setBulkSending(false);
   };
 
   const discardDraft = (draft) => {
@@ -249,10 +281,25 @@ export default function OcoyaSuggest({ workspaceId }) {
               ))}
             </div>
             {mode === "schedule" && <OcoyaSlotPicker value={scheduledAt} onChange={setScheduledAt} />}
+            {mode === "auto" && (
+              <p className="text-xs text-muted-foreground">
+                Each approved post takes the next open slot (8:00 AM–10:00 PM CST, every 30 minutes),
+                rolling onto following days. Next open slot: {slotLabelCST(nextOpenSlots(1, usedSlots)[0])}
+              </p>
+            )}
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-sora font-semibold">Review & approve ({drafts.filter((d) => d.status !== "sent").length} remaining)</h3>
+            <h3 className="font-sora font-semibold">Review & approve ({pendingDrafts.length} remaining)</h3>
+            <OcoyaBulkApproveBar
+              total={pendingDrafts.length}
+              selectedCount={selectedDrafts.length}
+              allSelected={pendingDrafts.length > 0 && selectedDrafts.length === pendingDrafts.length}
+              onToggleAll={(checked) => setSelectedDrafts(checked ? pendingDrafts.map((d) => d.id) : [])}
+              onSend={sendSelected}
+              sending={bulkSending}
+              hint={mode === "auto" ? "Selected posts get consecutive open slots." : undefined}
+            />
             {drafts.map((d) => (
               <OcoyaDraftCard
                 key={d.id}
@@ -262,6 +309,9 @@ export default function OcoyaSuggest({ workspaceId }) {
                 onRegenImage={() => regenImage(d)}
                 onSend={() => sendDraft(d)}
                 onDiscard={() => discardDraft(d)}
+                selectable
+                selected={selectedDrafts.includes(d.id)}
+                onToggleSelect={() => toggleDraftSelect(d.id)}
               />
             ))}
           </div>
