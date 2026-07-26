@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-// Posting slots 8am–10pm Central Time, every 30 minutes (stored as minutes from midnight).
-export const DAILY_SLOTS = Array.from({ length: 29 }, (_, i) => 8 * 60 + i * 30);
+// Posting slots 24 hours a day, Central Time, every 30 minutes (stored as minutes from midnight).
+export const DAILY_SLOTS = Array.from({ length: 48 }, (_, i) => i * 30);
 
 const slotLabel = (mins) => {
   const h = Math.floor(mins / 60);
@@ -121,7 +121,7 @@ export default function OcoyaSlotPicker({ value, onChange }) {
 
           {mode === "slot" ? (
             <div className="space-y-2">
-              <Label>Time slot (CST — every 30 minutes, 8:00 AM–10:00 PM)</Label>
+              <Label>Time slot (CST — every 30 minutes, 24 hours a day)</Label>
               <div className="grid grid-cols-4 gap-2 max-w-md max-h-64 overflow-y-auto pr-1">
                 {DAILY_SLOTS.map((h) => {
                   const disabled = isPast(h);

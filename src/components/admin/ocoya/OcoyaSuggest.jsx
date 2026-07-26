@@ -283,7 +283,7 @@ export default function OcoyaSuggest({ workspaceId }) {
             {mode === "schedule" && <OcoyaSlotPicker value={scheduledAt} onChange={setScheduledAt} />}
             {mode === "auto" && (
               <p className="text-xs text-muted-foreground">
-                Each approved post takes the next open slot (8:00 AM–10:00 PM CST, every 30 minutes),
+                Each approved post takes the next open slot (24 hours a day CST, every 30 minutes),
                 rolling onto following days. Next open slot: {slotLabelCST(nextOpenSlots(1, usedSlots)[0])}
               </p>
             )}

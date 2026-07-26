@@ -1,7 +1,7 @@
-// Next available posting slots in America/Chicago: 8:00am - 10:00pm, every 30 minutes.
+// Next available posting slots in America/Chicago: 24 hours a day, every 30 minutes.
 const TZ = "America/Chicago";
-const START_HOUR = 8;
-const END_HOUR = 22;
+const START_HOUR = 0;
+const END_HOUR = 23.5;
 const STEP_MINUTES = 30;
 const BUFFER_MS = 2 * 60 * 1000;
 
