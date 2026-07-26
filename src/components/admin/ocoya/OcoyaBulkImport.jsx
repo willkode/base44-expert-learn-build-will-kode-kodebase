@@ -86,7 +86,7 @@ function parsePosts(raw) {
   });
 }
 
-export default function OcoyaBulkImport() {
+export default function OcoyaBulkImport({ onViewDrafts }) {
   const [raw, setRaw] = useState("");
   const [copied, setCopied] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -199,9 +199,16 @@ export default function OcoyaBulkImport() {
         {importing && progress && <p className="text-sm text-muted-foreground">{progress}</p>}
         {error && <p className="text-sm text-destructive">{error}</p>}
         {importedCount > 0 && (
-          <p className="text-sm text-primary flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4" /> Imported {importedCount} post{importedCount === 1 ? "" : "s"} as ready drafts.
-          </p>
+          <div className="flex items-center flex-wrap gap-3">
+            <p className="text-sm text-primary flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4" /> Imported {importedCount} post{importedCount === 1 ? "" : "s"} as ready drafts.
+            </p>
+            {onViewDrafts && (
+              <Button variant="outline" size="sm" onClick={onViewDrafts}>
+                View drafts
+              </Button>
+            )}
+          </div>
         )}
         <Button onClick={handleImport} disabled={importing || !raw.trim()}>
           {importing ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Upload className="w-4 h-4 mr-1.5" />}

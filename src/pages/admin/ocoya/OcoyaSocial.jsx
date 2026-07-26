@@ -14,6 +14,7 @@ export default function OcoyaSocial() {
   const [workspaceId, setWorkspaceId] = useState(localStorage.getItem("ocoya_workspace") || "");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [tab, setTab] = useState("create");
 
   useEffect(() => {
     base44.functions.invoke("ocoyaRequest", { action: "workspaces" }).then((res) => {
@@ -59,7 +60,7 @@ export default function OcoyaSocial() {
             </p>
           </div>
         ) : (
-          <Tabs defaultValue="create">
+          <Tabs value={tab} onValueChange={setTab}>
             <TabsList className="mb-6">
               <TabsTrigger value="create" className="gap-1.5">
                 <PenSquare className="w-4 h-4" /> Create
@@ -84,7 +85,7 @@ export default function OcoyaSocial() {
               <OcoyaSuggest workspaceId={workspaceId} />
             </TabsContent>
             <TabsContent value="bulk">
-              <OcoyaBulkImport />
+              <OcoyaBulkImport onViewDrafts={() => setTab("suggest")} />
             </TabsContent>
             <TabsContent value="posts">
               <OcoyaPostsList workspaceId={workspaceId} />
