@@ -39,9 +39,8 @@ For each idea provide:
 - title: short internal label (max 6 words)
 - description: one sentence on the angle and who it targets
 - platform: one of instagram, tiktok, youtube, linkedin, facebook (pick the best fit)
-- duration: 4, 6 or 8 (seconds)
 - voice: one of river, honey, sunny, storm, spark
-- script: the spoken voice-over, written to be read aloud in exactly the chosen duration (roughly 12 words for 4s, 18 for 6s, 24 for 8s). Punchy, hook first, end with a clear call to action mentioning kodebase.us.
+- script: the spoken voice-over, written to be read aloud in exactly 8 seconds (roughly 24 words). Punchy, hook first, end with a clear call to action mentioning kodebase.us.
 - videoDetails: visual direction for the clip — abstract, symbolic, icon-and-shape imagery only, NO text or lettering of any kind in the visuals.`,
       response_json_schema: {
         type: 'object',
@@ -54,7 +53,6 @@ For each idea provide:
                 title: { type: 'string' },
                 description: { type: 'string' },
                 platform: { type: 'string' },
-                duration: { type: 'number' },
                 voice: { type: 'string' },
                 script: { type: 'string' },
                 videoDetails: { type: 'string' },
@@ -73,7 +71,7 @@ For each idea provide:
       title: idea.title || 'Video idea',
       description: idea.description || '',
       platform: allowedPlatforms.includes(idea.platform) ? idea.platform : 'instagram',
-      duration: [4, 6, 8].includes(Number(idea.duration)) ? Number(idea.duration) : 8,
+      duration: 8,
       voice: allowedVoices.includes(idea.voice) ? idea.voice : 'river',
       script: idea.script || '',
       videoDetails: idea.videoDetails || '',
