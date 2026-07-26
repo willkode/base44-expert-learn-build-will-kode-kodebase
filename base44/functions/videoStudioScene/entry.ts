@@ -56,7 +56,7 @@ export default async function (req) {
     if (action === 'storyboard') {
       const image = makeImageProvider(base44);
       const res = await image.generate({
-        prompt: `${scene.visual_prompt}. ${scene.camera_direction || ''} ${continuity} Aspect ratio ${project.aspect_ratio}.`,
+        prompt: `${scene.visual_prompt}. ${scene.camera_direction || ''} ${continuity}`,
       });
       const updated = await base44.asServiceRole.entities.VideoScene.update(sceneId, {
         storyboard_url: res.url,

@@ -72,7 +72,7 @@ HARD RULES:
 - Every scene's narration must be speakable in 5 to 7.5 seconds (12 to 18 words). NEVER more than ${MAX_SCENE_SECONDS} seconds.
 - Split at natural sentence or clause boundaries. Do not drop or truncate any words from the narration — every word must appear in exactly one scene, in order.
 - Keep the same characters, location, wardrobe, lighting, palette and camera language across scenes; describe them explicitly in every visual_prompt so each clip is generated consistently.
-- visual_prompt must be purely visual and contain NO text, letters, logos or brand names in frame.
+- visual_prompt must be purely visual and contain NO text, letters, logos or brand names in frame. Never mention aspect ratios, resolutions, numbers, measurements, dates or any spellable words as part of the scene contents — the video model renders anything like that as on-screen lettering.
 
 For each scene return: title, purpose, narration, visual_prompt, negative_prompt, camera_direction, motion_direction, starting_state, ending_state, continuity_notes, caption_text (short on-screen caption), transition_out (cut, dissolve, whip_pan or match_cut).`,
         response_json_schema: {
