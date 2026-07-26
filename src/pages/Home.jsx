@@ -8,7 +8,6 @@ import Hero from "@/components/landing/Hero";
 import HeroStats from "@/components/landing/HeroStats";
 import MigrationLastChance from "@/components/landing/MigrationLastChance";
 import ExploreResources from "@/components/landing/ExploreResources";
-import ToolsSection from "@/components/landing/ToolsSection";
 import PromptsSection from "@/components/landing/PromptsSection";
 import FAQ from "@/components/landing/FAQ";
 import Testimonials from "@/components/landing/Testimonials";
@@ -38,7 +37,6 @@ export default function Home() {
         <MigrationLastChance />
         <HeroStats />
         <ExploreResources />
-        <ToolsSection />
         <PromptsSection />
         <Testimonials />
         <FAQ />

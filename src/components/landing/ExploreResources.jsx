@@ -7,6 +7,7 @@ import { fetchPublishedPosts } from "@/lib/blogPublic";
 import { trackCTA } from "@/lib/analytics";
 import BlogCard from "@/components/learn/BlogCard";
 import VideoCard from "@/components/learn/VideoCard";
+import AgentSkillPreviewCard from "@/components/landing/AgentSkillPreviewCard";
 
 // Surfaces the app's other content hubs on the home page: latest blog posts,
 // prompt library, and videos. Reuses the existing learn cards + design tokens.
@@ -80,11 +81,13 @@ export default function ExploreResources() {
   const [posts, setPosts] = useState([]);
   const [prompts, setPrompts] = useState([]);
   const [videos, setVideos] = useState([]);
+  const [skills, setSkills] = useState([]);
 
   useEffect(() => {
     fetchPublishedPosts(6).then((p) => setPosts(p.slice(0, 3))).catch(() => {});
     base44.entities.LibraryPrompt.list("order", 3).then(setPrompts).catch(() => {});
     base44.entities.Video.list("order", 3).then(setVideos).catch(() => {});
+    base44.entities.AgentSkill.filter({ published: true }, "-created_date", 4).then(setSkills).catch(() => {});
   }, []);
 
   const hasAny = posts.length > 0 || prompts.length > 0 || videos.length > 0;
@@ -167,46 +170,29 @@ export default function ExploreResources() {
           </div>
         )}
 
-        <div>
-          <SectionHeading
-            icon={Sparkles}
-            eyebrow="Agent skills"
-            title="Expert playbooks, on demand"
-            to="/learn/agent-skills"
-            linkLabel="Explore agent skills"
-          />
-          <Link
-            to="/learn/agent-skills"
-            onClick={() => trackCTA({ text: "Explore agent skills", location: "home_explore", destination: "/learn/agent-skills" })}
-            className="group block overflow-hidden rounded-2xl border border-border bg-card/70 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300"
-          >
-            <div className="grid md:grid-cols-2">
-              <div className="relative h-48 md:h-full overflow-hidden">
-                <img
-                  src="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/445de1ec7_generated_image.png"
-                  alt="Agent Skills"
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/80 md:to-card" />
+        {skills.length > 0 && (
+          <div>
+            <SectionHeading
+              icon={Sparkles}
+              eyebrow="Agent skills"
+              title="Expert playbooks, on demand"
+              to="/learn/agent-skills"
+              linkLabel="Explore agent skills"
+            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="h-full">
+                <AgentSkillPreviewCard skill={skills[0]} featured />
               </div>
-              <div className="p-8 flex flex-col justify-center">
-                <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary mb-3">
-                  <Sparkles className="w-4 h-4" /> Agent Skills
-                </span>
-                <h3 className="font-sora font-bold text-xl md:text-2xl mb-3 group-hover:text-primary transition-colors">
-                  Battle-tested playbooks the AI uses on demand
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-                  Curated expert skills for security, SEO, accessibility, data modeling, and more — activated automatically when your task matches.
-                </p>
-                <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary group-hover:gap-2.5 transition-all">
-                  Explore agent skills <ArrowRight className="w-4 h-4" />
-                </span>
-              </div>
+              {skills.length > 1 && (
+                <div className="flex flex-col gap-4">
+                  {skills.slice(1, 4).map((skill) => (
+                    <AgentSkillPreviewCard key={skill.id} skill={skill} />
+                  ))}
+                </div>
+              )}
             </div>
-          </Link>
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );
