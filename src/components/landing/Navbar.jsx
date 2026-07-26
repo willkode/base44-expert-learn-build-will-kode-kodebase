@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, FileText, BookOpenCheck, Sparkles, Library, Settings2, ShieldCheck, Wand2, Headphones, Wrench, Shield, TrendingUp, Heart, ArrowRight, BookOpen, Database, Rocket, Hammer } from "lucide-react";
+import { Menu, X, ChevronDown, FileText, BookOpenCheck, Sparkles, Library, Settings2, ShieldCheck, Wand2, Headphones, Wrench, Shield, TrendingUp, Heart, ArrowRight, BookOpen, Database, Rocket, Hammer, MonitorDown } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import {
   DropdownMenu,
@@ -21,7 +21,7 @@ const links = [
 
 const toolItems = [
   { label: "Prompt Engine", to: "/tools/prompt-generator", icon: Wand2, desc: "Turn your idea into an ordered prompt pack", badge: "NEW" },
-  { label: "Migration Planner", to: "/migration-planner", icon: Rocket, desc: "Assess your Base44 app and plan its migration", badge: "NEW" },
+  { label: "Base44 Frontend Porter", to: "/tools/base44-frontend-porter", icon: MonitorDown, desc: "Free desktop app — host your frontend anywhere, keep the backend", badge: "FREE" },
 ];
 
 const serviceItems = [
