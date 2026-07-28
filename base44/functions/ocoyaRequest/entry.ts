@@ -63,13 +63,31 @@ Deno.serve(async (req) => {
       if (!caption && !(mediaUrls || []).length) {
         return Response.json({ error: 'A caption or media is required' }, { status: 400 });
       }
-      const body = {};
-      if (caption) body.caption = caption;
-      if (mediaUrls?.length) body.mediaUrls = mediaUrls;
-      if (socialProfileIds?.length) body.socialProfileIds = socialProfileIds;
-      if (scheduledAt) body.scheduledAt = scheduledAt;
-      const result = await ocoya(`/post?workspaceId=${ws}`, { method: 'POST', body });
-      return Response.json(result || { success: true });
+      const base = {};
+      if (caption) base.caption = caption;
+      if (mediaUrls?.length) base.mediaUrls = mediaUrls;
+      if (scheduledAt) base.scheduledAt = scheduledAt;
+
+      // One Ocoya post per social profile: a bundle addressed to several
+      // channels is validated as a group, so a single unhealthy channel
+      // parks every other channel in NEEDS_ATTENTION.
+      const profileIds = socialProfileIds?.length ? socialProfileIds : [null];
+      const created = [];
+      const failures = [];
+      for (const profileId of profileIds) {
+        const body = { ...base };
+        if (profileId) body.socialProfileIds = [profileId];
+        try {
+          const result = await ocoya(`/post?workspaceId=${ws}`, { method: 'POST', body });
+          created.push({ socialProfileId: profileId, post: result || null });
+        } catch (e) {
+          failures.push({ socialProfileId: profileId, error: e.message });
+        }
+      }
+      if (!created.length) {
+        return Response.json({ error: failures[0]?.error || 'Ocoya rejected the post' }, { status: 502 });
+      }
+      return Response.json({ success: true, created, failures });
     }
 
     if (action === 'deletePost') {
