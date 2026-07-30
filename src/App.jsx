@@ -19,6 +19,7 @@ import ProductDetail from '@/pages/ProductDetail';
 import Base44DesktopIde from '@/pages/products/Base44DesktopIde';
 import Base44Porter from '@/pages/tools/Base44Porter';
 import Contact from '@/pages/Contact';
+import Tip from '@/pages/Tip';
 import LearnIndex from '@/pages/learn/LearnIndex';
 import Blog from '@/pages/learn/Blog';
 import BlogPost from '@/pages/learn/BlogPost';
@@ -147,6 +148,7 @@ const AuthenticatedApp = () => {
         <Route path="/products/base44-desktop-ide" element={<Base44DesktopIde />} />
         <Route path="/products/:slug" element={<ProductDetail />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/tip" element={<Tip />} />
         <Route path="/learn/blog" element={<Blog />} />
         <Route path="/learn/blog/category/:slug" element={<BlogCategory />} />
         <Route path="/learn/blog/tag/:slug" element={<BlogTag />} />

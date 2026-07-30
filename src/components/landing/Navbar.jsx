@@ -43,6 +43,7 @@ const learnLinks = [
   { label: "Prompt Library", to: "/learn/prompt-library", icon: Library, desc: "Expert prompts by Will Kode", badge: "NEW" },
   { label: "AI LLM Guide", to: "/learn/llm-guide", icon: Settings2, desc: "Pick the right model for the job", badge: "NEW" },
   { label: "AI Controls", to: "/learn/ai-controls", icon: ShieldCheck, desc: "Free prompts to keep AI builds on track", badge: "NEW" },
+  { label: "Tip Will", to: "/tip", icon: Heart, desc: "Support the free guides, prompts and tools", badge: "NEW" },
 ];
 
 function LearnBadge({ badge }) {

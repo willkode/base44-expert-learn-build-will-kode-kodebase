@@ -47,7 +47,8 @@ Deno.serve(async (req) => {
 
     // Services can be ordered as a guest (no account needed) — everything else
     // still requires an authenticated user.
-    if (!user && !serviceId) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    // Tips/donations are also open to guests — no account needed to support the free content.
+    if (!user && !serviceId && donationCents == null) return Response.json({ error: 'Unauthorized' }, { status: 401 });
     if (!user && serviceId) {
       const emailOk = typeof guestEmail === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.trim());
       if (!guestName?.trim() || !emailOk) {
@@ -171,7 +172,7 @@ Deno.serve(async (req) => {
       metadata.base44UserId = user.id;
     } else {
       metadata.guestCheckout = 'true';
-      metadata.guestName = guestName.trim();
+      metadata.guestName = guestName?.trim() || 'Anonymous';
     }
     if (appUrl?.trim()) metadata.appUrl = appUrl.trim();
     if (serviceId) metadata.serviceId = serviceId;
