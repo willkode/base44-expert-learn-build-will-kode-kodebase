@@ -10,9 +10,9 @@ const WILL_PHOTO = "https://media.base44.com/images/public/6a1905a0bc76553d6c934
 
 export default function Hero() {
   const navigate = useNavigate();
-  const getStarted = () => {
-    trackCTA({ text: "Start Learning", location: "hero", destination: "/register" });
-    navigate("/register");
+  const viewServices = () => {
+    trackCTA({ text: "View Services", location: "hero", destination: "/services" });
+    navigate("/services");
   };
 
   return (
@@ -63,11 +63,11 @@ export default function Hero() {
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-10">
             <Button
-              onClick={getStarted}
+              onClick={viewServices}
               size="lg"
               className="bg-primary hover:bg-red-500 text-primary-foreground font-semibold text-base px-7 py-6 shadow-lg shadow-red-600/30 group transition-transform hover:-translate-y-0.5">
 
-              Start Learning
+              View Services
               <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
             </Button>
             <div className="p-[1.5px] rounded-md bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15]">

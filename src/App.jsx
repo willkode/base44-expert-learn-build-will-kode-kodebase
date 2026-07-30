@@ -37,6 +37,7 @@ import Base44MasterClass from '@/pages/learn/Base44MasterClass';
 import TermsOfService from '@/pages/legal/TermsOfService';
 import PrivacyPolicy from '@/pages/legal/PrivacyPolicy';
 import RefundPolicy from '@/pages/legal/RefundPolicy';
+import ServicesIndex from '@/pages/services/ServicesIndex';
 import KodeSessions from '@/pages/services/KodeSessions';
 import ErService from '@/pages/services/ErService';
 import SecurityAudit from '@/pages/services/SecurityAudit';
@@ -161,6 +162,7 @@ const AuthenticatedApp = () => {
         <Route path="/learn/base44-cheat-sheet" element={<Base44ResourceHub />} />
         <Route path="/learn/base44-master-class" element={<Base44MasterClass />} />
         <Route path="/learn/base44" element={<Navigate to="/learn/base44-cheat-sheet" replace />} />
+        <Route path="/services" element={<ServicesIndex />} />
         <Route path="/services/kode-sessions" element={<KodeSessions />} />
         <Route path="/services/er-service" element={<ErService />} />
         <Route path="/services/security-audit" element={<SecurityAudit />} />
