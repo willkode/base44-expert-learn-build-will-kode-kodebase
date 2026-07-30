@@ -316,6 +316,32 @@ export const ADD_ONS = [
   },
 ];
 
+const M = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574";
+
+// Feature image per curriculum week
+export const WEEK_IMAGES = {
+  1: `${M}/be7b4eb9e_generated_image.png`,
+  2: `${M}/7a403f41c_generated_image.png`,
+  3: `${M}/114e6d06b_generated_image.png`,
+  4: `${M}/aa1e50a8a_generated_image.png`,
+  5: `${M}/483ddc143_generated_image.png`,
+  6: `${M}/1ec1c952e_generated_image.png`,
+  7: `${M}/e4b8c7e9c_generated_image.png`,
+  8: `${M}/b87088939_generated_image.png`,
+  9: `${M}/f5ef05314_generated_image.png`,
+  10: `${M}/ed384cc11_generated_image.png`,
+  11: `${M}/1639ee4ad_generated_image.png`,
+  12: `${M}/e2e1952b1_generated_image.png`,
+  13: `${M}/cc7bec37b_generated_image.png`,
+  14: `${M}/ab9859acc_generated_image.png`,
+  15: `${M}/5f512a739_generated_image.png`,
+  16: `${M}/bfb9964c4_generated_image.png`,
+  17: `${M}/18af8e6dc_generated_image.png`,
+  18: `${M}/84b6bbf1d_generated_image.png`,
+  19: `${M}/06e97b4cf_generated_image.png`,
+  20: `${M}/60c94b1b9_generated_image.png`,
+};
+
 export const CERTIFICATIONS = [
   { name: "KodeBase Certified Prompt Engineer", req: "Weeks 1–4" },
   { name: "KodeBase Certified Base44 Builder", req: "Weeks 5–12 + Base44 capstone" },

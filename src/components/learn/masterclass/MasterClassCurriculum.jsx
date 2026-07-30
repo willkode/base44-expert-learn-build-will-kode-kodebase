@@ -1,5 +1,5 @@
 import React from "react";
-import { WEEKLY_FORMAT, PHASES } from "./masterClassData";
+import { WEEKLY_FORMAT, PHASES, WEEK_IMAGES } from "./masterClassData";
 
 export default function MasterClassCurriculum() {
   return (
@@ -20,8 +20,17 @@ export default function MasterClassCurriculum() {
               {phase.weeks.map((w) => (
                 <div
                   key={w.week}
-                  className="rounded-xl border border-border bg-card/50 p-6 hover:border-primary/40 transition-colors"
+                  className="group overflow-hidden rounded-xl border border-border bg-card/50 hover:border-primary/40 transition-colors"
                 >
+                  <div className="relative aspect-[16/9] overflow-hidden border-b border-border">
+                    <img
+                      src={WEEK_IMAGES[w.week]}
+                      alt={`Week ${w.week} — ${w.title}`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="p-6">
                   <div className="flex items-baseline gap-3">
                     <span className="font-sora font-extrabold text-sm text-gradient-orange">
                       Week {w.week}
@@ -41,6 +50,7 @@ export default function MasterClassCurriculum() {
                   <p className="mt-4 pt-4 border-t border-border text-sm text-foreground/80">
                     {w.outcome}
                   </p>
+                  </div>
                 </div>
               ))}
             </div>
