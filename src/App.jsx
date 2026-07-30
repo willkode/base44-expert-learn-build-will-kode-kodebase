@@ -33,6 +33,7 @@ import Videos from '@/pages/learn/Videos';
 
 import LlmGuide from '@/pages/learn/LlmGuide';
 import Base44ResourceHub from '@/pages/learn/Base44ResourceHub';
+import Base44MasterClass from '@/pages/learn/Base44MasterClass';
 import TermsOfService from '@/pages/legal/TermsOfService';
 import PrivacyPolicy from '@/pages/legal/PrivacyPolicy';
 import RefundPolicy from '@/pages/legal/RefundPolicy';
@@ -158,6 +159,7 @@ const AuthenticatedApp = () => {
 
         <Route path="/learn/llm-guide" element={<LlmGuide />} />
         <Route path="/learn/base44-cheat-sheet" element={<Base44ResourceHub />} />
+        <Route path="/learn/base44-master-class" element={<Base44MasterClass />} />
         <Route path="/learn/base44" element={<Navigate to="/learn/base44-cheat-sheet" replace />} />
         <Route path="/services/kode-sessions" element={<KodeSessions />} />
         <Route path="/services/er-service" element={<ErService />} />

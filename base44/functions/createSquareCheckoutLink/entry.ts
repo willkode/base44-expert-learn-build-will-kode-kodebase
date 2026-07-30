@@ -23,6 +23,8 @@ const SERVICE_PRICING = {
   kodecare_starter: { amountCents: 12000, name: 'KodeCare Starter — Monthly Support Retainer' },
   kodecare_growth: { amountCents: 25000, name: 'KodeCare Growth — Monthly Support Retainer' },
   kodecare_pro: { amountCents: 50000, name: 'KodeCare Pro — Monthly Support Retainer' },
+  // Base44 Master Class — live cohort seat, Aug 10 2026, 100 seats
+  masterclass_seat: { amountCents: 9900, name: 'Base44 Master Class — Seat (Aug 10, 2026)' },
 };
 
 // Products never discounted by the sale (fixed-price services sold as products).

@@ -1,12 +1,20 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, Video, Sparkles, Library, Settings2, ShieldCheck, Bot } from "lucide-react";
+import { ArrowRight, BookOpen, Video, Sparkles, Library, Settings2, ShieldCheck, Bot, GraduationCap } from "lucide-react";
 import Seo from "@/components/seo/Seo";
 import { SITE, canonical } from "@/lib/seo";
 import { trackEvent } from "@/lib/analytics";
 
 const SECTIONS = [
+  {
+    label: "Base44 Master Class",
+    to: "/learn/base44-master-class",
+    icon: GraduationCap,
+    desc: "Live 20-week academy — plan, build, test, secure, launch, market, and sell real apps with Base44 and Claude. Starts Aug 10, 2026. $99 per seat, 100 seats only.",
+    badge: "NEW",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/709424cb6_generated_image.png",
+  },
   {
     label: "Base44 Cheat Sheets",
     to: "/learn/base44-cheat-sheet",

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, FileText, BookOpenCheck, Sparkles, Library, Settings2, ShieldCheck, Wand2, Headphones, Wrench, Shield, TrendingUp, Heart, ArrowRight, BookOpen, Database, Rocket, Hammer, MonitorDown } from "lucide-react";
+import { Menu, X, ChevronDown, FileText, BookOpenCheck, Sparkles, Library, Settings2, ShieldCheck, Wand2, Headphones, Wrench, Shield, TrendingUp, Heart, ArrowRight, BookOpen, Database, Rocket, Hammer, MonitorDown, GraduationCap } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import {
   DropdownMenu,
@@ -36,6 +36,7 @@ const serviceItems = [
 ];
 
 const learnLinks = [
+  { label: "Base44 Master Class", to: "/learn/base44-master-class", icon: GraduationCap, desc: "20-week live academy — $99, 100 seats", badge: "NEW" },
   { label: "Blog", to: "/learn/blog", icon: FileText, desc: "Articles & tutorials" },
   { label: "Base44 Cheat Sheets", to: "/learn/base44-cheat-sheet", icon: BookOpenCheck, desc: "The complete platform resource hub", badge: "NEW" },
   { label: "Agent Skills", to: "/learn/agent-skills", icon: Sparkles, desc: "Expert playbooks the AI uses on demand", badge: "NEW" },
