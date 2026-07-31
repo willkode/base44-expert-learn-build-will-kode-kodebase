@@ -11,8 +11,7 @@ import MigrationIncluded from "@/components/services/migration/MigrationIncluded
 import MigrationStacks from "@/components/services/migration/MigrationStacks";
 import MigrationReadiness from "@/components/services/migration/MigrationReadiness";
 import { replacedItems, compatFocus, processSteps, deliverables, pricingFactors, faqs } from "@/components/services/migration/migrationData";
-import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
-import Migration500Special, { isMigrationSpecialActive } from "@/components/services/migration/Migration500Special";
+import MigrationQuoteTool, { MIGRATION_START_PRICE } from "@/components/services/migration/MigrationQuoteTool";
 import ReviewsSection from "@/components/reviews/ReviewsSection";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/bab7cb2ec_generated_image.png";
@@ -35,7 +34,7 @@ export default function Base44Migration() {
     <>
       <Seo
         title="Base44 App Migration Services — Take Full Ownership of Your App | KodeBase"
-        description="Migrate your Base44 app to infrastructure you control — backend, database, authentication, storage, integrations, and deployment. Keep the frontend, replace the backend. Migrations start at $2,000."
+        description="Own your Base44 app: we migrate backend, database, auth, storage, integrations and deployment to infrastructure you control. Automated migrations now start at $199 — get an instant quote."
         path="/services/base44-migration"
         image={OG_IMAGE}
         jsonLd={[faqSchema(faqs)]}
@@ -65,14 +64,13 @@ export default function Base44Migration() {
           >
             Your application may have started on Base44, but it does not have to remain dependent on Base44 forever. We migrate Base44 applications to independent infrastructure that you control — backend, database, authentication, storage, integrations, automation, and deployment.
           </motion.p>
-          <motion.p initial="hidden" animate="visible" variants={fadeUp} custom={3} className="text-sm font-semibold text-foreground mb-6">
-            Base44 migrations start at <span className="text-gradient-orange">$2,000</span>.
+          <motion.p initial="hidden" animate="visible" variants={fadeUp} custom={3} className="text-base font-semibold text-foreground mb-2">
+            Base44 migrations now start at <span className="text-gradient-orange">${MIGRATION_START_PRICE}</span>
+            <span className="text-muted-foreground line-through font-medium ml-2 text-sm">$2,000</span>
           </motion.p>
-          {isMigrationSpecialActive() && (
-            <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={3.5} className="mb-8">
-              <Migration500Special />
-            </motion.div>
-          )}
+          <motion.p initial="hidden" animate="visible" variants={fadeUp} custom={3.5} className="text-sm text-muted-foreground max-w-2xl mx-auto mb-8">
+            We completely rebuilt our Base44 backend and automated the migration process end to end. That work let us drop migration pricing from $2,000 per app to a starting price of ${MIGRATION_START_PRICE}.
+          </motion.p>
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={4} className="flex flex-wrap items-center justify-center gap-6 mb-10">
             {[
               { icon: KeyRound, label: "Own your infrastructure" },
@@ -86,15 +84,12 @@ export default function Base44Migration() {
             ))}
           </motion.div>
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={5} className="flex flex-col items-center gap-3">
-            <div className="w-full max-w-sm">
-              <ServiceCheckoutButton
-                serviceId="base44_migration"
-                label={`Pay & Start Your Migration — ${isMigrationSpecialActive() ? "$500" : "$2,000"}`}
-                redirectPath="/services/migration-intake"
-                onClick={() => handleCTA("hero_pay")}
-              />
-            </div>
-            <p className="text-xs text-muted-foreground">Pay first, then fill out a quick intake form — I'll contact you within 24 hours.</p>
+            <a href="#quote" onClick={() => handleCTA("hero_quote")}>
+              <Button size="lg" className="font-semibold px-8">
+                Get My Migration Quote <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </a>
+            <p className="text-xs text-muted-foreground">Instant quote. Under 100 pages + backend functions? It's a flat ${MIGRATION_START_PRICE} and you can pay right away.</p>
             <a href="#pricing" onClick={() => handleCTA("hero_secondary")}>
               <Button size="lg" variant="ghost" className="font-semibold px-8">
                 See Pricing
@@ -230,21 +225,15 @@ export default function Base44Migration() {
         <div className="relative max-w-4xl mx-auto px-6">
           <div className="text-center mb-10">
             <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Pricing</p>
-            {isMigrationSpecialActive() ? (
-              <>
-                <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">
-                  <span className="text-muted-foreground line-through mr-3">$2,000</span>
-                  <span className="text-gradient-orange">$500 Migration Special</span>
-                </h2>
-                <p className="text-sm font-semibold text-primary mb-3">Limited time — offer ends 08/07/2026 at noon CST.</p>
-              </>
-            ) : (
-              <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">
-                Starting at <span className="text-gradient-orange">$2,000</span>
-              </h2>
-            )}
+            <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">
+              Starting at <span className="text-gradient-orange">${MIGRATION_START_PRICE}</span>
+              <span className="text-muted-foreground line-through text-2xl ml-3">$2,000</span>
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-4">
+              Because we rebuilt our Base44 backend and automated the migration pipeline, apps with fewer than <span className="text-foreground font-semibold">100 pages and backend functions combined</span> migrate for a flat <span className="text-foreground font-semibold">${MIGRATION_START_PRICE}</span> — priced instantly, paid instantly, no proposal cycle.
+            </p>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Migration pricing depends on the size and complexity of the application. A smaller application with limited entities and backend functionality may remain close to the starting price. Applications with complex payments, extensive backend functions, realtime systems, large datasets, AI agents, or multiple integrations will require a custom estimate.
+              Larger applications — 100+ pages and functions, complex payments, realtime systems, large datasets, AI agents, or many integrations — get a custom quote on a short call. These factors shape that quote:
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-10">
@@ -262,23 +251,18 @@ export default function Base44Migration() {
         </div>
       </section>
 
-      {/* Pay first, then intake */}
-      <section id="contact" className="py-20 relative scroll-mt-24">
+      {/* Quote tool */}
+      <section id="quote" className="py-20 relative scroll-mt-24">
         <div className="absolute inset-0 blueprint-grid opacity-10" />
-        <div className="relative max-w-2xl mx-auto px-6 text-center">
-          <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">How to get started</p>
-          <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">Pay first, then tell me about your app.</h2>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            Secure your migration with payment. Right after checkout you'll fill out a short intake form with your app details, and I'll contact you within 24 hours to kick off the migration.
-          </p>
-          <div className="max-w-sm mx-auto">
-            <ServiceCheckoutButton
-              serviceId="base44_migration"
-              label={`Pay & Start Your Migration — ${isMigrationSpecialActive() ? "$500" : "$2,000"}`}
-              redirectPath="/services/migration-intake"
-              onClick={() => handleCTA("contact_pay")}
-            />
+        <div className="relative max-w-2xl mx-auto px-6">
+          <div className="text-center mb-8">
+            <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Migration quote tool</p>
+            <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">Know your price in 30 seconds.</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              Tell me how big your app is. Under 100 pages and backend functions and it's a flat ${MIGRATION_START_PRICE} you can pay right now. Over that and we'll book a call so I can quote it properly.
+            </p>
           </div>
+          <MigrationQuoteTool />
         </div>
       </section>
 
@@ -338,19 +322,14 @@ export default function Base44Migration() {
             Your application should not be permanently limited by the platform where it was originally built. We help Base44 app owners move to infrastructure they control while preserving the functionality, workflows, and customer experience they have already invested in.
           </p>
           <p className="text-sm font-semibold text-foreground mb-8">
-            {isMigrationSpecialActive()
-              ? <>Limited time: $500 Migration Special — offer ends 08/07/2026 at noon CST.</>
-              : <>Base44 migration services start at $2,000.</>}
+            Automated Base44 migrations now start at ${MIGRATION_START_PRICE}.
           </p>
           <div className="flex flex-col items-center gap-3">
-            <div className="w-full max-w-sm">
-              <ServiceCheckoutButton
-                serviceId="base44_migration"
-                label={`Pay & Start Your Migration — ${isMigrationSpecialActive() ? "$500" : "$2,000"}`}
-                redirectPath="/services/migration-intake"
-                onClick={() => handleCTA("final_pay")}
-              />
-            </div>
+            <a href="#quote" onClick={() => handleCTA("final_quote")}>
+              <Button size="lg" className="font-semibold px-8">
+                Get My Migration Quote <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </a>
           </div>
         </div>
       </section>
