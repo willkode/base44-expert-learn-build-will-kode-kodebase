@@ -87,6 +87,7 @@ import Help from '@/pages/app/Help';
 // Admin pages
 import AdminDashboard from '@/pages/admin/AdminDashboard';
 import AdminUsers from '@/pages/admin/AdminUsers';
+import AdminCrm from '@/pages/admin/AdminCrm';
 import AdminProjects from '@/pages/admin/AdminProjects';
 import AdminLogs from '@/pages/admin/AdminLogs';
 import AdminTemplates from '@/pages/admin/AdminTemplates';
@@ -224,6 +225,7 @@ const AuthenticatedApp = () => {
           <Route element={<AdminRoute />}>
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AdminUsers />} />
+            <Route path="/admin/crm" element={<AdminCrm />} />
             <Route path="/admin/projects" element={<AdminProjects />} />
             <Route path="/admin/logs" element={<AdminLogs />} />
             <Route path="/admin/templates" element={<AdminTemplates />} />

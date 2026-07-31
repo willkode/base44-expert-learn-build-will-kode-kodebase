@@ -23,6 +23,7 @@ import {
   Network,
   GitPullRequest,
   DownloadCloud,
+  Inbox,
 } from "lucide-react";
 
 export const userNav = [
@@ -47,6 +48,7 @@ export const projectNav = [
 export const adminNav = [
   { label: "Admin Dashboard", to: "/admin", icon: LayoutDashboard },
   { label: "Users", to: "/admin/users", icon: Users },
+  { label: "CRM — Contacts", to: "/admin/crm", icon: Inbox },
   { label: "Projects", to: "/admin/projects", icon: FolderKanban },
   { label: "AI Usage Logs", to: "/admin/logs", icon: ScrollText },
   { label: "Templates", to: "/admin/templates", icon: LayoutTemplate },
