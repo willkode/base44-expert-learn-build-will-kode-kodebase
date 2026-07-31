@@ -31,7 +31,7 @@ const SERVICE_PRICING = {
 const KODE_SESSION_SALE_IDS = ['kode_session_1hr', 'kode_session_2hr'];
 
 // Products never discounted by the sale (fixed-price services sold as products).
-const SALE_EXCLUDED_SLUGS = ['hire-will-kode'];
+const SALE_EXCLUDED_SLUGS = ['hire-will-kode', 'desktop-pro-access'];
 
 // Will's Birthday Sale: 86% off all products through Oct 19, 11:59 AM Central
 // (16:59 UTC), anchored to the current calendar year.
