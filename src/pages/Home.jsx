@@ -26,7 +26,7 @@ export default function Home() {
     <div className="dark min-h-screen bg-background text-foreground font-inter antialiased overflow-x-hidden">
       {loading && <GlitchPreloader onComplete={handleComplete} />}
       <Seo
-        title="KodeBase — Plan Before You Build"
+        title="Base44 Export - Will Kode - Become a Base44 Export | Kodebase"
         description={SITE.description}
         path="/"
         type="website"
