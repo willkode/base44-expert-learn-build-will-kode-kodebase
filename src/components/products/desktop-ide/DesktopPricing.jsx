@@ -3,6 +3,7 @@ import { Check, Download, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PRICING, DOWNLOAD_URL } from "@/components/products/desktop-ide/desktopIdeData";
 import { trackEvent } from "@/lib/analytics";
+import DesktopProCheckoutButton from "@/components/products/desktop-ide/DesktopProCheckoutButton";
 
 export default function DesktopPricing({ onEarlyAccess }) {
   const handleCta = (tier) => {
@@ -60,18 +61,16 @@ export default function DesktopPricing({ onEarlyAccess }) {
                   </li>
                 ))}
               </ul>
-              <Button
-                size="lg"
-                onClick={() => handleCta(tier)}
-                variant={tier.highlight ? "default" : "outline"}
-                className={
-                  tier.highlight
-                    ? "w-full font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
-                    : "w-full font-semibold"
-                }
-              >
-                {tier.cta}
-              </Button>
+              {tier.highlight ? (
+                <DesktopProCheckoutButton
+                  label={tier.cta}
+                  className="w-full font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
+                />
+              ) : (
+                <Button size="lg" onClick={() => handleCta(tier)} variant="outline" className="w-full font-semibold">
+                  {tier.cta}
+                </Button>
+              )}
             </div>
           ))}
         </div>
