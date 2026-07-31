@@ -12,6 +12,7 @@ import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 import PublicLayout from "@/components/layout/PublicLayout";
 import { trackEvent } from "@/lib/analytics";
 import ReviewsSection from "@/components/reviews/ReviewsSection";
+import { isKodeSessionSaleActive, KODE_SESSION_SALE_LABEL } from "@/lib/kodeSessionSale";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -34,6 +35,7 @@ const plans = [
     title: "1 Hour Session",
     subtitle: "Quick fixes and focused guidance",
     price: "$75",
+    salePrice: "$37.50",
     billing: "one-time",
     features: [
       "60 minutes live",
@@ -49,6 +51,7 @@ const plans = [
     title: "2 Hour Session",
     subtitle: "Deeper building and debugging",
     price: "$150",
+    salePrice: "$75",
     billing: "one-time",
     features: [
       "120 minutes live",
@@ -106,6 +109,7 @@ function FAQ({ q, a }) {
 }
 
 export default function KodeSessions() {
+  const saleOn = isKodeSessionSaleActive();
   useEffect(() => {
     trackEvent("page_view", { page: "kode_sessions_service" });
   }, []);
@@ -131,7 +135,9 @@ export default function KodeSessions() {
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0}>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-6">
               <Monitor className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-semibold text-primary uppercase tracking-wider">Live 1-on-1 · Screen-share · Hands-on</span>
+              <span className="text-xs font-semibold text-primary uppercase tracking-wider">
+                {saleOn ? KODE_SESSION_SALE_LABEL : "Live 1-on-1 · Screen-share · Hands-on"}
+              </span>
             </div>
           </motion.div>
           <motion.h1
@@ -227,10 +233,19 @@ export default function KodeSessions() {
                 )}
                 <h3 className="font-sora font-bold text-xl mb-1">{plan.title}</h3>
                 <p className="text-sm text-muted-foreground mb-4">{plan.subtitle}</p>
-                <div className="flex items-baseline gap-1 mb-6">
-                  <span className="font-sora font-extrabold text-4xl text-foreground">{plan.price}</span>
+                <div className="flex items-baseline flex-wrap gap-2 mb-2">
+                  <span className="font-sora font-extrabold text-4xl text-foreground">
+                    {saleOn ? plan.salePrice : plan.price}
+                  </span>
+                  {saleOn && (
+                    <span className="text-muted-foreground text-lg line-through">{plan.price}</span>
+                  )}
                   <span className="text-muted-foreground text-sm">{plan.billing}</span>
                 </div>
+                {saleOn && (
+                  <p className="text-xs font-semibold text-primary mb-4">{KODE_SESSION_SALE_LABEL}</p>
+                )}
+                {!saleOn && <div className="mb-4" />}
                 <ul className="space-y-3 mb-8 flex-1">
                   {plan.features.map((f) => (
                     <li key={f} className="flex items-center gap-2.5 text-sm text-muted-foreground">

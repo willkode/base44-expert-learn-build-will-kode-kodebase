@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import CrmStatCards from "@/components/admin/crm/CrmStatCards";
+import CrmSubmissionDialog from "@/components/admin/crm/CrmSubmissionDialog";
 import { loadCrmSubmissions, SOURCE_LABELS } from "@/components/admin/crm/crmSources";
 import { base44 } from "@/api/base44Client";
 
@@ -25,6 +26,7 @@ export default function AdminCrm() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [source, setSource] = useState("all");
+  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
     base44.analytics.track({ eventName: "admin_crm_view" });
@@ -79,6 +81,10 @@ export default function AdminCrm() {
         columns={["Source", "Name", "Email", "Phone", "Subject", "Message", "Status", "Date"]}
         emptyIcon={Inbox}
         emptyTitle="No submissions yet"
+        onRowClick={(r) => {
+          setSelected(r);
+          base44.analytics.track({ eventName: "admin_crm_submission_open", properties: { source: r.source } });
+        }}
         renderRow={(r) => [
           <span className={`text-xs px-2.5 py-1 rounded-full whitespace-nowrap ${SOURCE_STYLES[r.source]}`}>
             {SOURCE_LABELS[r.source]}
@@ -94,6 +100,8 @@ export default function AdminCrm() {
           </span>,
         ]}
       />
+
+      <CrmSubmissionDialog submission={selected} onClose={() => setSelected(null)} />
     </div>
   );
 }

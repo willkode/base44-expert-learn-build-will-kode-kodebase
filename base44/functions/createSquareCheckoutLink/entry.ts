@@ -27,6 +27,9 @@ const SERVICE_PRICING = {
   masterclass_seat: { amountCents: 9900, name: 'Base44 Master Class — Seat (Aug 10, 2026)' },
 };
 
+// Kode Sessions included in the 50% off promo
+const KODE_SESSION_SALE_IDS = ['kode_session_1hr', 'kode_session_2hr'];
+
 // Products never discounted by the sale (fixed-price services sold as products).
 const SALE_EXCLUDED_SLUGS = ['hire-will-kode'];
 
@@ -118,6 +121,11 @@ Deno.serve(async (req) => {
       // These services are already half-price promos — the Pro discount must not stack on top.
       amountCents = service.amountCents;
       itemName = service.name;
+      // Kode Sessions 50% off through 08/07/2026 11 PM Central (04:00 UTC on 08/08).
+      if (KODE_SESSION_SALE_IDS.includes(serviceId) && new Date() < new Date('2026-08-08T04:00:00Z')) {
+        amountCents = Math.round(service.amountCents * 0.5);
+        itemName = `${service.name} (50% off)`;
+      }
     } else if (promptSessionId) {
       // Prompt Engine prompt pack — fixed $10 unlock. Verify the session belongs
       // to this user and has prompts generated before charging.
