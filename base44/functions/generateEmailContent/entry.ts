@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
     let featureImageUrl = '';
     if (generateImage) {
       try {
-        const imgPrompt = `Email feature/hero image illustrating: ${prompt}. Style: dark tech aesthetic on a deep navy background (#0d1326 / #0a0f1e), glowing orange-to-red gradient accents transitioning through coral, orange, and amber (#f87171 to #fb923c to #facc15), minimal flat vector style with subtle blueprint grid lines and soft glows, clean modern premium SaaS/developer-tool look, no text, no logos, no watermarks, consistent lighting, high contrast, ample negative space. Wide banner composition.`;
+        const imgPrompt = `Email feature/hero image illustrating: ${prompt}. Style: dark tech aesthetic on a deep navy background (#0d1326 / #0a0f1e), glowing orange-to-red gradient accents transitioning through coral, orange, and amber (#f87171 to #fb923c to #facc15), minimal flat vector style with subtle blueprint grid lines and soft glows, clean modern premium SaaS/developer-tool look, no text, no logos, no watermarks, consistent lighting, high contrast. Composition: ultra-wide 16:9 horizontal banner, full-bleed edge-to-edge artwork that completely fills the frame with NO empty margins, no letterboxing, no large blank areas of background at the top, bottom or sides — the illustration must extend all the way to every edge of the image.`;
         const img = await base44.integrations.Core.GenerateImage({ prompt: imgPrompt });
         featureImageUrl = img?.url || '';
       } catch (_e) {
@@ -79,7 +79,7 @@ Write the plain-text version as clean readable text (no HTML).`;
     // centered container so desktop + mobile render identically regardless of
     // the markup the model returns.
     const bannerHtml = featureImageUrl
-      ? `<img src="${featureImageUrl}" alt="" width="600" style="width:100%;max-width:600px;height:auto;display:block;border:0;border-radius:12px 12px 0 0;" />`
+      ? `<img src="${featureImageUrl}" alt="" width="600" style="width:100%;max-width:600px;height:220px;object-fit:cover;object-position:center;display:block;border:0;border-radius:12px 12px 0 0;" />`
       : '';
 
     const wrappedHtml = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0a0f1e;margin:0;padding:24px 0;">
