@@ -23,6 +23,11 @@ const SERVICE_PRICING = {
   kodecare_starter: { amountCents: 12000, name: 'KodeCare Starter — Monthly Support Retainer' },
   kodecare_growth: { amountCents: 25000, name: 'KodeCare Growth — Monthly Support Retainer' },
   kodecare_pro: { amountCents: 50000, name: 'KodeCare Pro — Monthly Support Retainer' },
+  // Growth Consulting
+  growth_strategy_session: { amountCents: 12500, name: 'Base44 Growth Strategy Session' },
+  growth_session: { amountCents: 25000, name: 'Base44 Growth Session' },
+  growth_blueprint: { amountCents: 75000, name: 'Base44 Growth Blueprint' },
+  growth_advisor: { amountCents: 150000, name: 'Fractional Growth Advisor — First Month' },
   // Base44 Master Class — live cohort seat, Aug 10 2026, 100 seats
   masterclass_seat: { amountCents: 9900, name: 'Base44 Master Class — Seat (Aug 10, 2026)' },
 };

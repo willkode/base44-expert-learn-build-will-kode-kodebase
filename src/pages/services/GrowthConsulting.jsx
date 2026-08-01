@@ -11,6 +11,7 @@ import { trackEvent } from "@/lib/analytics";
 import GrowthHero from "@/components/services/growth/GrowthHero";
 import GrowthPillars from "@/components/services/growth/GrowthPillars";
 import GrowthPackages from "@/components/services/growth/GrowthPackages";
+import GrowthSessionForm from "@/components/services/growth/GrowthSessionForm";
 import { IMG, businessQuestions, steps, proofStats, idealFor, faqs } from "@/components/services/growth/growthData";
 
 const fadeUp = {
@@ -170,6 +171,22 @@ export default function GrowthConsulting() {
         </div>
       </section>
 
+      {/* Booking form */}
+      <section id="strategy-session" className="py-20 scroll-mt-24">
+        <div className="max-w-2xl mx-auto px-6">
+          <div className="text-center mb-8">
+            <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Book your session</p>
+            <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">
+              Book a Growth Strategy Session — $125
+            </h2>
+            <p className="text-muted-foreground">
+              Tell me about your app, pick the engagement you want, and you'll be taken straight to secure checkout.
+            </p>
+          </div>
+          <GrowthSessionForm />
+        </div>
+      </section>
+
       <ReviewsSection seed="service:growth-consulting" title="What founders say about Growth Consulting" />
 
       {/* FAQ */}
@@ -223,11 +240,11 @@ export default function GrowthConsulting() {
           <p className="text-muted-foreground mb-8">
             You've already done something most people never do — you built the application. Now let's turn it into something people discover, use, pay for, and recommend. Whether you're preparing for launch, chasing your first 100 customers, or turning an existing Base44 app into a profitable SaaS business, I'll help you build the strategy to get there.
           </p>
-          <Link to="/contact" onClick={() => handleCTA("final_cta")}>
+          <a href="#strategy-session" onClick={() => handleCTA("final_cta")}>
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10">
               Grow My Base44 App <ArrowRight className="w-4 h-4 ml-1" />
             </Button>
-          </Link>
+          </a>
         </div>
       </section>
     </>

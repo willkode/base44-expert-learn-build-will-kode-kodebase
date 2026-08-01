@@ -1,6 +1,5 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, TrendingUp } from "lucide-react";
 
@@ -57,15 +56,15 @@ export default function GrowthHero({ onCTA }) {
           </p>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-10">
-            <Link to="/contact" onClick={() => onCTA?.("hero_primary")}>
+            <a href="#strategy-session" onClick={() => onCTA?.("hero_primary")}>
               <Button
                 size="lg"
                 className="w-full bg-primary hover:bg-red-500 text-primary-foreground font-semibold text-base px-7 py-6 shadow-lg shadow-red-600/30 group transition-transform hover:-translate-y-0.5"
               >
-                Book a Growth Strategy Session
+                Book a Growth Strategy Session — $125
                 <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
               </Button>
-            </Link>
+            </a>
             <div className="p-[1.5px] rounded-md bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15]">
               <a href="#packages" onClick={() => onCTA?.("hero_secondary")}>
                 <Button

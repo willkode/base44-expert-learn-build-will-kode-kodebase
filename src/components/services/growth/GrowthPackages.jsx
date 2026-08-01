@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Check, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -35,14 +34,14 @@ export default function GrowthPackages({ onCTA }) {
               </div>
             ))}
           </div>
-          <Link to="/contact" className="mt-auto" onClick={() => onCTA?.(`package_${pkg.name}`)}>
+          <a href="#strategy-session" className="mt-auto" onClick={() => onCTA?.(`package_${pkg.name}`)}>
             <Button
               className={`w-full font-semibold ${pkg.popular ? "bg-primary hover:bg-primary/90 text-primary-foreground" : ""}`}
               variant={pkg.popular ? "default" : "outline"}
             >
               Get Started <ArrowRight className="w-3.5 h-3.5 ml-1" />
             </Button>
-          </Link>
+          </a>
         </motion.div>
       ))}
     </div>
