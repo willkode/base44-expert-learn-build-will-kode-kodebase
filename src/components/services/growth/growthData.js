@@ -84,7 +84,7 @@ export const steps = [
 export const proofStats = [
   { value: "22+ Years", label: "Digital marketing experience" },
   { value: "$92M+", label: "Inbound lead value generated" },
-  { value: "500+", label: "Keywords ranked top 3" },
+  { value: "500k+", label: "Keywords ranked top 3" },
   { value: "720%", label: "Increase in new business for one campaign" },
 ];
 
