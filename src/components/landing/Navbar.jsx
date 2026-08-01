@@ -26,6 +26,7 @@ const toolItems = [
 
 const serviceItems = [
   { label: "Custom App Creation", to: "/services/custom-app-creation", icon: Hammer, desc: "Complete custom Base44 app built to your spec", badge: "NEW" },
+  { label: "Growth Consulting", to: "/services/growth-consulting", icon: TrendingUp, desc: "Positioning, pricing, launch & customer acquisition", badge: "NEW" },
   { label: "Kode Sessions", to: "/services/kode-sessions", icon: Headphones, desc: "1-on-1 expert sessions" },
   { label: "ER Service", to: "/services/er-service", icon: Wrench, desc: "Emergency app repair" },
   { label: "Security Audit + Fix", to: "/services/security-audit", icon: Shield, desc: "Full security review" },

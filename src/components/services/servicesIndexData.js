@@ -2,6 +2,7 @@ import { Hammer, Headphones, Wrench, Shield, TrendingUp, Heart, Database, Rocket
 
 export const SERVICES = [
   { label: "Custom App Creation", to: "/services/custom-app-creation", icon: Hammer, badge: "NEW", desc: "A complete, production-ready Base44 app designed and built to your spec — planning, build, security and launch included." },
+  { label: "Growth Consulting", to: "/services/growth-consulting", icon: TrendingUp, badge: "NEW", desc: "Turn your finished Base44 app into a profitable product — positioning, pricing, launch, acquisition and conversion strategy." },
   { label: "Kode Sessions", to: "/services/kode-sessions", icon: Headphones, desc: "1-on-1 expert sessions where we work through your app live — architecture, prompts, bugs and strategy." },
   { label: "ER Service", to: "/services/er-service", icon: Wrench, desc: "Emergency app repair when your build is broken, stuck in an AI loop, or down in production." },
   { label: "Security Audit + Fix", to: "/services/security-audit", icon: Shield, desc: "A full security review of entities, permissions and functions — with the fixes applied, not just a report." },
