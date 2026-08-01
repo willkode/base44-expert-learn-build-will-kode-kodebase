@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { HelpCircle } from "lucide-react";
@@ -96,9 +97,9 @@ export default function FAQ() {
           className="mt-16 text-center"
         >
           <p className="text-muted-foreground mb-2">Still have a question?</p>
-          <a href="mailto:hello@forgebase.us" className="text-primary hover:text-primary/80 font-medium transition-colors">
+          <Link to="/contact" className="text-primary hover:text-primary/80 font-medium transition-colors">
             Get in touch →
-          </a>
+          </Link>
         </motion.div>
       </div>
     </section>
