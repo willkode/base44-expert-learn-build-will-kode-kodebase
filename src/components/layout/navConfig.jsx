@@ -1,6 +1,5 @@
 import {
   LayoutDashboard,
-  FolderPlus,
   FolderKanban,
   Wand2,
   ShieldCheck,
@@ -28,8 +27,6 @@ import {
 
 export const userNav = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
-  { label: "New Project", to: "/projects/new", icon: FolderPlus, action: "newProject" },
-  { label: "Projects", to: "/projects", icon: FolderKanban },
   { label: "Prompt Engine", to: "/tools/prompt-engine", icon: Wand2 },
   { label: "Prompt Vault", to: "/vault/access", icon: Vault },
   { label: "Migration Planner", to: "/migration-planner/assessments", icon: GitPullRequest },

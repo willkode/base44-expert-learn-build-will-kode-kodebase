@@ -1,5 +1,5 @@
 import React from "react";
-import { Boxes, Database, ShieldCheck, Palette, Server, ClipboardCheck, Wand2, FileText } from "lucide-react";
+import { Boxes, Database, ShieldCheck, Palette, Server, ClipboardCheck, Wand2 } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import Seo from "@/components/seo/Seo";
 import { softwareApplicationSchema } from "@/lib/seo";
@@ -12,7 +12,6 @@ const features = [
   { icon: Server, title: "Backend Plan", desc: "Backend functions, automations, integrations, and APIs." },
   { icon: ClipboardCheck, title: "QA Checklist", desc: "Test cases, launch checklist, and bug-risk areas." },
   { icon: Wand2, title: "Build Prompts", desc: "KodeBase-ready prompts, sequenced and ready to paste." },
-  { icon: FileText, title: "Full Blueprint", desc: "Everything compiled into one cohesive build document." },
 ];
 
 export default function Features() {

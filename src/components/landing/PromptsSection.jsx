@@ -19,7 +19,7 @@ const PROMPTS = [
     title: "Prompt Engine",
     badge: "Pro",
     to: "/tools/prompt-generator",
-    desc: "Generate a full ordered prompt pack from your app blueprint — sequenced from foundation to polish.",
+    desc: "Generate a full ordered prompt pack from your app idea — sequenced from foundation to polish.",
     image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a2b810bf6_generated_image.png",
   },
   {

@@ -57,8 +57,8 @@ export default function Hero() {
           </h1>
 
           <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-9">
-            Access free resources, guides, prompts, and training videos to master Base44. Plus, 
-            use my premium blueprint tool to design and architect your entire app with ease.
+            Access free resources, guides, prompts, and training videos to master Base44. Plus,
+            expert services, migrations, and 1-on-1 help whenever you need it.
           </p>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-10">

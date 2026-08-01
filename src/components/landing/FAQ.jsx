@@ -6,20 +6,8 @@ import { HelpCircle } from "lucide-react";
 
 export const faqs = [
   {
-    q: "How long does blueprint generation take?",
-    a: "Most blueprints are generated in 2–5 minutes depending on project complexity. Our AI agents work in parallel, and you can monitor progress in real time.",
-  },
-  {
-    q: "What happens if I need to change something in my blueprint?",
-    a: "Blueprints are living documents. You can regenerate at any time, adjust the intake form, and the agents will produce an updated architecture. All previous versions are archived.",
-  },
-  {
-    q: "Can I use the blueprint with frameworks other than Base44?",
-    a: "Our blueprints are tailored specifically for ForgeBase's architecture, entities, and backend functions. However, the core planning (data model, workflows, security rules) can inform development on other platforms.",
-  },
-  {
     q: "What does the Launch Ready Audit include?",
-    a: "The audit reviews your built app against the blueprint's security plan, QA checklist, and best practices. Our team tests flows, checks RLS rules, validates integrations, and provides a detailed report with fixes.",
+    a: "The audit reviews your built app against security best practices and a full QA checklist. Our team tests flows, checks RLS rules, validates integrations, and provides a detailed report with fixes.",
   },
   {
     q: "How much does a Launch Ready Audit cost?",
@@ -28,14 +16,6 @@ export const faqs = [
   {
     q: "Do you update my app during the audit?",
     a: "No. The audit is a review and reporting service. We identify issues and provide fix prompts you can paste into ForgeBase to resolve them yourself. Optional implementation services are available separately.",
-  },
-  {
-    q: "Can I export the blueprint as a PDF or document?",
-    a: "Yes. Each blueprint section (architecture, entity plan, security plan, etc.) can be copied or exported. The full blueprint is also available as markdown.",
-  },
-  {
-    q: "What if my project doesn't need all sections of the blueprint?",
-    a: "You can skip any section during intake. The agents will focus on what matters — e.g., a public app might skip advanced admin workflows, or a simple MVP might have a minimal security plan.",
   },
 ];
 
@@ -61,7 +41,7 @@ export default function FAQ() {
             Frequently asked questions
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Everything you need to know about blueprints, audits, and building with structure.
+            Everything you need to know about audits, services, and building with structure.
           </p>
         </motion.div>
 

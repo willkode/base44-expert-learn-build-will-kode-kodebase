@@ -26,11 +26,11 @@ export default function FinalCTA() {
             <h2 className="font-sora font-extrabold text-3xl md:text-5xl tracking-tight mb-5">
               Don't just prompt your app.
               <br />
-              <span className="text-gradient-orange">Architect it first.</span>
+              <span className="text-gradient-orange">Build it like an expert.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-10">
-              AI can build faster than ever — but speed without structure creates chaos. Get the blueprint,
-              prompts, permissions, and build order before you start building in Base44. Stop guessing.
+              AI can build faster than ever — but speed without structure creates chaos. Get the prompts,
+              guides, and expert help you need before you start building in Base44. Stop guessing.
               Stop wasting credits. Stop chasing preventable bugs.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -39,7 +39,7 @@ export default function FinalCTA() {
                 size="lg"
                 className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base px-10 py-6 glow-orange group transition-transform hover:-translate-y-0.5"
               >
-                Build My Blueprint Free
+                Get Started Free
                 <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Button

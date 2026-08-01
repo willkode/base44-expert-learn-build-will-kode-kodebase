@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
-import { FolderKanban, Package, ShieldCheck, FolderPlus } from "lucide-react";
+import { Package, ShieldCheck } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/shared/PageHeader";
 import StatCard from "@/components/shared/StatCard";
 import LoadingState from "@/components/shared/LoadingState";
 import { Button } from "@/components/ui/button";
-import RecentProjects from "@/components/dashboard/RecentProjects";
-import HowItWorks from "@/components/dashboard/HowItWorks";
 import RecentPromptPacks from "@/components/dashboard/RecentPromptPacks";
 import PromptVaultBanner from "@/components/dashboard/PromptVaultBanner";
 import MyProducts from "@/components/dashboard/MyProducts";
@@ -57,12 +55,9 @@ export default function Dashboard() {
       <div className="flex items-start justify-between gap-4 mb-10 flex-wrap">
         <PageHeader
           title={`Welcome${user?.full_name ? `, ${user.full_name.split(" ")[0]}` : ""}`}
-          description="Your AI Base44 architecture workspace."
+          description="Your Base44 workspace."
         />
         <div className="flex items-center gap-3 shrink-0">
-        <Button onClick={() => navigate("/projects/new")} className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
-          <FolderPlus className="w-4 h-4 mr-2" /> New Project
-        </Button>
         <Button
           asChild
           className="shrink-0 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] hover:opacity-90 text-white font-semibold border-0"
@@ -77,8 +72,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <StatCard icon={FolderKanban} label="Total Projects" value={projects.length} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <StatCard icon={Package} label="Prompt Packs Generated" value={packs.length} />
         <StatCard icon={ShieldCheck} label="Security Reviews" value={reviewedProjects} />
       </div>
@@ -92,16 +86,6 @@ export default function Dashboard() {
         title="Level up your builds"
         description="Ready-made prompt packs and complete systems to take your next app from idea to launch faster."
       />
-
-      <section>
-        <h2 className="font-sora font-semibold text-lg mb-4">Recent Projects</h2>
-        <RecentProjects projects={projects.slice(0, 5)} />
-      </section>
-
-      <section>
-        <h2 className="font-sora font-semibold text-lg mb-4">How It Works</h2>
-        <HowItWorks />
-      </section>
 
       <section>
         <h2 className="font-sora font-semibold text-lg mb-4">Recent Prompt Packs</h2>
