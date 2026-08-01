@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import ServiceFAQ from "@/components/services/ServiceFAQ";
 import ReviewsSection from "@/components/reviews/ReviewsSection";
 import { trackEvent } from "@/lib/analytics";
+import GrowthHero from "@/components/services/growth/GrowthHero";
 import GrowthPillars from "@/components/services/growth/GrowthPillars";
 import GrowthPackages from "@/components/services/growth/GrowthPackages";
 import { IMG, businessQuestions, steps, proofStats, idealFor, faqs } from "@/components/services/growth/growthData";
@@ -34,49 +35,7 @@ export default function GrowthConsulting() {
         jsonLd={[faqSchema(faqs)]}
       />
 
-      {/* Hero */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0 blueprint-grid opacity-20" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative max-w-4xl mx-auto px-6 text-center">
-          <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0}>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-6">
-              <TrendingUp className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-semibold text-primary uppercase tracking-wider">Base44 Growth Consulting · From $250</span>
-            </div>
-          </motion.div>
-          <motion.h1
-            initial="hidden" animate="visible" variants={fadeUp} custom={1}
-            className="font-sora font-extrabold text-4xl md:text-6xl tracking-tight mb-5"
-          >
-            You built the app.<br />
-            <span className="text-gradient-orange">Now let's build the business.</span>
-          </motion.h1>
-          <motion.p
-            initial="hidden" animate="visible" variants={fadeUp} custom={2}
-            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4"
-          >
-            Building your Base44 application was the first step. Now you need people to actually find it, understand it, sign up, pay for it, and keep using it. That's where most app creators get stuck.
-          </motion.p>
-          <motion.p
-            initial="hidden" animate="visible" variants={fadeUp} custom={3}
-            className="text-base text-muted-foreground max-w-2xl mx-auto mb-8"
-          >
-            I help Base44 founders turn finished applications into marketable, profitable products — developing the strategy behind your positioning, pricing, launch, customer acquisition, conversion, and long-term growth.
-            <span className="block mt-3 text-foreground font-semibold">You don't need more features. You need customers.</span>
-          </motion.p>
-          <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={4} className="flex flex-wrap items-center justify-center gap-3">
-            <Link to="/contact" onClick={() => handleCTA("hero_primary")}>
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8">
-                Book a Growth Strategy Session <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </Link>
-            <a href="#packages" onClick={() => handleCTA("hero_secondary")}>
-              <Button size="lg" variant="outline" className="font-semibold px-8">See Packages</Button>
-            </a>
-          </motion.div>
-        </div>
-      </section>
+      <GrowthHero onCTA={handleCTA} />
 
       {/* Problem */}
       <section className="py-20">
