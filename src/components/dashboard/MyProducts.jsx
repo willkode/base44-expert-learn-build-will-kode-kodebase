@@ -4,6 +4,7 @@ import { Package, Download, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import { trackEvent } from "@/lib/analytics";
+import SectionHeading from "@/components/dashboard/SectionHeading";
 
 // Shows products the logged-in user has purchased (completed Payment with a
 // productId) so they can jump straight to their download. Reuses the existing
@@ -38,38 +39,38 @@ export default function MyProducts({ userId }) {
 
   return (
     <section>
-      <h2 className="font-sora font-semibold text-lg mb-4 flex items-center gap-2">
-        <Package className="w-5 h-5 text-primary" /> My Products
-      </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <SectionHeading icon={Package}>My Products</SectionHeading>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         {products.map((p) => (
           <div
             key={p.id}
-            className="rounded-2xl border border-border bg-card/60 p-5 flex flex-col"
+            className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card/60 p-5 transition-all hover:border-primary/40 hover:bg-card"
           >
-            <div className="flex items-start gap-3 mb-4">
+            <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-primary/5 blur-2xl opacity-0 transition-opacity group-hover:opacity-100" />
+            <div className="relative flex items-start gap-3 mb-5">
               {p.imageUrl ? (
                 <img
                   src={p.imageUrl}
                   alt={p.name}
-                  className="w-12 h-12 rounded-xl object-cover shrink-0 border border-border"
+                  loading="lazy"
+                  className="w-12 h-12 rounded-xl object-cover shrink-0 border border-border transition-transform group-hover:scale-105"
                 />
               ) : (
-                <div className="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
-                  <Package className="w-6 h-6 text-primary" />
+                <div className="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center shrink-0 ring-1 ring-primary/20">
+                  <Package className="w-6 h-6 text-primary" aria-hidden="true" />
                 </div>
               )}
               <div className="min-w-0">
-                <p className="font-semibold text-sm leading-snug">{p.name}</p>
+                <p className="font-sora font-semibold text-sm leading-snug">{p.name}</p>
                 {p.tagline && (
-                  <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{p.tagline}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-2 mt-1 leading-relaxed">{p.tagline}</p>
                 )}
               </div>
             </div>
             <Button
               onClick={() => handleOpen(p)}
               size="sm"
-              className="mt-auto w-full font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
+              className="relative mt-auto w-full rounded-full font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] transition-all hover:opacity-90"
             >
               {p.deliversPdf ? (
                 <><Download className="w-3.5 h-3.5 mr-1.5" /> Download</>
