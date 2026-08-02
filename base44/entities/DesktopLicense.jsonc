@@ -1,0 +1,80 @@
+{
+  "name": "DesktopLicense",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "description": "Owner user id"
+    },
+    "userEmail": {
+      "type": "string"
+    },
+    "licenseKey": {
+      "type": "string",
+      "description": "Account key entered in the Base44 Desktop IDE"
+    },
+    "plan": {
+      "type": "string",
+      "enum": [
+        "lifetime",
+        "monthly",
+        "admin",
+        "none"
+      ],
+      "default": "none",
+      "description": "Entitlement type last resolved for this key"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "expired",
+        "inactive",
+        "revoked"
+      ],
+      "default": "inactive"
+    },
+    "expiresAt": {
+      "type": "string",
+      "description": "ISO timestamp when a monthly subscription lapses (empty for lifetime)"
+    },
+    "lastCheckedAt": {
+      "type": "string"
+    },
+    "lastCheckedVersion": {
+      "type": "string",
+      "description": "Desktop app version that last validated this key"
+    },
+    "checkCount": {
+      "type": "number",
+      "default": 0
+    },
+    "revoked": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "userId",
+    "licenseKey"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.userId": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

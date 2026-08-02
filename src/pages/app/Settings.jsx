@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Check } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
+import DesktopLicenseCard from "@/components/desktop/DesktopLicenseCard";
 
 export default function Settings() {
   const { user } = useOutletContext();
@@ -22,7 +23,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-2xl space-y-8">
       <PageHeader title="Settings" description="Manage your account and preferences." />
 
       <form onSubmit={handleSave} className="rounded-2xl border border-border bg-card/60 p-6 md:p-8 space-y-6">
@@ -44,6 +45,8 @@ export default function Settings() {
           </Button>
         </div>
       </form>
+
+      <DesktopLicenseCard />
     </div>
   );
 }
