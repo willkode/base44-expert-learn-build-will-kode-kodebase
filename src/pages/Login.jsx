@@ -11,9 +11,9 @@ import { trackLogin } from "@/lib/analytics";
 
 // Only allow same-app redirect targets (must start with a single "/").
 function safeNext(raw) {
-  if (!raw) return "/dashboard";
+  if (!raw) return "/start";
   const decoded = decodeURIComponent(raw);
-  return decoded.startsWith("/") && !decoded.startsWith("//") ? decoded : "/dashboard";
+  return decoded.startsWith("/") && !decoded.startsWith("//") ? decoded : "/start";
 }
 
 export default function Login() {

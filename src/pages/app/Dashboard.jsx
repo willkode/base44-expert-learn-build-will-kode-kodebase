@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useOutletContext, useNavigate } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { Package, ShieldCheck, Sparkles } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
@@ -14,19 +14,13 @@ import ProductsCtaBanner from "@/components/shared/ProductsCtaBanner";
 
 export default function Dashboard() {
   const { user } = useOutletContext();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState([]);
   const [packs, setPacks] = useState([]);
   const [security, setSecurity] = useState([]);
   const [hasVaultAccess, setHasVaultAccess] = useState(false);
 
-  // Admins always land on the admin dashboard.
   useEffect(() => {
-    if (user?.role === "admin") {
-      navigate("/admin", { replace: true });
-      return;
-    }
     const init = async () => {
       const [p, pk, s] = await Promise.all([
         base44.entities.Project.list("-updated_date", 50),
@@ -47,7 +41,7 @@ export default function Dashboard() {
 
   const reviewedProjects = new Set(security.map((s) => s.projectId)).size;
 
-  if (loading || user?.role === "admin") return <LoadingState label="Loading dashboard..." />;
+  if (loading) return <LoadingState label="Loading dashboard..." />;
 
   return (
     <div className="space-y-8 sm:space-y-10">
@@ -75,16 +69,16 @@ export default function Dashboard() {
           </section>
         </div>
 
-        <aside className="space-y-6 xl:sticky xl:top-6 xl:self-start">
+        <aside className="xl:sticky xl:top-6 xl:self-start">
           <PromptVaultBanner hasAccess={hasVaultAccess} />
-
-          <ProductsCtaBanner
-            location="dashboard"
-            title="Level up your builds"
-            description="Ready-made prompt packs and complete systems to take your next app from idea to launch faster."
-          />
         </aside>
       </div>
+
+      <ProductsCtaBanner
+        location="dashboard"
+        title="Level up your builds"
+        description="Ready-made prompt packs and complete systems to take your next app from idea to launch faster."
+      />
     </div>
   );
 }
