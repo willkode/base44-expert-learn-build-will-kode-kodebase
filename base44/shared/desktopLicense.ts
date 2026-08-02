@@ -46,6 +46,44 @@ export async function resolveEntitlement(base44, user) {
   return { plan: 'none', status: 'inactive', expiresAt: '' };
 }
 
+// Validates a pasted key and refreshes its stored state. Shared by the
+// desktopLicense function and the public desktopLicenseStatus endpoint.
+export async function verifyLicenseKey(base44, rawKey, appVersion) {
+  const key = String(rawKey || '').trim().toUpperCase();
+  if (!key) return { status: 400, body: { valid: false, reason: 'missing_key' } };
+
+  const found = await base44.asServiceRole.entities.DesktopLicense.filter(
+    { licenseKey: key }, '-created_date', 1
+  );
+  const license = found[0];
+  if (!license) return { status: 404, body: { valid: false, reason: 'not_found' } };
+  if (license.revoked) return { status: 403, body: { valid: false, reason: 'revoked', plan: license.plan } };
+
+  const users = await base44.asServiceRole.entities.User.filter({ id: license.userId }, '-created_date', 1);
+  const entitlement = await resolveEntitlement(base44, users[0]);
+
+  await base44.asServiceRole.entities.DesktopLicense.update(license.id, {
+    plan: entitlement.plan,
+    status: entitlement.status,
+    expiresAt: entitlement.expiresAt,
+    lastCheckedAt: new Date().toISOString(),
+    lastCheckedVersion: appVersion ? String(appVersion).slice(0, 32) : license.lastCheckedVersion,
+    checkCount: (license.checkCount || 0) + 1,
+  });
+
+  return {
+    status: 200,
+    body: {
+      valid: entitlement.status === 'active',
+      reason: entitlement.status === 'active' ? null : entitlement.status,
+      plan: entitlement.plan,
+      status: entitlement.status,
+      expiresAt: entitlement.expiresAt || null,
+      email: license.userEmail || users[0]?.email || null,
+    },
+  };
+}
+
 // Returns the user's key (creating one on first request) with its entitlement
 // state refreshed from payment records.
 export async function ensureLicense(base44, user) {

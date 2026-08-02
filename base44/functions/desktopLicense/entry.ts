@@ -1,5 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
-import { ensureLicense, resolveEntitlement } from '../../shared/desktopLicense.ts';
+import { ensureLicense, verifyLicenseKey } from '../../shared/desktopLicense.ts';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -30,36 +30,8 @@ Deno.serve(async (req) => {
 
     // The desktop app calls this on launch with only the key — no session needed.
     if (action === 'verify') {
-      const key = String(body.licenseKey || '').trim().toUpperCase();
-      if (!key) return json({ valid: false, reason: 'missing_key' }, 400);
-
-      const found = await base44.asServiceRole.entities.DesktopLicense.filter(
-        { licenseKey: key }, '-created_date', 1
-      );
-      const license = found[0];
-      if (!license) return json({ valid: false, reason: 'not_found' }, 404);
-      if (license.revoked) return json({ valid: false, reason: 'revoked', plan: license.plan }, 403);
-
-      const users = await base44.asServiceRole.entities.User.filter({ id: license.userId }, '-created_date', 1);
-      const entitlement = await resolveEntitlement(base44, users[0]);
-
-      await base44.asServiceRole.entities.DesktopLicense.update(license.id, {
-        plan: entitlement.plan,
-        status: entitlement.status,
-        expiresAt: entitlement.expiresAt,
-        lastCheckedAt: new Date().toISOString(),
-        lastCheckedVersion: body.appVersion ? String(body.appVersion).slice(0, 32) : license.lastCheckedVersion,
-        checkCount: (license.checkCount || 0) + 1,
-      });
-
-      return json({
-        valid: entitlement.status === 'active',
-        reason: entitlement.status === 'active' ? null : entitlement.status,
-        plan: entitlement.plan,
-        status: entitlement.status,
-        expiresAt: entitlement.expiresAt || null,
-        email: license.userEmail || users[0]?.email || null,
-      });
+      const result = await verifyLicenseKey(base44, body.licenseKey, body.appVersion);
+      return json(result.body, result.status);
     }
 
     return json({ error: 'Unknown action. Use "get" or "verify".' }, 400);
