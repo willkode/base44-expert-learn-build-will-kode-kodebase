@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 import ServiceFAQ from "@/components/services/ServiceFAQ";
+import KodeCareHoursValue from "@/components/services/kodecare/KodeCareHoursValue";
 import { trackEvent } from "@/lib/analytics";
 import ReviewsSection from "@/components/reviews/ReviewsSection";
 
@@ -108,6 +109,7 @@ const steps = [
 const faqs = [
   { q: "What is KodeCare?", a: "KodeCare is a monthly support retainer for Base44 apps. You get a set number of development hours each month for bug fixes, feature additions, security patches, performance tuning, and strategic guidance — all from a certified Base44 expert." },
   { q: "How are hours tracked?", a: "Each plan includes a set number of dev hours per month. I track time spent on your requests and report it in your monthly health check. Unused hours roll over for up to one additional month." },
+  { q: "How much can actually get done in 2 hours?", a: "A lot more than you'd expect. Most requests — bug fixes, styling changes, new forms, small features — take 5 to 10 minutes to build because of how I approach prompt engineering, backed by 20+ years as a full stack developer. In the 2-hour Starter plan that typically means 12 to 20 completed items a month: bug fixes, a new page or two, a security patch pass, and your health check." },
   { q: "What happens if I need more hours?", a: "If you consistently need more hours, you can upgrade to a higher tier. For one-off spikes, additional hours are billed at a discounted rate of $60/hour for retainer clients." },
   { q: "Can I cancel anytime?", a: "Yes. All KodeCare plans are month-to-month with no long-term contract. Cancel anytime and service continues through the end of your billing period." },
   { q: "What's the difference between KodeCare and Kode Sessions?", a: "Kode Sessions are one-off 1-2 hour calls for specific questions or guidance. KodeCare is an ongoing monthly retainer where I actively do the development work — fixing bugs, building features, and maintaining your app." },
@@ -247,6 +249,8 @@ export default function KodeCare() {
           </div>
         </div>
       </section>
+
+      <KodeCareHoursValue />
 
       {/* Pricing */}
       <section id="pricing" className="py-20 relative">
