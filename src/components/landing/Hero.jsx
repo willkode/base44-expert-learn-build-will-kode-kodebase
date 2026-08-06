@@ -51,14 +51,15 @@ export default function Hero() {
           </div>
 
           <h1 className="font-sora font-extrabold text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight mb-6">
-            <span className="whitespace-nowrap">I Help Base44 Users</span>
+            <span className="whitespace-nowrap">The Base44 Expert</span>
             <br />
-            <span className="text-gradient-orange whitespace-nowrap">Become Experts</span>
+            <span className="text-gradient-orange whitespace-nowrap">Serious Brands Trust</span>
           </h1>
 
           <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-9">
-            Access free resources, guides, prompts, and training videos to master Base44. Plus,
-            expert services, migrations, and 1-on-1 help whenever you need it.
+            I'm Will Kode — full-stack since 1997, 20+ years building production apps, 15+ years in
+            marketing, and a certified Base44 Expert. I architect, audit, secure, and ship AI-first
+            Apps — the kind that survives real users.
           </p>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-10">
