@@ -188,6 +188,7 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<Home />} />
       <Route path="/tools/prompt-generator" element={<PromptGenerator />} />
       <Route path="/vault" element={<PromptVault />} />
+      <Route path="/coffee" element={<BuyMeACoffee />} />
       {/* Auth pages */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
@@ -198,7 +199,6 @@ const AuthenticatedApp = () => {
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/service-onboarding" element={<ServiceOnboarding />} />
-        <Route path="/coffee" element={<BuyMeACoffee />} />
         <Route path="/download/:productId" element={<Download />} />
         <Route path="/start" element={<StartRedirect />} />
         <Route element={<AppLayout />}>
