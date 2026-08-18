@@ -12,6 +12,71 @@ Deno.serve(async (req) => {
       const completed = projects.filter(p=>p.scan_status==='completed').length, purchased = reports.filter(r=>r.access_unlocked).length;
       return Response.json({ projects,reports,quotes,payments,consultations,rules,settings:settings[0]||null,stats:{ total_assessments:projects.length, completed_scans:completed, locked_reports:reports.length-purchased, purchased_reports:purchased, report_revenue:payments.filter(p=>p.payment_type==='report'&&p.status==='completed').reduce((s,p)=>s+p.amount,0), quoted_value:quotes.reduce((s,q)=>s+q.total,0), deposits_paid:payments.filter(p=>p.payment_type==='deposit'&&p.status==='completed').reduce((s,p)=>s+p.amount,0), full_payments:payments.filter(p=>p.payment_type==='full'&&p.status==='completed').reduce((s,p)=>s+p.amount,0), consultation_requests:consultations.length, conversion_rate:reports.length?Math.round(purchased/reports.length*100):0, average_quote:quotes.length?Math.round(quotes.reduce((s,q)=>s+q.total,0)/quotes.length):0, reports_requiring_review:projects.filter(p=>p.manual_review_required).length } });
     }
+    if (body.action === 'quote_leads') {
+      const all = await base44.asServiceRole.entities.ContactMessage.list('-created_date', 500);
+      const leads = all.filter((m) => String(m.subject || '').toLowerCase().includes('migration quote'));
+      return Response.json({ leads });
+    }
+    if (body.action === 'send_quote_link') {
+      const rows = await base44.asServiceRole.entities.ContactMessage.filter({ id: body.lead_id });
+      const lead = rows[0];
+      if (!lead) return Response.json({ error: 'Lead not found.' }, { status: 404 });
+      const amount = Math.round(Number(body.amount_cents));
+      if (!Number.isFinite(amount) || amount < 100 || amount > 5000000) {
+        return Response.json({ error: 'Amount must be between $1 and $50,000.' }, { status: 400 });
+      }
+      const note = String(body.message || '').trim().slice(0, 3000);
+      const itemName = String(body.item_name || 'Base44 App Migration — Custom Quote').slice(0, 120);
+      const appUrl = Deno.env.get('APP_PUBLIC_URL') || '';
+      const env = Deno.env.get('SQUARE_ENVIRONMENT') === 'production' ? 'production' : 'sandbox';
+      const api = env === 'production' ? 'https://connect.squareup.com' : 'https://connect.squareupsandbox.com';
+      const linkRes = await fetch(`${api}/v2/online-checkout/payment-links`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${Deno.env.get('SQUARE_ACCESS_TOKEN')}`, 'Content-Type': 'application/json', 'Square-Version': '2025-01-23' },
+        body: JSON.stringify({
+          idempotency_key: crypto.randomUUID(),
+          checkout_options: { redirect_url: appUrl ? `${appUrl}/services/migration-intake` : undefined, ask_for_shipping_address: false },
+          pre_populated_data: { buyer_email: lead.email },
+          payment_note: `${itemName} — ${lead.email}`,
+          order: {
+            location_id: Deno.env.get('SQUARE_LOCATION_ID'),
+            metadata: { base44UserEmail: lead.email, itemName, serviceId: 'base44_migration_custom', guestCheckout: 'true', guestName: lead.name || 'Migration lead', contactMessageId: lead.id },
+            line_items: [{ name: itemName, quantity: '1', base_price_money: { amount, currency: 'USD' } }],
+          },
+        }),
+      });
+      const linkBody = await linkRes.json();
+      const checkoutUrl = linkBody.payment_link?.url;
+      if (!linkRes.ok || !checkoutUrl) {
+        return Response.json({ error: linkBody.errors?.[0]?.detail || 'Could not create the payment link.' }, { status: 502 });
+      }
+      const settingsList = await base44.asServiceRole.entities.EmailSettings.filter({ key: 'global' });
+      const emailSettings = settingsList[0] || {};
+      const esc = (s: string) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const html = `<div style="background-color:#0a0f1e;padding:40px 16px;font-family:'Segoe UI',Helvetica,Arial,sans-serif;"><div style="max-width:600px;margin:0 auto;"><div style="background:linear-gradient(90deg,#f87171,#fb923c,#facc15);height:4px;border-radius:4px 4px 0 0;"></div><div style="background-color:#0d1326;border:1px solid #1e2a45;border-top:none;border-radius:0 0 12px 12px;padding:32px;"><h1 style="margin:0 0 16px;font-size:22px;color:#ffffff;">Your migration quote</h1><p style="margin:0 0 20px;font-size:14px;line-height:1.7;color:#e2e8f0;white-space:pre-wrap;">${esc(note || `Hi ${lead.name}, here's the quote for migrating your app.`)}</p><div style="background-color:#101a33;border:1px solid #1e2a45;border-radius:8px;padding:20px;text-align:center;"><p style="margin:0 0 6px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fb923c;">${esc(itemName)}</p><p style="margin:0 0 18px;font-size:32px;font-weight:800;color:#ffffff;">$${(amount / 100).toLocaleString()}</p><a href="${checkoutUrl}" style="display:inline-block;background:linear-gradient(90deg,#f87171,#fb923c,#facc15);color:#ffffff;font-weight:700;font-size:15px;padding:14px 32px;border-radius:9999px;text-decoration:none;">Pay &amp; Start My Migration</a></div><p style="margin:24px 0 0;font-size:12px;color:#64748b;text-align:center;">Secure one-time payment via Square. Reply to this email with any questions.</p></div></div></div>`;
+      const mailRes = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${Deno.env.get('RESEND_API_KEY')}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: `${emailSettings.resendFromName || 'KodeBase'} <${emailSettings.resendFromEmail || 'onboarding@resend.dev'}>`,
+          to: [lead.email],
+          subject: `Your migration quote — $${(amount / 100).toLocaleString()}`,
+          html,
+        }),
+      });
+      if (!mailRes.ok) {
+        const detail = await mailRes.text();
+        return Response.json({ error: 'Payment link created but the email failed to send.', checkoutUrl, detail }, { status: 502 });
+      }
+      await base44.asServiceRole.entities.ContactMessage.update(lead.id, {
+        status: 'replied',
+        quoteAmountCents: amount,
+        quoteMessage: note,
+        quotePaymentLinkUrl: checkoutUrl,
+        quoteSentAt: new Date().toISOString(),
+      });
+      return Response.json({ success: true, checkoutUrl });
+    }
     if (body.action === 'project_detail') {
       const projects = await base44.asServiceRole.entities.MigrationProject.filter({ id: body.project_id });
       if (!projects[0]) return Response.json({ error: 'Project not found.' }, { status: 404 });

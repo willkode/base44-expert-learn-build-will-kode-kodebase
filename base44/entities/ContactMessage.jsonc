@@ -26,6 +26,22 @@
         "archived"
       ],
       "default": "new"
+    },
+    "quoteAmountCents": {
+      "type": "number",
+      "description": "Amount quoted to this lead, in cents"
+    },
+    "quoteMessage": {
+      "type": "string",
+      "description": "Custom message included with the payment link email"
+    },
+    "quotePaymentLinkUrl": {
+      "type": "string",
+      "description": "Square hosted payment link sent to the lead"
+    },
+    "quoteSentAt": {
+      "type": "string",
+      "description": "ISO timestamp the payment link was emailed"
     }
   },
   "required": [
