@@ -1,5 +1,6 @@
 import React from "react";
 import DesktopSection from "@/components/products/desktop-ide/DesktopSection";
+import DesktopFeatureCard from "@/components/products/desktop-ide/DesktopFeatureCard";
 import { PROOF } from "@/components/products/desktop-ide/desktopIdeData";
 
 export default function DesktopProof() {
@@ -11,10 +12,10 @@ export default function DesktopProof() {
     >
       <div className="grid md:grid-cols-2 gap-6">
         {PROOF.map((p) => (
-          <div key={p.title} className="rounded-2xl border border-border bg-card/60 p-6">
+          <DesktopFeatureCard key={p.title} image={p.image} alt={p.title}>
             <h3 className="font-sora font-semibold text-lg mb-2">{p.title}</h3>
             <p className="text-sm text-muted-foreground">{p.body}</p>
-          </div>
+          </DesktopFeatureCard>
         ))}
       </div>
     </DesktopSection>

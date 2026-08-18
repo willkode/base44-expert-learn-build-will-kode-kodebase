@@ -29,11 +29,13 @@ export const IDEA = [
 export const MODES = [
   {
     badge: "Default mode",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/9d2b72b43_generated_image.png",
     title: "The person who just builds things",
     body: "You want your apps in a grid, one click into the editor, and an AI that will tell you honestly whether your app is safe to put in front of customers. You never need to know what a CLI is. This is what the app looks like out of the box.",
   },
   {
     badge: "Advanced mode",
+    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/594bb8598_generated_image.png",
     title: "The developer who wants the exits",
     body: "You want the source on disk, a local dev server, backend function logs, a git-tracked copy you can diff, deploy configuration for your own host, and a way to pull Base44's newer changes into it later. One toggle reveals all of it.",
   },
@@ -47,12 +49,12 @@ export const SURFACES = [
 ];
 
 export const TABS = [
-  { name: "Editor", body: "The genuine Base44 editor, embedded in the window — not a link that throws you into a browser. It keeps its own signed-in session between launches, and stays loaded in the background when you switch tabs so you never lose your place mid-thought." },
-  { name: "Local code", body: "A read-only file tree and viewer with line numbers over the copy on your disk. Read what Base44 actually generated, with no risk of editing the wrong copy." },
-  { name: "Preview", body: "Installs dependencies and runs the app locally against the real Base44 backend — either the hot-reloading dev server or the production build, which is what actually ships." },
-  { name: "Logs", body: "Backend function logs for the draft or published deployment, filterable by text, without opening the dashboard." },
-  { name: "Migrate", body: "Marked optional, because it is. The whole export-and-rehost flow lives here and nowhere else, so it never gets in the way of ordinary work." },
-  { name: "Prompt and Audit menus", body: "Two dropdowns beside the tabs that push work into the editor's chat: a saved prompt, or a full audit. Rendered as native menus so they open cleanly above the embedded editor." },
+  { name: "Editor", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/6c9a0a1d9_generated_image.png", body: "The genuine Base44 editor, embedded in the window — not a link that throws you into a browser. It keeps its own signed-in session between launches, and stays loaded in the background when you switch tabs so you never lose your place mid-thought." },
+  { name: "Local code", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/248977ea0_generated_image.png", body: "A read-only file tree and viewer with line numbers over the copy on your disk. Read what Base44 actually generated, with no risk of editing the wrong copy." },
+  { name: "Preview", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/0533eb150_generated_image.png", body: "Installs dependencies and runs the app locally against the real Base44 backend — either the hot-reloading dev server or the production build, which is what actually ships." },
+  { name: "Logs", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/c9b7dc8f3_generated_image.png", body: "Backend function logs for the draft or published deployment, filterable by text, without opening the dashboard." },
+  { name: "Migrate", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/bb94b0573_generated_image.png", body: "Marked optional, because it is. The whole export-and-rehost flow lives here and nowhere else, so it never gets in the way of ordinary work." },
+  { name: "Prompt and Audit menus", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/763e67d7d_generated_image.png", body: "Two dropdowns beside the tabs that push work into the editor's chat: a saved prompt, or a full audit. Rendered as native menus so they open cleanly above the embedded editor." },
 ];
 
 export const AUDITS = [
@@ -69,25 +71,25 @@ export const AUDITS = [
 ];
 
 export const MIGRATION_STEPS = [
-  { title: "Download the app code", body: "Fetches the export archive. A plain read that creates nothing on the Base44 side." },
-  { title: "Check what can move", body: "Inventories entities, functions, agents, connectors and auth methods, and reports anything that will not survive the move as a blocker, warning or note." },
-  { title: "Check the backend is reachable", body: "Confirms the original backend answers before any files are written." },
-  { title: "Plan the source changes", body: "Works out every edit needed to point the copy at your existing backend — and shows you the full diff before a single byte lands." },
-  { title: "Plan the host configuration", body: "Generates deploy config for Vercel, Netlify, Cloudflare Pages or a plain static host." },
+  { title: "Download the app code", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/19d2f0443_generated_image.png", body: "Fetches the export archive. A plain read that creates nothing on the Base44 side." },
+  { title: "Check what can move", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/fbc6c3e81_generated_image.png", body: "Inventories entities, functions, agents, connectors and auth methods, and reports anything that will not survive the move as a blocker, warning or note." },
+  { title: "Check the backend is reachable", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/de07aca47_generated_image.png", body: "Confirms the original backend answers before any files are written." },
+  { title: "Plan the source changes", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/ea9e91e36_generated_image.png", body: "Works out every edit needed to point the copy at your existing backend — and shows you the full diff before a single byte lands." },
+  { title: "Plan the host configuration", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/53c5fca17_generated_image.png", body: "Generates deploy config for Vercel, Netlify, Cloudflare Pages or a plain static host." },
 ];
 
 export const PROOF = [
-  { title: "Origin probes", body: "Confirms Base44 is reachable, that the backend accepts simple and preflighted requests from your new origin, that an Authorization header survives preflight, that a JSON write is accepted, and how cookie-bearing cross-origin requests behave." },
-  { title: "Twelve validation checks", body: "Project structure, entity schemas, auth configuration, backend functions, connector configuration, environment variables, broken imports, production build, routes, the Base44 connection, the logged-in user, and the published URL." },
-  { title: "Update sync", body: "Pulls newer Base44 code into an already-migrated project as a git merge, reporting changed files, incoming commits and conflicts. Strictly one-way — your Base44 app is never written to." },
-  { title: "Honest reporting", body: "A missing auth config is reported as absent, not as \"login disabled\". An empty app list caused by a failed request says the request failed. The distinction matters when you are deciding whether to ship." },
+  { title: "Origin probes", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/19fad89e8_generated_image.png", body: "Confirms Base44 is reachable, that the backend accepts simple and preflighted requests from your new origin, that an Authorization header survives preflight, that a JSON write is accepted, and how cookie-bearing cross-origin requests behave." },
+  { title: "Twelve validation checks", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/e615244e2_generated_image.png", body: "Project structure, entity schemas, auth configuration, backend functions, connector configuration, environment variables, broken imports, production build, routes, the Base44 connection, the logged-in user, and the published URL." },
+  { title: "Update sync", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a31c8f801_generated_image.png", body: "Pulls newer Base44 code into an already-migrated project as a git merge, reporting changed files, incoming commits and conflicts. Strictly one-way — your Base44 app is never written to." },
+  { title: "Honest reporting", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/ba25793ef_generated_image.png", body: "A missing auth config is reported as absent, not as \"login disabled\". An empty app list caused by a failed request says the request failed. The distinction matters when you are deciding whether to ship." },
 ];
 
 export const CRAFT = [
-  { title: "A real menu bar", body: "File, Workspace, Project, Tools, Prompts, View and Help — around a hundred commands with keyboard accelerators. Developer-only menus disappear entirely in default mode rather than sitting greyed out, advertising features you have not opted into." },
-  { title: "Command palette", body: "Ctrl+K for everything, filtered to what is reachable in your current mode." },
-  { title: "Accessibility", body: "Keyboard-navigable tables, visible focus states, live regions announcing results, focus moved to the heading on navigation, and confirmation on every destructive action." },
-  { title: "Nothing left running", body: "Preview servers are tracked and terminated with their child processes. Earlier tooling left orphaned backends behind that quietly consumed plan quota; this app never creates them, and tracks any it finds so you can clean them up." },
+  { title: "A real menu bar", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/4c8a9bbb0_generated_image.png", body: "File, Workspace, Project, Tools, Prompts, View and Help — around a hundred commands with keyboard accelerators. Developer-only menus disappear entirely in default mode rather than sitting greyed out, advertising features you have not opted into." },
+  { title: "Command palette", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/609d2997f_generated_image.png", body: "Ctrl+K for everything, filtered to what is reachable in your current mode." },
+  { title: "Accessibility", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/79a84fbd5_generated_image.png", body: "Keyboard-navigable tables, visible focus states, live regions announcing results, focus moved to the heading on navigation, and confirmation on every destructive action." },
+  { title: "Nothing left running", image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/b23fdeb55_generated_image.png", body: "Preview servers are tracked and terminated with their child processes. Earlier tooling left orphaned backends behind that quietly consumed plan quota; this app never creates them, and tracks any it finds so you can clean them up." },
 ];
 
 export const SECURITY = [

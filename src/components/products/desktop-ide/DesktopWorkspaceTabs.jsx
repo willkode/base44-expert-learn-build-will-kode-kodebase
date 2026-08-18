@@ -1,6 +1,7 @@
 import React from "react";
 import DesktopSection from "@/components/products/desktop-ide/DesktopSection";
 import DesktopShot from "@/components/products/desktop-ide/DesktopShot";
+import DesktopFeatureCard from "@/components/products/desktop-ide/DesktopFeatureCard";
 import { SHOTS, TABS } from "@/components/products/desktop-ide/desktopIdeData";
 
 export default function DesktopWorkspaceTabs() {
@@ -13,10 +14,10 @@ export default function DesktopWorkspaceTabs() {
       />
       <div className="grid md:grid-cols-2 gap-6 mt-12">
         {TABS.map((t) => (
-          <div key={t.name} className="rounded-2xl border border-border bg-card/60 p-6">
+          <DesktopFeatureCard key={t.name} image={t.image} alt={t.name}>
             <h3 className="font-sora font-semibold text-lg mb-2">{t.name}</h3>
             <p className="text-sm text-muted-foreground">{t.body}</p>
-          </div>
+          </DesktopFeatureCard>
         ))}
       </div>
     </DesktopSection>

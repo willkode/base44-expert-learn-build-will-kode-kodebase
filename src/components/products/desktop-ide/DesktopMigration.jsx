@@ -1,6 +1,7 @@
 import React from "react";
 import DesktopSection from "@/components/products/desktop-ide/DesktopSection";
 import DesktopShot from "@/components/products/desktop-ide/DesktopShot";
+import DesktopFeatureCard from "@/components/products/desktop-ide/DesktopFeatureCard";
 import { SHOTS, MIGRATION_STEPS } from "@/components/products/desktop-ide/desktopIdeData";
 
 export default function DesktopMigration() {
@@ -25,11 +26,11 @@ export default function DesktopMigration() {
       </div>
       <div className="grid md:grid-cols-2 gap-5 mt-10">
         {MIGRATION_STEPS.map((s, i) => (
-          <div key={s.title} className="rounded-2xl border border-border bg-card/60 p-6">
+          <DesktopFeatureCard key={s.title} image={s.image} alt={s.title}>
             <span className="text-xs font-bold text-primary">{String(i + 1).padStart(2, "0")}</span>
             <h3 className="font-sora font-semibold text-base mt-2 mb-2">{s.title}</h3>
             <p className="text-sm text-muted-foreground">{s.body}</p>
-          </div>
+          </DesktopFeatureCard>
         ))}
       </div>
       <div className="max-w-3xl mx-auto space-y-5 mt-10">
