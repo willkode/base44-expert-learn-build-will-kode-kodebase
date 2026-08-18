@@ -1,133 +1,149 @@
-export const HERO_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/880b29606_generated_image.png";
+export const HERO_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a91fa8956_Screenshot2026-08-18080311.png";
 export const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/5579b0a4d_generated_image.png";
 
-// Set this to the .exe download URL when available. While empty, the free
-// download button sends visitors to the early-access list instead.
+export const SHOTS = {
+  home: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a91fa8956_Screenshot2026-08-18080311.png",
+  editor: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/4786d3010_Screenshot2026-08-18080325.png",
+  migrate: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/1e0a3d6be_Screenshot2026-08-18080337.png",
+  audit: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/463ef0b15_Screenshot2026-08-18080346.png",
+  prompt: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/fe547fc1e_Screenshot2026-08-18080354.png",
+};
+
+// Set this to the .exe download URL when available. While empty, the download
+// button sends visitors to the launch list instead.
 export const DOWNLOAD_URL = "";
+
+export const HERO_SPECS = [
+  { label: "Platform", value: "Windows 10 / 11 · x64" },
+  { label: "Installer", value: "80 MB · per-user" },
+  { label: "Requires", value: "A Base44 account" },
+  { label: "Price", value: "$25 lifetime access" },
+];
+
+export const IDEA = [
+  "Base44 is excellent at getting an app built. What it does not give you is a place to sit with that app on your own computer — to read the code it generated, run it locally, review it properly, and decide where it should live.",
+  "Base44 BaaS Desktop is that place. It signs in to your real account, lists every app you own, and opens any one of them into a workspace with five tabs: the Base44 editor itself, a local copy of the source, a preview server, backend logs, and an optional migration flow. Nothing is simulated and nothing is a mock — you are looking at your live account throughout.",
+  "It never modifies your Base44 app. Every operation is either read-only or writes to a folder you choose on your own disk. Your app stays in Base44, editable in Base44, for as long as you want it there.",
+];
+
+export const MODES = [
+  {
+    badge: "Default mode",
+    title: "The person who just builds things",
+    body: "You want your apps in a grid, one click into the editor, and an AI that will tell you honestly whether your app is safe to put in front of customers. You never need to know what a CLI is. This is what the app looks like out of the box.",
+  },
+  {
+    badge: "Advanced mode",
+    title: "The developer who wants the exits",
+    body: "You want the source on disk, a local dev server, backend function logs, a git-tracked copy you can diff, deploy configuration for your own host, and a way to pull Base44's newer changes into it later. One toggle reveals all of it.",
+  },
+];
+
+export const SURFACES = [
+  { name: "Home", body: "Your apps as tiles with artwork, split by kind, one click into the editor." },
+  { name: "My apps", body: "The full searchable table — app ID, last modified, source status, migration status — with filters for Apps, Superagents, Games, editor-managed, externally linked, and already migrated." },
+  { name: "Workspaces", body: "Browse and switch workspaces, mark favourites, see recents.", advanced: true },
+  { name: "Manual entry", body: "Paste an app ID directly, for anything discovery cannot see." },
+];
+
+export const TABS = [
+  { name: "Editor", body: "The genuine Base44 editor, embedded in the window — not a link that throws you into a browser. It keeps its own signed-in session between launches, and stays loaded in the background when you switch tabs so you never lose your place mid-thought." },
+  { name: "Local code", body: "A read-only file tree and viewer with line numbers over the copy on your disk. Read what Base44 actually generated, with no risk of editing the wrong copy." },
+  { name: "Preview", body: "Installs dependencies and runs the app locally against the real Base44 backend — either the hot-reloading dev server or the production build, which is what actually ships." },
+  { name: "Logs", body: "Backend function logs for the draft or published deployment, filterable by text, without opening the dashboard." },
+  { name: "Migrate", body: "Marked optional, because it is. The whole export-and-rehost flow lives here and nowhere else, so it never gets in the way of ordinary work." },
+  { name: "Prompt and Audit menus", body: "Two dropdowns beside the tabs that push work into the editor's chat: a saved prompt, or a full audit. Rendered as native menus so they open cleanly above the embedded editor." },
+];
+
+export const AUDITS = [
+  { name: "Security", body: "Secrets exposed to the browser, backend functions trusting client-supplied values, injection risks, over-permissive endpoints, missing rate limits." },
+  { name: "Permissions and data rules", body: "Per-entity read, create, update and delete reality against intent; records readable by the wrong user; fields like role, plan or balance that should never be client-writable." },
+  { name: "Authentication", body: "Routes that should require login but do not, client-only access checks with no backend equivalent, broken signup and reset flows, abusable post-login redirects." },
+  { name: "Backend functions", body: "Missing authorization, unvalidated input, unhandled failures around external calls, N+1 lookups, non-idempotent operations called as if they were." },
+  { name: "Connectors", body: "Credentials stored unsafely, webhooks that do not verify their sender, calls with no timeout or retry, integrations still wired up but unused." },
+  { name: "Performance", body: "Over-fetching, missing pagination, work repeated every render, blocking calls on first paint, sequential backend work that could run concurrently." },
+  { name: "Code quality", body: "Duplicated logic that has drifted, error paths that swallow failures, dead code, state that can desynchronise." },
+  { name: "Desktop UI", body: "Broken layouts, poor contrast, keyboard-unreachable controls, missing loading and error states, destructive actions with no confirmation." },
+  { name: "Mobile UI", body: "Horizontal overflow, tap targets too small or too close, fixed elements hidden under the keyboard, hover-only interactions with no touch path." },
+  { name: "Migration readiness", body: "Hardcoded Base44 URLs and origins, auth flows that break off-platform, anything depending on Base44 hosting behaviour a static host will not provide." },
+];
+
+export const MIGRATION_STEPS = [
+  { title: "Download the app code", body: "Fetches the export archive. A plain read that creates nothing on the Base44 side." },
+  { title: "Check what can move", body: "Inventories entities, functions, agents, connectors and auth methods, and reports anything that will not survive the move as a blocker, warning or note." },
+  { title: "Check the backend is reachable", body: "Confirms the original backend answers before any files are written." },
+  { title: "Plan the source changes", body: "Works out every edit needed to point the copy at your existing backend — and shows you the full diff before a single byte lands." },
+  { title: "Plan the host configuration", body: "Generates deploy config for Vercel, Netlify, Cloudflare Pages or a plain static host." },
+];
+
+export const PROOF = [
+  { title: "Origin probes", body: "Confirms Base44 is reachable, that the backend accepts simple and preflighted requests from your new origin, that an Authorization header survives preflight, that a JSON write is accepted, and how cookie-bearing cross-origin requests behave." },
+  { title: "Twelve validation checks", body: "Project structure, entity schemas, auth configuration, backend functions, connector configuration, environment variables, broken imports, production build, routes, the Base44 connection, the logged-in user, and the published URL." },
+  { title: "Update sync", body: "Pulls newer Base44 code into an already-migrated project as a git merge, reporting changed files, incoming commits and conflicts. Strictly one-way — your Base44 app is never written to." },
+  { title: "Honest reporting", body: "A missing auth config is reported as absent, not as \"login disabled\". An empty app list caused by a failed request says the request failed. The distinction matters when you are deciding whether to ship." },
+];
+
+export const CRAFT = [
+  { title: "A real menu bar", body: "File, Workspace, Project, Tools, Prompts, View and Help — around a hundred commands with keyboard accelerators. Developer-only menus disappear entirely in default mode rather than sitting greyed out, advertising features you have not opted into." },
+  { title: "Command palette", body: "Ctrl+K for everything, filtered to what is reachable in your current mode." },
+  { title: "Accessibility", body: "Keyboard-navigable tables, visible focus states, live regions announcing results, focus moved to the heading on navigation, and confirmation on every destructive action." },
+  { title: "Nothing left running", body: "Preview servers are tracked and terminated with their child processes. Earlier tooling left orphaned backends behind that quietly consumed plan quota; this app never creates them, and tracks any it finds so you can clean them up." },
+];
+
+export const SECURITY = [
+  "The window renders under a strict content security policy with context isolation on and Node integration off. Your Base44 credential is held by the CLI and read only in the privileged process — it never crosses into the page.",
+  "The embedded editor is a separate process with its own session and no bridge to this app's internals. It is not an iframe, precisely because framing a third-party origin would have meant weakening the policy that keeps your token away from remote content.",
+  "App artwork shows the same discipline. Those image URLs come from your account but can point anywhere, and in practice some do — third-party hosts, not Base44's CDN. Rather than allowing remote images and handing every one of those hosts your IP address, the app fetches them in the privileged process behind an allowlist that rejects local and private addresses, caps size, refuses formats that can carry script, and passes the bytes through as inline data.",
+];
+
+export const SPECS = [
+  { item: "Application", detail: "Electron 33 · React 18 · TypeScript · Vite" },
+  { item: "Base44 integration", detail: "Official CLI 0.1.5 for authentication and project operations, plus the same API the CLI's own project picker uses for app discovery" },
+  { item: "Embedded editor", detail: "Isolated web view with a persistent session, no preload bridge" },
+  { item: "Installer", detail: "NSIS · per-user, no administrator prompt · choose your install directory · desktop and Start Menu shortcuts" },
+  { item: "Uninstall", detail: "Leaves migrated projects and history on disk" },
+  { item: "Deploy targets", detail: "Vercel · Netlify · Cloudflare Pages · static" },
+  { item: "Data stored locally", detail: "Settings, migration history, saved prompts, audit runs, recent projects. No telemetry." },
+];
+
+export const LIMITS = [
+  "Apps whose source Base44 does not manage cannot be downloaded — you will be told before anything is attempted, not after.",
+  "The installer is unsigned, so Windows will warn on first run until it builds reputation.",
+  "Windows only at present. The codebase is cross-platform; the packaging is not yet.",
+  "Audits are AI-generated findings. They are a strong first pass and a genuine time-saver, not a substitute for a security review before you handle real money or real personal data.",
+];
 
 export const PRICING = [
   {
-    name: "Desktop Pro Access",
-    badge: "🚀 Pre-Launch Special",
-    price: "$15",
-    compareAt: "$25/mo",
-    priceNote: "One-time payment. Lifetime access. Base44 Desktop releases August 1, 2026 — after launch, access becomes $25/mo.",
-    tagline: "Unlock the complete prompt, audit, and testing arsenal.",
-    cta: "Claim Lifetime Access — $15",
+    name: "Base44 BaaS Desktop",
+    badge: "Lifetime access",
+    price: "$25",
+    priceNote: "One-time payment. Lifetime access, including future updates. Requires a Base44 account.",
+    tagline: "The full Windows workbench for every app in your Base44 account.",
+    cta: "Get Lifetime Access — $25",
     highlight: true,
     features: [
-      "Full Base44 Desktop IDE",
-      "Project Command Center & Resource Explorer",
-      "Full Prompt Vault — every proven prompt",
-      "Prompt Lab testing & comparisons",
-      "Security & production audits",
-      "Agent user testing with personas",
-      "Complete Agent Skills library",
-      "All future Pro content updates",
+      "Every app in your account, with artwork, in one window",
+      "The genuine Base44 editor, embedded",
+      "Local source viewer, preview server and backend logs",
+      "Ten AI audits, run by the model inside your editor",
+      "Saved prompt library, fired into any app's chat",
+      "Optional frontend migration with full diffs and rollback",
+      "Origin probes and twelve post-migration validation checks",
+      "All future updates included",
     ],
   },
 ];
 
-export const PAIN_POINTS = [
-  { title: "Too many disconnected tools", body: "Projects, prompts, logs, APIs, testing, documentation, and deployment commands live in different places." },
-  { title: "Limited project visibility", body: "It can be difficult to see the complete state of entities, functions, agents, connectors, authentication, and local files at once." },
-  { title: "Repetitive development work", body: "Teams repeatedly write similar prompts, run the same checks, troubleshoot the same issues, and rebuild the same workflows." },
-  { title: "Expensive mistakes", body: "Permission problems, exposed data, missing secrets, broken routes, disconnected integrations, and unsafe deployments are often discovered too late." },
-];
-
-export const BENEFITS = [
-  { title: "See every Base44 project in one place", body: "Connect your Base44 account and instantly organize the applications and backend projects you can access. See project type, connection status, audit score, failed tests, recent activity, integrations, and deployment health without opening every app individually.", benefit: "Spend less time searching and more time building." },
-  { title: "Manage the full Base44 backend visually", body: "Inspect and manage entities, functions, agents, connectors, authentication, secrets, automations, and APIs from a structured desktop interface. Review local and remote resources before making changes.", benefit: "Understand your backend without manually digging through folders and configuration files." },
-  { title: "Turn better prompts into reusable development systems", body: "Save your strongest Base44 prompts in a searchable Prompt Vault. Organize them by project, purpose, feature, or workflow. Add variables, compare versions, test outputs, and reuse proven instructions across applications.", benefit: "Stop rewriting prompts and repeating avoidable mistakes." },
-  { title: "Find security and production issues before users do", body: "Run structured audits across permissions, authentication, entities, functions, connectors, secrets, code quality, mobile behavior, performance, and production readiness. Every finding includes evidence, severity, affected resources, and recommended remediation.", benefit: "Catch expensive issues before launch." },
-  { title: "Test your app through the eyes of real users", body: "Create user personas and automated journeys that interact with your application like a customer, administrator, first-time user, mobile visitor, or unauthorized user. Capture failed actions, console errors, broken requests, screenshots, and unexpected behavior.", benefit: "Discover problems that basic code checks cannot find." },
-  { title: "Deploy with confidence", body: "Preview which resources will be created, changed, removed, or require authorization before running a deployment. Base44 Desktop highlights destructive changes, missing secrets, disconnected connectors, failed tests, and critical audit findings.", benefit: "Know what a deployment will change before it changes anything." },
-];
-
-export const FEATURES = [
-  { name: "Project Command Center", tagline: "Every application. One organized view.", body: "Connect your Base44 account and view all accessible applications alongside locally linked projects. Open the Base44 app, local folder, terminal, logs, audits, or tests directly from the project dashboard.", items: ["Project type", "Base44 application ID", "Local connection status", "Git branch", "Audit score", "Failed tests", "Connector status", "Recent deployments", "Open findings", "Recent activity"] },
-  { name: "Base44 Resource Explorer", tagline: "Understand the complete structure behind your application.", body: "Compare local resources with their connected Base44 project and identify missing, changed, or conflicting configurations.", items: ["Entities and schemas", "Backend functions", "Agents", "Shared connectors", "App-user connectors", "Authentication methods", "Secrets", "Automations", "External APIs", "MCP connections"] },
-  { name: "Files IDE", tagline: "Edit local Base44 projects without leaving the app.", body: "Base44 Desktop shows exactly which files will change before an AI-generated edit is applied.", items: ["File explorer", "Monaco code editor", "TypeScript support", "JSONC validation", "Project-wide search", "Problems panel", "Git changes", "File history", "Base44 resource awareness", "Reviewable AI-generated patches"] },
-  { name: "Prompt Vault", tagline: "Build once. Reuse everywhere.", body: "Add reusable variables, project context, instructions, expected output formats, and model recommendations. Track every version and see which prompts consistently produce the best results.", items: ["Application planning", "UI development", "Entity creation", "Permission audits", "Security fixes", "API integrations", "Mobile optimization", "Production readiness", "Migration planning", "Agent creation", "Bug diagnosis"] },
-  { name: "Prompt Lab", tagline: "Test prompts before using credits inside your project.", body: "Run prompts against selected files, schemas, functions, notes, and project requirements. Compare results, identify missing instructions, detect contradictions, and evaluate whether the response follows Base44 platform requirements.", items: ["A copied prompt", "A project prompt", "An implementation plan", "A reviewable code patch", "A reusable Prompt Vault template"] },
-  { name: "Security & Production Audits", tagline: "Replace vague AI opinions with evidence-backed findings.", body: "Every finding includes severity, evidence, affected resource, business impact, recommended fix, and verification instructions.", items: ["Entity access rules", "User data isolation", "Role-based permissions", "Authentication flows", "Admin route protection", "Secret exposure", "Function authorization", "Connector permissions", "Hardcoded credentials", "Broken routes", "Missing validation", "Performance risks", "Mobile usability", "Accessibility", "Deployment readiness"] },
-  { name: "Agent User Testing", tagline: "Let automated users test what real users will experience.", body: "Assign each persona a goal and let the testing agent navigate the application. Convert confirmed failures into reusable regression tests.", items: ["First-time customer", "Returning user", "Administrator", "Unauthorized visitor", "Mobile user", "Low-vision user", "Nontechnical user", "User entering invalid information"] },
-  { name: "Connectors and APIs", tagline: "Add external services without losing track of credentials, scopes, and dependencies.", body: "Base44 Desktop identifies overly broad permissions, missing scopes, disconnected accounts, unused connectors, and functions that depend on unavailable services.", items: ["Shared Base44 connectors", "Per-user OAuth connectors", "External REST APIs", "OpenAPI specifications", "Backend API wrappers", "Webhooks", "Secret references", "OAuth scopes", "Function dependencies"] },
-  { name: "MCP Management", tagline: "Connect the right tools to the right project.", body: "Control which tools can read information, which can make changes, and which require confirmation.", items: ["Base44 account MCP", "Base44 documentation MCP", "Custom MCP servers", "Available tools", "Tool permissions", "Project assignments", "Connection status", "Invocation history"] },
-  { name: "Logs and Diagnostics", tagline: "Stop searching through disconnected consoles.", body: "Search, filter, export, attach logs to notes, or turn errors directly into audit findings.", items: ["Base44 function logs", "Local development output", "CLI operations", "MCP tool calls", "Connector events", "Browser console errors", "Failed network requests", "Audit activity", "Testing activity"] },
-  { name: "Notes and Decisions", tagline: "Keep project knowledge beside the project.", body: "Attach notes directly to projects, entities, functions, files, tests, logs, and deployments. No more searching through messages and documents to remember why a decision was made.", items: ["Development notes", "Client requirements", "Technical decisions", "Bugs", "Deployment notes", "Audit findings", "Test observations", "Meeting notes", "Future improvements"] },
-];
-
-export const STEPS = [
-  { title: "Connect your Base44 account", body: "Authorize the Base44 CLI and MCP connection through the secure browser-based login process. Base44 Desktop discovers the applications your account can access without storing your Base44 credentials in the cloud." },
-  { title: "Import or link your projects", body: "Browse existing Base44 applications, connect local backend projects, create a new standalone BaaS project, or eject an editor application into an independent codebase. Each project is automatically classified based on the features it supports." },
-  { title: "Build, test, audit, and deploy", body: "Open the project workspace to manage resources, improve prompts, inspect logs, run tests, review findings, and prepare a safe deployment plan. Everything stays organized around the project you are working on." },
-];
-
-export const WORKFLOW = [
-  { title: "Discover", body: "Connect your account and organize every Base44 application and local backend project." },
-  { title: "Understand", body: "See resources, permissions, integrations, local files, tests, and deployment state." },
-  { title: "Build", body: "Edit files, manage backend resources, configure APIs, and reuse proven prompts." },
-  { title: "Verify", body: "Run audits, browser tests, security checks, and production-readiness scans." },
-  { title: "Deploy", body: "Review every proposed change and deploy with clear warnings before destructive actions." },
-  { title: "Improve", body: "Save findings, notes, tests, prompts, and project knowledge for the next release." },
-];
-
-export const USE_CASES = [
-  { title: "For Freelance Base44 Developers", body: "Manage multiple client projects without mixing prompts, notes, local folders, integrations, or deployment history. Deliver better handoffs, clearer reports, and more consistent results." },
-  { title: "For Development Agencies", body: "Create standardized workflows across your team. Share prompt libraries, audit templates, testing systems, and project standards while keeping client data separated." },
-  { title: "For Base44 App Owners", body: "Understand what is happening inside your application without relying on vague status updates. See open risks, failed tests, recent changes, and production-readiness progress in one place." },
-  { title: "For Technical Teams", body: "Connect Base44 projects to structured local development, Git workflows, external APIs, MCP servers, testing, and deployment controls. Build with the speed of Base44 without giving up engineering discipline." },
-  { title: "For Security and QA Reviews", body: "Run repeatable audits and user journeys across multiple projects. Track findings from discovery through remediation and verification." },
-];
-
-export const WHY_DESKTOP = [
-  { title: "Work directly with local code", body: "Open, search, validate, compare, and safely edit trusted project folders." },
-  { title: "Use secure system authentication", body: "Keep CLI and MCP credentials inside approved local credential storage." },
-  { title: "Run real browser tests", body: "Launch isolated browsers, capture traces, and simulate complete user journeys." },
-  { title: "Stream logs and commands", body: "Watch local and remote processes from one interface." },
-  { title: "Keep working offline", body: "Continue using local projects, notes, prompts, and files when internet access is interrupted." },
-];
-
-export const SAFETY = [
-  { title: "Credentials stay protected", body: "Base44 credentials, OAuth tokens, API keys, and project secrets are not stored in the desktop application's cloud database." },
-  { title: "AI changes remain reviewable", body: "AI-generated code and configuration changes appear as patches before they touch your project." },
-  { title: "Destructive operations require confirmation", body: "Entity removals, connector removals, secret deletion, function pruning, and risky deployments cannot run silently." },
-  { title: "Project access remains restricted", body: "The application can only access folders that you explicitly approve." },
-  { title: "Sensitive information is masked", body: "Secrets are removed from logs, AI context, command history, and exported reports." },
-  { title: "Every important action is recorded", body: "Track commands, deployments, audits, tests, resource changes, and confirmations through a searchable activity timeline." },
-];
-
-export const COMPARISON = [
-  ["Projects spread across multiple workspaces and tabs", "Every project organized in one dashboard"],
-  ["Prompts stored in random documents and messages", "Searchable, versioned Prompt Vault"],
-  ["Manual security reviews", "Repeatable evidence-backed audits"],
-  ["Testing limited to clicking through the app", "Automated personas and user journeys"],
-  ["Logs spread across terminals and dashboards", "Unified searchable diagnostics"],
-  ["APIs and connectors tracked manually", "Central integration registry and scope review"],
-  ["Deployment commands run without a complete impact view", "Preflight checks and deployment plans"],
-  ["Important decisions buried in chat history", "Project-linked notes and activity"],
-  ["Repeated setup for every project", "Reusable workflows, templates, and standards"],
-];
-
-export const OUTCOMES = [
-  "Find projects faster.", "Reuse proven prompts.", "Understand backend resources.", "Catch permission problems earlier.",
-  "Test complete user journeys.", "Reduce deployment mistakes.", "Troubleshoot issues faster.", "Keep project knowledge organized.",
-  "Standardize work across a team.", "Deliver clearer reports to clients.", "Move from prototype to production with confidence.",
-];
-
 export const FAQS = [
-  { q: "What is Base44 Desktop?", a: "Base44 Desktop is an independent Electron desktop application that organizes Base44 projects, local backend code, prompts, audits, integrations, testing, logs, notes, and deployment workflows inside one development environment." },
-  { q: "Is Base44 Desktop part of Base44?", a: "No. Base44 Desktop is an independent developer tool created for people who build and manage applications using Base44." },
-  { q: "Does it replace the Base44 editor?", a: "No. It complements the Base44 platform. You can continue using the Base44 editor while using Base44 Desktop to organize projects, manage standalone backend resources, run audits, perform testing, maintain prompts, and coordinate local development workflows." },
-  { q: "Can it access my current Base44 projects?", a: "Base44 Desktop is designed to connect to the user's authorized Base44 account and discover the applications available to that account through supported Base44 connections. Access remains limited to projects the connected user is authorized to use." },
-  { q: "Can I manage Base44 Backend as a Service projects?", a: "Yes. Base44 Desktop is designed to manage standalone Base44 BaaS projects, including local resources such as entities, functions, agents, connectors, authentication configuration, secrets, and automations. Available capabilities may differ between normal Base44 editor applications and standalone backend projects." },
-  { q: "Does Base44 Desktop store my Base44 password?", a: "No. Base44 authentication should be completed through the supported browser, CLI, and OAuth connection flows. Sensitive credentials remain in approved local credential storage or are managed by the Base44 CLI." },
-  { q: "Can it modify my application automatically?", a: "Not without your approval. AI-generated edits are shown as reviewable patches. Operations that can remove resources, expose data, delete secrets, or affect production require explicit confirmation." },
-  { q: "Can it run security audits?", a: "Yes. Base44 Desktop is designed to check entity permissions, authentication, role access, secrets, functions, connectors, routes, application behavior, and production-readiness risks. Findings include evidence and recommended verification steps." },
-  { q: "Can it test the application like a real user?", a: "Yes. The Agent User Testing system can run browser-based journeys using defined personas, goals, devices, permissions, and expected outcomes. It can capture screenshots, errors, failed requests, dead ends, and unexpected application behavior." },
-  { q: "How much does Base44 Desktop cost?", a: "Base44 Desktop Pro Access — including the full desktop IDE, complete Prompt Vault, security and production audits, agent user testing, and the full Agent Skills library — is available as a pre-launch special for a one-time payment of $15 with lifetime access. Once the app releases on August 1, 2026, pricing becomes $25 per month." },
-  { q: "Will it work offline?", a: "Local features such as files, notes, cached prompts, project metadata, and previously downloaded results can remain available offline. Features that require Base44, MCP, APIs, cloud synchronization, or remote logs require an internet connection." },
-  { q: "Which operating systems will be supported?", a: "The planned desktop application targets Windows and macOS first, with Linux support evaluated based on runtime and packaging compatibility." },
-  { q: "When will Base44 Desktop be available?", a: "Base44 Desktop releases on August 1, 2026. Claim the pre-launch lifetime special now and you'll get full access the moment it launches." },
+  { q: "What is Base44 BaaS Desktop?", a: "A Windows desktop application that signs in to your real Base44 account, lists every app you own, and opens any of them into a workspace with five tabs: the embedded Base44 editor, a local copy of the source, a preview server, backend logs, and an optional migration flow." },
+  { q: "Is it affiliated with Base44?", a: "No. It is an independent tool built for people who build on Base44. It uses the official Base44 CLI and public APIs to talk to your account." },
+  { q: "Can it break or change my Base44 app?", a: "No. Every operation is either read-only or writes to a folder you choose on your own disk. Your app stays in Base44, fully editable in Base44." },
+  { q: "How does sign-in work?", a: "Base44's own device-code flow. The app shows a short code, you confirm it in your browser, and the credential is held by the Base44 CLI on your machine. It is read only in the privileged process and never crosses into the page." },
+  { q: "Does migration move my backend?", a: "No. Migration relocates the frontend and wires it to your existing Base44 backend — same database, same users, same functions. Entities, functions, users and data stay on Base44." },
+  { q: "Do I lose the ability to keep building in Base44?", a: "No. The export is a real git repository with stable commit hashes, so you keep building in Base44 and pull the changes down as a merge whenever you want them. Your own edits survive." },
+  { q: "What do the audits actually do?", a: "You pick an audit and the app composes a detailed instruction and sends it to your Base44 editor's chat, so the review runs inside Base44 where the model can read your entities, functions, permission rules and pages. Every prompt asks for findings with severity, location, cause and fix — and explicitly forbids the model from changing anything." },
+  { q: "Which operating systems are supported?", a: "Windows 10 and 11 (x64) at present. The codebase is cross-platform; the packaging is not yet." },
+  { q: "Why does Windows warn me when I install it?", a: "The installer is unsigned, so Windows shows a warning on first run until the installer builds reputation. Installation is per-user and does not require an administrator prompt." },
+  { q: "How much does it cost?", a: "$25 once, for lifetime access including future updates. You also need a Base44 account, since the app works against your real account." },
 ];

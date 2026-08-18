@@ -24,8 +24,8 @@ export default function DesktopPricing({ onEarlyAccess }) {
             One payment. <span className="text-gradient-orange">Lifetime access.</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Base44 Desktop releases August 1, 2026. Lock in the full desktop IDE plus every prompt,
-            audit, agent test, and skill for a one-time $15 — before launch pricing becomes $25/month.
+            $25 once for Base44 BaaS Desktop, including every future update. Windows 10 / 11, x64,
+            80 MB per-user installer, and a Base44 account.
           </p>
         </div>
         <div className="grid grid-cols-1 gap-6 max-w-xl mx-auto">
@@ -75,8 +75,8 @@ export default function DesktopPricing({ onEarlyAccess }) {
           ))}
         </div>
         <p className="text-[11px] text-muted-foreground text-center mt-6">
-          Pre-launch special: pay $15 once and keep Pro access for life. When Base44 Desktop releases
-          on August 1, 2026, Pro Access becomes $25/month — lifetime buyers keep everything, forever.
+          Base44 BaaS Desktop · $25 lifetime · requires a Base44 account. It never modifies your Base44
+          app — every operation is read-only or writes to a folder you choose on your own disk.
         </p>
       </div>
     </section>

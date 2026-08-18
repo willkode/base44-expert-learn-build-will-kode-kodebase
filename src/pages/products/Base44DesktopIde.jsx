@@ -3,14 +3,18 @@ import Seo from "@/components/seo/Seo";
 import { trackEvent } from "@/lib/analytics";
 import { OG_IMAGE, FAQS } from "@/components/products/desktop-ide/desktopIdeData";
 import DesktopHero from "@/components/products/desktop-ide/DesktopHero";
-import DesktopProblem from "@/components/products/desktop-ide/DesktopProblem";
-import DesktopBenefits from "@/components/products/desktop-ide/DesktopBenefits";
-import DesktopFeatures from "@/components/products/desktop-ide/DesktopFeatures";
-import DesktopHowItWorks from "@/components/products/desktop-ide/DesktopHowItWorks";
-import DesktopUseCases from "@/components/products/desktop-ide/DesktopUseCases";
-import DesktopWhy from "@/components/products/desktop-ide/DesktopWhy";
-import DesktopComparison from "@/components/products/desktop-ide/DesktopComparison";
-import DesktopOutcome from "@/components/products/desktop-ide/DesktopOutcome";
+import DesktopIdea from "@/components/products/desktop-ide/DesktopIdea";
+import DesktopModes from "@/components/products/desktop-ide/DesktopModes";
+import DesktopDiscovery from "@/components/products/desktop-ide/DesktopDiscovery";
+import DesktopWorkspaceTabs from "@/components/products/desktop-ide/DesktopWorkspaceTabs";
+import DesktopAudits from "@/components/products/desktop-ide/DesktopAudits";
+import DesktopPromptLibrary from "@/components/products/desktop-ide/DesktopPromptLibrary";
+import DesktopMigration from "@/components/products/desktop-ide/DesktopMigration";
+import DesktopProof from "@/components/products/desktop-ide/DesktopProof";
+import DesktopCraft from "@/components/products/desktop-ide/DesktopCraft";
+import DesktopSecurity from "@/components/products/desktop-ide/DesktopSecurity";
+import DesktopSpecs from "@/components/products/desktop-ide/DesktopSpecs";
+import DesktopLimits from "@/components/products/desktop-ide/DesktopLimits";
 import DesktopPricing from "@/components/products/desktop-ide/DesktopPricing";
 import DesktopEarlyAccess from "@/components/products/desktop-ide/DesktopEarlyAccess";
 import DesktopFAQ from "@/components/products/desktop-ide/DesktopFAQ";
@@ -26,8 +30,8 @@ export default function Base44DesktopIde() {
   return (
     <div className="pt-16">
       <Seo
-        title="Base44 Desktop — The Desktop IDE for Base44 Developers"
-        description="Manage Base44 projects, prompts, backend resources, integrations, audits, agent user testing, logs, and deployments from one powerful desktop application."
+        title="Base44 BaaS Desktop — Open, Audit & Migrate Your Base44 Apps on Windows"
+        description="A Windows workbench for your Base44 account: open any app in the real editor, read the code locally, run 10 AI audits, and lift the frontend to your own hosting. $25 lifetime."
         path="/products/base44-desktop-ide"
         type="website"
         image={OG_IMAGE}
@@ -35,10 +39,11 @@ export default function Base44DesktopIde() {
           {
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            name: "Base44 Desktop IDE",
-            operatingSystem: "Windows, macOS",
+            name: "Base44 BaaS Desktop",
+            operatingSystem: "Windows 10, Windows 11",
             applicationCategory: "DeveloperApplication",
-            description: "An independent desktop development and operations workspace for Base44 developers, agencies, teams, and application owners.",
+            description: "A Windows desktop workbench for Base44 builders: embedded editor, local source viewer, preview server, backend logs, ten AI audits, and an optional frontend migration flow.",
+            offers: { "@type": "Offer", price: "25.00", priceCurrency: "USD" },
           },
           {
             "@context": "https://schema.org",
@@ -52,14 +57,18 @@ export default function Base44DesktopIde() {
         ]}
       />
       <DesktopHero onEarlyAccess={() => scrollTo("pricing")} onExplore={() => scrollTo("features")} />
-      <DesktopProblem />
-      <DesktopBenefits />
-      <DesktopFeatures />
-      <DesktopHowItWorks />
-      <DesktopUseCases />
-      <DesktopWhy />
-      <DesktopComparison />
-      <DesktopOutcome />
+      <DesktopIdea />
+      <DesktopModes />
+      <DesktopDiscovery />
+      <DesktopWorkspaceTabs />
+      <DesktopAudits />
+      <DesktopPromptLibrary />
+      <DesktopMigration />
+      <DesktopProof />
+      <DesktopCraft />
+      <DesktopSecurity />
+      <DesktopSpecs />
+      <DesktopLimits />
       <DesktopPricing onEarlyAccess={() => scrollTo("early-access")} />
       <DesktopEarlyAccess />
       <DesktopFAQ />

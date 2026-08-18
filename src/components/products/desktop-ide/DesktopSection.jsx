@@ -1,9 +1,9 @@
 import React from "react";
 
 // Shared section wrapper — eyebrow + headline + optional supporting copy.
-export default function DesktopSection({ eyebrow, headline, copy, children, className = "" }) {
+export default function DesktopSection({ id, eyebrow, headline, copy, children, className = "" }) {
   return (
-    <section className={`py-16 md:py-24 px-6 ${className}`}>
+    <section id={id} className={`py-16 md:py-24 px-6 ${className}`}>
       <div className="max-w-6xl mx-auto">
         <div className="max-w-3xl mx-auto text-center mb-12">
           {eyebrow && (
