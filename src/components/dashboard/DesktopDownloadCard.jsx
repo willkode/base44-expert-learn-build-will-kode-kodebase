@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Download, Monitor } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 
-const DOWNLOAD_URL = "https://drive.google.com/file/d/1bvt0cNBl3ABSyJ4geDwAAS6OW0oS_Wxi/view?usp=sharing";
+const DOWNLOAD_URL = "https://drive.google.com/file/d/1FpAvQur3NDUZTIsz9BMKMvswh8mQzPVG/view?usp=sharing";
 
 export default function DesktopDownloadCard() {
   const [license, setLicense] = useState(null);
