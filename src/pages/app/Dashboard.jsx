@@ -9,6 +9,7 @@ import SectionHeading from "@/components/dashboard/SectionHeading";
 import RecentPromptPacks from "@/components/dashboard/RecentPromptPacks";
 import PromptVaultBanner from "@/components/dashboard/PromptVaultBanner";
 import MyProducts from "@/components/dashboard/MyProducts";
+import DesktopDownloadCard from "@/components/dashboard/DesktopDownloadCard";
 import PurchaseThankYouDialog from "@/components/dashboard/PurchaseThankYouDialog";
 import ProductsCtaBanner from "@/components/shared/ProductsCtaBanner";
 
@@ -51,6 +52,8 @@ export default function Dashboard() {
         title={`Welcome${user?.full_name ? `, ${user.full_name.split(" ")[0]}` : ""}`}
         description="Your Base44 workspace."
       />
+
+      <DesktopDownloadCard />
 
       <div className="grid grid-cols-1 gap-8 xl:grid-cols-3 xl:gap-8">
         <div className="space-y-8 sm:space-y-10 xl:col-span-2">

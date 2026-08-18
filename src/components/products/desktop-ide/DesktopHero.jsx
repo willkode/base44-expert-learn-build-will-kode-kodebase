@@ -14,7 +14,7 @@ export default function DesktopHero({ onEarlyAccess, onExplore }) {
             <Monitor className="w-4 h-4" /> Windows desktop application
           </span>
           <h1 className="font-sora font-bold text-4xl md:text-6xl tracking-tight mt-5 mb-6">
-            Base44 <span className="text-gradient-orange">BaaS Desktop</span>
+Base44 <span className="text-gradient-orange">Desktop IDE</span>
           </h1>
           <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto">
             A local workbench for everything you have built on Base44. Open any app in a real editor without leaving the
@@ -47,7 +47,7 @@ export default function DesktopHero({ onEarlyAccess, onExplore }) {
         <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }} className="mt-14">
           <img
             src={SHOTS.home}
-            alt="Base44 BaaS Desktop showing every app in your Base44 account as tiles"
+            alt="Base44 Desktop IDE showing every app in your Base44 account as tiles"
             className="rounded-2xl border border-border bg-[#0a0f1e] glow-orange w-full"
           />
           <p className="text-sm text-muted-foreground mt-5 max-w-2xl mx-auto">

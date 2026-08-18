@@ -22,7 +22,7 @@ export const HERO_SPECS = [
 
 export const IDEA = [
   "Base44 is excellent at getting an app built. What it does not give you is a place to sit with that app on your own computer — to read the code it generated, run it locally, review it properly, and decide where it should live.",
-  "Base44 BaaS Desktop is that place. It signs in to your real account, lists every app you own, and opens any one of them into a workspace with five tabs: the Base44 editor itself, a local copy of the source, a preview server, backend logs, and an optional migration flow. Nothing is simulated and nothing is a mock — you are looking at your live account throughout.",
+  "Base44 Desktop IDE is that place. It signs in to your real account, lists every app you own, and opens any one of them into a workspace with five tabs: the Base44 editor itself, a local copy of the source, a preview server, backend logs, and an optional migration flow. Nothing is simulated and nothing is a mock — you are looking at your live account throughout.",
   "It never modifies your Base44 app. Every operation is either read-only or writes to a folder you choose on your own disk. Your app stays in Base44, editable in Base44, for as long as you want it there.",
 ];
 
@@ -117,7 +117,7 @@ export const LIMITS = [
 
 export const PRICING = [
   {
-    name: "Base44 BaaS Desktop",
+    name: "Base44 Desktop IDE",
     badge: "Lifetime access",
     price: "$25",
     priceNote: "One-time payment. Lifetime access, including future updates. Requires a Base44 account.",
@@ -138,7 +138,7 @@ export const PRICING = [
 ];
 
 export const FAQS = [
-  { q: "What is Base44 BaaS Desktop?", a: "A Windows desktop application that signs in to your real Base44 account, lists every app you own, and opens any of them into a workspace with five tabs: the embedded Base44 editor, a local copy of the source, a preview server, backend logs, and an optional migration flow." },
+  { q: "What is Base44 Desktop IDE?", a: "A Windows desktop application that signs in to your real Base44 account, lists every app you own, and opens any of them into a workspace with five tabs: the embedded Base44 editor, a local copy of the source, a preview server, backend logs, and an optional migration flow." },
   { q: "Is it affiliated with Base44?", a: "No. It is an independent tool built for people who build on Base44. It uses the official Base44 CLI and public APIs to talk to your account." },
   { q: "Can it break or change my Base44 app?", a: "No. Every operation is either read-only or writes to a folder you choose on your own disk. Your app stays in Base44, fully editable in Base44." },
   { q: "How does sign-in work?", a: "Base44's own device-code flow. The app shows a short code, you confirm it in your browser, and the credential is held by the Base44 CLI on your machine. It is read only in the privileged process and never crosses into the page." },

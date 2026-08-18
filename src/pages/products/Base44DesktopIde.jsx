@@ -30,8 +30,8 @@ export default function Base44DesktopIde() {
   return (
     <div className="pt-16">
       <Seo
-        title="Base44 BaaS Desktop — Open, Audit & Migrate Your Base44 Apps on Windows"
-        description="A Windows workbench for your Base44 account: open any app in the real editor, read the code locally, run 10 AI audits, and lift the frontend to your own hosting. $25 lifetime."
+        title="Base44 Desktop IDE — Open, Audit & Migrate Your Base44 Apps on Windows"
+        description="Base44 Desktop IDE: a Windows workbench for your Base44 account — open any app in the real editor, read the code locally, run 10 AI audits, and lift the frontend to your own hosting. $25 lifetime."
         path="/products/base44-desktop-ide"
         type="website"
         image={OG_IMAGE}
@@ -39,10 +39,10 @@ export default function Base44DesktopIde() {
           {
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            name: "Base44 BaaS Desktop",
+            name: "Base44 Desktop IDE",
             operatingSystem: "Windows 10, Windows 11",
             applicationCategory: "DeveloperApplication",
-            description: "A Windows desktop workbench for Base44 builders: embedded editor, local source viewer, preview server, backend logs, ten AI audits, and an optional frontend migration flow.",
+            description: "Base44 Desktop IDE — a Windows desktop workbench for Base44 builders: embedded editor, local source viewer, preview server, backend logs, ten AI audits, and an optional frontend migration flow.",
             offers: { "@type": "Offer", price: "25.00", priceCurrency: "USD" },
           },
           {
