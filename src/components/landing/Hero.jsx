@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, GraduationCap } from "lucide-react";
+import { ArrowRight, Sparkles, Monitor } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { trackCTA } from "@/lib/analytics";
 
@@ -74,15 +74,15 @@ export default function Hero() {
             <div className="p-[1.5px] rounded-md bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15]">
               <Button
                 onClick={() => {
-                  trackCTA({ text: "Base44 Master Class", location: "hero", destination: "/learn/base44-master-class" });
-                  navigate("/learn/base44-master-class");
+                  trackCTA({ text: "Base44 Desktop IDE", location: "hero", destination: "/products/base44-desktop-ide" });
+                  navigate("/products/base44-desktop-ide");
                 }}
                 size="lg"
                 variant="outline"
                 className="w-full bg-background hover:bg-white/10 text-white border-0 font-semibold text-base px-7 py-6">
 
-                <GraduationCap className="w-4 h-4 mr-1 text-amber-400" />
-                Base44 Master Class
+                <Monitor className="w-4 h-4 mr-1 text-amber-400" />
+                Base44 Desktop IDE
               </Button>
             </div>
           </div>
