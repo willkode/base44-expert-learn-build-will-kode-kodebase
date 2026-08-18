@@ -11,16 +11,29 @@ const money = (c) => `$${((c || 0) / 100).toLocaleString()}`;
 export default function AdminQuoteLeadsTab() {
   const [leads, setLeads] = useState(null);
   const [active, setActive] = useState(null);
+  const [loadError, setLoadError] = useState("");
 
   const load = useCallback(async () => {
-    const res = await base44.functions.invoke("migrationAdmin", { action: "quote_leads" });
-    setLeads(res.data?.leads || []);
+    setLoadError("");
+    try {
+      const res = await base44.functions.invoke("migrationAdmin", { action: "quote_leads" });
+      setLeads(res.data?.leads || []);
+    } catch (e) {
+      setLoadError(e?.response?.data?.error || "Could not load quote requests.");
+      setLeads([]);
+    }
   }, []);
 
   useEffect(() => { load(); }, [load]);
 
   return (
     <div className="space-y-4">
+      {loadError && (
+        <div className="rounded-xl border border-destructive/40 bg-destructive/10 p-4 flex items-center justify-between gap-4">
+          <p className="text-sm text-destructive">{loadError}</p>
+          <Button size="sm" variant="outline" onClick={load}>Retry</Button>
+        </div>
+      )}
       <AdminTable
         loading={leads === null}
         rows={leads || []}
