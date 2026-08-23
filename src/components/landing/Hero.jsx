@@ -33,7 +33,7 @@ export default function Hero() {
 
       {/* Overlays to keep the left copy readable */}
       <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-transparent z-[1]" />
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent z-[1]" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent z-[1] hidden" />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-32 pb-16 lg:pt-24">
         {/* Left — copy */}
