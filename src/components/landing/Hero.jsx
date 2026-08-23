@@ -74,8 +74,8 @@ export default function Hero() {
             <div className="p-[1.5px] rounded-md bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15]">
               <Button
                 onClick={() => {
-                  trackCTA({ text: "Base44 Desktop IDE", location: "hero", destination: "/products/base44-desktop-ide" });
-                  navigate("/products/base44-desktop-ide");
+                  trackCTA({ text: "Base44 Desktop IDE", location: "hero", destination: "/tools/base44-desktop-ide" });
+                  navigate("/tools/base44-desktop-ide");
                 }}
                 size="lg"
                 variant="outline"

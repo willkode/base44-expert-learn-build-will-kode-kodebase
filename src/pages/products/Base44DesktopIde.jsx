@@ -24,7 +24,7 @@ const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior:
 
 export default function Base44DesktopIde() {
   useEffect(() => {
-    trackEvent("page_view_desktop_ide", { page: "/products/base44-desktop-ide" });
+    trackEvent("page_view_desktop_ide", { page: "/tools/base44-desktop-ide" });
   }, []);
 
   return (
@@ -32,7 +32,7 @@ export default function Base44DesktopIde() {
       <Seo
         title="Base44 Desktop IDE — Open, Audit & Migrate Your Base44 Apps on Windows"
         description="Base44 Desktop IDE: a Windows workbench for your Base44 account — open any app in the real editor, read the code locally, run 10 AI audits, and lift the frontend to your own hosting. $25 lifetime."
-        path="/products/base44-desktop-ide"
+        path="/tools/base44-desktop-ide"
         type="website"
         image={OG_IMAGE}
         jsonLd={[

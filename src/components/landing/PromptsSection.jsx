@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Library, Wand2, Lock } from "lucide-react";
+import { ArrowRight, Library, Lock } from "lucide-react";
 import { trackCTA } from "@/lib/analytics";
 
 // Home "Prompts" section — the prompt ecosystem: free library, ordered engine, and the curated vault.
@@ -13,14 +13,6 @@ const PROMPTS = [
     to: "/learn/prompt-library",
     desc: "Browse expert prompts by Will Kode across development, business, SEO, marketing, and AI — copy-paste ready.",
     image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/5685cb3d6_generated_image.png",
-  },
-  {
-    icon: Wand2,
-    title: "Prompt Engine",
-    badge: "Pro",
-    to: "/tools/prompt-generator",
-    desc: "Generate a full ordered prompt pack from your app idea — sequenced from foundation to polish.",
-    image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a2b810bf6_generated_image.png",
   },
   {
     icon: Lock,
@@ -53,7 +45,7 @@ export default function PromptsSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-4xl mx-auto">
           {PROMPTS.map((p, i) => (
             <motion.div
               key={p.to}

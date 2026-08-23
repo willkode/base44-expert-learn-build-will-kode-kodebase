@@ -65,8 +65,8 @@ export const sitemapTree = [
     label: "Tools",
     type: "layout",
     children: [
-      { label: "Prompt Generator (Public)", path: "/tools/prompt-generator", type: "public", navSources: ["navbar-dropdown"] },
-      { label: "Prompt Engine (Auth)", path: "/tools/prompt-engine", type: "auth", navSources: ["sidebar"] },
+      { label: "Base44 Desktop IDE", path: "/tools/base44-desktop-ide", type: "public", navSources: ["navbar-dropdown", "hero"] },
+      { label: "Base44 Frontend Porter", path: "/tools/base44-frontend-porter", type: "public", navSources: ["navbar-dropdown"] },
     ],
   },
   {

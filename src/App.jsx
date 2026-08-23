@@ -11,8 +11,6 @@ import { CartProvider } from '@/components/cart/CartContext';
 
 // Public pages
 import Home from '@/pages/Home';
-import PromptEngine from '@/pages/tools/PromptEngine';
-import PromptGenerator from '@/pages/tools/PromptGenerator';
 import Features from '@/pages/Features';
 import Products from '@/pages/Products';
 import ProductDetail from '@/pages/ProductDetail';
@@ -50,12 +48,6 @@ import CustomAppCreation from '@/pages/services/CustomAppCreation';
 import GrowthConsulting from '@/pages/services/GrowthConsulting';
 import ServiceThankYou from '@/pages/services/ServiceThankYou';
 import MigrationIntake from '@/pages/services/MigrationIntake';
-import MigrationPlanner from '@/pages/migration/MigrationPlanner';
-import MigrationDashboard from '@/pages/migration/MigrationDashboard';
-import NewMigrationAssessment from '@/pages/migration/NewMigrationAssessment';
-import MigrationProject from '@/pages/migration/MigrationProject';
-import MigrationReport from '@/pages/migration/MigrationReport';
-import MigrationQuote from '@/pages/migration/MigrationQuote';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -136,7 +128,6 @@ import AdminPromptVault from '@/pages/admin/AdminPromptVault';
 import AdminAgentSkills from '@/pages/admin/AdminAgentSkills';
 import AdminAnalyticsPlan from '@/pages/admin/AdminAnalyticsPlan';
 import AdminSitemap from '@/pages/admin/AdminSitemap';
-import AdminMigrationPlanner from '@/pages/admin/AdminMigrationPlanner';
 import PromptVault from '@/pages/PromptVault';
 import VaultAccess from '@/pages/VaultAccess';
 
@@ -148,7 +139,8 @@ const AuthenticatedApp = () => {
         <Route path="/learn" element={<LearnIndex />} />
         <Route path="/features" element={<Features />} />
         <Route path="/products" element={<Products />} />
-        <Route path="/products/base44-desktop-ide" element={<Base44DesktopIde />} />
+        <Route path="/tools/base44-desktop-ide" element={<Base44DesktopIde />} />
+        <Route path="/products/base44-desktop-ide" element={<Navigate to="/tools/base44-desktop-ide" replace />} />
         <Route path="/products/:slug" element={<ProductDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/tip" element={<Tip />} />
@@ -179,14 +171,12 @@ const AuthenticatedApp = () => {
         <Route path="/services/growth-consulting" element={<GrowthConsulting />} />
         <Route path="/services/thank-you" element={<ServiceThankYou />} />
         <Route path="/services/migration-intake" element={<MigrationIntake />} />
-        <Route path="/migration-planner" element={<MigrationPlanner />} />
         <Route path="/tools/base44-frontend-porter" element={<Base44Porter />} />
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
       </Route>
       <Route path="/" element={<Home />} />
-      <Route path="/tools/prompt-generator" element={<PromptGenerator />} />
       <Route path="/vault" element={<PromptVault />} />
       <Route path="/coffee" element={<BuyMeACoffee />} />
       {/* Auth pages */}
@@ -215,12 +205,6 @@ const AuthenticatedApp = () => {
             <Route path="qa" element={<QAChecklist />} />
             <Route path="launch-audit" element={<LaunchAudit />} />
           </Route>
-          <Route path="/tools/prompt-engine" element={<PromptEngine />} />
-          <Route path="/migration-planner/assessments" element={<MigrationDashboard />} />
-          <Route path="/migration-planner/new" element={<NewMigrationAssessment />} />
-          <Route path="/migration-planner/projects/:id" element={<MigrationProject />} />
-          <Route path="/migration-planner/projects/:id/report" element={<MigrationReport />} />
-          <Route path="/migration-planner/projects/:id/quote" element={<MigrationQuote />} />
           <Route path="/vault/access" element={<VaultAccess />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />
@@ -278,7 +262,6 @@ const AuthenticatedApp = () => {
             <Route path="/admin/prompt-vault" element={<AdminPromptVault />} />
             <Route path="/admin/agent-skills" element={<AdminAgentSkills />} />
             <Route path="/admin/analytics" element={<AdminAnalyticsPlan />} />
-            <Route path="/admin/migration-planner" element={<AdminMigrationPlanner />} />
             <Route path="/admin/sitemap" element={<AdminSitemap />} />
           </Route>
         </Route>

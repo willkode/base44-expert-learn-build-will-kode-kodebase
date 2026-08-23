@@ -20,7 +20,7 @@ const links = [
 ];
 
 const toolItems = [
-  { label: "Prompt Engine", to: "/tools/prompt-generator", icon: Wand2, desc: "Turn your idea into an ordered prompt pack", badge: "NEW" },
+  { label: "Base44 Desktop IDE", to: "/tools/base44-desktop-ide", icon: MonitorDown, desc: "Open, audit and migrate your Base44 apps on Windows — $25 lifetime", badge: "NEW" },
   { label: "Base44 Frontend Porter", to: "/tools/base44-frontend-porter", icon: MonitorDown, desc: "Free desktop app — host your frontend anywhere, keep the backend", badge: "FREE" },
 ];
 
