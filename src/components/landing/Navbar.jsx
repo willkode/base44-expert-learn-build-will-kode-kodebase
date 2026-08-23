@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, FileText, BookOpenCheck, Sparkles, Library, Settings2, ShieldCheck, Wand2, Headphones, Wrench, Shield, TrendingUp, Heart, ArrowRight, BookOpen, Database, Rocket, Hammer, MonitorDown, GraduationCap } from "lucide-react";
+import { Menu, X, ChevronDown, FileText, BookOpenCheck, Sparkles, Library, Settings2, ShieldCheck, Wand2, Headphones, Wrench, Shield, TrendingUp, Heart, ArrowRight, BookOpen, Database, Rocket, Hammer, MonitorDown, GraduationCap, Stethoscope } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import {
   DropdownMenu,
@@ -25,6 +25,7 @@ const toolItems = [
 ];
 
 const serviceItems = [
+  { label: "Discovery Audit", to: "/services/discovery-audit", icon: Stethoscope, desc: "Full app review — $225, major issues fixed", badge: "NEW" },
   { label: "Custom App Creation", to: "/services/custom-app-creation", icon: Hammer, desc: "Complete custom Base44 app built to your spec", badge: "NEW" },
   { label: "Growth Consulting", to: "/services/growth-consulting", icon: TrendingUp, desc: "Positioning, pricing, launch & customer acquisition", badge: "NEW" },
   { label: "Kode Sessions", to: "/services/kode-sessions", icon: Headphones, desc: "1-on-1 expert sessions" },

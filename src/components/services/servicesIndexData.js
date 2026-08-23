@@ -1,6 +1,7 @@
-import { Hammer, Headphones, Wrench, Shield, TrendingUp, Heart, Database, Rocket } from "lucide-react";
+import { Hammer, Headphones, Wrench, Shield, TrendingUp, Heart, Database, Rocket, Stethoscope } from "lucide-react";
 
 export const SERVICES = [
+  { label: "Discovery Audit", to: "/services/discovery-audit", icon: Stethoscope, badge: "NEW", desc: "A complete review of your entire app — security, code quality, functionality and UI/UX — with major issues fixed and fix prompts for the rest." },
   { label: "Custom App Creation", to: "/services/custom-app-creation", icon: Hammer, badge: "NEW", desc: "A complete, production-ready Base44 app designed and built to your spec — planning, build, security and launch included." },
   { label: "Growth Consulting", to: "/services/growth-consulting", icon: TrendingUp, badge: "NEW", desc: "Turn your finished Base44 app into a profitable product — positioning, pricing, launch, acquisition and conversion strategy." },
   { label: "Kode Sessions", to: "/services/kode-sessions", icon: Headphones, desc: "1-on-1 expert sessions where we work through your app live — architecture, prompts, bugs and strategy." },

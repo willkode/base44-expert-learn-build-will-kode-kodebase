@@ -54,6 +54,7 @@ export const sitemapTree = [
     label: "Services (PublicLayout)",
     type: "layout",
     children: [
+      { label: "Discovery Audit", path: "/services/discovery-audit", type: "public", navSources: ["navbar-dropdown", "mobile-menu", "services-index"] },
       { label: "Kode Sessions", path: "/services/kode-sessions", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
       { label: "ER Service", path: "/services/er-service", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
       { label: "Security Audit", path: "/services/security-audit", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
