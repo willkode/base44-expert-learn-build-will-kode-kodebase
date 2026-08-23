@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles, Monitor } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { trackCTA } from "@/lib/analytics";
+import HeroPlatforms from "@/components/landing/HeroPlatforms";
 
 const NEBULA_BG = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/412194915_d32a9ead9_Gemini_Generated_Image_cy4o04cy4o04cy4o.png";
 const WILL_PHOTO = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a75f49248_b2ff656b5_will-kode-hero-profile.png";
@@ -94,8 +95,10 @@ export default function Hero() {
             </span>
             <span className="hidden sm:block w-px h-4 bg-border" />
             <span>AI-first architecture &amp; security</span>
-            <span className="hidden sm:block w-px h-4 bg-border" />
-            <span>500+ apps shipped</span>
+          </div>
+
+          <div className="mt-7">
+            <HeroPlatforms />
           </div>
         </motion.div>
       </div>
