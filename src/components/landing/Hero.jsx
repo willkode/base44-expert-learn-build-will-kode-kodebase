@@ -45,21 +45,21 @@ export default function Hero() {
 
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-7 backdrop-blur-sm">
             <Sparkles className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs font-semibold tracking-wide text-primary uppercase">CERTIFIED BASE44 EXPERT
-
+            <span className="text-xs font-semibold tracking-wide text-primary uppercase">
+              AI-First Software &amp; Growth Partner
             </span>
           </div>
 
           <h1 className="font-sora font-extrabold text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight mb-6">
-            <span className="whitespace-nowrap">The Base44 Expert</span>
+            <span className="whitespace-nowrap">The Software Partner</span>
             <br />
             <span className="text-gradient-orange whitespace-nowrap">Serious Brands Trust</span>
           </h1>
 
           <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-9">
-            I'm Will Kode — full-stack since 1997, 20+ years building production apps, 15+ years in
-            marketing, and a certified Base44 Expert. I architect, audit, secure, and ship AI-first
-            Apps — the kind that survives real users.
+            I'm Will Kode — full-stack since 1997, 20+ years building production apps, and 15+ years in
+            marketing. I architect, audit, secure, and ship AI-first software on whatever stack fits your
+            business — the kind that survives real users.
           </p>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-10">
@@ -93,7 +93,7 @@ export default function Hero() {
               Full-stack since 1997
             </span>
             <span className="hidden sm:block w-px h-4 bg-border" />
-            <span>Certified Base44 Expert</span>
+            <span>AI-first architecture &amp; security</span>
             <span className="hidden sm:block w-px h-4 bg-border" />
             <span>500+ apps shipped</span>
           </div>
