@@ -84,6 +84,9 @@ export default function Hero() {
 
                 <Monitor className="w-4 h-4 mr-1 text-amber-400" />
                 Base44 Desktop IDE
+                <span className="ml-2 text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e]">
+                  New
+                </span>
               </Button>
             </div>
           </div>
