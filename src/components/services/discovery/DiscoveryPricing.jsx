@@ -33,6 +33,7 @@ export default function DiscoveryPricing({ onCta }) {
           </ul>
           <ServiceCheckoutButton
             serviceId="discovery_audit"
+            redirectPath="/services/discovery-audit/next"
             label={`Book My Discovery Audit — $${DISCOVERY_PRICE}`}
             onClick={onCta}
           />

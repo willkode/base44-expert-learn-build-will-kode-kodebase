@@ -39,6 +39,7 @@ import RefundPolicy from '@/pages/legal/RefundPolicy';
 import ServicesIndex from '@/pages/services/ServicesIndex';
 import KodeSessions from '@/pages/services/KodeSessions';
 import DiscoveryAudit from '@/pages/services/DiscoveryAudit';
+import DiscoveryAuditNext from '@/pages/services/DiscoveryAuditNext';
 import ErService from '@/pages/services/ErService';
 import SecurityAudit from '@/pages/services/SecurityAudit';
 import SeoAudit from '@/pages/services/SeoAudit';
@@ -163,6 +164,7 @@ const AuthenticatedApp = () => {
         <Route path="/services" element={<ServicesIndex />} />
         <Route path="/services/kode-sessions" element={<KodeSessions />} />
         <Route path="/services/discovery-audit" element={<DiscoveryAudit />} />
+        <Route path="/services/discovery-audit/next" element={<DiscoveryAuditNext />} />
         <Route path="/services/er-service" element={<ErService />} />
         <Route path="/services/security-audit" element={<SecurityAudit />} />
         <Route path="/services/seo-audit" element={<SeoAudit />} />
