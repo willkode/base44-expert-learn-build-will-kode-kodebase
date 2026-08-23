@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import NewsletterPopup from "@/components/newsletter/NewsletterPopup";
+import WhatsAppButton from "@/components/shared/WhatsAppButton";
 import { isSummerSaleActive } from "@/lib/summerSale";
 
 export default function PublicLayout() {
@@ -14,6 +15,7 @@ export default function PublicLayout() {
       </main>
       <Footer />
       <NewsletterPopup />
+      <WhatsAppButton />
     </div>
   );
 }

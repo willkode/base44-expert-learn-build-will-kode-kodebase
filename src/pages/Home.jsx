@@ -15,6 +15,7 @@ import FAQ from "@/components/landing/FAQ";
 import Testimonials from "@/components/landing/Testimonials";
 import FinalCTA from "@/components/landing/FinalCTA";
 import Footer from "@/components/landing/Footer";
+import WhatsAppButton from "@/components/shared/WhatsAppButton";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -47,6 +48,7 @@ export default function Home() {
         <FinalCTA />
       </main>
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }
