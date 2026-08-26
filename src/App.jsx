@@ -51,6 +51,7 @@ import CustomAppCreation from '@/pages/services/CustomAppCreation';
 import GrowthConsulting from '@/pages/services/GrowthConsulting';
 import ServiceThankYou from '@/pages/services/ServiceThankYou';
 import MigrationIntake from '@/pages/services/MigrationIntake';
+import MigrationNext from '@/pages/services/MigrationNext';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -173,6 +174,7 @@ const AuthenticatedApp = () => {
         <Route path="/services/kodecare" element={<KodeCare />} />
         <Route path="/services/base44-baas" element={<Base44Baas />} />
         <Route path="/services/base44-migration" element={<Base44Migration />} />
+        <Route path="/services/base44-migration/next" element={<MigrationNext />} />
         <Route path="/services/custom-app-creation" element={<CustomAppCreation />} />
         <Route path="/services/growth-consulting" element={<GrowthConsulting />} />
         <Route path="/services/thank-you" element={<ServiceThankYou />} />

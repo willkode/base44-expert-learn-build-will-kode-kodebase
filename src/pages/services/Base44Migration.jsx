@@ -11,7 +11,7 @@ import MigrationIncluded from "@/components/services/migration/MigrationIncluded
 import MigrationStacks from "@/components/services/migration/MigrationStacks";
 import MigrationReadiness from "@/components/services/migration/MigrationReadiness";
 import { replacedItems, compatFocus, processSteps, deliverables, pricingFactors, faqs } from "@/components/services/migration/migrationData";
-import MigrationQuoteTool, { MIGRATION_START_PRICE } from "@/components/services/migration/MigrationQuoteTool";
+import MigrationCheckout, { MIGRATION_PRICE as MIGRATION_START_PRICE } from "@/components/services/migration/MigrationCheckout";
 import ReviewsSection from "@/components/reviews/ReviewsSection";
 
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/bab7cb2ec_generated_image.png";
@@ -34,7 +34,7 @@ export default function Base44Migration() {
     <>
       <Seo
         title="Base44 App Migration Services — Take Full Ownership of Your App | KodeBase"
-        description="Own your Base44 app: we migrate backend, database, auth, storage, integrations and deployment to infrastructure you control. Automated migrations now start at $199 — get an instant quote."
+        description="Own your Base44 app: we migrate backend, database, auth, storage, integrations and deployment to infrastructure you control. Flat $199 for any size app — pay and start today."
         path="/services/base44-migration"
         image={OG_IMAGE}
         jsonLd={[faqSchema(faqs)]}
@@ -84,12 +84,12 @@ export default function Base44Migration() {
             ))}
           </motion.div>
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={5} className="flex flex-col items-center gap-3">
-            <a href="#quote" onClick={() => handleCTA("hero_quote")}>
+            <a href="#checkout" onClick={() => handleCTA("hero_checkout")}>
               <Button size="lg" className="font-semibold px-8">
-                Get My Migration Quote <ArrowRight className="w-4 h-4 ml-1" />
+                Start My Migration — ${MIGRATION_START_PRICE} <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </a>
-            <p className="text-xs text-muted-foreground">Instant quote. Under 100 pages + backend functions? It's a flat ${MIGRATION_START_PRICE} and you can pay right away.</p>
+            <p className="text-xs text-muted-foreground">One flat price, any size app. No quotes, no proposal cycle.</p>
             <a href="#pricing" onClick={() => handleCTA("hero_secondary")}>
               <Button size="lg" variant="ghost" className="font-semibold px-8">
                 See Pricing
@@ -230,10 +230,10 @@ export default function Base44Migration() {
               <span className="text-muted-foreground line-through text-2xl ml-3">$2,000</span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto mb-4">
-              Because we rebuilt our Base44 backend and automated the migration pipeline, apps with fewer than <span className="text-foreground font-semibold">100 pages and backend functions combined</span> migrate for a flat <span className="text-foreground font-semibold">${MIGRATION_START_PRICE}</span> — priced instantly, paid instantly, no proposal cycle.
+              Because we rebuilt our Base44 backend and automated the migration pipeline, every app migrates for a flat <span className="text-foreground font-semibold">${MIGRATION_START_PRICE}</span> — regardless of size. No quotes, no proposal cycle.
             </p>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Larger applications — 100+ pages and functions, complex payments, realtime systems, large datasets, AI agents, or many integrations — get a custom quote on a short call. These factors shape that quote:
+              Your migration still covers all the moving parts we work through on every app:
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-10">
@@ -251,18 +251,18 @@ export default function Base44Migration() {
         </div>
       </section>
 
-      {/* Quote tool */}
-      <section id="quote" className="py-20 relative scroll-mt-24">
+      {/* Checkout */}
+      <section id="checkout" className="py-20 relative scroll-mt-24">
         <div className="absolute inset-0 blueprint-grid opacity-10" />
         <div className="relative max-w-2xl mx-auto px-6">
           <div className="text-center mb-8">
-            <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Migration quote tool</p>
-            <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">Know your price in 30 seconds.</h2>
+            <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Start your migration</p>
+            <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">One price. Any size app.</h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Tell me how big your app is. Under 100 pages and backend functions and it's a flat ${MIGRATION_START_PRICE} you can pay right now. Over that and we'll book a call so I can quote it properly.
+              Pay ${MIGRATION_START_PRICE} and you're in the queue. Right after checkout you'll send your app details and add me as a collaborator so I can get started.
             </p>
           </div>
-          <MigrationQuoteTool />
+          <MigrationCheckout />
         </div>
       </section>
 
@@ -325,9 +325,9 @@ export default function Base44Migration() {
             Automated Base44 migrations now start at ${MIGRATION_START_PRICE}.
           </p>
           <div className="flex flex-col items-center gap-3">
-            <a href="#quote" onClick={() => handleCTA("final_quote")}>
+            <a href="#checkout" onClick={() => handleCTA("final_checkout")}>
               <Button size="lg" className="font-semibold px-8">
-                Get My Migration Quote <ArrowRight className="w-4 h-4 ml-1" />
+                Start My Migration — ${MIGRATION_START_PRICE} <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </a>
           </div>
