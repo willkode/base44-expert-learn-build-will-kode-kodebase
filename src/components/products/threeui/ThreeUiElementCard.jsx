@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Lock, Copy, Check } from "lucide-react";
+import { Lock, Copy, Check, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import ThreeUiPreviewDialog from "@/components/products/threeui/ThreeUiPreviewDialog";
 import { trackEvent } from "@/lib/analytics";
 
 export default function ThreeUiElementCard({ element, locked, onUnlock }) {
@@ -11,8 +12,13 @@ export default function ThreeUiElementCard({ element, locked, onUnlock }) {
   const copyPrompt = () => {
     navigator.clipboard.writeText(element.prompt);
     setCopied(true);
-    trackEvent("three_ui_prompt_copy", { element: element.id });
+    trackEvent("three_ui_prompt_copy", { element: element.id, location: "card" });
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const openPreview = () => {
+    trackEvent("three_ui_preview_open", { element: element.id, locked: !!locked });
+    setOpen(true);
   };
 
   return (
@@ -29,30 +35,25 @@ export default function ThreeUiElementCard({ element, locked, onUnlock }) {
         ))}
       </div>
 
-      <div className="mt-auto">
-        {locked ? (
-          <Button variant="outline" size="sm" className="w-full" onClick={onUnlock}>
-            <Lock className="w-3.5 h-3.5" /> Unlock prompt
+      <div className="mt-auto flex gap-2">
+        <Button size="sm" variant={locked ? "default" : "outline"} className="flex-1" onClick={openPreview}>
+          <Eye className="w-3.5 h-3.5" /> Preview
+        </Button>
+        {!locked && (
+          <Button size="sm" className="flex-1" onClick={copyPrompt}>
+            {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? "Copied" : "Copy prompt"}
           </Button>
-        ) : (
-          <>
-            <div className="flex gap-2">
-              <Button size="sm" className="flex-1" onClick={copyPrompt}>
-                {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                {copied ? "Copied" : "Copy prompt"}
-              </Button>
-              <Button size="sm" variant="outline" onClick={() => setOpen(!open)}>
-                {open ? "Hide" : "View"}
-              </Button>
-            </div>
-            {open && (
-              <pre className="mt-3 max-h-64 overflow-y-auto whitespace-pre-wrap rounded-xl bg-background border border-border p-3 text-xs text-muted-foreground leading-relaxed">
-                {element.prompt}
-              </pre>
-            )}
-          </>
         )}
       </div>
+
+      <ThreeUiPreviewDialog
+        element={element}
+        locked={locked}
+        open={open}
+        onOpenChange={setOpen}
+        onUnlock={onUnlock}
+      />
     </div>
   );
 }
