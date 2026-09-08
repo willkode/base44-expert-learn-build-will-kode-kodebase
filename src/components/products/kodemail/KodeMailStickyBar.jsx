@@ -28,7 +28,11 @@ export default function KodeMailStickyBar() {
               <div className="font-sora font-extrabold text-lg text-gradient-orange">${KODEMAIL_PRICE}</div>
               <div className="text-[11px] text-muted-foreground line-through">${KODEMAIL_LIST_PRICE}</div>
             </div>
-            <KodeMailBuyButton location="kodemail_sticky_bar" className="flex-1 !py-5 !px-4 text-sm" />
+            <KodeMailBuyButton
+              location="kodemail_sticky_bar"
+              label={`Own my email — $${KODEMAIL_PRICE}`}
+              className="flex-1 !py-5 !px-4 text-sm"
+            />
           </div>
         </motion.div>
       )}

@@ -33,8 +33,8 @@ export default function KodeMail() {
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
       <Seo
-        title="KodeMail — Prompts to Build Your Own Business Email System | KodeBase"
-        description="An expertly crafted prompt pack that builds a complete inbox system for your own domain, plus step-by-step Cloudflare routing instructions. One payment, lifetime access — no monthly email subscription."
+        title="KodeMail — Own Your Business Email, Stop Paying Monthly | KodeBase"
+        description="Stop renting your inbox. KodeMail's ordered prompt pack builds a full email system on your own domain, with exact Cloudflare setup steps. Unlimited addresses, one payment, no monthly per-user fees."
         path="/products/kodemail"
         type="product"
         image={KODEMAIL_OG_IMAGE}
@@ -51,7 +51,7 @@ export default function KodeMail() {
         <KodeMailSecurity />
 
         <section className="py-16 sm:py-24">
-          <KodeMailSectionHeading eyebrow="Questions" title="Frequently asked questions" />
+          <KodeMailSectionHeading eyebrow="Before you buy" title="Straight answers to the questions people ask" />
           <div className="max-w-3xl mx-auto">
             <ServiceFAQ faqs={faqs} />
           </div>
@@ -71,15 +71,16 @@ export default function KodeMail() {
                 className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] max-w-[120vw] rounded-full bg-primary/20 blur-[90px]"
               />
               <h2 className="relative font-sora font-bold text-2xl sm:text-[2rem] leading-tight tracking-tight mb-3">
-                Get the prompts. Build the inbox. Own your email.
+                Pay once today, or keep paying every month forever.
               </h2>
               <p className="relative text-sm sm:text-base text-muted-foreground max-w-xl mx-auto mb-8">
-                ${KODEMAIL_PRICE} once — the full prompt series plus the Cloudflare setup guide, lifetime access.
+                ${KODEMAIL_PRICE} gets you the full prompt series and the Cloudflare setup guide, for life. That's less
+                than one month of a mailbox you'd never own.
               </p>
               <div className="relative flex flex-col sm:flex-row items-center justify-center gap-3">
                 <KodeMailBuyButton
                   location="kodemail_final_cta"
-                  label={`Get KodeMail — $${KODEMAIL_PRICE}`}
+                  label={`Own my email — $${KODEMAIL_PRICE}`}
                   className="w-full sm:w-auto"
                 />
                 <p className="text-xs text-muted-foreground flex items-center gap-1.5">

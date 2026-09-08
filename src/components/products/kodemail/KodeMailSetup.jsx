@@ -8,9 +8,9 @@ export default function KodeMailSetup() {
   return (
     <section className="py-16 sm:py-24">
       <KodeMailSectionHeading
-        eyebrow="Process"
-        title="How it works"
-        subtitle="Prompts in the right order, then a guided Cloudflare setup. No guessing at mail-server settings."
+        eyebrow="How it works"
+        title="Four steps from renting to owning"
+        subtitle="No architecture decisions, no mail-server rabbit holes. Paste prompts in the order given, follow the Cloudflare steps, and your domain's email is live."
       />
 
       <ol className="relative grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
@@ -41,9 +41,10 @@ export default function KodeMailSetup() {
           <Sparkles className="w-5 h-5" />
         </span>
         <p className="text-sm text-muted-foreground leading-relaxed">
-          <span className="font-semibold text-foreground">Includes an AI assistant prompt.</span> One of the prompts
-          builds an in-app assistant for your inbox — it creates new addresses, checks your email configuration,
-          diagnoses delivery problems, and repairs supported settings with your approval.
+          <span className="font-semibold text-foreground">You get an AI assistant built in.</span> One of the prompts
+          builds an assistant right into your inbox — it creates new addresses for you, checks your configuration, tells
+          you why a message didn't deliver, and repairs supported settings with your approval. No support ticket, no
+          waiting.
         </p>
       </div>
     </section>

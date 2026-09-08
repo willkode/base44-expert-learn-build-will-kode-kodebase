@@ -16,7 +16,9 @@ export default function KodeMailSecurity() {
         <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/12 text-primary mb-5">
           <ShieldCheck className="w-6 h-6" />
         </span>
-        <h2 className="font-sora font-bold text-2xl sm:text-[1.75rem] tracking-tight mb-5">Secure by design</h2>
+        <h2 className="font-sora font-bold text-2xl sm:text-[1.75rem] tracking-tight mb-5">
+          Your mail, your control — nothing risky to switch
+        </h2>
         <ul className="space-y-3.5">
           {securityPoints.map((p) => (
             <li key={p} className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed">
@@ -40,10 +42,10 @@ export default function KodeMailSecurity() {
           <Users className="w-6 h-6" />
         </span>
         <h2 className="font-sora font-bold text-2xl sm:text-[1.75rem] tracking-tight mb-3">
-          Built for modern businesses
+          Who this is for
         </h2>
         <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-          Anyone who wants professional email they own instead of rent.
+          Anyone tired of a monthly bill for an inbox they'll never own.
         </p>
         <div className="flex flex-wrap gap-2">
           {builtFor.map((b) => (

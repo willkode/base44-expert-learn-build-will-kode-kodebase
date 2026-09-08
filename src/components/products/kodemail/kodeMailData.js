@@ -9,31 +9,31 @@ export const KODEMAIL_HERO_IMAGE =
 const IMG = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/";
 
 export const inboxFeatures = [
-  { label: "Send and receive email from your custom domain", image: `${IMG}0925ec4da_generated_image.png` },
-  { label: "Create multiple professional email addresses", image: `${IMG}a22d9d5aa_generated_image.png` },
-  { label: "Organize conversations into familiar inbox folders", image: `${IMG}d4ec79962_generated_image.png` },
-  { label: "Compose, reply, reply all, and forward", image: `${IMG}3d5e23b13_generated_image.png` },
-  { label: "Search messages, contacts, and attachments", image: `${IMG}7ab84eb0c_generated_image.png` },
-  { label: "Save drafts automatically", image: `${IMG}2e904f8cb_generated_image.png` },
-  { label: "Manage multiple domains and mailboxes", image: `${IMG}187f4ff47_generated_image.png` },
-  { label: "Track delivery, bounce, and sending status", image: `${IMG}e1bbc9157_generated_image.png` },
-  { label: "Access your inbox from desktop or mobile", image: `${IMG}6e31198c2_generated_image.png` },
-  { label: "An AI assistant that helps configure and repair email settings", image: `${IMG}7ee45515d_generated_image.png` },
+  { label: "Send and receive from your own domain, so you stop emailing clients from a Gmail address", image: `${IMG}0925ec4da_generated_image.png` },
+  { label: "Spin up hello@, billing@, support@ — as many addresses as you want, with no per-user fee", image: `${IMG}a22d9d5aa_generated_image.png` },
+  { label: "Inbox, Sent, Drafts, Archive — familiar folders, so nothing feels like a downgrade", image: `${IMG}d4ec79962_generated_image.png` },
+  { label: "Compose, reply, reply all and forward — the full daily workflow, not a stripped-down demo", image: `${IMG}3d5e23b13_generated_image.png` },
+  { label: "Find any message, contact or attachment in seconds instead of scrolling", image: `${IMG}7ab84eb0c_generated_image.png` },
+  { label: "Drafts save themselves, so a closed tab never costs you a written reply", image: `${IMG}2e904f8cb_generated_image.png` },
+  { label: "Run every brand and mailbox you own from one inbox instead of juggling logins", image: `${IMG}187f4ff47_generated_image.png` },
+  { label: "See delivered, bounced and failed status, so you know when a client never got your email", image: `${IMG}e1bbc9157_generated_image.png` },
+  { label: "Answer from your laptop or your phone — your inbox goes where you go", image: `${IMG}6e31198c2_generated_image.png` },
+  { label: "An AI assistant that sets up addresses and fixes broken email settings for you", image: `${IMG}7ee45515d_generated_image.png` },
 ];
 
 export const setupSteps = [
-  { num: "01", title: "Get the prompt pack", desc: "Instant access to the full series of expertly crafted prompts, ordered exactly the way they should be run." },
-  { num: "02", title: "Paste the prompts in order", desc: "Run them one by one in your AI builder — each prompt builds the next piece of your inbox system." },
-  { num: "03", title: "Follow the Cloudflare guide", desc: "Step-by-step instructions to route email from your domain into the system you just built." },
-  { num: "04", title: "Start sending and receiving", desc: "Email hello@yourbusiness.com from an inbox you own and control." },
+  { num: "01", title: "Buy once, get instant access", desc: "The full prompt series lands in your account immediately — already ordered, already tested, nothing for you to figure out." },
+  { num: "02", title: "Paste the prompts in order", desc: "Each prompt builds the next piece of your inbox. No coding, no architecture decisions, no dead ends." },
+  { num: "03", title: "Point your domain with the guide", desc: "Follow the Cloudflare steps exactly as written and your domain's mail starts flowing into the inbox you just built." },
+  { num: "04", title: "Email clients like a real company", desc: "Send from hello@yourbusiness.com from an inbox you own — and never pay a mailbox subscription again." },
 ];
 
 export const securityPoints = [
-  "You build and host the inbox yourself — nobody else stores your mail",
-  "The Cloudflare guide uses scoped API access, never your account password",
-  "Every DNS change is explained before you make it",
-  "Includes what to check before replacing an existing email provider",
-  "Prompts include security and access-control instructions for your inbox",
+  "Your mail lives in your system, not on someone else's server",
+  "Cloudflare setup uses scoped API access — you never hand over your account password",
+  "Every DNS change is explained before you make it, so you're never guessing",
+  "A pre-switch checklist so you don't break email that's already working",
+  "Access-control instructions included, so only the right people can read your inbox",
 ];
 
 export const builtFor = [
@@ -47,39 +47,39 @@ export const builtFor = [
 
 export const faqs = [
   {
-    q: "What exactly do I get?",
-    a: "A complete, ordered series of expertly crafted prompts that build a full inbox system for hosting and managing your email — plus step-by-step instructions for configuring Cloudflare to route your domain's email into it.",
+    q: "What exactly do I get for my money?",
+    a: "The complete, ordered prompt series that builds a working inbox system for your own domain — plus the exact Cloudflare steps to route your business email into it. Everything you need to go from no email system to sending from your domain.",
   },
   {
     q: "Is KodeMail a hosted email service?",
-    a: "No. KodeMail is the blueprint: the prompts build the inbox system, and you own and host it. That's why there's nothing to subscribe to.",
+    a: "No — and that's the point. Hosted services rent you a mailbox forever. KodeMail hands you the blueprint: the prompts build the inbox, you own and host it, and there's nothing left to subscribe to.",
   },
   {
     q: "Do I need to be a developer?",
-    a: "No. You paste the prompts into your AI builder in the order provided and follow the Cloudflare instructions. Everything is written in plain steps.",
+    a: "No. You paste the prompts into your AI builder in the order given and follow the Cloudflare steps. If you can copy and paste, you can finish this.",
   },
   {
     q: "What do I need before I start?",
-    a: "An AI app builder (Base44 works great), a Cloudflare account, and a domain you manage there.",
+    a: "An AI app builder (Base44 works great), a Cloudflare account, and a domain you manage there. That's it.",
   },
   {
     q: "Do I have to edit DNS records myself?",
-    a: "You make the Cloudflare changes, but the guide walks you through each one and explains exactly what it does — no guesswork about mail-server settings.",
+    a: "You make the changes in Cloudflare, but the guide walks you through every record and explains what it does — so you're never guessing at mail-server settings or hoping it works.",
   },
   {
     q: "Can I create more than one address?",
-    a: "Yes. The system you build supports multiple professional addresses across multiple domains, all managed from one inbox.",
+    a: "As many as you want. hello@, billing@, support@, addresses across multiple domains — all from one inbox, and not one of them adds to your bill.",
   },
   {
-    q: "What happens if I already use another email provider?",
-    a: "The guide covers what to check before you switch, so you don't accidentally break email that's already flowing to another provider.",
+    q: "What if I already use another email provider?",
+    a: "The guide includes a pre-switch checklist so you can build and test without breaking the email already reaching your current provider. You only cut over when you're ready.",
   },
   {
     q: "Is this a subscription?",
-    a: `No. KodeMail is a one-time $${KODEMAIL_PRICE} payment for lifetime access to the prompts and instructions — no monthly bill, no per-user fees.`,
+    a: `No. One payment of $${KODEMAIL_PRICE} for lifetime access to the prompts and instructions — no monthly bill, no per-user fees, no renewal email a year from now.`,
   },
   {
     q: "How is this different from Google Workspace or Microsoft 365?",
-    a: "Those providers rent you a mailbox monthly, per user. KodeMail hands you the prompts to build your own inbox system on your own domain — you pay once, and the addresses you create don't cost extra.",
+    a: "They charge you every month, per person, forever — and you own nothing. KodeMail is a one-time payment for the prompts to build your own inbox on your own domain, where extra addresses cost you nothing.",
   },
 ];

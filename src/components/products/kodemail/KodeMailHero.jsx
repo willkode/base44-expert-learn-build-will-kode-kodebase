@@ -5,9 +5,9 @@ import KodeMailBuyButton from "./KodeMailBuyButton";
 import { KODEMAIL_PRICE, KODEMAIL_LIST_PRICE, KODEMAIL_HERO_IMAGE } from "./kodeMailData";
 
 const highlights = [
-  { icon: Sparkles, text: "Ordered prompt series" },
-  { icon: Cloud, text: "Cloudflare routing guide" },
-  { icon: InfinityIcon, text: "Lifetime access" },
+  { icon: Sparkles, text: "Prompts in the exact order to run them" },
+  { icon: Cloud, text: "Cloudflare routing spelled out" },
+  { icon: InfinityIcon, text: "Pay once, keep it for life" },
 ];
 
 export default function KodeMailHero({ owned }) {
@@ -30,14 +30,15 @@ export default function KodeMailHero({ owned }) {
           </div>
 
           <h1 className="mt-6 font-sora font-bold text-[2.15rem] leading-[1.08] sm:text-5xl lg:text-[3.5rem] tracking-tight">
-            Build your own email system.<br />
-            <span className="text-gradient-orange">Stop renting your inbox.</span>
+            Stop paying rent on your inbox.<br />
+            <span className="text-gradient-orange">Own your business email instead.</span>
           </h1>
 
           <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0">
-            KodeMail is a complete series of expertly crafted prompts that build a full inbox system for hosting and
-            managing your email — plus step-by-step instructions to configure Cloudflare so your domain's mail routes
-            straight into it. Paste the prompts in order, follow the guide, and send from hello@yourbusiness.com.
+            Every month you pay per user for a mailbox you'll never own — and it goes up every time you add someone.
+            KodeMail is the ordered prompt series that builds a full inbox system for your own domain, plus the exact
+            Cloudflare steps to route your mail into it. Paste the prompts, follow the guide, and start emailing clients
+            from hello@yourbusiness.com. One payment. No subscription.
           </p>
 
           <ul className="mt-7 flex flex-wrap justify-center lg:justify-start gap-2.5">
@@ -68,7 +69,11 @@ export default function KodeMailHero({ owned }) {
                 </div>
               ) : (
                 <>
-                  <KodeMailBuyButton location="kodemail_hero" className="w-full sm:w-auto" />
+                  <KodeMailBuyButton
+                    location="kodemail_hero"
+                    label={`Own my email — $${KODEMAIL_PRICE}`}
+                    className="w-full sm:w-auto"
+                  />
                   <p className="text-xs text-muted-foreground flex items-center gap-1.5 sm:self-center">
                     <Lock className="w-3.5 h-3.5" /> Secure checkout via Square
                   </p>
