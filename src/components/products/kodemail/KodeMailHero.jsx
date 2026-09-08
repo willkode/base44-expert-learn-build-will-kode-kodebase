@@ -12,13 +12,13 @@ export default function KodeMailHero({ owned }) {
           <Mail className="w-3.5 h-3.5" /> New — KodeMail
         </div>
         <h1 className="font-sora font-bold text-4xl md:text-6xl tracking-tight mb-5">
-          Own your business email.<br />
-          <span className="text-gradient-orange">Stop paying monthly for it.</span>
+          Build your own email system.<br />
+          <span className="text-gradient-orange">Stop renting your inbox.</span>
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-          Google Workspace and Microsoft 365 charge you every month, per user, forever. KodeMail is your own email
-          system — professional addresses like hello@yourbusiness.com on your own domain, for one payment you never
-          pay again. No per-seat fees, no renewals, no DNS headaches.
+          KodeMail is a complete series of expertly crafted prompts that build a full inbox system for hosting and
+          managing your email — plus step-by-step instructions to configure Cloudflare so your domain's mail routes
+          straight into it. Paste the prompts in order, follow the guide, and send from hello@yourbusiness.com.
         </p>
 
         <div className="inline-flex items-end gap-3 mb-8">
@@ -48,7 +48,7 @@ export default function KodeMailHero({ owned }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.15 }}
         src={KODEMAIL_HERO_IMAGE}
-        alt="KodeMail inbox showing folders and messages for a custom domain email address"
+        alt="The inbox system KodeMail's prompts build, showing folders and messages for a custom domain address"
         className="w-full rounded-2xl border border-border mt-12"
       />
     </div>

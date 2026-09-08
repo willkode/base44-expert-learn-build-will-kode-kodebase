@@ -18,22 +18,22 @@ export const inboxFeatures = [
   { label: "Manage multiple domains and mailboxes", image: `${IMG}187f4ff47_generated_image.png` },
   { label: "Track delivery, bounce, and sending status", image: `${IMG}e1bbc9157_generated_image.png` },
   { label: "Access your inbox from desktop or mobile", image: `${IMG}6e31198c2_generated_image.png` },
-  { label: "Get AI-powered help configuring or repairing email settings", image: `${IMG}7ee45515d_generated_image.png` },
+  { label: "An AI assistant that helps configure and repair email settings", image: `${IMG}7ee45515d_generated_image.png` },
 ];
 
 export const setupSteps = [
-  { num: "01", title: "Connect Cloudflare", desc: "Authorize securely with limited permissions — your Cloudflare password is never shared." },
-  { num: "02", title: "Pick your domain", desc: "Choose any domain you already manage in Cloudflare." },
-  { num: "03", title: "Choose your address", desc: "hello@, support@, or your own name — created in seconds." },
-  { num: "04", title: "Open your inbox", desc: "Send, receive, organize and reply in a clean modern inbox." },
+  { num: "01", title: "Get the prompt pack", desc: "Instant access to the full series of expertly crafted prompts, ordered exactly the way they should be run." },
+  { num: "02", title: "Paste the prompts in order", desc: "Run them one by one in your AI builder — each prompt builds the next piece of your inbox system." },
+  { num: "03", title: "Follow the Cloudflare guide", desc: "Step-by-step instructions to route email from your domain into the system you just built." },
+  { num: "04", title: "Start sending and receiving", desc: "Email hello@yourbusiness.com from an inbox you own and control." },
 ];
 
 export const securityPoints = [
-  "Your Cloudflare password is never shared with the platform",
-  "Access is granted through Cloudflare with limited permissions",
-  "Sensitive credentials stay protected on the server",
-  "Important DNS changes require your confirmation",
-  "You're warned before replacing an existing email provider",
+  "You build and host the inbox yourself — nobody else stores your mail",
+  "The Cloudflare guide uses scoped API access, never your account password",
+  "Every DNS change is explained before you make it",
+  "Includes what to check before replacing an existing email provider",
+  "Prompts include security and access-control instructions for your inbox",
 ];
 
 export const builtFor = [
@@ -47,35 +47,39 @@ export const builtFor = [
 
 export const faqs = [
   {
-    q: "Do I need to edit DNS records myself?",
-    a: "No. There are no DNS records to copy and no mail-server settings to figure out. Connect Cloudflare, choose your email address, and KodeMail handles the technical configuration for you.",
+    q: "What exactly do I get?",
+    a: "A complete, ordered series of expertly crafted prompts that build a full inbox system for hosting and managing your email — plus step-by-step instructions for configuring Cloudflare to route your domain's email into it.",
+  },
+  {
+    q: "Is KodeMail a hosted email service?",
+    a: "No. KodeMail is the blueprint: the prompts build the inbox system, and you own and host it. That's why there's nothing to subscribe to.",
+  },
+  {
+    q: "Do I need to be a developer?",
+    a: "No. You paste the prompts into your AI builder in the order provided and follow the Cloudflare instructions. Everything is written in plain steps.",
   },
   {
     q: "What do I need before I start?",
-    a: "A Cloudflare account and a domain you manage there. That's it — everything else is configured for you.",
+    a: "An AI app builder (Base44 works great), a Cloudflare account, and a domain you manage there.",
+  },
+  {
+    q: "Do I have to edit DNS records myself?",
+    a: "You make the Cloudflare changes, but the guide walks you through each one and explains exactly what it does — no guesswork about mail-server settings.",
   },
   {
     q: "Can I create more than one address?",
-    a: "Yes. Create multiple professional addresses across multiple domains and manage every mailbox from the same inbox.",
-  },
-  {
-    q: "What does the AI assistant do?",
-    a: "It can create new addresses, check your email configuration, diagnose delivery problems, and safely repair supported settings — always with your approval.",
+    a: "Yes. The system you build supports multiple professional addresses across multiple domains, all managed from one inbox.",
   },
   {
     q: "What happens if I already use another email provider?",
-    a: "KodeMail warns you before replacing an existing email provider, and any important DNS change requires your explicit confirmation.",
+    a: "The guide covers what to check before you switch, so you don't accidentally break email that's already flowing to another provider.",
   },
   {
     q: "Is this a subscription?",
-    a: `No. KodeMail is a one-time $${KODEMAIL_PRICE} payment for lifetime access — no monthly bill, no renewals, no per-user fees.`,
+    a: `No. KodeMail is a one-time $${KODEMAIL_PRICE} payment for lifetime access to the prompts and instructions — no monthly bill, no per-user fees.`,
   },
   {
     q: "How is this different from Google Workspace or Microsoft 365?",
-    a: "Those providers rent you a mailbox for a monthly fee per user, and the cost grows with every address you add. KodeMail is your own email system on your own domain — you pay once and keep it, and you can create as many professional addresses as you need.",
-  },
-  {
-    q: "Can I replace my current paid email provider with this?",
-    a: "Yes. Most small teams use KodeMail as a direct replacement for a paid mailbox subscription. You'll be warned before any existing email provider is replaced, and important DNS changes always require your confirmation.",
+    a: "Those providers rent you a mailbox monthly, per user. KodeMail hands you the prompts to build your own inbox system on your own domain — you pay once, and the addresses you create don't cost extra.",
   },
 ];

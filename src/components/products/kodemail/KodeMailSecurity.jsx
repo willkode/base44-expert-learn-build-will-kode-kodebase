@@ -18,7 +18,7 @@ export default function KodeMailSecurity() {
         <Users className="w-7 h-7 text-primary mb-4" />
         <h2 className="font-sora font-bold text-2xl mb-3">Built for modern businesses</h2>
         <p className="text-sm text-muted-foreground mb-5">
-          Professional email without a complicated setup process.
+          Anyone who wants professional email they own instead of rent.
         </p>
         <div className="flex flex-wrap gap-2">
           {builtFor.map((b) => (

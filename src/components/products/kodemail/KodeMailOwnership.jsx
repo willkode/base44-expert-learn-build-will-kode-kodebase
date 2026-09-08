@@ -11,10 +11,10 @@ const subscriptionCons = [
 ];
 
 const ownPros = [
-  "One payment — no monthly bill, ever",
-  "Unlimited professional addresses on your domain",
-  "No per-seat pricing as your team grows",
-  "Your domain, your inbox, your system",
+  "One payment for the full prompt pack — no monthly bill",
+  "You build and own the inbox system yourself",
+  "Create as many addresses as you want, at no extra cost",
+  "Step-by-step Cloudflare routing instructions included",
   `Pays for itself in under a month at $${KODEMAIL_PRICE}`,
 ];
 
@@ -24,7 +24,7 @@ export default function KodeMailOwnership() {
       <h2 className="font-sora font-bold text-3xl text-center mb-3">Rent your email, or own it</h2>
       <p className="text-muted-foreground text-center text-sm mb-8 max-w-xl mx-auto">
         A team of five on Google Workspace pays roughly $420 a year — every year. KodeMail is a one-time payment for
-        the same professional email you actually own.
+        the prompts and instructions to build the same professional email yourself.
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
         <div className="rounded-2xl border border-border bg-card/40 p-6">

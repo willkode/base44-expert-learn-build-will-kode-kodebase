@@ -5,9 +5,9 @@ import { setupSteps } from "./kodeMailData";
 export default function KodeMailSetup() {
   return (
     <section className="mb-16">
-      <h2 className="font-sora font-bold text-3xl text-center mb-3">Setup without the technical headache</h2>
+      <h2 className="font-sora font-bold text-3xl text-center mb-3">How it works</h2>
       <p className="text-muted-foreground text-center text-sm mb-8 max-w-xl mx-auto">
-        No DNS records to copy. No confusing mail-server settings. KodeMail handles the technical configuration.
+        Prompts in the right order, then a guided Cloudflare setup. No guessing at mail-server settings.
       </p>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {setupSteps.map((step) => (
@@ -21,9 +21,9 @@ export default function KodeMailSetup() {
       <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6 flex items-start gap-4">
         <Sparkles className="w-6 h-6 text-primary shrink-0" />
         <p className="text-sm text-muted-foreground">
-          <span className="font-semibold text-foreground">Built-in AI setup assistant.</span> It creates new
-          addresses, checks your email configuration, diagnoses delivery problems, and safely repairs supported
-          settings — with your approval.
+          <span className="font-semibold text-foreground">Includes an AI assistant prompt.</span> One of the prompts
+          builds an in-app assistant for your inbox — it creates new addresses, checks your email configuration,
+          diagnoses delivery problems, and repairs supported settings with your approval.
         </p>
       </div>
     </section>

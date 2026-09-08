@@ -29,8 +29,8 @@ export default function KodeMail() {
   return (
     <div className="min-h-screen bg-background pb-24 px-6 pt-16">
       <Seo
-        title="KodeMail — Own Your Business Email, No Monthly Subscription | KodeBase"
-        description="Cancel Google Workspace and Microsoft 365. Get professional email like hello@yourbusiness.com on your own domain for one payment — unlimited addresses, no per-user fees, no DNS setup, lifetime access."
+        title="KodeMail — Prompts to Build Your Own Business Email System | KodeBase"
+        description="An expertly crafted prompt pack that builds a complete inbox system for your own domain, plus step-by-step Cloudflare routing instructions. One payment, lifetime access — no monthly email subscription."
         path="/products/kodemail"
         type="product"
         image={KODEMAIL_OG_IMAGE}
@@ -53,9 +53,9 @@ export default function KodeMail() {
 
         {!owned && (
           <div className="text-center rounded-2xl border border-primary/20 bg-primary/5 p-10">
-            <h2 className="font-sora font-bold text-2xl mb-2">Own your business email instead of renting it</h2>
+            <h2 className="font-sora font-bold text-2xl mb-2">Get the prompts. Build the inbox. Own your email.</h2>
             <p className="text-muted-foreground text-sm mb-6">
-              ${KODEMAIL_PRICE} once — lifetime access, unlimited addresses, no monthly subscription.
+              ${KODEMAIL_PRICE} once — the full prompt series plus the Cloudflare setup guide, lifetime access.
             </p>
             <KodeMailBuyButton location="kodemail_final_cta" label={`Get KodeMail — $${KODEMAIL_PRICE}`} />
           </div>
