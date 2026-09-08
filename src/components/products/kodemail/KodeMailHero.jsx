@@ -29,9 +29,9 @@ export default function KodeMailHero({ owned }) {
             <Mail className="w-3.5 h-3.5" /> New — KodeMail
           </div>
 
-          <h1 className="mt-6 font-sora font-bold text-[2.15rem] leading-[1.08] sm:text-5xl lg:text-[3.5rem] tracking-tight">
-            Stop renting your inbox.<br />
-            <span className="text-gradient-orange">Own your email.</span>
+          <h1 className="mt-6 font-sora font-bold text-[1.85rem] leading-[1.12] sm:text-[2.4rem] lg:text-[2.75rem] tracking-tight">
+            <span className="block">Stop renting email.</span>
+            <span className="block text-gradient-orange">Own your inbox.</span>
           </h1>
 
           <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0">
