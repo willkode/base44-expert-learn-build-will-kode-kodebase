@@ -16,6 +16,7 @@ import Products from '@/pages/Products';
 import ProductDetail from '@/pages/ProductDetail';
 import Base44DesktopIde from '@/pages/products/Base44DesktopIde';
 import ThreeUiKit from '@/pages/products/ThreeUiKit';
+import KodeMail from '@/pages/products/KodeMail';
 import Base44Porter from '@/pages/tools/Base44Porter';
 import Contact from '@/pages/Contact';
 import Tip from '@/pages/Tip';
@@ -146,6 +147,7 @@ const AuthenticatedApp = () => {
         <Route path="/tools/base44-desktop-ide" element={<Base44DesktopIde />} />
         <Route path="/products/base44-desktop-ide" element={<Navigate to="/tools/base44-desktop-ide" replace />} />
         <Route path="/products/3d-ui-element-kit" element={<ThreeUiKit />} />
+        <Route path="/products/kodemail" element={<KodeMail />} />
         <Route path="/products/:slug" element={<ProductDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/tip" element={<Tip />} />
