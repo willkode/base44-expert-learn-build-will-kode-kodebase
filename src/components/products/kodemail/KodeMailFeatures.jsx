@@ -1,6 +1,6 @@
 import React from "react";
-import { Check } from "lucide-react";
 import { inboxFeatures } from "./kodeMailData";
+import KodeMailFeatureCard from "./KodeMailFeatureCard";
 
 export default function KodeMailFeatures() {
   return (
@@ -12,10 +12,7 @@ export default function KodeMailFeatures() {
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {inboxFeatures.map((f) => (
-          <div key={f} className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card/40">
-            <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-            <span className="text-sm">{f}</span>
-          </div>
+          <KodeMailFeatureCard key={f.label} feature={f} />
         ))}
       </div>
     </section>

@@ -6,17 +6,19 @@ export const KODEMAIL_OG_IMAGE =
 export const KODEMAIL_HERO_IMAGE =
   "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/0637cd36f_generated_image.png";
 
+const IMG = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/";
+
 export const inboxFeatures = [
-  "Send and receive email from your custom domain",
-  "Create multiple professional email addresses",
-  "Organize conversations into familiar inbox folders",
-  "Compose, reply, reply all, and forward",
-  "Search messages, contacts, and attachments",
-  "Save drafts automatically",
-  "Manage multiple domains and mailboxes",
-  "Track delivery, bounce, and sending status",
-  "Access your inbox from desktop or mobile",
-  "Get AI-powered help configuring or repairing email settings",
+  { label: "Send and receive email from your custom domain", image: `${IMG}0925ec4da_generated_image.png` },
+  { label: "Create multiple professional email addresses", image: `${IMG}a22d9d5aa_generated_image.png` },
+  { label: "Organize conversations into familiar inbox folders", image: `${IMG}d4ec79962_generated_image.png` },
+  { label: "Compose, reply, reply all, and forward", image: `${IMG}3d5e23b13_generated_image.png` },
+  { label: "Search messages, contacts, and attachments", image: `${IMG}7ab84eb0c_generated_image.png` },
+  { label: "Save drafts automatically", image: `${IMG}2e904f8cb_generated_image.png` },
+  { label: "Manage multiple domains and mailboxes", image: `${IMG}187f4ff47_generated_image.png` },
+  { label: "Track delivery, bounce, and sending status", image: `${IMG}e1bbc9157_generated_image.png` },
+  { label: "Access your inbox from desktop or mobile", image: `${IMG}6e31198c2_generated_image.png` },
+  { label: "Get AI-powered help configuring or repairing email settings", image: `${IMG}7ee45515d_generated_image.png` },
 ];
 
 export const setupSteps = [
