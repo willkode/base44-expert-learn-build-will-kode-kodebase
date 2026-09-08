@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, Check } from "lucide-react";
 import KodeMailBuyButton from "./KodeMailBuyButton";
-import { KODEMAIL_PRICE, KODEMAIL_LIST_PRICE, KODEMAIL_OG_IMAGE } from "./kodeMailData";
+import { KODEMAIL_PRICE, KODEMAIL_LIST_PRICE, KODEMAIL_HERO_IMAGE } from "./kodeMailData";
 
 export default function KodeMailHero({ owned }) {
   return (
@@ -46,8 +46,8 @@ export default function KodeMailHero({ owned }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.15 }}
-        src={KODEMAIL_OG_IMAGE}
-        alt="KodeMail — custom domain email connected to a modern inbox"
+        src={KODEMAIL_HERO_IMAGE}
+        alt="KodeMail inbox showing folders and messages for a custom domain email address"
         className="w-full rounded-2xl border border-border mt-12"
       />
     </div>
