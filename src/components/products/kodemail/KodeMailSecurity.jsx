@@ -1,33 +1,61 @@
 import React from "react";
-import { ShieldCheck, Users } from "lucide-react";
+import { motion } from "framer-motion";
+import { ShieldCheck, Users, Check } from "lucide-react";
 import { securityPoints, builtFor } from "./kodeMailData";
 
 export default function KodeMailSecurity() {
   return (
-    <section className="grid lg:grid-cols-2 gap-6 mb-16">
-      <div className="rounded-2xl border border-border bg-card/40 p-7">
-        <ShieldCheck className="w-7 h-7 text-primary mb-4" />
-        <h2 className="font-sora font-bold text-2xl mb-4">Secure by design</h2>
-        <div className="space-y-3">
+    <section className="grid lg:grid-cols-2 gap-4 sm:gap-5 py-16 sm:py-24">
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.5 }}
+        className="rounded-3xl border border-border bg-card/50 p-7 sm:p-9"
+      >
+        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/12 text-primary mb-5">
+          <ShieldCheck className="w-6 h-6" />
+        </span>
+        <h2 className="font-sora font-bold text-2xl sm:text-[1.75rem] tracking-tight mb-5">Secure by design</h2>
+        <ul className="space-y-3.5">
           {securityPoints.map((p) => (
-            <p key={p} className="text-sm text-muted-foreground">• {p}</p>
+            <li key={p} className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed">
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+                <Check className="w-3 h-3" />
+              </span>
+              {p}
+            </li>
           ))}
-        </div>
-      </div>
-      <div className="rounded-2xl border border-border bg-card/40 p-7">
-        <Users className="w-7 h-7 text-primary mb-4" />
-        <h2 className="font-sora font-bold text-2xl mb-3">Built for modern businesses</h2>
-        <p className="text-sm text-muted-foreground mb-5">
+        </ul>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.5, delay: 0.08 }}
+        className="rounded-3xl border border-border bg-card/50 p-7 sm:p-9"
+      >
+        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/12 text-primary mb-5">
+          <Users className="w-6 h-6" />
+        </span>
+        <h2 className="font-sora font-bold text-2xl sm:text-[1.75rem] tracking-tight mb-3">
+          Built for modern businesses
+        </h2>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-6">
           Anyone who wants professional email they own instead of rent.
         </p>
         <div className="flex flex-wrap gap-2">
           {builtFor.map((b) => (
-            <span key={b} className="px-3 py-1.5 rounded-full border border-border bg-background/40 text-xs font-medium">
+            <span
+              key={b}
+              className="px-3.5 py-2 rounded-xl border border-border bg-background/50 text-xs font-medium transition-colors hover:border-primary/40 hover:text-primary"
+            >
               {b}
             </span>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

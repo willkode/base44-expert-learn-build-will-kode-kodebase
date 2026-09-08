@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Lock } from "lucide-react";
 import Seo from "@/components/seo/Seo";
 import { faqSchema } from "@/lib/seo";
 import { base44 } from "@/api/base44Client";
@@ -10,6 +12,8 @@ import KodeMailFeatures from "@/components/products/kodemail/KodeMailFeatures";
 import KodeMailSetup from "@/components/products/kodemail/KodeMailSetup";
 import KodeMailSecurity from "@/components/products/kodemail/KodeMailSecurity";
 import KodeMailBuyButton from "@/components/products/kodemail/KodeMailBuyButton";
+import KodeMailSectionHeading from "@/components/products/kodemail/KodeMailSectionHeading";
+import KodeMailStickyBar from "@/components/products/kodemail/KodeMailStickyBar";
 import { faqs, KODEMAIL_PRODUCT_ID, KODEMAIL_PRICE, KODEMAIL_OG_IMAGE } from "@/components/products/kodemail/kodeMailData";
 
 export default function KodeMail() {
@@ -27,7 +31,7 @@ export default function KodeMail() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background pb-24 px-6 pt-16">
+    <div className="relative min-h-screen bg-background overflow-hidden">
       <Seo
         title="KodeMail — Prompts to Build Your Own Business Email System | KodeBase"
         description="An expertly crafted prompt pack that builds a complete inbox system for your own domain, plus step-by-step Cloudflare routing instructions. One payment, lifetime access — no monthly email subscription."
@@ -37,30 +41,57 @@ export default function KodeMail() {
         jsonLd={[faqSchema(faqs)]}
       />
 
-      <div className="max-w-6xl mx-auto">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 blueprint-grid opacity-[0.55]" />
+
+      <div className="relative max-w-6xl mx-auto px-5 sm:px-6 pt-16 pb-28 lg:pb-24 divide-y divide-border/60">
         <KodeMailHero owned={owned} />
         <KodeMailOwnership />
         <KodeMailFeatures />
         <KodeMailSetup />
         <KodeMailSecurity />
 
-        <section className="mb-16">
-          <h2 className="font-sora font-bold text-3xl text-center mb-8">Frequently asked questions</h2>
+        <section className="py-16 sm:py-24">
+          <KodeMailSectionHeading eyebrow="Questions" title="Frequently asked questions" />
           <div className="max-w-3xl mx-auto">
             <ServiceFAQ faqs={faqs} />
           </div>
         </section>
 
         {!owned && (
-          <div className="text-center rounded-2xl border border-primary/20 bg-primary/5 p-10">
-            <h2 className="font-sora font-bold text-2xl mb-2">Get the prompts. Build the inbox. Own your email.</h2>
-            <p className="text-muted-foreground text-sm mb-6">
-              ${KODEMAIL_PRICE} once — the full prompt series plus the Cloudflare setup guide, lifetime access.
-            </p>
-            <KodeMailBuyButton location="kodemail_final_cta" label={`Get KodeMail — $${KODEMAIL_PRICE}`} />
-          </div>
+          <section className="py-16 sm:py-24">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.55 }}
+              className="relative overflow-hidden text-center rounded-3xl border border-primary/25 bg-gradient-to-b from-primary/12 to-primary/[0.03] px-6 py-12 sm:px-12 sm:py-16"
+            >
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-[34rem] max-w-[120vw] rounded-full bg-primary/20 blur-[90px]"
+              />
+              <h2 className="relative font-sora font-bold text-2xl sm:text-[2rem] leading-tight tracking-tight mb-3">
+                Get the prompts. Build the inbox. Own your email.
+              </h2>
+              <p className="relative text-sm sm:text-base text-muted-foreground max-w-xl mx-auto mb-8">
+                ${KODEMAIL_PRICE} once — the full prompt series plus the Cloudflare setup guide, lifetime access.
+              </p>
+              <div className="relative flex flex-col sm:flex-row items-center justify-center gap-3">
+                <KodeMailBuyButton
+                  location="kodemail_final_cta"
+                  label={`Get KodeMail — $${KODEMAIL_PRICE}`}
+                  className="w-full sm:w-auto"
+                />
+                <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                  <Lock className="w-3.5 h-3.5" /> Secure checkout via Square
+                </p>
+              </div>
+            </motion.div>
+          </section>
         )}
       </div>
+
+      {!owned && <KodeMailStickyBar />}
     </div>
   );
 }
