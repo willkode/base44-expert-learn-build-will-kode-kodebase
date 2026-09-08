@@ -5,6 +5,7 @@ import { base44 } from "@/api/base44Client";
 import { trackEvent } from "@/lib/analytics";
 import ServiceFAQ from "@/components/services/ServiceFAQ";
 import KodeMailHero from "@/components/products/kodemail/KodeMailHero";
+import KodeMailOwnership from "@/components/products/kodemail/KodeMailOwnership";
 import KodeMailFeatures from "@/components/products/kodemail/KodeMailFeatures";
 import KodeMailSetup from "@/components/products/kodemail/KodeMailSetup";
 import KodeMailSecurity from "@/components/products/kodemail/KodeMailSecurity";
@@ -28,8 +29,8 @@ export default function KodeMail() {
   return (
     <div className="min-h-screen bg-background pb-24 px-6 pt-16">
       <Seo
-        title="KodeMail — Business Email On Your Own Domain, No DNS Setup | KodeBase"
-        description="Professional email like hello@yourbusiness.com in minutes. Connect Cloudflare, pick your address, and get a modern inbox — no DNS records, no mail-server settings. One-time $25, lifetime access."
+        title="KodeMail — Own Your Business Email, No Monthly Subscription | KodeBase"
+        description="Cancel Google Workspace and Microsoft 365. Get professional email like hello@yourbusiness.com on your own domain for one payment — unlimited addresses, no per-user fees, no DNS setup, lifetime access."
         path="/products/kodemail"
         type="product"
         image={KODEMAIL_OG_IMAGE}
@@ -38,6 +39,7 @@ export default function KodeMail() {
 
       <div className="max-w-6xl mx-auto">
         <KodeMailHero owned={owned} />
+        <KodeMailOwnership />
         <KodeMailFeatures />
         <KodeMailSetup />
         <KodeMailSecurity />
@@ -51,9 +53,9 @@ export default function KodeMail() {
 
         {!owned && (
           <div className="text-center rounded-2xl border border-primary/20 bg-primary/5 p-10">
-            <h2 className="font-sora font-bold text-2xl mb-2">Connect your domain. Create your address. Open your inbox.</h2>
+            <h2 className="font-sora font-bold text-2xl mb-2">Own your business email instead of renting it</h2>
             <p className="text-muted-foreground text-sm mb-6">
-              ${KODEMAIL_PRICE} once — lifetime access, no subscription.
+              ${KODEMAIL_PRICE} once — lifetime access, unlimited addresses, no monthly subscription.
             </p>
             <KodeMailBuyButton location="kodemail_final_cta" label={`Get KodeMail — $${KODEMAIL_PRICE}`} />
           </div>

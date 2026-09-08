@@ -12,12 +12,13 @@ export default function KodeMailHero({ owned }) {
           <Mail className="w-3.5 h-3.5" /> New — KodeMail
         </div>
         <h1 className="font-sora font-bold text-4xl md:text-6xl tracking-tight mb-5">
-          Your business email. Your domain.<br />
-          <span className="text-gradient-orange">One simple inbox.</span>
+          Own your business email.<br />
+          <span className="text-gradient-orange">Stop paying monthly for it.</span>
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-          Create and manage professional email addresses on your own domain — without manually configuring DNS
-          records, mail routes, or server settings. Connect Cloudflare, pick your address, open your inbox.
+          Google Workspace and Microsoft 365 charge you every month, per user, forever. KodeMail is your own email
+          system — professional addresses like hello@yourbusiness.com on your own domain, for one payment you never
+          pay again. No per-seat fees, no renewals, no DNS headaches.
         </p>
 
         <div className="inline-flex items-end gap-3 mb-8">

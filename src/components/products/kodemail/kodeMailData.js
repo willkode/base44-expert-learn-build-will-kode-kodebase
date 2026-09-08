@@ -68,6 +68,14 @@ export const faqs = [
   },
   {
     q: "Is this a subscription?",
-    a: `No. KodeMail is a one-time $${KODEMAIL_PRICE} payment for lifetime access.`,
+    a: `No. KodeMail is a one-time $${KODEMAIL_PRICE} payment for lifetime access — no monthly bill, no renewals, no per-user fees.`,
+  },
+  {
+    q: "How is this different from Google Workspace or Microsoft 365?",
+    a: "Those providers rent you a mailbox for a monthly fee per user, and the cost grows with every address you add. KodeMail is your own email system on your own domain — you pay once and keep it, and you can create as many professional addresses as you need.",
+  },
+  {
+    q: "Can I replace my current paid email provider with this?",
+    a: "Yes. Most small teams use KodeMail as a direct replacement for a paid mailbox subscription. You'll be warned before any existing email provider is replaced, and important DNS changes always require your confirmation.",
   },
 ];
