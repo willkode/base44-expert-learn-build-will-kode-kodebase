@@ -9,6 +9,7 @@ import BlogSidebar from "@/components/learn/BlogSidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import LoadingState from "@/components/shared/LoadingState";
+import ApiKeyHelpCta from "@/components/learn/ApiKeyHelpCta";
 import { SITE } from "@/lib/seo";
 import { trackEvent } from "@/lib/analytics";
 
@@ -129,6 +130,8 @@ export default function PromptPostDetail() {
                   {prompt.promptText}
                 </pre>
               </div>
+
+              {prompt.slug === "base44-legacy-api-key-audit" && <ApiKeyHelpCta />}
 
               <div className="mt-10 pt-8 border-t border-border flex flex-wrap items-center gap-2">
                 <Badge variant="secondary" className="text-xs">{prompt.category}</Badge>
