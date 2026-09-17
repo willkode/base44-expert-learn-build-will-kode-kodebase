@@ -120,6 +120,10 @@ Deno.serve(async (req) => {
       // 100 pages + backend functions. Larger apps are quoted on a call.
       amountCents = 19900;
       itemName = 'Base44 App Migration — Automated Migration ($199)';
+    } else if (serviceId === 'base44_migration_mobile') {
+      // Migration + optional mobile app conversion upsell (+$99)
+      amountCents = 29800;
+      itemName = 'Base44 App Migration + Mobile App Conversion ($199 + $99)';
     } else if (serviceId) {
       const service = SERVICE_PRICING[serviceId];
       if (!service) return Response.json({ error: 'Invalid service.' }, { status: 400 });
