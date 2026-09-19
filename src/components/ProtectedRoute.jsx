@@ -23,7 +23,7 @@ export default function ProtectedRoute({ fallback = <DefaultFallback />, unauthe
   // (e.g. a /download/:id link opened from an email), so they land back there
   // after signing in instead of on the dashboard.
   const redirectToLogin = () => {
-    const next = `${location.pathname}${location.search}`;
+    const next = `${location.pathname}${location.search}${location.hash}`;
     return <Navigate to={`/login?next=${encodeURIComponent(next)}`} replace />;
   };
 
