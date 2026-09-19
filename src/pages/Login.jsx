@@ -9,19 +9,14 @@ import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { trackLogin } from "@/lib/analytics";
 
-// Only allow same-app redirect targets (must start with a single "/").
-function safeNext(raw) {
-  if (!raw) return "/start";
-  const decoded = decodeURIComponent(raw);
-  return decoded.startsWith("/") && !decoded.startsWith("//") ? decoded : "/start";
-}
+import { safeReturnTo } from "@/lib/authReturnTo";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const next = safeNext(new URLSearchParams(window.location.search).get("next"));
+  const next = safeReturnTo();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,7 +46,7 @@ export default function Login() {
       footer={
         <>
           Don't have an account?{" "}
-          <Link to="/register" className="text-primary font-medium hover:underline">
+          <Link to={`/register?next=${encodeURIComponent(next)}`} className="text-primary font-medium hover:underline">
             Create one
           </Link>
         </>
@@ -102,7 +97,7 @@ export default function Login() {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="password">Password</Label>
-            <Link to="/forgot-password" className="text-xs text-primary hover:underline">
+            <Link to={`/forgot-password?next=${encodeURIComponent(next)}`} className="text-xs text-primary hover:underline">
               Forgot password?
             </Link>
           </div>
