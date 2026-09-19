@@ -10,8 +10,10 @@ import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { toast } from "@/components/ui/use-toast";
 import { trackSignup } from "@/lib/analytics";
+import { safeReturnTo } from "@/lib/authReturnTo";
 
 export default function Register() {
+  const next = safeReturnTo();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -47,7 +49,7 @@ export default function Register() {
         base44.auth.setToken(result.access_token);
       }
       trackSignup("email");
-      window.location.href = "/dashboard";
+      window.location.href = next;
     } catch (err) {
       setError(err.message || "Invalid verification code");
     } finally {
@@ -70,7 +72,7 @@ export default function Register() {
 
   const handleGoogle = () => {
     trackSignup("google");
-    base44.auth.loginWithProvider("google", "/dashboard");
+    base44.auth.loginWithProvider("google", next);
   };
 
   if (showOtp) {
@@ -135,7 +137,7 @@ export default function Register() {
       footer={
         <>
           Already have an account?{" "}
-          <Link to="/login" className="text-primary font-medium hover:underline">
+          <Link to={`/login?next=${encodeURIComponent(next)}`} className="text-primary font-medium hover:underline">
             Log in
           </Link>
         </>
