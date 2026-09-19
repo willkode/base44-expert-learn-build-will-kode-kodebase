@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import Seo from "@/components/seo/Seo";
 import ServiceFAQ from "@/components/services/ServiceFAQ";
+import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 import { faqSchema } from "@/lib/seo";
 import { useCart } from "@/components/cart/CartContext";
 import { trackViewItem, trackSelectItem, trackAddToCart } from "@/lib/analytics";
@@ -130,6 +131,23 @@ export default function KodeMigration() {
               ))}
             </ul>
             <p className="text-xs text-muted-foreground leading-relaxed mt-7">A self-guided workflow. You stay in control of your code, your migration decisions, and your final testing.</p>
+          </div>
+        </section>
+
+        <section aria-labelledby="done-for-you-heading" className="rounded-3xl border border-primary/30 bg-card p-7 sm:p-10 mb-16">
+          <div className="grid md:grid-cols-[1fr_auto] gap-8 items-center">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-primary mb-3">Want us to handle it?</p>
+              <h2 id="done-for-you-heading" className="font-sora font-bold text-2xl sm:text-3xl mb-4">Done for you Migration</h2>
+              <p className="text-muted-foreground max-w-2xl leading-relaxed">Let us migrate your Base44 app to infrastructure you control. We handle the backend, database, authentication, storage, integrations, and deployment, preserving your existing frontend wherever possible.</p>
+              <p className="text-sm text-muted-foreground mt-4">After checkout, send your app details and add us as a collaborator to get started.</p>
+              <Link to="/services/base44-migration" className="inline-flex items-center gap-2 text-sm text-primary hover:underline mt-4">See what's included <ArrowRight className="w-4 h-4" /></Link>
+            </div>
+            <div className="md:w-72 rounded-2xl border border-border bg-background/60 p-6">
+              <p className="font-sora font-extrabold text-4xl mb-2">$199 <span className="font-normal font-inter text-sm text-muted-foreground">one time</span></p>
+              <p className="text-xs text-muted-foreground mb-5">Fixed service price. The 86% Birthday discount does not apply.</p>
+              <ServiceCheckoutButton serviceId="base44_migration" label="Get Done for you Migration — $199" redirectPath="/services/base44-migration/next" className="h-auto py-3 whitespace-normal" />
+            </div>
           </div>
         </section>
 
