@@ -47,6 +47,9 @@ export default function Register() {
       const result = await base44.auth.verifyOtp({ email, otpCode });
       if (result?.access_token) {
         base44.auth.setToken(result.access_token);
+      } else {
+        // Verification may confirm the email without issuing a login token.
+        await base44.auth.loginViaEmailPassword(email, password);
       }
       trackSignup("email");
       window.location.href = next;
