@@ -51,7 +51,7 @@ export default function AdminProducts() {
     <div>
       <PageHeader
         title="Products & Downloads"
-        description="Manage which products deliver a downloadable PDF after purchase."
+        description="Manage the downloadable files buyers receive after purchase."
       />
 
       {/* Stats */}
@@ -64,7 +64,7 @@ export default function AdminProducts() {
         <div className="flex items-center gap-2 px-4 py-2 rounded-xl border border-border bg-card/60 text-sm">
           <FileText className="w-4 h-4 text-primary" />
           <span className="font-semibold">{withPdf}</span>
-          <span className="text-muted-foreground">with PDF</span>
+          <span className="text-muted-foreground">with downloads</span>
         </div>
       </div>
 
