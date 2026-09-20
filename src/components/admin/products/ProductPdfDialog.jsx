@@ -39,9 +39,9 @@ export default function ProductPdfDialog({ open, onOpenChange, product, onSaved 
     const picked = Array.from(e.target.files || []);
     e.target.value = ""; // allow re-picking the same file
     const valid = picked.filter(
-      (f) => f.type === "application/pdf" || f.name.toLowerCase().endsWith(".pdf")
+      (f) => /\.(pdf|zip|md)$/i.test(f.name)
     );
-    if (valid.length !== picked.length) toast.error("Only PDF files are allowed.");
+    if (valid.length !== picked.length) toast.error("Choose PDF, ZIP, or Markdown files.");
     if (valid.length === 0) return;
     setFiles((prev) => [
       ...prev,
@@ -119,7 +119,7 @@ export default function ProductPdfDialog({ open, onOpenChange, product, onSaved 
             <input
               ref={fileInputRef}
               type="file"
-              accept="application/pdf,.pdf"
+              accept="application/pdf,application/zip,application/x-zip-compressed,text/markdown,.pdf,.zip,.md"
               multiple
               className="hidden"
               onChange={handleFilePick}
@@ -135,7 +135,7 @@ export default function ProductPdfDialog({ open, onOpenChange, product, onSaved 
                   <Upload className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium">Upload PDF files</p>
+                  <p className="text-sm font-medium">Upload PDF, ZIP, or Markdown files</p>
                   <p className="text-xs text-muted-foreground">Click to choose one or more files</p>
                 </div>
               </button>
@@ -149,7 +149,7 @@ export default function ProductPdfDialog({ open, onOpenChange, product, onSaved 
                     <Input
                       value={f.fileName}
                       onChange={(e) => renameFile(idx, e.target.value)}
-                      placeholder="filename.pdf"
+                      placeholder="download.zip"
                       className="h-8 text-sm"
                     />
                     {f.pending && (
