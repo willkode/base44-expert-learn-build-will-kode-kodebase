@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
-import { Package, FileText, FileX, Download, Settings2, Eye, EyeOff, Megaphone } from "lucide-react";
+import { Package, FileText, FileX, Settings2, Eye, EyeOff, Megaphone } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import AdminTable from "@/components/admin/AdminTable";
 import { Button } from "@/components/ui/button";
