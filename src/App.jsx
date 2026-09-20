@@ -19,6 +19,7 @@ import ThreeUiKit from '@/pages/products/ThreeUiKit';
 import KodeMail from '@/pages/products/KodeMail';
 import KodeMigration from '@/pages/products/KodeMigration';
 import KodeAiEmployees from '@/pages/products/KodeAiEmployees';
+import KodeMarketingProduct from '@/pages/products/KodeMarketingProduct';
 import Base44Porter from '@/pages/tools/Base44Porter';
 import Contact from '@/pages/Contact';
 import Tip from '@/pages/Tip';
@@ -152,6 +153,8 @@ const AuthenticatedApp = () => {
         <Route path="/products/kodemail" element={<KodeMail />} />
         <Route path="/products/kode-migration" element={<KodeMigration />} />
         <Route path="/products/kode-ai-employees" element={<KodeAiEmployees />} />
+        <Route path="/products/kode-video-launch-kit" element={<KodeMarketingProduct kind="video" />} />
+        <Route path="/products/kode-ai-marketing-team-bundle" element={<KodeMarketingProduct kind="bundle" />} />
         <Route path="/products/:slug" element={<ProductDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/tip" element={<Tip />} />
