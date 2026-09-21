@@ -32,6 +32,14 @@
       "type": "string",
       "default": "Prompt Package"
     },
+    "hero_video_url": {
+      "type": "string",
+      "description": "Public example video shown on the product landing page"
+    },
+    "hero_video_poster_url": {
+      "type": "string",
+      "description": "Public preview image for the example video"
+    },
     "imageUrl": {
       "type": "string"
     },
