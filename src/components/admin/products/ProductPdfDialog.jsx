@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import ProductHeroMedia from "./ProductHeroMedia";
 
 // Normalizes a product's deliverables into a single list, merging the legacy
 // single-file fields (pdfFileUri/pdfFileName) with the newer pdfFiles array.
@@ -91,7 +92,7 @@ export default function ProductPdfDialog({ open, onOpenChange, product, onSaved 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Manage downloads — {product?.name}</DialogTitle>
           <DialogDescription>
@@ -165,6 +166,7 @@ export default function ProductPdfDialog({ open, onOpenChange, product, onSaved 
           </div>
         </div>
 
+        {product?.slug === "kode-video-launch-kit" && <ProductHeroMedia key={product.id} product={product} />}
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Cancel</Button>
           <Button onClick={handleSave} disabled={saving} className="gap-2">
