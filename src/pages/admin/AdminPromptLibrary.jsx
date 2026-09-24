@@ -17,13 +17,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import PromptPostFormDialog from "@/components/admin/marketing/PromptPostFormDialog";
 import ManualPromptFormDialog from "@/components/admin/marketing/ManualPromptFormDialog";
-
-const publishedTime = (p) => new Date(p.publishedAt || p.created_date || 0).getTime();
+import { publishedTime, byFeaturedThenNewest } from "@/lib/promptSort";
 
 const SORTS = {
   newest: { label: "Newest first", fn: (a, b) => publishedTime(b) - publishedTime(a) },
   oldest: { label: "Oldest first", fn: (a, b) => publishedTime(a) - publishedTime(b) },
-  order: { label: "Display order", fn: (a, b) => (a.order ?? 0) - (b.order ?? 0) },
+  public: { label: "Public order (featured first)", fn: byFeaturedThenNewest },
 };
 
 export default function AdminPromptLibrary() {
@@ -38,7 +37,7 @@ export default function AdminPromptLibrary() {
 
   const load = async () => {
     setLoading(true);
-    const data = await base44.entities.LibraryPrompt.list("order", 1000);
+    const data = await base44.entities.LibraryPrompt.list("-created_date", 1000);
     setPrompts(data);
     setLoading(false);
   };
@@ -104,7 +103,7 @@ export default function AdminPromptLibrary() {
       </div>
 
       <AdminTable
-        columns={["", "Title", "Category", "Published", "Views", "Copies", "Order", "Featured", "Actions"]}
+        columns={["", "Title", "Category", "Published", "Views", "Copies", "Featured", "Actions"]}
         rows={visible}
         loading={loading}
         emptyIcon={search.trim() ? Search : Library}
@@ -126,7 +125,6 @@ export default function AdminPromptLibrary() {
           </span>,
           <span className="text-sm tabular-nums">{(p.viewCount || 0).toLocaleString()}</span>,
           <span className="text-sm tabular-nums">{(p.copyCount || 0).toLocaleString()}</span>,
-          <span className="text-sm text-muted-foreground">{p.order ?? 0}</span>,
           p.featured ? (
             <Star className="w-4 h-4 fill-primary text-primary" />
           ) : (
