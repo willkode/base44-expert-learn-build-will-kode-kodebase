@@ -19,6 +19,7 @@ const PAGES = [
   { path: "/contact", label: "Contact" },
   { path: "/learn/blog", label: "Blog" },
   { path: "/learn/prompt-library", label: "Prompt Library" },
+  { path: "/learn/build-your-own", label: "Build Your Own" },
   { path: "/learn/videos", label: "Videos" },
   { path: "/learn/superagent", label: "SuperAgent" },
   { path: "/learn/llm-guide", label: "LLM Guide" },
