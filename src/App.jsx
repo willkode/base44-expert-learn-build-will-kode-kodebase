@@ -38,6 +38,7 @@ import Videos from '@/pages/learn/Videos';
 import LlmGuide from '@/pages/learn/LlmGuide';
 import Base44ResourceHub from '@/pages/learn/Base44ResourceHub';
 import Base44MasterClass from '@/pages/learn/Base44MasterClass';
+import BuildYourOwn from '@/pages/learn/BuildYourOwn';
 import TermsOfService from '@/pages/legal/TermsOfService';
 import PrivacyPolicy from '@/pages/legal/PrivacyPolicy';
 import RefundPolicy from '@/pages/legal/RefundPolicy';
@@ -96,6 +97,7 @@ import AdminTemplates from '@/pages/admin/AdminTemplates';
 import AdminVideos from '@/pages/admin/AdminVideos';
 import AdminMarketing from '@/pages/admin/AdminMarketing';
 import AdminPromptLibrary from '@/pages/admin/AdminPromptLibrary';
+import AdminBuildYourOwn from '@/pages/admin/AdminBuildYourOwn';
 import BlogMarketingLayout from '@/components/admin/blog/BlogMarketingLayout';
 import BlogDashboard from '@/pages/admin/blog/BlogDashboard';
 import BlogPosts from '@/pages/admin/blog/BlogPosts';
@@ -172,6 +174,7 @@ const AuthenticatedApp = () => {
         <Route path="/learn/llm-guide" element={<LlmGuide />} />
         <Route path="/learn/base44-cheat-sheet" element={<Base44ResourceHub />} />
         <Route path="/learn/base44-master-class" element={<Base44MasterClass />} />
+        <Route path="/learn/build-your-own" element={<BuildYourOwn />} />
         <Route path="/learn/base44" element={<Navigate to="/learn/base44-cheat-sheet" replace />} />
         <Route path="/services" element={<ServicesIndex />} />
         <Route path="/services/kode-sessions" element={<KodeSessions />} />
@@ -235,6 +238,7 @@ const AuthenticatedApp = () => {
             <Route path="/admin/logs" element={<AdminLogs />} />
             <Route path="/admin/templates" element={<AdminTemplates />} />
             <Route path="/admin/videos" element={<AdminVideos />} />
+            <Route path="/admin/build-your-own" element={<AdminBuildYourOwn />} />
             <Route path="/admin/marketing" element={<AdminMarketing />} />
             <Route path="/admin/marketing/prompt-library" element={<AdminPromptLibrary />} />
             <Route path="/admin/marketing/blog" element={<BlogMarketingLayout />}>
