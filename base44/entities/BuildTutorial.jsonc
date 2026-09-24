@@ -1,0 +1,77 @@
+{
+  "name": "BuildTutorial",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Tutorial title"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Link to the external tutorial (also the dedupe key for imports)"
+    },
+    "category": {
+      "type": "string",
+      "default": "Uncategorized",
+      "description": "What you build, e.g. Database, Git, Web Server"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Programming languages used, e.g. [\"C++\", \"Python\"]"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional short note shown under the title"
+    },
+    "isVideo": {
+      "type": "boolean",
+      "default": false,
+      "description": "Tutorial is a video or video series"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Pinned to the top of its category"
+    },
+    "published": {
+      "type": "boolean",
+      "default": true,
+      "description": "Visible on /learn/build-your-own"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "build-your-own-x",
+        "manual"
+      ],
+      "default": "manual",
+      "description": "Where the entry came from"
+    }
+  },
+  "required": [
+    "title",
+    "url",
+    "category"
+  ],
+  "rls": {
+    "read": {},
+    "write": {
+      "$and": [
+        {
+          "created_by_id": {
+            "$ne": "anonymous"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
