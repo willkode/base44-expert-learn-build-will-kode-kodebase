@@ -58,7 +58,11 @@
     "category"
   ],
   "rls": {
-    "read": {},
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
     "write": {
       "$and": [
         {
