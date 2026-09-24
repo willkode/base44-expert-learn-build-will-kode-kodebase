@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { trackEvent, trackNewsletterSignup } from "@/lib/analytics";
 import { fetchPublishedPosts } from "@/lib/blogPublic";
+import { fetchLibraryPrompts } from "@/lib/promptSort";
 import { trackBlogClick } from "@/lib/blogTracking";
 
 const PRODUCTS_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/2597094aa_generated_image.png";
@@ -85,7 +86,7 @@ function RelatedPosts({ currentSlug, variant = "blog" }) {
 
   useEffect(() => {
     const loader = isPrompt
-      ? base44.entities.LibraryPrompt.list("-order", 6)
+      ? fetchLibraryPrompts(6)
       : fetchPublishedPosts(20);
     loader.then((d) => {
       setPosts((d || []).filter((p) => p.slug !== currentSlug).slice(0, 4));
