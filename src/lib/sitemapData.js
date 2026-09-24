@@ -43,6 +43,7 @@ export const sitemapTree = [
       { label: "Prompt Library", path: "/learn/prompt-library", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
       { label: "Prompt Post Detail", path: "/learn/prompt-library/:slug", type: "dynamic", navSources: ["prompt-card"] },
       { label: "Build Your Own", path: "/learn/build-your-own", type: "public", navSources: ["navbar-dropdown", "mobile-menu", "learn-index"] },
+      { label: "Build Guide Detail", path: "/learn/build-your-own/:slug", type: "dynamic", navSources: ["build-your-own"] },
       { label: "Agent Skills", path: "/learn/agent-skills", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
       { label: "Super Agent Guide", path: "/learn/superagent", type: "public", navSources: ["learn-index"] },
       { label: "AI Controls", path: "/learn/ai-controls", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
