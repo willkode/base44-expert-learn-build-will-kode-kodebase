@@ -87,6 +87,11 @@ export default function Checkout() {
             navigate(`/dashboard?purchase=success&item=${encodeURIComponent(label || "")}`);
             return;
           }
+          // Access products land back on the area they unlock.
+          if (product?.slug === "build-your-own-lifetime") {
+            navigate("/learn/build-your-own?unlocked=1");
+            return;
+          }
           navigate(`/dashboard?purchase=success&item=${encodeURIComponent(product?.name || pay.itemName || "")}`);
           return;
         }
@@ -178,7 +183,7 @@ export default function Checkout() {
         desc: product.tagline,
         priceLabel: (product.priceCents || 0) === 0 ? "Free" : formatUsd(getProductSalePriceCents(product.priceCents, product.slug)),
         fullPriceLabel: formatUsd(product.priceCents),
-        onSale: isSummerSaleActive() && (product.priceCents || 0) > 0,
+        onSale: isSummerSaleActive() && (product.priceCents || 0) > 0 && getSaleDiscountPercent(product.slug) > 0,
         periodLabel: " one-time",
         features: product.features || [],
         supportNote: product.supportNote,
