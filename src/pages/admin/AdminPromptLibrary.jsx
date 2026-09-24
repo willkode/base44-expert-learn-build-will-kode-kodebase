@@ -38,7 +38,7 @@ export default function AdminPromptLibrary() {
 
   const load = async () => {
     setLoading(true);
-    const data = await base44.entities.LibraryPrompt.list("order");
+    const data = await base44.entities.LibraryPrompt.list("order", 1000);
     setPrompts(data);
     setLoading(false);
   };
