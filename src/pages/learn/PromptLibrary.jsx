@@ -12,6 +12,12 @@ import ProductsCtaBanner from "@/components/shared/ProductsCtaBanner";
 
 const STORAGE_KEY = "kb_newsletter_subscribed";
 
+const publishedTime = (p) => new Date(p.publishedAt || p.created_date || 0).getTime();
+
+// Featured first, then newest published within each group.
+const byFeaturedThenNewest = (a, b) =>
+  (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || publishedTime(b) - publishedTime(a);
+
 export default function PromptLibrary() {
   const [prompts, setPrompts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,8 +28,8 @@ export default function PromptLibrary() {
 
   useEffect(() => {
     if (localStorage.getItem(STORAGE_KEY)) setUnlocked(true);
-    base44.entities.LibraryPrompt.list("order").then((data) => {
-      setPrompts(data);
+    base44.entities.LibraryPrompt.list("-created_date", 1000).then((data) => {
+      setPrompts([...data].sort(byFeaturedThenNewest));
       setLoading(false);
     });
   }, []);
