@@ -197,15 +197,9 @@ export default function ManualPromptFormDialog({ open, onOpenChange, prompt, onS
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <Label className="mb-1.5 block">SEO title <span className="text-muted-foreground">(optional)</span></Label>
-              <Input value={form.seoTitle} onChange={(e) => set("seoTitle", e.target.value)} placeholder={form.title ? `${form.title} | KodeBase` : ""} />
-            </div>
-            <div>
-              <Label className="mb-1.5 block">Sort order <span className="text-muted-foreground">(lower shows first)</span></Label>
-              <Input type="number" value={form.order} onChange={(e) => set("order", e.target.value)} />
-            </div>
+          <div>
+            <Label className="mb-1.5 block">SEO title <span className="text-muted-foreground">(optional)</span></Label>
+            <Input value={form.seoTitle} onChange={(e) => set("seoTitle", e.target.value)} placeholder={form.title ? `${form.title} | KodeBase` : ""} />
           </div>
 
           <div>
