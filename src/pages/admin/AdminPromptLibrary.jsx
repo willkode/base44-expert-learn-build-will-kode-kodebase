@@ -18,6 +18,7 @@ import {
 import PromptPostFormDialog from "@/components/admin/marketing/PromptPostFormDialog";
 import ManualPromptFormDialog from "@/components/admin/marketing/ManualPromptFormDialog";
 import { publishedTime, byFeaturedThenNewest } from "@/lib/promptSort";
+import PromptMedia from "@/components/learn/PromptMedia";
 
 const SORTS = {
   newest: { label: "Newest first", fn: (a, b) => publishedTime(b) - publishedTime(a) },
@@ -110,8 +111,8 @@ export default function AdminPromptLibrary() {
         emptyTitle={search.trim() ? "No matching prompts" : "No prompt posts yet"}
         emptyDescription={search.trim() ? `Nothing matches "${search.trim()}".` : "Add your first prompt manually or generate one with AI."}
         renderRow={(p) => [
-          p.imageUrl ? (
-            <img src={p.imageUrl} alt="" className="w-12 h-9 rounded object-cover" />
+          p.imageUrl || p.videoUrl ? (
+            <PromptMedia prompt={p} variant="thumb" alt="" className="w-12 h-9 rounded object-cover" />
           ) : (
             <div className="w-12 h-9 rounded bg-secondary" />
           ),
