@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Hammer, Search, ExternalLink, PlayCircle, Star, Lock, Check, PartyPopper } from "lucide-react";
+import { Hammer, Search, ArrowRight, PlayCircle, Star, Lock, PartyPopper, Gauge, Clock } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import Seo from "@/components/seo/Seo";
 import { canonical } from "@/lib/seo";
-import { trackEvent } from "@/lib/analytics";
-import { formatUsd } from "@/lib/summerSale";
+import { BUILD_PATH, guidePath } from "@/lib/buildGuides";
+import BuildUnlockCard from "@/components/learn/BuildUnlockCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/select";
 import LoadingState from "@/components/shared/LoadingState";
 
-const PAGE_PATH = "/learn/build-your-own";
 const DESCRIPTION =
   "Step-by-step guides for re-creating the technologies you use every day — databases, Git, Docker, shells, compilers, web servers and more — from scratch.";
 
@@ -42,11 +41,8 @@ function GroupTitle({ name, count }) {
 
 function TutorialRow({ t }) {
   return (
-    <a
-      href={t.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={() => trackEvent("build_your_own_click", { tutorial_title: t.title, category: t.category })}
+    <Link
+      to={guidePath(t)}
       className="group flex items-start gap-3 rounded-xl border border-border bg-card/60 p-4 hover:border-primary/40 hover:bg-card transition-colors"
     >
       <div className="min-w-0 flex-1">
@@ -63,9 +59,15 @@ function TutorialRow({ t }) {
         </div>
         <p className="font-medium leading-snug group-hover:text-primary transition-colors">{t.title}</p>
         {t.description && <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{t.description}</p>}
+        {(t.difficulty || t.timeEstimate) && (
+          <div className="flex items-center gap-3 mt-2 text-[11px] text-muted-foreground">
+            {t.difficulty && <span className="inline-flex items-center gap-1"><Gauge className="w-3 h-3" /> {t.difficulty}</span>}
+            {t.timeEstimate && <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" /> {t.timeEstimate}</span>}
+          </div>
+        )}
       </div>
-      <ExternalLink className="w-4 h-4 mt-1 shrink-0 text-muted-foreground group-hover:text-primary transition-colors" />
-    </a>
+      <ArrowRight className="w-4 h-4 mt-1 shrink-0 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+    </Link>
   );
 }
 
@@ -143,7 +145,7 @@ function Library({ tutorials }) {
             size="sm"
             className="font-medium"
           >
-            {c}
+            {c === "Uncategorized" ? "More builds" : c}
             <span className="ml-1.5 text-xs opacity-70">{c === "All" ? tutorials.length : categoryCounts[c]}</span>
           </Button>
         ))}
@@ -173,59 +175,13 @@ function Library({ tutorials }) {
   );
 }
 
-// Locked view — pricing card plus a link-free preview of what's inside.
+// Locked view — pricing card plus a preview of what's inside.
 function Paywall({ data }) {
-  const navigate = useNavigate();
-  const price = formatUsd(data.product?.priceCents ?? 500);
   const categories = [...(data.categories || [])].sort((a, b) => byCategoryName(a.name, b.name));
-  const canBuy = data.total > 0 && data.product?.active;
-
-  const unlock = () => {
-    trackEvent("build_your_own_unlock_click", { signed_in: data.signedIn });
-    if (!data.signedIn) { navigate(`/register?next=${PAGE_PATH}`); return; }
-    navigate(`/checkout?product=${data.product.id}`);
-  };
 
   return (
     <>
-      <div className="max-w-xl mx-auto mb-16 rounded-2xl border border-primary/40 bg-card/80 p-8 text-center glow-orange">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-xs font-medium text-primary mb-5">
-          <Lock className="w-3.5 h-3.5" /> Members only
-        </div>
-        <p className="font-sora font-extrabold text-5xl mb-1">{price}</p>
-        <p className="text-muted-foreground mb-6">One-time payment · Lifetime access · No subscription</p>
-        <ul className="text-sm text-left space-y-2 max-w-sm mx-auto mb-7">
-          {[
-            data.total > 0 ? `${data.total.toLocaleString()} curated guides across ${categories.length} categories` : "Hundreds of curated guides",
-            "Search and filter by category and programming language",
-            "New guides added over time — included forever",
-          ].map((f) => (
-            <li key={f} className="flex items-start gap-2">
-              <Check className="w-4 h-4 mt-0.5 shrink-0 text-primary" /> {f}
-            </li>
-          ))}
-        </ul>
-        {canBuy ? (
-          <Button
-            onClick={unlock}
-            size="lg"
-            className="w-full font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
-          >
-            Unlock for {price}
-          </Button>
-        ) : (
-          <Button size="lg" className="w-full" disabled>Opening soon</Button>
-        )}
-        <p className="mt-3 text-xs text-muted-foreground flex items-center justify-center gap-1.5">
-          <Lock className="w-3 h-3" /> Secure checkout via Square
-        </p>
-        {!data.signedIn && (
-          <p className="mt-4 text-sm text-muted-foreground">
-            Already purchased?{" "}
-            <Link to={`/login?next=${PAGE_PATH}`} className="text-primary hover:underline">Log in</Link>
-          </p>
-        )}
-      </div>
+      <BuildUnlockCard access={data} returnPath={BUILD_PATH} className="mb-16" />
 
       {categories.length > 0 && (
         <>
@@ -240,9 +196,11 @@ function Paywall({ data }) {
                 </div>
                 <ul className="space-y-1.5">
                   {c.samples.map((s) => (
-                    <li key={s} className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <Lock className="w-3 h-3 mt-1 shrink-0" />
-                      <span className="line-clamp-1">{s}</span>
+                    <li key={s.slug || s.title}>
+                      <Link to={guidePath(s)} className="flex items-start gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                        <Lock className="w-3 h-3 mt-1 shrink-0" />
+                        <span className="line-clamp-1">{s.title}</span>
+                      </Link>
                     </li>
                   ))}
                   {c.count > c.samples.length && (
@@ -284,12 +242,12 @@ export default function BuildYourOwn() {
       <Seo
         title="Build Your Own X — Recreate Technologies From Scratch | KodeBase"
         description={DESCRIPTION}
-        path={PAGE_PATH}
+        path={BUILD_PATH}
         jsonLd={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
           name: "Build Your Own",
-          url: canonical(PAGE_PATH),
+          url: canonical(BUILD_PATH),
           description: DESCRIPTION,
         }}
       />
