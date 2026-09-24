@@ -38,7 +38,10 @@ const SERVICE_PRICING = {
 const KODE_SESSION_SALE_IDS = ['kode_session_1hr', 'kode_session_2hr'];
 
 // Products never discounted by the sale (fixed-price services sold as products).
-const SALE_EXCLUDED_SLUGS = ['hire-will-kode', 'desktop-pro-access', '3d-ui-element-kit'];
+const SALE_EXCLUDED_SLUGS = ['hire-will-kode', 'desktop-pro-access', '3d-ui-element-kit', 'build-your-own-lifetime'];
+
+// Products that are never discounted by anything — sales or coupon overrides.
+const NO_DISCOUNT_SLUGS = ['build-your-own-lifetime'];
 
 // Will's Birthday Sale: 86% off all products through Oct 19, 11:59 AM Central
 // (16:59 UTC), anchored to the current calendar year.
@@ -92,7 +95,9 @@ Deno.serve(async (req) => {
         if (!product) return Response.json({ error: 'One of the products in your cart is no longer available.' }, { status: 404 });
         if ((product.priceCents || 0) === 0) continue; // free products are claimed directly, not purchased
         let cents, name;
-        const override = coupon?.productPrices?.find((o) => o.productId === product.id);
+        const override = NO_DISCOUNT_SLUGS.includes(product.slug)
+          ? null
+          : coupon?.productPrices?.find((o) => o.productId === product.id);
         if (override && Number.isFinite(override.priceCents)) {
           cents = Math.max(0, Math.round(override.priceCents));
           name = `${product.name} (Coupon ${coupon.code})`;
