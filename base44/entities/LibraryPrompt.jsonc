@@ -70,6 +70,21 @@
       "type": "number",
       "default": 0,
       "description": "Sort order"
+    },
+    "publishedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Published date shown in admin; falls back to created_date when empty"
+    },
+    "viewCount": {
+      "type": "number",
+      "default": 0,
+      "description": "Post page views (incremented by trackPromptEvent)"
+    },
+    "copyCount": {
+      "type": "number",
+      "default": 0,
+      "description": "Times the prompt was copied (incremented by trackPromptEvent)"
     }
   },
   "required": [
