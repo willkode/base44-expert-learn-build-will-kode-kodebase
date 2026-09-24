@@ -22,6 +22,7 @@ import {
   Network,
   DownloadCloud,
   Inbox,
+  Hammer,
 } from "lucide-react";
 
 export const userNav = [
@@ -47,6 +48,7 @@ export const adminNav = [
   { label: "AI Usage Logs", to: "/admin/logs", icon: ScrollText },
   { label: "Templates", to: "/admin/templates", icon: LayoutTemplate },
   { label: "Videos", to: "/admin/videos", icon: Video },
+  { label: "Build Your Own", to: "/admin/build-your-own", icon: Hammer },
   { label: "Marketing", to: "/admin/marketing", icon: Megaphone },
   { label: "Prompt Vault", to: "/admin/prompt-vault", icon: Vault },
   { label: "Agent Skills", to: "/admin/agent-skills", icon: Sparkles },
