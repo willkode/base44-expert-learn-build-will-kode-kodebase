@@ -14,6 +14,9 @@ import { replacedItems, compatFocus, processSteps, deliverables, pricingFactors,
 import MigrationCheckout, { MIGRATION_PRICE as MIGRATION_START_PRICE } from "@/components/services/migration/MigrationCheckout";
 import ReviewsSection from "@/components/reviews/ReviewsSection";
 
+const PROMO_VIDEO = "https://base44.app/api/apps/6a1905a0bc76553d6c934574/files/mp/public/6a1905a0bc76553d6c934574/e397a9596_migration-promo-60s.mp4";
+const PROMO_POSTER = "https://base44.app/api/apps/6a1905a0bc76553d6c934574/files/mp/public/6a1905a0bc76553d6c934574/fd5f25dca_migration-promo-poster.jpg";
+
 const OG_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/bab7cb2ec_generated_image.png";
 
 const fadeUp = {
@@ -95,6 +98,20 @@ export default function Base44Migration() {
                 See Pricing
               </Button>
             </a>
+          </motion.div>
+          <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={6} className="mt-12">
+            <div className="rounded-2xl overflow-hidden border border-border bg-black shadow-2xl shadow-primary/10 glow-orange">
+              <video
+                src={PROMO_VIDEO}
+                poster={PROMO_POSTER}
+                controls
+                playsInline
+                preload="metadata"
+                className="w-full aspect-video"
+                aria-label="Base44 App Migration — 60 second overview"
+                onPlay={() => trackEvent("migration_promo_video_play", { page_path: "/services/base44-migration" })}
+              />
+            </div>
           </motion.div>
         </div>
       </section>
