@@ -16,7 +16,6 @@ import {
 import LoadingState from "@/components/shared/LoadingState";
 
 const PAGE_PATH = "/learn/build-your-own";
-const SOURCE_REPO = "https://github.com/codecrafters-io/build-your-own-x";
 const DESCRIPTION =
   "Step-by-step guides for re-creating the technologies you use every day — databases, Git, Docker, shells, compilers, web servers and more — from scratch.";
 
@@ -328,14 +327,6 @@ export default function BuildYourOwn() {
         ) : (
           <Paywall data={data} />
         )}
-
-        <p className="mt-16 text-center text-xs text-muted-foreground">
-          Many guides are curated from{" "}
-          <a href={SOURCE_REPO} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
-            build-your-own-x
-          </a>{" "}
-          by CodeCrafters and its contributors (CC0). Tutorials are hosted by their original authors.
-        </p>
       </section>
     </>
   );
