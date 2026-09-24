@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
+import { format } from "date-fns";
 import { Library, Plus, Pencil, Trash2, ExternalLink, Star, Sparkles } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import AdminTable from "@/components/admin/AdminTable";
@@ -60,7 +61,7 @@ export default function AdminPromptLibrary() {
       />
 
       <AdminTable
-        columns={["", "Title", "Category", "Order", "Featured", "Actions"]}
+        columns={["", "Title", "Category", "Published", "Views", "Copies", "Order", "Featured", "Actions"]}
         rows={prompts}
         loading={loading}
         emptyIcon={Library}
@@ -77,6 +78,11 @@ export default function AdminPromptLibrary() {
             {p.slug && <div className="text-xs text-muted-foreground">/{p.slug}</div>}
           </div>,
           <Badge variant="secondary" className="text-xs">{p.category}</Badge>,
+          <span className="text-sm whitespace-nowrap">
+            {p.publishedAt || p.created_date ? format(new Date(p.publishedAt || p.created_date), "MMM d, yyyy") : "—"}
+          </span>,
+          <span className="text-sm tabular-nums">{(p.viewCount || 0).toLocaleString()}</span>,
+          <span className="text-sm tabular-nums">{(p.copyCount || 0).toLocaleString()}</span>,
           <span className="text-sm text-muted-foreground">{p.order ?? 0}</span>,
           p.featured ? (
             <Star className="w-4 h-4 fill-primary text-primary" />
