@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, Library, Video as VideoIcon, Sparkles } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { fetchPublishedPosts } from "@/lib/blogPublic";
+import { fetchLibraryPrompts } from "@/lib/promptSort";
 import { trackCTA } from "@/lib/analytics";
 import BlogCard from "@/components/learn/BlogCard";
 import VideoCard from "@/components/learn/VideoCard";
@@ -85,7 +86,7 @@ export default function ExploreResources() {
 
   useEffect(() => {
     fetchPublishedPosts(6).then((p) => setPosts(p.slice(0, 3))).catch(() => {});
-    base44.entities.LibraryPrompt.list("order", 3).then(setPrompts).catch(() => {});
+    fetchLibraryPrompts(3).then(setPrompts).catch(() => {});
     base44.entities.Video.list("order", 3).then(setVideos).catch(() => {});
     base44.entities.AgentSkill.filter({ published: true }, "-created_date", 4).then(setSkills).catch(() => {});
   }, []);
