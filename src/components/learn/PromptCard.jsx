@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Copy, Check, Star, ArrowRight } from "lucide-react";
+import { trackPromptCopy } from "@/lib/promptTracking";
 
 const CATEGORY_IMAGES = {
   "App Building": "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/e5af6c698_generated_image.png",
@@ -32,6 +33,7 @@ export default function PromptCard({ prompt, unlocked, onCopyRequest }) {
 
   const doCopy = () => {
     navigator.clipboard.writeText(prompt.promptText);
+    trackPromptCopy(prompt.slug);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
