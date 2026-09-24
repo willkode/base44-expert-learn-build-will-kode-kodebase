@@ -42,6 +42,7 @@ export const sitemapTree = [
       { label: "Blog Post", path: "/learn/blog/:slug", type: "dynamic", navSources: ["blog-card"] },
       { label: "Prompt Library", path: "/learn/prompt-library", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
       { label: "Prompt Post Detail", path: "/learn/prompt-library/:slug", type: "dynamic", navSources: ["prompt-card"] },
+      { label: "Build Your Own", path: "/learn/build-your-own", type: "public", navSources: ["navbar-dropdown", "mobile-menu", "learn-index"] },
       { label: "Agent Skills", path: "/learn/agent-skills", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
       { label: "Super Agent Guide", path: "/learn/superagent", type: "public", navSources: ["learn-index"] },
       { label: "AI Controls", path: "/learn/ai-controls", type: "public", navSources: ["navbar-dropdown", "mobile-menu"] },
@@ -111,6 +112,7 @@ export const sitemapTree = [
       { label: "AI Usage Logs", path: "/admin/logs", type: "admin", navSources: ["admin-sidebar"] },
       { label: "Templates", path: "/admin/templates", type: "admin", navSources: ["admin-sidebar"] },
       { label: "Videos", path: "/admin/videos", type: "admin", navSources: ["admin-sidebar"] },
+      { label: "Build Your Own Mgmt", path: "/admin/build-your-own", type: "admin", navSources: ["admin-sidebar"] },
       { label: "Marketing Hub", path: "/admin/marketing", type: "admin", navSources: ["admin-sidebar"] },
       { label: "Prompt Library Mgmt", path: "/admin/marketing/prompt-library", type: "admin", navSources: ["admin-marketing"] },
       {
