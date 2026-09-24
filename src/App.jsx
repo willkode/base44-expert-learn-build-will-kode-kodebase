@@ -39,6 +39,7 @@ import LlmGuide from '@/pages/learn/LlmGuide';
 import Base44ResourceHub from '@/pages/learn/Base44ResourceHub';
 import Base44MasterClass from '@/pages/learn/Base44MasterClass';
 import BuildYourOwn from '@/pages/learn/BuildYourOwn';
+import BuildGuide from '@/pages/learn/BuildGuide';
 import TermsOfService from '@/pages/legal/TermsOfService';
 import PrivacyPolicy from '@/pages/legal/PrivacyPolicy';
 import RefundPolicy from '@/pages/legal/RefundPolicy';
@@ -175,6 +176,7 @@ const AuthenticatedApp = () => {
         <Route path="/learn/base44-cheat-sheet" element={<Base44ResourceHub />} />
         <Route path="/learn/base44-master-class" element={<Base44MasterClass />} />
         <Route path="/learn/build-your-own" element={<BuildYourOwn />} />
+        <Route path="/learn/build-your-own/:slug" element={<BuildGuide />} />
         <Route path="/learn/base44" element={<Navigate to="/learn/base44-cheat-sheet" replace />} />
         <Route path="/services" element={<ServicesIndex />} />
         <Route path="/services/kode-sessions" element={<KodeSessions />} />
