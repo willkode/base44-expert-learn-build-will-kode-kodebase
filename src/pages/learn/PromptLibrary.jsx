@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
 import { Library, Coffee } from "lucide-react";
 import Seo from "@/components/seo/Seo";
@@ -9,14 +8,9 @@ import PromptCard from "@/components/learn/PromptCard";
 import NewsletterGateDialog from "@/components/learn/NewsletterGateDialog";
 import LoadingState from "@/components/shared/LoadingState";
 import ProductsCtaBanner from "@/components/shared/ProductsCtaBanner";
+import { fetchLibraryPrompts } from "@/lib/promptSort";
 
 const STORAGE_KEY = "kb_newsletter_subscribed";
-
-const publishedTime = (p) => new Date(p.publishedAt || p.created_date || 0).getTime();
-
-// Featured first, then newest published within each group.
-const byFeaturedThenNewest = (a, b) =>
-  (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || publishedTime(b) - publishedTime(a);
 
 export default function PromptLibrary() {
   const [prompts, setPrompts] = useState([]);
@@ -28,8 +22,8 @@ export default function PromptLibrary() {
 
   useEffect(() => {
     if (localStorage.getItem(STORAGE_KEY)) setUnlocked(true);
-    base44.entities.LibraryPrompt.list("-created_date", 1000).then((data) => {
-      setPrompts([...data].sort(byFeaturedThenNewest));
+    fetchLibraryPrompts().then((data) => {
+      setPrompts(data);
       setLoading(false);
     });
   }, []);
