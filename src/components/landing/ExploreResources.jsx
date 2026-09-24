@@ -9,6 +9,7 @@ import { trackCTA } from "@/lib/analytics";
 import BlogCard from "@/components/learn/BlogCard";
 import VideoCard from "@/components/learn/VideoCard";
 import AgentSkillPreviewCard from "@/components/landing/AgentSkillPreviewCard";
+import PromptMedia from "@/components/learn/PromptMedia";
 
 // Surfaces the app's other content hubs on the home page: latest blog posts,
 // prompt library, and videos. Reuses the existing learn cards + design tokens.
@@ -41,17 +42,17 @@ const PROMPT_CATEGORY_IMAGES = {
 const PROMPT_DEFAULT_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/d7d834e22_generated_image.png";
 
 function PromptPreviewCard({ prompt }) {
-  const image = prompt.imageUrl || PROMPT_CATEGORY_IMAGES[prompt.category] || PROMPT_DEFAULT_IMAGE;
   return (
     <Link
       to={prompt.slug ? `/learn/prompt-library/${prompt.slug}` : "/learn/prompt-library"}
       className="group flex flex-col h-full overflow-hidden rounded-2xl border border-border bg-card/70 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300"
     >
       <div className="relative h-36 overflow-hidden">
-        <img
-          src={image}
+        <PromptMedia
+          prompt={prompt}
+          variant="card"
+          fallbackImage={PROMPT_CATEGORY_IMAGES[prompt.category] || PROMPT_DEFAULT_IMAGE}
           alt={prompt.category}
-          loading="lazy"
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
