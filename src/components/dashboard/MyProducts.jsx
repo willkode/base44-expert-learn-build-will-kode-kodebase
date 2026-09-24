@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import { trackEvent } from "@/lib/analytics";
 import SectionHeading from "@/components/dashboard/SectionHeading";
+import { ACCESS_PRODUCT_ROUTES } from "@/lib/accessProducts";
 
 // Shows products the logged-in user has purchased (completed Payment with a
 // productId) so they can jump straight to their download. Reuses the existing
@@ -34,7 +35,7 @@ export default function MyProducts({ userId }) {
 
   const handleOpen = (product) => {
     trackEvent("my_products_open", { item_id: product.id, item_name: product.name });
-    navigate(product.slug === "complete-builder-bundle" ? "/bundle-downloads" : `/download/${product.id}`);
+    navigate(ACCESS_PRODUCT_ROUTES[product.slug] || `/download/${product.id}`);
   };
 
   return (
