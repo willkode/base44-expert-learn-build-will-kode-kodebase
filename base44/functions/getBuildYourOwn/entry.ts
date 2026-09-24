@@ -34,7 +34,10 @@ Deno.serve(async (req) => {
     const tutorials = await base44.asServiceRole.entities.BuildTutorial.filter({ published: true }, 'title', 2000);
 
     if (via) {
-      return Response.json({ hasAccess: true, via, signedIn: true, product: productInfo, tutorials });
+      // Only display fields go to the browser — internal fields (e.g. source) stay server-side.
+      const guides = tutorials.map(({ id, title, url, category, languages, description, isVideo, featured }) =>
+        ({ id, title, url, category, languages, description, isVideo, featured }));
+      return Response.json({ hasAccess: true, via, signedIn: true, product: productInfo, tutorials: guides });
     }
 
     // Preview — never includes URLs.
