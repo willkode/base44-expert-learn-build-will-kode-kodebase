@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { Download as DownloadIcon, Mail, CheckCircle2, Loader2, ArrowLeft, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
@@ -7,8 +7,17 @@ import LoadingState from "@/components/shared/LoadingState";
 import Seo from "@/components/seo/Seo";
 import { trackEvent } from "@/lib/analytics";
 import HireWillKodeUpsell from "@/components/upsell/HireWillKodeUpsell";
+import { ACCESS_PRODUCT_ROUTES_BY_ID } from "@/lib/accessProducts";
 
+// Access products (e.g. Build Your Own) unlock a section instead of a file —
+// send old or emailed /download links for them to that section.
 export default function Download() {
+  const { productId } = useParams();
+  const accessRoute = ACCESS_PRODUCT_ROUTES_BY_ID[productId];
+  return accessRoute ? <Navigate to={accessRoute} replace /> : <DownloadPage />;
+}
+
+function DownloadPage() {
   const { productId } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
