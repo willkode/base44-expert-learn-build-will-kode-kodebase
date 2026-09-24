@@ -13,6 +13,7 @@ import ApiKeyHelpCta from "@/components/learn/ApiKeyHelpCta";
 import { SITE } from "@/lib/seo";
 import { trackEvent } from "@/lib/analytics";
 import { trackPromptView, trackPromptCopy } from "@/lib/promptTracking";
+import PromptMedia from "@/components/learn/PromptMedia";
 
 export default function PromptPostDetail() {
   const { slug } = useParams();
@@ -110,8 +111,8 @@ export default function PromptPostDetail() {
           {/* Two-column: content + sticky sidebar */}
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-10 lg:gap-14">
             <div className="min-w-0">
-              {prompt.imageUrl && (
-                <img src={prompt.imageUrl} alt={prompt.title} className="w-full aspect-[16/9] object-cover rounded-2xl border border-border mb-10" />
+              {(prompt.videoUrl || prompt.imageUrl) && (
+                <PromptMedia prompt={prompt} variant="hero" className="w-full aspect-[16/9] object-cover rounded-2xl border border-border bg-black mb-10" />
               )}
 
               {prompt.guide && (
