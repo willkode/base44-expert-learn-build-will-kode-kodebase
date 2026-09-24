@@ -3,7 +3,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 // Single source of truth for Build Your Own access ($5 one-time, lifetime).
 // Access = admin, or a completed Payment for the Build Your Own product.
 // BuildTutorial RLS only lets admins read directly, so buyers get the guides
-// served here; everyone else gets a link-free preview (counts + sample titles).
+// served here; everyone else gets a preview (counts + sample titles, no source links).
 const PRODUCT_SLUG = 'build-your-own-lifetime';
 const SAMPLES_PER_CATEGORY = 3;
 
@@ -34,9 +34,9 @@ Deno.serve(async (req) => {
     const tutorials = await base44.asServiceRole.entities.BuildTutorial.filter({ published: true }, 'title', 2000);
 
     if (via) {
-      // Only display fields go to the browser — internal fields (e.g. source) stay server-side.
-      const guides = tutorials.map(({ id, title, url, category, languages, description, isVideo, featured }) =>
-        ({ id, title, url, category, languages, description, isVideo, featured }));
+      // List fields only — guide pages (getBuildGuide) serve the write-up and source link.
+      const guides = tutorials.map(({ id, slug, title, category, languages, description, isVideo, featured, difficulty, timeEstimate }) =>
+        ({ id, slug, title, category, languages, description, isVideo, featured, difficulty, timeEstimate }));
       return Response.json({ hasAccess: true, via, signedIn: true, product: productInfo, tutorials: guides });
     }
 
@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
     for (const t of tutorials) {
       const c = (categories[t.category] ||= { name: t.category, count: 0, samples: [] });
       c.count += 1;
-      if (c.samples.length < SAMPLES_PER_CATEGORY) c.samples.push(t.title);
+      if (c.samples.length < SAMPLES_PER_CATEGORY) c.samples.push({ title: t.title, slug: t.slug });
       for (const l of t.languages || []) languages[l] = (languages[l] || 0) + 1;
     }
 
@@ -57,6 +57,7 @@ Deno.serve(async (req) => {
       product: productInfo,
       total: tutorials.length,
       categories: Object.values(categories),
+      categoryCount: Object.keys(categories).length,
       languages: Object.keys(languages).sort((a, b) => languages[b] - languages[a]),
     });
   } catch (error) {
