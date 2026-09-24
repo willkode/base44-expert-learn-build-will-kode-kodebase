@@ -21,7 +21,7 @@ export function isSummerSaleActive(now = new Date()) {
 }
 
 // Products excluded from sale pricing (always full price).
-export const SALE_EXCLUDED_SLUGS = ["hire-will-kode"];
+export const SALE_EXCLUDED_SLUGS = ["hire-will-kode", "build-your-own-lifetime"];
 
 // Will's Birthday Sale: 86% off everything (except excluded products).
 export function getSaleDiscountPercent(slug) {
