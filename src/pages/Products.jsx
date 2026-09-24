@@ -19,7 +19,7 @@ import SummerSaleBanner from "@/components/products/SummerSaleBanner";
 import FeaturedDesktopIdeCard from "@/components/products/FeaturedDesktopIdeCard";
 import ProductStars from "@/components/products/ProductStars";
 
-const HIDDEN_SLUGS = ["complete-builder-bundle", "starter-prompt-pack", "hire-will-kode", "base44-desktop-ide"];
+const HIDDEN_SLUGS = ["complete-builder-bundle", "starter-prompt-pack", "hire-will-kode", "base44-desktop-ide", "build-your-own-lifetime"];
 
 export default function Products() {
   const navigate = useNavigate();
