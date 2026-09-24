@@ -12,6 +12,7 @@ import LoadingState from "@/components/shared/LoadingState";
 import ApiKeyHelpCta from "@/components/learn/ApiKeyHelpCta";
 import { SITE } from "@/lib/seo";
 import { trackEvent } from "@/lib/analytics";
+import { trackPromptView, trackPromptCopy } from "@/lib/promptTracking";
 
 export default function PromptPostDetail() {
   const { slug } = useParams();
@@ -26,7 +27,10 @@ export default function PromptPostDetail() {
       const p = rows[0] || null;
       setPrompt(p);
       setLoading(false);
-      if (p) trackEvent("view_prompt_post", { prompt_title: p.title, prompt_category: p.category, page_path: window.location.pathname });
+      if (p) {
+        trackEvent("view_prompt_post", { prompt_title: p.title, prompt_category: p.category, page_path: window.location.pathname });
+        trackPromptView(p.slug);
+      }
     });
     return () => { active = false; };
   }, [slug]);
@@ -37,6 +41,7 @@ export default function PromptPostDetail() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
     trackEvent("copy_prompt", { prompt_title: prompt.title, prompt_category: prompt.category, page_path: window.location.pathname });
+    trackPromptCopy(prompt.slug);
   };
 
   if (loading) {
