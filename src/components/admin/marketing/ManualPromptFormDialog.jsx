@@ -11,6 +11,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { PenLine, RefreshCw, Upload, X } from "lucide-react";
+import PromptMedia from "@/components/learn/PromptMedia";
 
 // Manual create/edit for LibraryPrompt — saves exactly what the admin types,
 // no AI rewrite. Mirrors the fields rendered on /learn/prompt-library.
@@ -22,7 +23,7 @@ const CATEGORIES = [
 
 const EMPTY = {
   title: "", slug: "", category: "General", tags: "",
-  description: "", guide: "", promptText: "", imageUrl: "",
+  description: "", guide: "", promptText: "", imageUrl: "", videoUrl: "",
   seoTitle: "", seoDescription: "", featured: false, order: 0, publishedAt: "",
 };
 
@@ -42,7 +43,7 @@ function slugify(s) {
 export default function ManualPromptFormDialog({ open, onOpenChange, prompt, onSaved }) {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [uploading, setUploading] = useState(null); // field name being uploaded
 
   useEffect(() => {
     if (prompt) {
@@ -60,18 +61,18 @@ export default function ManualPromptFormDialog({ open, onOpenChange, prompt, onS
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
-  const handleUpload = async (e) => {
+  const handleUpload = (field) => async (e) => {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
-    setUploading(true);
+    setUploading(field);
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      set("imageUrl", file_url);
+      set(field, file_url);
     } catch (err) {
-      toast.error("Image upload failed");
+      toast.error(err?.message || "Upload failed");
     }
-    setUploading(false);
+    setUploading(null);
   };
 
   const save = async () => {
@@ -101,6 +102,7 @@ export default function ManualPromptFormDialog({ open, onOpenChange, prompt, onS
         guide: form.guide,
         promptText: form.promptText,
         imageUrl: form.imageUrl.trim(),
+        videoUrl: form.videoUrl.trim(),
         seoTitle: form.seoTitle.trim(),
         seoDescription: form.seoDescription.trim(),
         featured: !!form.featured,
@@ -181,9 +183,9 @@ export default function ManualPromptFormDialog({ open, onOpenChange, prompt, onS
               <Input value={form.imageUrl} onChange={(e) => set("imageUrl", e.target.value)} placeholder="https://... (blank uses the category image)" />
               <Button type="button" variant="outline" className="gap-2 shrink-0" disabled={uploading} asChild>
                 <label className="cursor-pointer">
-                  {uploading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                  {uploading === "imageUrl" ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                   Upload
-                  <input type="file" accept="image/*" className="hidden" onChange={handleUpload} disabled={uploading} />
+                  <input type="file" accept="image/*" className="hidden" onChange={handleUpload("imageUrl")} disabled={!!uploading} />
                 </label>
               </Button>
             </div>
@@ -195,6 +197,31 @@ export default function ManualPromptFormDialog({ open, onOpenChange, prompt, onS
                 </button>
               </div>
             )}
+          </div>
+
+          <div>
+            <Label className="mb-1.5 block">Featured video <span className="text-muted-foreground">(optional — replaces the image)</span></Label>
+            <div className="flex gap-2">
+              <Input value={form.videoUrl} onChange={(e) => set("videoUrl", e.target.value)} placeholder="YouTube link, or upload a video file" />
+              <Button type="button" variant="outline" className="gap-2 shrink-0" disabled={!!uploading} asChild>
+                <label className="cursor-pointer">
+                  {uploading === "videoUrl" ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                  Upload
+                  <input type="file" accept="video/mp4,video/webm,video/quicktime" className="hidden" onChange={handleUpload("videoUrl")} disabled={!!uploading} />
+                </label>
+              </Button>
+            </div>
+            {form.videoUrl && (
+              <div className="relative mt-2 w-64">
+                <div className="relative aspect-video rounded overflow-hidden border border-border bg-black">
+                  <PromptMedia prompt={{ title: form.title, videoUrl: form.videoUrl, imageUrl: form.imageUrl }} variant="card" className="w-full h-full object-cover" />
+                </div>
+                <button type="button" onClick={() => set("videoUrl", "")} className="absolute -top-2 -right-2 rounded-full bg-background border border-border p-0.5" title="Remove video">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground mt-1.5">Uploaded videos autoplay muted on cards; YouTube shows a thumbnail. The featured image is still used for social share previews.</p>
           </div>
 
           <div>
