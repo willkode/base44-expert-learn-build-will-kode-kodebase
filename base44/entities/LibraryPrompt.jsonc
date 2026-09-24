@@ -46,6 +46,10 @@
       "type": "string",
       "description": "AI-generated featured image URL"
     },
+    "videoUrl": {
+      "type": "string",
+      "description": "Optional featured video (YouTube link or uploaded file URL); replaces the image on cards and the post page"
+    },
     "seoTitle": {
       "type": "string",
       "description": "Optimized SEO/og title"
