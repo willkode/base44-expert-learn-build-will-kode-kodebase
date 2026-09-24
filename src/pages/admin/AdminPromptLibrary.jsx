@@ -1,18 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { Library, Plus, Pencil, Trash2, ExternalLink, Star, Sparkles } from "lucide-react";
+import { Library, Plus, Pencil, Trash2, ExternalLink, Star, Sparkles, Search } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import AdminTable from "@/components/admin/AdminTable";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import PromptPostFormDialog from "@/components/admin/marketing/PromptPostFormDialog";
 import ManualPromptFormDialog from "@/components/admin/marketing/ManualPromptFormDialog";
+
+const publishedTime = (p) => new Date(p.publishedAt || p.created_date || 0).getTime();
+
+const SORTS = {
+  newest: { label: "Newest first", fn: (a, b) => publishedTime(b) - publishedTime(a) },
+  oldest: { label: "Oldest first", fn: (a, b) => publishedTime(a) - publishedTime(b) },
+  order: { label: "Display order", fn: (a, b) => (a.order ?? 0) - (b.order ?? 0) },
+};
 
 export default function AdminPromptLibrary() {
   const [prompts, setPrompts] = useState([]);
@@ -21,6 +33,8 @@ export default function AdminPromptLibrary() {
   const [manualOpen, setManualOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("newest");
 
   const load = async () => {
     setLoading(true);
@@ -30,6 +44,17 @@ export default function AdminPromptLibrary() {
   };
 
   useEffect(() => { load(); }, []);
+
+  const visible = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const matches = q
+      ? prompts.filter((p) =>
+          [p.title, p.slug, p.category, p.description, ...(p.tags || [])]
+            .some((v) => String(v || "").toLowerCase().includes(q))
+        )
+      : prompts;
+    return [...matches].sort(SORTS[sort].fn);
+  }, [prompts, search, sort]);
 
   const openNewAi = () => { setEditing(null); setDialogOpen(true); };
   const openAiRewrite = (p) => { setEditing(p); setDialogOpen(true); };
@@ -60,13 +85,31 @@ export default function AdminPromptLibrary() {
         }
       />
 
+      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search title, slug, category, tags..."
+            className="pl-9"
+          />
+        </div>
+        <Select value={sort} onValueChange={setSort}>
+          <SelectTrigger className="sm:w-48"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            {Object.entries(SORTS).map(([k, s]) => <SelectItem key={k} value={k}>{s.label}</SelectItem>)}
+          </SelectContent>
+        </Select>
+      </div>
+
       <AdminTable
         columns={["", "Title", "Category", "Published", "Views", "Copies", "Order", "Featured", "Actions"]}
-        rows={prompts}
+        rows={visible}
         loading={loading}
-        emptyIcon={Library}
-        emptyTitle="No prompt posts yet"
-        emptyDescription="Add your first prompt manually or generate one with AI."
+        emptyIcon={search.trim() ? Search : Library}
+        emptyTitle={search.trim() ? "No matching prompts" : "No prompt posts yet"}
+        emptyDescription={search.trim() ? `Nothing matches "${search.trim()}".` : "Add your first prompt manually or generate one with AI."}
         renderRow={(p) => [
           p.imageUrl ? (
             <img src={p.imageUrl} alt="" className="w-12 h-9 rounded object-cover" />
