@@ -38,6 +38,7 @@ Rules:
 - Explain how someone builds this kind of project in the given language(s), from general engineering knowledge. Be concrete and technically accurate.
 - Confident, friendly, practical tone in the second person. No hype, no emojis.
 - Never mention CodeCrafters, "build-your-own-x", or any list or repository the project came from.
+- Never refer to the original guide, tutorial, video or "full walkthrough", and never tell the reader to continue elsewhere — the page credits and links the original separately. The write-up must stand on its own.
 
 Return:
 - summary: one or two sentences (max 200 characters) on what the reader builds and learns.
