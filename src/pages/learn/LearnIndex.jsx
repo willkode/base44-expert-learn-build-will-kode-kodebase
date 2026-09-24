@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, Video, Sparkles, Library, Settings2, ShieldCheck, Bot, GraduationCap } from "lucide-react";
+import { ArrowRight, BookOpen, Video, Sparkles, Library, Settings2, ShieldCheck, Bot, GraduationCap, Hammer } from "lucide-react";
 import Seo from "@/components/seo/Seo";
 import { SITE, canonical } from "@/lib/seo";
 import { trackEvent } from "@/lib/analytics";
@@ -53,6 +53,13 @@ const SECTIONS = [
     desc: "A growing collection of expert-crafted prompts by Will Kode, organized by category and use case.",
     badge: "NEW",
     image: "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/e76703f7b_generated_image.png",
+  },
+  {
+    label: "Build Your Own",
+    to: "/learn/build-your-own",
+    icon: Hammer,
+    desc: "Step-by-step guides for re-creating real technologies from scratch — databases, Git, Docker, shells, compilers, web servers and more.",
+    badge: "NEW",
   },
   {
     label: "AI LLM Guide",
@@ -144,12 +151,18 @@ export default function LearnIndex() {
                   className="group block h-full overflow-hidden rounded-xl border border-border bg-card/50 hover:bg-card hover:border-primary/40 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   <div className="relative aspect-[16/10] overflow-hidden border-b border-border">
-                    <img
-                      src={s.image}
-                      alt={`${s.label} featured`}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
+                    {s.image ? (
+                      <img
+                        src={s.image}
+                        alt={`${s.label} featured`}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-secondary/60 blueprint-grid flex items-center justify-center">
+                        <s.icon className="w-14 h-14 text-primary/80 group-hover:scale-110 transition-transform duration-500" />
+                      </div>
+                    )}
                     {s.badge && (
                       <span className="absolute top-3 right-3 inline-flex items-center rounded px-2 py-0.5 text-[10px] font-bold leading-none bg-primary text-primary-foreground shadow-lg">
                         {s.badge}
