@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Copy, Check, Star, ArrowRight } from "lucide-react";
 import { trackPromptCopy } from "@/lib/promptTracking";
+import PromptMedia from "@/components/learn/PromptMedia";
 
 const CATEGORY_IMAGES = {
   "App Building": "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/e5af6c698_generated_image.png",
@@ -54,10 +55,11 @@ export default function PromptCard({ prompt, unlocked, onCopyRequest }) {
         />
       )}
       <div className="relative h-36 overflow-hidden">
-        <img
-          src={prompt.imageUrl || CATEGORY_IMAGES[prompt.category] || DEFAULT_IMAGE}
+        <PromptMedia
+          prompt={prompt}
+          variant="card"
+          fallbackImage={CATEGORY_IMAGES[prompt.category] || DEFAULT_IMAGE}
           alt={prompt.category}
-          loading="lazy"
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
