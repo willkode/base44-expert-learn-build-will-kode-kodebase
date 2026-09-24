@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
-import { Library, Plus, Pencil, Trash2, ExternalLink, Star } from "lucide-react";
+import { Library, Plus, Pencil, Trash2, ExternalLink, Star, Sparkles } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import AdminTable from "@/components/admin/AdminTable";
 import { Button } from "@/components/ui/button";
@@ -11,11 +11,13 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import PromptPostFormDialog from "@/components/admin/marketing/PromptPostFormDialog";
+import ManualPromptFormDialog from "@/components/admin/marketing/ManualPromptFormDialog";
 
 export default function AdminPromptLibrary() {
   const [prompts, setPrompts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [manualOpen, setManualOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
@@ -28,8 +30,10 @@ export default function AdminPromptLibrary() {
 
   useEffect(() => { load(); }, []);
 
-  const openNew = () => { setEditing(null); setDialogOpen(true); };
-  const openEdit = (p) => { setEditing(p); setDialogOpen(true); };
+  const openNewAi = () => { setEditing(null); setDialogOpen(true); };
+  const openAiRewrite = (p) => { setEditing(p); setDialogOpen(true); };
+  const openNewManual = () => { setEditing(null); setManualOpen(true); };
+  const openEdit = (p) => { setEditing(p); setManualOpen(true); };
 
   const confirmDelete = async () => {
     await base44.entities.LibraryPrompt.delete(deleteTarget.id);
@@ -42,21 +46,26 @@ export default function AdminPromptLibrary() {
     <div>
       <PageHeader
         title="Prompt Library"
-        description="Create AI-optimized prompt posts for the public Prompt Library."
+        description="Add and edit the prompts listed on the public Prompt Library — manually or with AI."
         actions={
-          <Button onClick={openNew} className="gap-2">
-            <Plus className="w-4 h-4" /> New prompt post
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={openNewAi} className="gap-2">
+              <Sparkles className="w-4 h-4" /> New with AI
+            </Button>
+            <Button onClick={openNewManual} className="gap-2">
+              <Plus className="w-4 h-4" /> Add manually
+            </Button>
+          </div>
         }
       />
 
       <AdminTable
-        columns={["", "Title", "Category", "Featured", "Actions"]}
+        columns={["", "Title", "Category", "Order", "Featured", "Actions"]}
         rows={prompts}
         loading={loading}
         emptyIcon={Library}
         emptyTitle="No prompt posts yet"
-        emptyDescription="Create your first AI-optimized prompt post."
+        emptyDescription="Add your first prompt manually or generate one with AI."
         renderRow={(p) => [
           p.imageUrl ? (
             <img src={p.imageUrl} alt="" className="w-12 h-9 rounded object-cover" />
@@ -68,6 +77,7 @@ export default function AdminPromptLibrary() {
             {p.slug && <div className="text-xs text-muted-foreground">/{p.slug}</div>}
           </div>,
           <Badge variant="secondary" className="text-xs">{p.category}</Badge>,
+          <span className="text-sm text-muted-foreground">{p.order ?? 0}</span>,
           p.featured ? (
             <Star className="w-4 h-4 fill-primary text-primary" />
           ) : (
@@ -80,6 +90,7 @@ export default function AdminPromptLibrary() {
               </a>
             )}
             <Button variant="ghost" size="icon" onClick={() => openEdit(p)} title="Edit"><Pencil className="w-4 h-4" /></Button>
+            <Button variant="ghost" size="icon" onClick={() => openAiRewrite(p)} title="Rewrite with AI"><Sparkles className="w-4 h-4" /></Button>
             <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(p)} title="Delete"><Trash2 className="w-4 h-4 text-destructive" /></Button>
           </div>,
         ]}
@@ -88,6 +99,13 @@ export default function AdminPromptLibrary() {
       <PromptPostFormDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
+        prompt={editing}
+        onSaved={load}
+      />
+
+      <ManualPromptFormDialog
+        open={manualOpen}
+        onOpenChange={setManualOpen}
         prompt={editing}
         onSaved={load}
       />
