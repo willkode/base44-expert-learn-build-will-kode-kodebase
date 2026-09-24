@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { trackEvent, trackNewsletterSignup } from "@/lib/analytics";
 import { fetchPublishedPosts } from "@/lib/blogPublic";
 import { fetchLibraryPrompts } from "@/lib/promptSort";
+import PromptMedia from "@/components/learn/PromptMedia";
 import { trackBlogClick } from "@/lib/blogTracking";
 
 const PRODUCTS_IMAGE = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/2597094aa_generated_image.png";
@@ -114,7 +115,9 @@ function RelatedPosts({ currentSlug, variant = "blog" }) {
               className="group flex gap-3 items-start"
             >
               <div className="w-14 h-14 rounded-lg overflow-hidden bg-secondary shrink-0">
-                {image ? (
+                {isPrompt && p.videoUrl ? (
+                  <PromptMedia prompt={p} variant="thumb" className="w-full h-full object-cover" />
+                ) : image ? (
                   <img src={image} alt={p.title} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full blueprint-grid opacity-40" />
