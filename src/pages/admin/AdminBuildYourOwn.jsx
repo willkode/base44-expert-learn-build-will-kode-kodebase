@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
-import { Hammer, Plus, Pencil, Trash2, ExternalLink, Star, Search, Eye, EyeOff, PlayCircle } from "lucide-react";
+import { Hammer, Plus, Pencil, Trash2, ExternalLink, Star, Search, Eye, EyeOff, PlayCircle, Sparkles, RefreshCw, FileText, Square } from "lucide-react";
+import { guidePath } from "@/lib/buildGuides";
 import PageHeader from "@/components/shared/PageHeader";
 import AdminTable from "@/components/admin/AdminTable";
 import BuildTutorialFormDialog from "@/components/admin/BuildTutorialFormDialog";
@@ -24,6 +25,8 @@ export default function AdminBuildYourOwn() {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  const [bulk, setBulk] = useState(null); // { done, total, failed } while generating
+  const stopRef = useRef(false);
 
   const load = async () => {
     setLoading(true);
@@ -49,6 +52,36 @@ export default function AdminBuildYourOwn() {
   }, [rows, search, category]);
 
   const publishedCount = rows.filter((r) => r.published !== false).length;
+  const missingWriteups = rows.filter((r) => !r.writeup);
+
+  // Generates write-ups for every guide without one, 3 at a time, in this tab.
+  const runBulk = async () => {
+    if (!confirm(`Generate AI write-ups for ${missingWriteups.length} guides? This uses AI credits and takes a while — keep this tab open. You can stop at any time.`)) return;
+    stopRef.current = false;
+    const queue = [...missingWriteups];
+    let done = 0, failed = 0;
+    setBulk({ done, total: queue.length, failed });
+    const worker = async () => {
+      while (queue.length && !stopRef.current) {
+        const r = queue.shift();
+        try {
+          const res = await base44.functions.invoke("generateBuildGuideWriteup", { id: r.id });
+          const g = res.data?.guide;
+          if (!g) throw new Error(res.data?.error || "no write-up");
+          setRows((prev) => prev.map((x) => (x.id === r.id ? { ...x, ...g } : x)));
+        } catch {
+          failed += 1;
+        }
+        done += 1;
+        setBulk({ done, total: missingWriteups.length, failed });
+      }
+    };
+    await Promise.all([worker(), worker(), worker()]);
+    setBulk(null);
+    const written = done - failed;
+    if (stopRef.current) toast(`Stopped — ${written} write-ups generated${failed ? `, ${failed} failed` : ""}`);
+    else toast.success(`${written} write-ups generated${failed ? `, ${failed} failed — run again to retry` : ""}`);
+  };
 
   const openNew = () => { setEditing(null); setDialogOpen(true); };
   const openEdit = (r) => { setEditing(r); setDialogOpen(true); };
@@ -74,6 +107,15 @@ export default function AdminBuildYourOwn() {
         description={`Guides listed on /learn/build-your-own — ${publishedCount} published of ${rows.length}.`}
         actions={
           <div className="flex gap-2">
+            {bulk ? (
+              <Button variant="outline" onClick={() => { stopRef.current = true; }} className="gap-2">
+                <RefreshCw className="w-4 h-4 animate-spin" /> Writing {bulk.done}/{bulk.total}{bulk.failed ? ` (${bulk.failed} failed)` : ""} <Square className="w-3.5 h-3.5 ml-1" /> Stop
+              </Button>
+            ) : missingWriteups.length > 0 && (
+              <Button variant="outline" onClick={runBulk} className="gap-2" disabled={loading}>
+                <Sparkles className="w-4 h-4" /> Generate missing write-ups ({missingWriteups.length})
+              </Button>
+            )}
             <a href="/learn/build-your-own" target="_blank" rel="noopener noreferrer">
               <Button variant="outline" className="gap-2"><ExternalLink className="w-4 h-4" /> View page</Button>
             </a>
@@ -97,12 +139,12 @@ export default function AdminBuildYourOwn() {
       </div>
 
       <AdminTable
-        columns={["Title", "Category", "Languages", "Status", "Actions"]}
+        columns={["Title", "Category", "Languages", "Write-up", "Status", "Actions"]}
         rows={visible}
         loading={loading}
         emptyIcon={search.trim() || category !== "All" ? Search : Hammer}
         emptyTitle={search.trim() || category !== "All" ? "No matching guides" : "No guides yet"}
-        emptyDescription={search.trim() || category !== "All" ? "Try a different search or category." : "Add a guide manually, or import them in bulk."}
+        emptyDescription={search.trim() || category !== "All" ? "Try a different search or category." : "Add a guide to get started."}
         renderRow={(r) => [
           <div className="max-w-md">
             <div className="font-medium flex items-center gap-1.5">
@@ -114,12 +156,15 @@ export default function AdminBuildYourOwn() {
           </div>,
           <Badge variant="secondary" className="text-xs whitespace-nowrap">{r.category}</Badge>,
           <span className="text-xs text-muted-foreground">{(r.languages || []).join(", ") || "—"}</span>,
+          r.writeup
+            ? <span className="inline-flex items-center gap-1 text-xs text-green-500"><FileText className="w-3.5 h-3.5" /> Ready</span>
+            : <span className="text-xs text-muted-foreground">—</span>,
           r.published === false
             ? <span className="text-xs text-muted-foreground">Hidden</span>
             : <span className="text-xs text-green-500">Published</span>,
           <div className="flex items-center gap-1">
-            <a href={r.url} target="_blank" rel="noopener noreferrer">
-              <Button variant="ghost" size="icon" title="Open link"><ExternalLink className="w-4 h-4" /></Button>
+            <a href={guidePath(r)} target="_blank" rel="noopener noreferrer">
+              <Button variant="ghost" size="icon" title="View guide page"><ExternalLink className="w-4 h-4" /></Button>
             </a>
             <Button variant="ghost" size="icon" onClick={() => togglePublished(r)} title={r.published === false ? "Publish" : "Hide"}>
               {r.published === false ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
