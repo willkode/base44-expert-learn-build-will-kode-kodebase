@@ -23,8 +23,11 @@ const CATEGORIES = [
 const EMPTY = {
   title: "", slug: "", category: "General", tags: "",
   description: "", guide: "", promptText: "", imageUrl: "",
-  seoTitle: "", seoDescription: "", featured: false, order: 0,
+  seoTitle: "", seoDescription: "", featured: false, order: 0, publishedAt: "",
 };
+
+// ISO date-time -> yyyy-mm-dd for the date input
+const toDateInput = (iso) => (iso ? String(iso).slice(0, 10) : "");
 
 function slugify(s) {
   return String(s || "")
@@ -48,6 +51,7 @@ export default function ManualPromptFormDialog({ open, onOpenChange, prompt, onS
         ...prompt,
         tags: Array.isArray(prompt.tags) ? prompt.tags.join(", ") : "",
         order: prompt.order ?? 0,
+        publishedAt: toDateInput(prompt.publishedAt || prompt.created_date),
       });
     } else {
       setForm(EMPTY);
@@ -101,6 +105,7 @@ export default function ManualPromptFormDialog({ open, onOpenChange, prompt, onS
         seoDescription: form.seoDescription.trim(),
         featured: !!form.featured,
         order: Number.isFinite(order) ? order : 0,
+        publishedAt: form.publishedAt ? new Date(`${form.publishedAt}T12:00:00Z`).toISOString() : new Date().toISOString(),
       };
 
       if (prompt?.id) {
@@ -206,6 +211,11 @@ export default function ManualPromptFormDialog({ open, onOpenChange, prompt, onS
           <div>
             <Label className="mb-1.5 block">SEO description <span className="text-muted-foreground">(optional)</span></Label>
             <Textarea value={form.seoDescription} onChange={(e) => set("seoDescription", e.target.value)} className="h-16" />
+          </div>
+
+          <div>
+            <Label className="mb-1.5 block">Published date <span className="text-muted-foreground">(blank = today)</span></Label>
+            <Input type="date" value={form.publishedAt} onChange={(e) => set("publishedAt", e.target.value)} className="w-48" />
           </div>
 
           <div className="flex items-center justify-between rounded-lg border border-border p-3">
