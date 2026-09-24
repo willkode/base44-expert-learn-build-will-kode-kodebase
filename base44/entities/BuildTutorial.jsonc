@@ -23,9 +23,34 @@
       },
       "description": "Programming languages used, e.g. [\"C++\", \"Python\"]"
     },
+    "slug": {
+      "type": "string",
+      "description": "URL slug for /learn/build-your-own/:slug"
+    },
     "description": {
       "type": "string",
-      "description": "Optional short note shown under the title"
+      "description": "Short summary shown on cards and at the top of the guide page"
+    },
+    "difficulty": {
+      "type": "string",
+      "description": "Beginner, Intermediate or Advanced (empty = not set)"
+    },
+    "timeEstimate": {
+      "type": "string",
+      "description": "Rough time to complete, e.g. 3\u20135 hours"
+    },
+    "sourceName": {
+      "type": "string",
+      "description": "Original author/site credited at the bottom of the guide page"
+    },
+    "writeup": {
+      "type": "string",
+      "description": "Original KodeBase breakdown (markdown) shown on the guide page"
+    },
+    "writeupGeneratedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the write-up was last AI-generated"
     },
     "isVideo": {
       "type": "boolean",
