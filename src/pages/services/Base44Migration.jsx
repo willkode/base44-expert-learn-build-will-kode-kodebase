@@ -11,7 +11,8 @@ import MigrationIncluded from "@/components/services/migration/MigrationIncluded
 import MigrationStacks from "@/components/services/migration/MigrationStacks";
 import MigrationReadiness from "@/components/services/migration/MigrationReadiness";
 import { replacedItems, compatFocus, processSteps, deliverables, pricingFactors, faqs } from "@/components/services/migration/migrationData";
-import MigrationCheckout, { MIGRATION_PRICE as MIGRATION_START_PRICE } from "@/components/services/migration/MigrationCheckout";
+import MigrationCheckout from "@/components/services/migration/MigrationCheckout";
+import useMigrationPrice from "@/components/services/migration/useMigrationPrice";
 import ReviewsSection from "@/components/reviews/ReviewsSection";
 
 const PROMO_VIDEO = "https://base44.app/api/apps/6a1905a0bc76553d6c934574/files/mp/public/6a1905a0bc76553d6c934574/e397a9596_migration-promo-60s.mp4";
@@ -25,6 +26,7 @@ const fadeUp = {
 };
 
 export default function Base44Migration() {
+  const { price: MIGRATION_START_PRICE, saleActive } = useMigrationPrice();
   useEffect(() => {
     trackEvent("page_view", { page: "base44_migration_service" });
   }, []);
@@ -37,13 +39,14 @@ export default function Base44Migration() {
     <>
       <Seo
         title="Base44 App Migration Services — Take Full Ownership of Your App | KodeBase"
-        description="Own your Base44 app: we migrate backend, database, auth, storage, integrations and deployment to infrastructure you control. Flat $199 for any size app — pay and start today."
+        description={`Own your Base44 app: backend, database, auth, storage, integrations and deployment on infrastructure you control. Flat $${MIGRATION_START_PRICE} for any size app.${saleActive ? " Save $100 through September 27 at midnight CST." : ""}`}
         path="/services/base44-migration"
         image={OG_IMAGE}
         jsonLd={[faqSchema(faqs)]}
       />
 
       {/* Hero */}
+      {saleActive && <div className="pt-28 px-6 text-center"><div className="max-w-4xl mx-auto rounded-2xl border border-primary/40 bg-primary/10 p-5"><p className="text-xl font-bold text-primary">$100 OFF Base44 Migration — now $99</p><p className="text-sm mt-2">Offer ends tonight, September 27, at midnight CST (UTC−6). Discount applied automatically at checkout.</p></div></div>}
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="absolute inset-0 blueprint-grid opacity-20" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 rounded-full blur-3xl pointer-events-none" />
@@ -69,7 +72,7 @@ export default function Base44Migration() {
           </motion.p>
           <motion.p initial="hidden" animate="visible" variants={fadeUp} custom={3} className="text-base font-semibold text-foreground mb-2">
             Base44 migrations now start at <span className="text-gradient-orange">${MIGRATION_START_PRICE}</span>
-            <span className="text-muted-foreground line-through font-medium ml-2 text-sm">$2,000</span>
+            <span className="text-muted-foreground line-through font-medium ml-2 text-sm">${saleActive ? 199 : "2,000"}</span>
           </motion.p>
           <motion.p initial="hidden" animate="visible" variants={fadeUp} custom={3.5} className="text-sm text-muted-foreground max-w-2xl mx-auto mb-8">
             We completely rebuilt our Base44 backend and automated the migration process end to end. That work let us drop migration pricing from $2,000 per app to a starting price of ${MIGRATION_START_PRICE}.
@@ -244,7 +247,7 @@ export default function Base44Migration() {
             <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Pricing</p>
             <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">
               Starting at <span className="text-gradient-orange">${MIGRATION_START_PRICE}</span>
-              <span className="text-muted-foreground line-through text-2xl ml-3">$2,000</span>
+              <span className="text-muted-foreground line-through text-2xl ml-3">${saleActive ? 199 : "2,000"}</span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto mb-4">
               Because we rebuilt our Base44 backend and automated the migration pipeline, every app migrates for a flat <span className="text-foreground font-semibold">${MIGRATION_START_PRICE}</span> — regardless of size. No quotes, no proposal cycle.
