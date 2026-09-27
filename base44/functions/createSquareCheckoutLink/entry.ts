@@ -123,12 +123,14 @@ Deno.serve(async (req) => {
     } else if (serviceId === 'base44_migration') {
       // Base44 Migration — automated migration path, flat $199 for apps under
       // 100 pages + backend functions. Larger apps are quoted on a call.
-      amountCents = 19900;
-      itemName = 'Base44 App Migration — Automated Migration ($199)';
+      const migrationSale = Date.now() < Date.parse('2026-09-28T00:00:00-06:00');
+      amountCents = migrationSale ? 9900 : 19900;
+      itemName = migrationSale ? 'Base44 App Migration — $100 off ($99)' : 'Base44 App Migration — Automated Migration ($199)';
     } else if (serviceId === 'base44_migration_mobile') {
       // Migration + optional mobile app conversion upsell (+$99)
-      amountCents = 29800;
-      itemName = 'Base44 App Migration + Mobile App Conversion ($199 + $99)';
+      const migrationSale = Date.now() < Date.parse('2026-09-28T00:00:00-06:00');
+      amountCents = migrationSale ? 19800 : 29800;
+      itemName = migrationSale ? 'Base44 App Migration + Mobile App Conversion ($99 + $99)' : 'Base44 App Migration + Mobile App Conversion ($199 + $99)';
     } else if (serviceId) {
       const service = SERVICE_PRICING[serviceId];
       if (!service) return Response.json({ error: 'Invalid service.' }, { status: 400 });
