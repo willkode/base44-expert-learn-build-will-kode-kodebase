@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { CheckCircle, ShieldCheck, Smartphone } from "lucide-react";
 import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 
+import useMigrationPrice from "./useMigrationPrice";
+
 export const MIGRATION_PRICE = 199;
 export const MOBILE_ADDON_PRICE = 99;
 
@@ -14,7 +16,8 @@ const includes = [
 
 export default function MigrationCheckout() {
   const [mobile, setMobile] = useState(false);
-  const total = MIGRATION_PRICE + (mobile ? MOBILE_ADDON_PRICE : 0);
+  const { price, saleActive } = useMigrationPrice();
+  const total = price + (mobile ? MOBILE_ADDON_PRICE : 0);
 
   return (
     <div className="rounded-2xl border border-border bg-card p-8">
@@ -22,13 +25,14 @@ export default function MigrationCheckout() {
         <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">One flat price</p>
         <p className="font-sora font-extrabold text-4xl tracking-tight">
           <span className="text-gradient-orange">${total}</span>
-          <span className="text-muted-foreground line-through text-xl ml-3">$2,000</span>
+          {saleActive && <span className="text-muted-foreground line-through text-xl ml-3">${MIGRATION_PRICE + (mobile ? MOBILE_ADDON_PRICE : 0)}</span>}
         </p>
         <p className="text-sm text-muted-foreground mt-2">
           Any size app — no quotes, no proposal cycle, no surprise pricing.
         </p>
       </div>
 
+      {saleActive && <p className="text-center text-sm font-semibold text-primary mb-6">Save $100 — ends September 27 at midnight CST (UTC−6). Mobile conversion remains $99.</p>}
       <div className="space-y-3 mb-6">
         {includes.map((item) => (
           <div key={item} className="flex items-start gap-3">
