@@ -27,6 +27,7 @@ const fadeUp = {
 
 export default function Base44Migration() {
   const { price: MIGRATION_START_PRICE, saleActive } = useMigrationPrice();
+  const currentFaqs = saleActive ? [{ q: "What is the 24-hour migration special?", a: "$75 one-time fee for Base44 migration. Mobile conversion is excluded and remains an optional $99 add-on. The offer runs from noon October 4 through Monday, October 5, 2026 at noon Central. Standard migration pricing returns to $199 afterward." }, ...faqs.filter((faq) => !faq.q.includes("pricing determined"))] : faqs;
   useEffect(() => {
     trackEvent("page_view", { page: "base44_migration_service" });
   }, []);
@@ -42,7 +43,7 @@ export default function Base44Migration() {
         description={`Own your Base44 app: backend, database, auth, storage, integrations and deployment on infrastructure you control. Flat $${MIGRATION_START_PRICE} for any size app.${saleActive ? " 24-hour special: $75 one-time fee, mobile excluded. Ends Monday, October 5, 2026 at noon Central." : ""}`}
         path="/services/base44-migration"
         image={OG_IMAGE}
-        jsonLd={[faqSchema(faqs)]}
+        jsonLd={[faqSchema(currentFaqs)]}
       />
 
       {/* Hero */}
@@ -257,7 +258,7 @@ export default function Base44Migration() {
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-10">
-            {pricingFactors.map((item, i) => (
+            {pricingFactors.filter((item) => item !== "Mobile application requirements").map((item, i) => (
               <motion.div
                 key={item}
                 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.2}
@@ -297,7 +298,7 @@ export default function Base44Migration() {
             <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">FAQ</p>
             <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight">Frequently Asked Questions</h2>
           </div>
-          <ServiceFAQ faqs={faqs} />
+          <ServiceFAQ faqs={currentFaqs} />
         </div>
       </section>
 
