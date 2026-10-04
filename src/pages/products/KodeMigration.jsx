@@ -11,6 +11,8 @@ import { useCart } from "@/components/cart/CartContext";
 import { trackViewItem, trackSelectItem, trackAddToCart } from "@/lib/analytics";
 import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 
+import useMigrationPrice from "@/components/services/migration/useMigrationPrice";
+
 const stages = [
   { icon: ScanSearch, title: "Scan your app", text: "Use the guided prompts with ChatGPT or Claude to understand your app's pages, data, authentication, backend functions, and integrations." },
   { icon: Map, title: "Map your migration", text: "Turn the findings into a practical migration plan: what moves, what needs replacing, and what to tackle first." },
@@ -26,6 +28,7 @@ const faqs = [
 
 export default function KodeMigration() {
   const navigate = useNavigate();
+  const { price: migrationPrice, saleActive: migrationSale } = useMigrationPrice();
   const { addItem, openCart } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -144,9 +147,9 @@ export default function KodeMigration() {
               <Link to="/services/base44-migration" className="inline-flex items-center gap-2 text-sm text-primary hover:underline mt-4">See what's included <ArrowRight className="w-4 h-4" /></Link>
             </div>
             <div className="md:w-72 rounded-2xl border border-border bg-background/60 p-6">
-              <p className="font-sora font-extrabold text-4xl mb-2">$199 <span className="font-normal font-inter text-sm text-muted-foreground">one time</span></p>
-              <p className="text-xs text-muted-foreground mb-5">Fixed service price. The 86% Birthday discount does not apply.</p>
-              <ServiceCheckoutButton serviceId="base44_migration" label="Get Done for you Migration — $199" redirectPath="/services/base44-migration/next" className="h-auto py-3 whitespace-normal" />
+              <p className="font-sora font-extrabold text-4xl mb-2">${migrationPrice} <span className="font-normal font-inter text-sm text-muted-foreground">one time</span></p>
+              <p className="text-xs text-muted-foreground mb-5">{migrationSale ? "$75 one-time special. Mobile excluded. Ends Monday, October 5, 2026 at noon Central." : "Fixed service price. The 86% Birthday discount does not apply."}</p>
+              <ServiceCheckoutButton serviceId="base44_migration" label={`Get Done for you Migration — $${migrationPrice}`} redirectPath="/services/base44-migration/next" className="h-auto py-3 whitespace-normal" />
             </div>
           </div>
         </section>
