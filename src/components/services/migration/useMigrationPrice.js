@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-// 24-hour special: noon October 4–5, 2026, America/Chicago (CDT).
-export const MIGRATION_SALE_START = Date.parse("2026-10-04T12:00:00-05:00");
+// Special starts immediately and ends October 5 at noon America/Chicago (CDT).
+export const MIGRATION_SALE_START = Date.parse("2026-10-04T14:33:58Z");
 export const MIGRATION_SALE_END = Date.parse("2026-10-05T12:00:00-05:00");
 export const MIGRATION_SALE_LABEL = "Monday, October 5, 2026 at noon Central";
 export const isMigrationSaleActive = (now) => now >= MIGRATION_SALE_START && now < MIGRATION_SALE_END;
