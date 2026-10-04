@@ -27,7 +27,7 @@ const fadeUp = {
 
 export default function Base44Migration() {
   const { price: MIGRATION_START_PRICE, saleActive } = useMigrationPrice();
-  const currentFaqs = saleActive ? [{ q: "What is the 24-hour migration special?", a: "$75 one-time fee for Base44 migration. Mobile conversion is excluded and remains an optional $99 add-on. The offer runs from noon October 4 through Monday, October 5, 2026 at noon Central. Standard migration pricing returns to $199 afterward." }, ...faqs.filter((faq) => !faq.q.includes("pricing determined"))] : faqs;
+  const currentFaqs = saleActive ? [{ q: "What is the limited-time migration special?", a: "$75 one-time fee for Base44 migration. Mobile conversion is excluded and remains an optional $99 add-on. The offer is available now through Monday, October 5, 2026 at noon Central. Standard migration pricing returns to $199 afterward." }, ...faqs.filter((faq) => !faq.q.includes("pricing determined"))] : faqs;
   useEffect(() => {
     trackEvent("page_view", { page: "base44_migration_service" });
   }, []);
@@ -40,14 +40,14 @@ export default function Base44Migration() {
     <>
       <Seo
         title="Base44 App Migration Services — Take Full Ownership of Your App | KodeBase"
-        description={`Own your Base44 app: backend, database, auth, storage, integrations and deployment on infrastructure you control. Flat $${MIGRATION_START_PRICE} for any size app.${saleActive ? " 24-hour special: $75 one-time fee, mobile excluded. Ends Monday, October 5, 2026 at noon Central." : ""}`}
+        description={`Own your Base44 app: backend, database, auth, storage, integrations and deployment on infrastructure you control. Flat $${MIGRATION_START_PRICE} for any size app.${saleActive ? " limited-time special: $75 one-time fee, mobile excluded. Ends Monday, October 5, 2026 at noon Central." : ""}`}
         path="/services/base44-migration"
         image={OG_IMAGE}
         jsonLd={[faqSchema(currentFaqs)]}
       />
 
       {/* Hero */}
-      {saleActive && <div className="pt-28 px-6 text-center"><div className="max-w-4xl mx-auto rounded-2xl border border-primary/40 bg-primary/10 p-5"><p className="text-xl font-bold text-primary">$75 Base44 Migration — 24-hour special</p><p className="text-sm mt-2">One-time fee. Mobile excluded. Offer ends Monday, October 5, 2026 at noon Central. Discount applied automatically at checkout.</p></div></div>}
+      {saleActive && <div className="pt-28 px-6 text-center"><div className="max-w-4xl mx-auto rounded-2xl border border-primary/40 bg-primary/10 p-5"><p className="text-xl font-bold text-primary">$75 Base44 Migration — limited-time special</p><p className="text-sm mt-2">One-time fee. Mobile excluded. Offer ends Monday, October 5, 2026 at noon Central. Discount applied automatically at checkout.</p></div></div>}
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="absolute inset-0 blueprint-grid opacity-20" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 rounded-full blur-3xl pointer-events-none" />
