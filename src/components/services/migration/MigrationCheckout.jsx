@@ -22,7 +22,7 @@ export default function MigrationCheckout() {
   return (
     <div className="rounded-2xl border border-border bg-card p-8">
       <div className="text-center mb-6">
-        <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">One flat price</p>
+        <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">One-time fee</p>
         <p className="font-sora font-extrabold text-4xl tracking-tight">
           <span className="text-gradient-orange">${total}</span>
           {saleActive && <span className="text-muted-foreground line-through text-xl ml-3">${MIGRATION_PRICE + (mobile ? MOBILE_ADDON_PRICE : 0)}</span>}
@@ -32,7 +32,7 @@ export default function MigrationCheckout() {
         </p>
       </div>
 
-      {saleActive && <p className="text-center text-sm font-semibold text-primary mb-6">Save $100 — ends September 27 at midnight CST (UTC−6). Mobile conversion remains $99.</p>}
+      {saleActive && <p className="text-center text-sm font-semibold text-primary mb-6">$75 migration special — ends Monday, October 5, 2026 at noon Central. Mobile excluded; optional mobile conversion is an additional $99.</p>}
       <div className="space-y-3 mb-6">
         {includes.map((item) => (
           <div key={item} className="flex items-start gap-3">
