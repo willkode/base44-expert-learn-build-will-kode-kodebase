@@ -39,14 +39,14 @@ export default function Base44Migration() {
     <>
       <Seo
         title="Base44 App Migration Services — Take Full Ownership of Your App | KodeBase"
-        description={`Own your Base44 app: backend, database, auth, storage, integrations and deployment on infrastructure you control. Flat $${MIGRATION_START_PRICE} for any size app.${saleActive ? " Save $100 through September 27 at midnight CST." : ""}`}
+        description={`Own your Base44 app: backend, database, auth, storage, integrations and deployment on infrastructure you control. Flat $${MIGRATION_START_PRICE} for any size app.${saleActive ? " 24-hour special: $75 one-time fee, mobile excluded. Ends Monday, October 5, 2026 at noon Central." : ""}`}
         path="/services/base44-migration"
         image={OG_IMAGE}
         jsonLd={[faqSchema(faqs)]}
       />
 
       {/* Hero */}
-      {saleActive && <div className="pt-28 px-6 text-center"><div className="max-w-4xl mx-auto rounded-2xl border border-primary/40 bg-primary/10 p-5"><p className="text-xl font-bold text-primary">$100 OFF Base44 Migration — now $99</p><p className="text-sm mt-2">Offer ends tonight, September 27, at midnight CST (UTC−6). Discount applied automatically at checkout.</p></div></div>}
+      {saleActive && <div className="pt-28 px-6 text-center"><div className="max-w-4xl mx-auto rounded-2xl border border-primary/40 bg-primary/10 p-5"><p className="text-xl font-bold text-primary">$75 Base44 Migration — 24-hour special</p><p className="text-sm mt-2">One-time fee. Mobile excluded. Offer ends Monday, October 5, 2026 at noon Central. Discount applied automatically at checkout.</p></div></div>}
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="absolute inset-0 blueprint-grid opacity-20" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-primary/10 rounded-full blur-3xl pointer-events-none" />
@@ -71,7 +71,7 @@ export default function Base44Migration() {
             Your application may have started on Base44, but it does not have to remain dependent on Base44 forever. We migrate Base44 applications to independent infrastructure that you control — backend, database, authentication, storage, integrations, automation, and deployment.
           </motion.p>
           <motion.p initial="hidden" animate="visible" variants={fadeUp} custom={3} className="text-base font-semibold text-foreground mb-2">
-            Base44 migrations now start at <span className="text-gradient-orange">${MIGRATION_START_PRICE}</span>
+            Base44 migration — one-time fee: <span className="text-gradient-orange">${MIGRATION_START_PRICE}</span>
             <span className="text-muted-foreground line-through font-medium ml-2 text-sm">${saleActive ? 199 : "2,000"}</span>
           </motion.p>
           <motion.p initial="hidden" animate="visible" variants={fadeUp} custom={3.5} className="text-sm text-muted-foreground max-w-2xl mx-auto mb-8">
@@ -95,7 +95,7 @@ export default function Base44Migration() {
                 Start My Migration — ${MIGRATION_START_PRICE} <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </a>
-            <p className="text-xs text-muted-foreground">One flat price, any size app. No quotes, no proposal cycle.</p>
+            <p className="text-xs text-muted-foreground">One flat price, any size app. Mobile conversion is a separate add-on.</p>
             <a href="#pricing" onClick={() => handleCTA("hero_secondary")}>
               <Button size="lg" variant="ghost" className="font-semibold px-8">
                 See Pricing
@@ -246,7 +246,7 @@ export default function Base44Migration() {
           <div className="text-center mb-10">
             <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Pricing</p>
             <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">
-              Starting at <span className="text-gradient-orange">${MIGRATION_START_PRICE}</span>
+              One-time fee: <span className="text-gradient-orange">${MIGRATION_START_PRICE}</span>
               <span className="text-muted-foreground line-through text-2xl ml-3">${saleActive ? 199 : "2,000"}</span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto mb-4">
@@ -279,7 +279,7 @@ export default function Base44Migration() {
             <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-2">Start your migration</p>
             <h2 className="font-sora font-extrabold text-3xl md:text-4xl tracking-tight mb-3">One price. Any size app.</h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Pay ${MIGRATION_START_PRICE} and you're in the queue. Right after checkout you'll send your app details and add me as a collaborator so I can get started.
+              Pay a one-time fee of ${MIGRATION_START_PRICE} (mobile excluded) and you're in the queue. Right after checkout you'll send your app details and add me as a collaborator so I can get started.
             </p>
           </div>
           <MigrationCheckout />
@@ -342,7 +342,7 @@ export default function Base44Migration() {
             Your application should not be permanently limited by the platform where it was originally built. We help Base44 app owners move to infrastructure they control while preserving the functionality, workflows, and customer experience they have already invested in.
           </p>
           <p className="text-sm font-semibold text-foreground mb-8">
-            Automated Base44 migrations now start at ${MIGRATION_START_PRICE}.
+            Automated Base44 migration — one-time fee: ${MIGRATION_START_PRICE}.
           </p>
           <div className="flex flex-col items-center gap-3">
             <a href="#checkout" onClick={() => handleCTA("final_checkout")}>
