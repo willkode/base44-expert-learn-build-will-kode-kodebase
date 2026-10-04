@@ -59,7 +59,7 @@ export default function MigrationCheckout() {
             </div>
             <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">
               Turning your Base44 app into an installable iOS / Android app is <strong>not included</strong> in the
-              migration. Add it here and I'll set up the native mobile build alongside your migration.
+              migration. Add it here and I'll set up the mobile (wrapper) build alongside your migration.
             </p>
           </div>
         </div>
