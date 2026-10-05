@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import NewsletterPopup from "@/components/newsletter/NewsletterPopup";
@@ -7,6 +7,8 @@ import WhatsAppButton from "@/components/shared/WhatsAppButton";
 import { isSummerSaleActive } from "@/lib/summerSale";
 
 export default function PublicLayout() {
+  const { pathname } = useLocation();
+  const isMigrationPage = pathname === "/services/base44-migration";
   return (
     <div className="dark min-h-screen bg-background text-foreground font-inter antialiased overflow-x-hidden">
       <Navbar />
@@ -14,7 +16,7 @@ export default function PublicLayout() {
         <Outlet />
       </main>
       <Footer />
-      <NewsletterPopup />
+      {!isMigrationPage && <NewsletterPopup />}
       <WhatsAppButton />
     </div>
   );
