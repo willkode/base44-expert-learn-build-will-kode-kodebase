@@ -1,4 +1,6 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
+
+import { completePromotion } from "../../shared/migrationPromotion.ts";
 
 // Square webhook (payment.created / payment.updated). Records a completed
 // Payment record and upgrades the user's plan. This is the source of truth for
@@ -146,6 +148,8 @@ Deno.serve(async (req) => {
       return Response.json({ received: true });
     }
 
+    await completePromotion(base44, payment);
+
     // Idempotency — skip if we already recorded this Square payment.
     const existing = await base44.asServiceRole.entities.Payment.filter({ squarePaymentId: payment.id });
     if (existing.length > 0) return Response.json({ received: true, duplicate: true });
@@ -187,6 +191,8 @@ Deno.serve(async (req) => {
         });
       }
     }
+
+    await completePromotion(base44, payment, metadata);
 
     let userId = metadata.base44UserId || metadata.migrationUserId || null;
     let userEmail = metadata.base44UserEmail || payment.buyer_email_address || '';
