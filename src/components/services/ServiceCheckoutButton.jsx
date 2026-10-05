@@ -11,7 +11,7 @@ import { trackEvent } from "@/lib/analytics";
  * - Guests get a quick name/email (+ app URL for ER) form — no signup needed —
  *   then are redirected to a public thank-you page after payment.
  */
-export default function ServiceCheckoutButton({ serviceId, label, size = "lg", className = "", onClick, redirectPath }) {
+export default function ServiceCheckoutButton({ serviceId, label, size = "lg", className = "", onClick, redirectPath, expectedAmountCents, disabled = false }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [guestOpen, setGuestOpen] = useState(false);
@@ -22,6 +22,7 @@ export default function ServiceCheckoutButton({ serviceId, label, size = "lg", c
     const response = await base44.functions.invoke("createSquareCheckoutLink", {
       serviceId,
       redirectUrl,
+      ...(expectedAmountCents != null ? { expectedAmountCents } : {}),
       ...payload,
     });
     const { checkoutUrl, error: apiError } = response.data;
@@ -47,7 +48,7 @@ export default function ServiceCheckoutButton({ serviceId, label, size = "lg", c
         : `${window.location.origin}/service-onboarding?service=${encodeURIComponent(serviceId)}`;
       await startCheckout({}, onboardingUrl);
     } catch (err) {
-      setError(err.message || "Something went wrong. Please try again.");
+      setError(err.response?.data?.error || err.message || "Something went wrong. Please try again.");
       setLoading(false);
     }
   };
@@ -62,7 +63,7 @@ export default function ServiceCheckoutButton({ serviceId, label, size = "lg", c
         : `${window.location.origin}/services/thank-you?service=${encodeURIComponent(serviceId)}`;
       await startCheckout({ guestName: name, guestEmail: email, appUrl }, thankYouUrl);
     } catch (err) {
-      setGuestError(err.message || "Something went wrong. Please try again.");
+      setGuestError(err.response?.data?.error || err.message || "Something went wrong. Please try again.");
       setGuestLoading(false);
     }
   };
@@ -73,7 +74,7 @@ export default function ServiceCheckoutButton({ serviceId, label, size = "lg", c
         size={size}
         className={`w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold ${className}`}
         onClick={handleClick}
-        disabled={loading}
+        disabled={loading || disabled}
       >
         {loading ? (
           <>
