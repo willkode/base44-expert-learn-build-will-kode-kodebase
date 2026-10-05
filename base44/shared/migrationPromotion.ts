@@ -98,7 +98,7 @@ export async function reconcilePromotion(base44: PromoClient) {
       if (check.pending || order.state === "COMPLETED") continue;
       // Deleting a Square payment link cancels its order. Never release a
       // hold until a fresh read confirms cancellation and no pending payment.
-      await square("/v2/online-checkout/payment-links/" + encodeURIComponent(slot.link_id), { method: "DELETE" });
+      if (order.state !== "CANCELED") await square("/v2/online-checkout/payment-links/" + encodeURIComponent(slot.link_id), { method: "DELETE" });
       order = (await square("/v2/orders/" + encodeURIComponent(slot.order_id))).order;
       if (!order) continue;
       check = await inspectPayments(order);
