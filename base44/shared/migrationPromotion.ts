@@ -1,6 +1,6 @@
 type Slot = Record<string, any>;
 type Promotion = { id: string; campaign: string; revision: number; slots: Slot[] };
-type PromoClient = { asServiceRole: { entities: { MigrationPromotion: {
+type PromoClient = { asServiceRole: { entities: { [entity: string]: {
   filter: (query: Record<string, unknown>) => Promise<Promotion[]>;
   updateMany: (query: Record<string, unknown>, data: Record<string, unknown>) => Promise<{ updated: number }>;
 } } } };
