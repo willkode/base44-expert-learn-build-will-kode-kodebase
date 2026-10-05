@@ -1,17 +1,23 @@
+type Slot = Record<string, any>;
+type Promotion = { id: string; campaign: string; revision: number; slots: Slot[] };
+type PromoClient = { asServiceRole: { entities: { MigrationPromotion: {
+  filter: (query: Record<string, unknown>) => Promise<Promotion[]>;
+  updateMany: (query: Record<string, unknown>, data: Record<string, unknown>) => Promise<{ updated: number }>;
+} } } };
 export const CAMPAIGN = "migration-first10-oct2026";
 export const LIMIT = 10;
 const HOLD_MS = 30 * 60 * 1000;
 
-export function promoError(message, status = 503) {
+export function promoError(message: string, status = 503) {
   return Object.assign(new Error(message), { status });
 }
-export async function readPromotion(base44) {
+export async function readPromotion(base44: PromoClient) {
   const rows = await base44.asServiceRole.entities.MigrationPromotion.filter({ campaign: CAMPAIGN });
   if (rows.length !== 1 || rows[0].slots?.length !== LIMIT) throw promoError("Offer availability is temporarily unavailable. Please try again.");
   return rows[0];
 }
 // Conditional revision update serializes allocation across concurrent function instances.
-export async function mutatePromotion(base44, change) {
+export async function mutatePromotion(base44: PromoClient, change: (slots: Slot[]) => any): Promise<any> {
   for (let i = 0; i < 12; i++) {
     const row = await readPromotion(base44);
     const slots = structuredClone(row.slots);
@@ -25,14 +31,14 @@ export async function mutatePromotion(base44, change) {
   }
   throw promoError("Checkout is busy. Please try again.");
 }
-export function publicStatus(row) {
+export function publicStatus(row: Promotion) {
   const claimed = row.slots.filter(s => s.state === "paid").length;
   const held = row.slots.filter(s => s.state === "held").length;
   const remaining = row.slots.filter(s => s.state === "available").length;
   return { campaign: CAMPAIGN, total: LIMIT, claimed, held, remaining,
     saleActive: claimed < LIMIT, soldOut: claimed === LIMIT, price: claimed < LIMIT ? 50 : 199 };
 }
-export async function square(path, options = {}) {
+export async function square(path: string, options: RequestInit = {}) {
   const origin = Deno.env.get("SQUARE_ENVIRONMENT") === "production" ? "https://connect.squareup.com" : "https://connect.squareupsandbox.com";
   const response = await fetch(origin + path, {
     ...options,
@@ -43,7 +49,7 @@ export async function square(path, options = {}) {
   if (!response.ok) throw promoError("Payment provider is temporarily unavailable. Please try again.");
   return body;
 }
-export async function ensureLink(base44, slot) {
+export async function ensureLink(base44: PromoClient, slot: Slot) {
   if (slot.link_id && slot.order_id && slot.checkout_url) return slot;
   // The exact request is saved before the network call. Retry with the same
   // idempotency key after ambiguous provider responses or interrupted requests.
@@ -58,7 +64,7 @@ export async function ensureLink(base44, slot) {
   });
   return { ...slot, link_id: link.id, checkout_url: link.url, order_id: link.order_id };
 }
-export async function completePromotion(base44, payment, metadata = {}) {
+export async function completePromotion(base44: PromoClient, payment: any, metadata: Record<string, string> = {}) {
   if (payment.status !== "COMPLETED") return;
   const amount = Number(payment.amount_money?.amount);
   if (![5000, 14900].includes(amount) || payment.amount_money?.currency !== "USD") return;
@@ -73,13 +79,13 @@ export async function completePromotion(base44, payment, metadata = {}) {
     return true;
   });
 }
-async function inspectPayments(order) {
-  const ids = [...new Set((order.tenders || []).map(t => t.payment_id).filter(Boolean))];
+async function inspectPayments(order: any) {
+  const ids: string[] = [...new Set<string>((order.tenders || []).map((t: any) => t.payment_id).filter(Boolean))];
   const payments = [];
   for (const id of ids) payments.push((await square("/v2/payments/" + encodeURIComponent(id))).payment);
   return { payments, pending: payments.some(p => !p || !["COMPLETED", "CANCELED", "FAILED"].includes(p.status)) };
 }
-export async function reconcilePromotion(base44) {
+export async function reconcilePromotion(base44: PromoClient) {
   const row = await readPromotion(base44);
   for (const old of row.slots.filter(s => s.state === "held" && s.expires_at <= Date.now())) {
     try {
@@ -107,12 +113,12 @@ export async function reconcilePromotion(base44) {
       });
     } catch (error) {
       // Fail closed: provider uncertainty cannot create an extra discounted slot.
-      console.error("[migrationPromotion] Hold reconciliation deferred", old.number, error.message);
+      console.error("[migrationPromotion] Hold reconciliation deferred", old.number, error instanceof Error ? error.message : "Unknown error");
     }
   }
   return readPromotion(base44);
 }
-export async function reservePromotion(base44, buyerEmail, serviceId, request) {
+export async function reservePromotion(base44: PromoClient, buyerEmail: string, serviceId: string, request: any) {
   const buyerKey = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",
     new TextEncoder().encode(buyerEmail.trim().toLowerCase())))).map(b => b.toString(16).padStart(2, "0")).join("");
   const token = crypto.randomUUID();
