@@ -1,0 +1,36 @@
+{
+  "name": "MigrationPromotion",
+  "type": "object",
+  "properties": {
+    "campaign": {
+      "type": "string"
+    },
+    "revision": {
+      "type": "integer",
+      "default": 0
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "campaign",
+    "revision",
+    "slots"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
