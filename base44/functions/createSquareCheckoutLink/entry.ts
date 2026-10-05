@@ -1,4 +1,6 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
+
+import { reservePromotion, reconcilePromotion, publicStatus, promoError } from "../../shared/migrationPromotion.ts";
 
 // Creates a Square-hosted checkout (Payment Link) and returns its URL.
 // The browser redirects the buyer to Square's hosted page; payment completion
@@ -56,7 +58,7 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me().catch(() => null);
 
-    const { productId, productIds, serviceId, donationCents, promptSessionId, redirectUrl, couponCode, guestName, guestEmail, appUrl } = await req.json();
+    const { productId, productIds, serviceId, donationCents, promptSessionId, redirectUrl, couponCode, guestName, guestEmail, appUrl, expectedAmountCents } = await req.json();
 
     // Services can be ordered as a guest (no account needed) — everything else
     // still requires an authenticated user.
@@ -120,19 +122,20 @@ Deno.serve(async (req) => {
       }
       itemName = `Cart — ${resolved.length} product${resolved.length > 1 ? 's' : ''}`;
       if (coupon) metadataCouponCode = coupon.code;
-    } else if (serviceId === 'base44_migration') {
-      // Base44 Migration — automated migration path, flat $199 for apps under
-      // 100 pages + backend functions. Larger apps are quoted on a call.
-      const now = Date.now();
-      const migrationSale = now >= Date.parse('2026-10-04T14:33:58Z') && now < Date.parse('2026-10-05T12:00:00-05:00');
-      amountCents = migrationSale ? 7500 : 19900;
-      itemName = migrationSale ? 'Base44 App Migration — limited-time special ($75 one time; mobile excluded)' : 'Base44 App Migration — Automated Migration ($199)';
-    } else if (serviceId === 'base44_migration_mobile') {
-      // Migration + optional mobile app conversion upsell (+$99)
-      const now = Date.now();
-      const migrationSale = now >= Date.parse('2026-10-04T14:33:58Z') && now < Date.parse('2026-10-05T12:00:00-05:00');
-      amountCents = migrationSale ? 17400 : 29800;
-      itemName = migrationSale ? 'Base44 App Migration + Mobile App Conversion ($75 special + $99 mobile)' : 'Base44 App Migration + Mobile App Conversion ($199 + $99)';
+    } else if (serviceId === 'base44_migration' || serviceId === 'base44_migration_mobile') {
+      const promo = publicStatus(await reconcilePromotion(base44));
+      const addon = serviceId === 'base44_migration_mobile' ? 9900 : 0;
+      // A requested $50 quote must acquire a spot below. Never silently raise
+      // the amount if another customer takes the last available spot.
+      if (expectedAmountCents === 5000 + addon) {
+        amountCents = 5000 + addon;
+        itemName = addon ? 'Base44 Migration — First 10 Special ($50) + Mobile Wrapper ($99)' : 'Base44 Migration — First 10 Special ($50; mobile excluded)';
+      } else if (expectedAmountCents === 19900 + addon && promo.soldOut) {
+        amountCents = 19900 + addon;
+        itemName = addon ? 'Base44 App Migration + Mobile App Conversion ($199 + $99)' : 'Base44 App Migration ($199)';
+      } else {
+        throw promoError(promo.held > 0 && !promo.remaining ? 'Promotional spots are temporarily held at checkout. Please refresh availability shortly.' : 'Migration pricing has changed. Refresh the page to see the current offer before ordering.', 409);
+      }
     } else if (serviceId) {
       const service = SERVICE_PRICING[serviceId];
       if (!service) return Response.json({ error: 'Invalid service.' }, { status: 400 });
@@ -208,14 +211,7 @@ Deno.serve(async (req) => {
     if (promptSessionResolved) metadata.promptSessionId = promptSessionResolved;
     if (isDonation) metadata.donation = 'true';
 
-    const res = await fetch(`${baseUrl}/v2/online-checkout/payment-links`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${Deno.env.get('SQUARE_ACCESS_TOKEN')}`,
-        'Content-Type': 'application/json',
-        'Square-Version': '2025-01-23',
-      },
-      body: JSON.stringify({
+    const checkoutRequest = {
         idempotency_key: crypto.randomUUID(),
         checkout_options: {
           redirect_url: redirectUrl || undefined,
@@ -242,7 +238,20 @@ Deno.serve(async (req) => {
                 },
               ],
         },
-      }),
+      };
+    if ((serviceId === 'base44_migration' && amountCents === 5000) ||
+        (serviceId === 'base44_migration_mobile' && amountCents === 14900)) {
+      return Response.json(await reservePromotion(base44, buyerEmail, serviceId, checkoutRequest));
+    }
+
+    const res = await fetch(`${baseUrl}/v2/online-checkout/payment-links`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${Deno.env.get('SQUARE_ACCESS_TOKEN')}`,
+        'Content-Type': 'application/json',
+        'Square-Version': '2025-01-23',
+      },
+      body: JSON.stringify(checkoutRequest),
     });
     const body = await res.json();
 
@@ -258,6 +267,6 @@ Deno.serve(async (req) => {
       orderId: body.payment_link.order_id,
     });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ error: error.message }, { status: error.status || 500 });
   }
 });
