@@ -30,7 +30,7 @@ export function publicStatus(row) {
   const held = row.slots.filter(s => s.state === "held").length;
   const remaining = row.slots.filter(s => s.state === "available").length;
   return { campaign: CAMPAIGN, total: LIMIT, claimed, held, remaining,
-    saleActive: remaining > 0, soldOut: claimed === LIMIT, price: remaining > 0 ? 50 : 199 };
+    saleActive: claimed < LIMIT, soldOut: claimed === LIMIT, price: claimed < LIMIT ? 50 : 199 };
 }
 export async function square(path, options = {}) {
   const origin = Deno.env.get("SQUARE_ENVIRONMENT") === "production" ? "https://connect.squareup.com" : "https://connect.squareupsandbox.com";
