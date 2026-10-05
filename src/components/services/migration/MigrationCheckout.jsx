@@ -3,6 +3,7 @@ import { CheckCircle, ShieldCheck, Smartphone } from "lucide-react";
 import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 
 import useMigrationPrice from "./useMigrationPrice";
+import MigrationSpotCounter from "./MigrationSpotCounter";
 
 export const MIGRATION_PRICE = 199;
 export const MOBILE_ADDON_PRICE = 99;
@@ -16,8 +17,8 @@ const includes = [
 
 export default function MigrationCheckout() {
   const [mobile, setMobile] = useState(false);
-  const { price, saleActive } = useMigrationPrice();
-  const total = price + (mobile ? MOBILE_ADDON_PRICE : 0);
+  const { price, saleActive, checkoutDisabled } = useMigrationPrice();
+  const total = typeof price === "number" ? price + (mobile ? MOBILE_ADDON_PRICE : 0) : "…";
 
   return (
     <div className="rounded-2xl border border-orange-300/30 bg-card p-5 shadow-xl sm:p-8">
@@ -32,7 +33,8 @@ export default function MigrationCheckout() {
         </p>
       </div>
 
-      {saleActive && <p className="text-center text-sm font-semibold text-primary mb-6">$75 migration special — ends Monday, October 5, 2026 at noon Central. Mobile excluded; optional mobile conversion is an additional $99.</p>}
+      {saleActive && <p className="text-center text-sm font-semibold text-primary mb-6">Save $149 — migration for $50 for the first 10 customers. Mobile excluded; optional mobile conversion is an additional $99.</p>}
+      <div className="mb-6 rounded-xl border border-orange-300/20 bg-orange-300/5 p-4"><MigrationSpotCounter /></div>
       <div className="space-y-3 mb-6">
         {includes.map((item) => (
           <div key={item} className="flex items-start gap-3">
@@ -69,6 +71,8 @@ export default function MigrationCheckout() {
         key={mobile ? "mobile" : "base"}
         serviceId={mobile ? "base44_migration_mobile" : "base44_migration"}
         label={`Start My Migration — $${total}`}
+        expectedAmountCents={typeof total === "number" ? total * 100 : undefined}
+        disabled={checkoutDisabled}
         redirectPath="/services/base44-migration/next"
         className="!bg-[#fb923c] !text-[#111827] hover:!bg-[#fdba74] h-auto min-h-12 whitespace-normal py-3"
       />
