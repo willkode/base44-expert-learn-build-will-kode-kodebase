@@ -35,7 +35,7 @@ export default function Base44Migration() {
     { q: "Do I need to know which hosting or database to use?", a: "No. Share your requirements and any preferred providers. We help identify a suitable destination, such as Supabase or a custom Node and PostgreSQL setup. The infrastructure accounts remain under your control." },
     { q: "Is an iOS or Android app included?", a: "No. Mobile app conversion is a separate $99 add-on. It creates an installable mobile wrapper around your web app, not a fully native app." },
     { q: "How long does migration take?", a: "Timing depends on your app's dependencies, data, and integrations. We review those after you share access and confirm the migration scope and timeline. No fixed turnaround is promised before that review." },
-    { q: "Can I ask a question before purchasing?", a: "Yes. Use the contact link below to share your app URL and migration questions before you order." },
+    { q: "Can I ask a question before purchasing?", a: "Yes. Use the contact link in the pricing section to share your app URL and migration questions before you order." },
     ...(saleActive ? [{ q: "When does the special end?", a: `The $75 offer ends ${MIGRATION_SALE_LABEL}. The standard $199 migration fee returns afterward. Mobile conversion remains an optional $99 add-on.` }] : []),
   ];
   const ctaClass = "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#fb923c] px-6 py-3 text-sm font-bold text-[#111827] transition-colors hover:bg-[#fdba74] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-300";
