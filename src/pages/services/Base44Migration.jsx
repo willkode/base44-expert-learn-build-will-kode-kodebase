@@ -119,7 +119,7 @@ export default function Base44Migration() {
       </section>
 
       <section id="pricing" className="scroll-mt-32 border-y border-orange-300/20 bg-gradient-to-br from-orange-300/5 to-card/40">
-        <div id="checkout" className="mx-auto grid max-w-6xl scroll-mt-32 items-start gap-10 px-5 py-16 sm:px-6 lg:grid-cols-2 lg:gap-16">
+        <div className="mx-auto grid max-w-6xl scroll-mt-32 items-start gap-10 px-5 py-16 sm:px-6 lg:grid-cols-2 lg:gap-16">
           <div><p className="text-xs font-bold uppercase tracking-widest text-orange-300">Ready when you are</p><h2 className="mt-3 font-sora text-3xl font-bold tracking-tight sm:text-4xl">Take the next step.<br />Keep what you've built.</h2>
             <p className="mt-5 text-lg leading-relaxed text-slate-300">Get your migration underway for a one-time ${price} fee.</p>
             <ul className="mt-7 space-y-4">{["Backend, database, authentication, and storage", "Integrations and core workflows", "Deployment to infrastructure you control", "Source code and handover documentation"].map((text) => <li key={text} className="flex gap-3 text-sm"><Check className="h-5 w-5 shrink-0 text-orange-300" />{text}</li>)}</ul>
@@ -127,7 +127,7 @@ export default function Base44Migration() {
             <p className="mt-5 text-xs leading-relaxed text-muted-foreground">Hosting, domains, and third-party service costs are separate. Mobile conversion is optional and costs an additional $99.</p>
             <p className="mt-5 text-sm text-slate-300">Have questions first? <Link to="/contact" className="rounded font-semibold text-orange-300 underline underline-offset-4">Let's talk about your app</Link>.</p>
           </div>
-          <MigrationCheckout />
+          <div id="checkout" className="min-w-0 scroll-mt-32"><MigrationCheckout /></div>
         </div>
       </section>
 
