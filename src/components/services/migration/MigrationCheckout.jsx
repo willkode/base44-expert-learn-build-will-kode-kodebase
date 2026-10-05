@@ -20,7 +20,7 @@ export default function MigrationCheckout() {
   const total = price + (mobile ? MOBILE_ADDON_PRICE : 0);
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-8">
+    <div className="rounded-2xl border border-orange-300/30 bg-card p-5 shadow-xl sm:p-8">
       <div className="text-center mb-6">
         <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">One-time fee</p>
         <p className="font-sora font-extrabold text-4xl tracking-tight">
@@ -28,7 +28,7 @@ export default function MigrationCheckout() {
           {saleActive && <span className="text-muted-foreground line-through text-xl ml-3">${MIGRATION_PRICE + (mobile ? MOBILE_ADDON_PRICE : 0)}</span>}
         </p>
         <p className="text-sm text-muted-foreground mt-2">
-          Any size app — no quotes, no proposal cycle, no surprise pricing.
+          Done-for-you migration. Your app, on infrastructure you control.
         </p>
       </div>
 
@@ -70,6 +70,7 @@ export default function MigrationCheckout() {
         serviceId={mobile ? "base44_migration_mobile" : "base44_migration"}
         label={`Start My Migration — $${total}`}
         redirectPath="/services/base44-migration/next"
+        className="!bg-[#fb923c] !text-[#111827] hover:!bg-[#fdba74] h-auto min-h-12 whitespace-normal py-3"
       />
 
       <p className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground">
