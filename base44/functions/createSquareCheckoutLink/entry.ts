@@ -7,7 +7,7 @@ import { reservePromotion, reconcilePromotion, publicStatus, promoError } from "
 // is recorded asynchronously by the squarePaymentWebhook function.
 // Amounts are ALWAYS resolved server-side — never trusted from the client.
 // One-time service pricing — amounts resolved server-side only
-const SERVICE_PRICING = {
+const SERVICE_PRICING: Record<string, { amountCents: number; name: string }> = {
   // ER Service
   er_audit: { amountCents: 2000, name: 'App Audit — Report + Fix Prompts (Special $20)' },
   er_audit_fix: { amountCents: 6250, name: 'App Audit + Fix (50% off)' },
@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Carts are limited to 10 products.' }, { status: 400 });
       }
       // Coupon — re-validated server-side; the code is never trusted from the client.
-      let coupon = null;
+      let coupon: any = null;
       if (couponCode) {
         const found = await base44.asServiceRole.entities.Coupon.filter({ code: String(couponCode).trim().toUpperCase() });
         const c = found[0];
@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
         let cents, name;
         const override = NO_DISCOUNT_SLUGS.includes(product.slug)
           ? null
-          : coupon?.productPrices?.find((o) => o.productId === product.id);
+          : coupon?.productPrices?.find((o: any) => o.productId === product.id);
         if (override && Number.isFinite(override.priceCents)) {
           cents = Math.max(0, Math.round(override.priceCents));
           name = `${product.name} (Coupon ${coupon.code})`;
@@ -193,7 +193,7 @@ Deno.serve(async (req) => {
     // metadata is echoed back on the webhook order so we can attribute the payment.
     // Square rejects empty-string metadata values, so only include set keys.
     const buyerEmail = user?.email || guestEmail?.trim();
-    const metadata = {
+    const metadata: Record<string, string> = {
       base44UserEmail: buyerEmail,
       itemName,
     };
@@ -266,7 +266,7 @@ Deno.serve(async (req) => {
       paymentLinkId: body.payment_link.id,
       orderId: body.payment_link.order_id,
     });
-  } catch (error) {
+  } catch (error: any) {
     return Response.json({ error: error.message }, { status: error.status || 500 });
   }
 });
