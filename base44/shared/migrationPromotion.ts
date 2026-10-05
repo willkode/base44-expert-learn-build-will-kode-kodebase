@@ -1,8 +1,8 @@
 type Slot = Record<string, any>;
 type Promotion = { id: string; campaign: string; revision: number; slots: Slot[] };
 type PromoClient = { asServiceRole: { entities: { [entity: string]: {
-  filter: (query: Record<string, unknown>) => Promise<Promotion[]>;
-  updateMany: (query: Record<string, unknown>, data: Record<string, unknown>) => Promise<{ updated: number }>;
+  filter: (query: Record<string, unknown>) => Promise<any[]>;
+  updateMany: (query: Record<string, unknown>, data: Record<string, Record<string, any>>) => Promise<{ updated: number }>;
 } } } };
 export const CAMPAIGN = "migration-first10-oct2026";
 export const LIMIT = 10;
@@ -11,7 +11,7 @@ const HOLD_MS = 30 * 60 * 1000;
 export function promoError(message: string, status = 503) {
   return Object.assign(new Error(message), { status });
 }
-export async function readPromotion(base44: PromoClient) {
+export async function readPromotion(base44: PromoClient): Promise<Promotion> {
   const rows = await base44.asServiceRole.entities.MigrationPromotion.filter({ campaign: CAMPAIGN });
   if (rows.length !== 1 || rows[0].slots?.length !== LIMIT) throw promoError("Offer availability is temporarily unavailable. Please try again.");
   return rows[0];
