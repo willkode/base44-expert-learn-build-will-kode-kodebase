@@ -2,7 +2,7 @@ import React from "react";
 import { MessageCircle } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 
-const WHATSAPP_URL = "https://wa.me/13343929401";
+const WHATSAPP_URL = "https://wa.me/13343921346";
 
 export default function WhatsAppButton() {
   return (

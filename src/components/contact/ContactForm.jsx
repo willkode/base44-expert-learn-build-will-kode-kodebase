@@ -92,7 +92,7 @@ export default function ContactForm({ bookingUrl }) {
           </div>
         </a>
         <a
-          href="https://wa.me/13343929401"
+          href="https://wa.me/13343921346"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 hover:border-primary/50 transition-colors group"
@@ -102,7 +102,7 @@ export default function ContactForm({ bookingUrl }) {
           </div>
           <div>
             <p className="text-xs text-muted-foreground mb-0.5">WhatsApp</p>
-            <p className="text-sm font-medium group-hover:text-primary transition-colors">+1 (334) 392-9401</p>
+            <p className="text-sm font-medium group-hover:text-primary transition-colors">+1 (334) 392-1346</p>
           </div>
         </a>
         <div>
