@@ -58,10 +58,10 @@ const plans = [
   {
     title: "Security Audit + Fix",
     subtitle: "Report + remediation",
-    price: "$62.50",
+    price: "$81.25",
     originalPrice: "$125",
     billing: "one-time",
-    badge: "50% OFF",
+    badge: "35% OFF",
     features: [
       "Everything in Security Audit",
       "All vulnerabilities patched",

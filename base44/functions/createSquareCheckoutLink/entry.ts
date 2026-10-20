@@ -10,12 +10,12 @@ import { reservePromotion, reconcilePromotion, publicStatus, promoError } from "
 const SERVICE_PRICING: Record<string, { amountCents: number; name: string }> = {
   // ER Service
   er_audit: { amountCents: 2000, name: 'App Audit — Report + Fix Prompts (Special $20)' },
-  er_audit_fix: { amountCents: 6250, name: 'App Audit + Fix (50% off)' },
+  er_audit_fix: { amountCents: 8125, name: 'App Audit + Fix (35% off)' },
   // Discovery Audit — full app review + major fixes + fix prompts
   discovery_audit: { amountCents: 22500, name: 'Discovery Audit — Full App Review + Major Fixes' },
   // Security Audit
   security_audit: { amountCents: 5000, name: 'Security Audit — Report + Fix Prompts' },
-  security_audit_fix: { amountCents: 6250, name: 'Security Audit + Fix (50% off)' },
+  security_audit_fix: { amountCents: 8125, name: 'Security Audit + Fix (35% off)' },
   // SEO Audit
   seo_audit: { amountCents: 5000, name: 'SEO Audit — Report + Fix Prompts' },
   seo_audit_fix: { amountCents: 12500, name: 'SEO Audit + Fix' },

@@ -66,10 +66,10 @@ const plans = [
   {
     title: "Audit + Fix",
     subtitle: "Report + direct fix implementation",
-    price: "$62.50",
+    price: "$81.25",
     originalPrice: "$125",
     billing: "one-time",
-    badge: "50% OFF",
+    badge: "35% OFF",
     features: [
       "Everything in Audit Only",
       "Will fixes all issues found",
