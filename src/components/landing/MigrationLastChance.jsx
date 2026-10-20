@@ -28,8 +28,7 @@ export default function MigrationLastChance() {
               </p>
               <h2 className="font-sora font-bold text-xl md:text-2xl mb-1">
                 Migrations start at{" "}
-                <span className="text-gradient-orange">${MIGRATION_START_PRICE}</span>{" "}
-                <span className="text-muted-foreground text-base font-normal line-through">$2,000</span>
+                <span className="text-gradient-orange">${MIGRATION_START_PRICE}</span>
               </h2>
               <p className="text-sm text-muted-foreground">
                 We rebuilt our Base44 backend and automated the migration pipeline. Apps under 100 pages
