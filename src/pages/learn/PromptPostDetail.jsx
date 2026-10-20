@@ -139,6 +139,19 @@ export default function PromptPostDetail() {
 
               {prompt.slug === "base44-legacy-api-key-audit" && <ApiKeyHelpCta />}
 
+              <div className="mt-8 rounded-2xl border border-border bg-card/60 p-6">
+                <p className="font-sora font-semibold mb-1">Want a hand applying this?</p>
+                <p className="text-sm text-muted-foreground mb-4">Get an audit of your Base44 app, or help moving it somewhere you control.</p>
+                <div className="flex flex-wrap gap-3">
+                  <Button asChild size="sm">
+                    <Link to="/services" onClick={() => trackEvent("service_cta_click", { service: "prompt_post", cta: "prompt_services", prompt_title: prompt.title })}>See services</Link>
+                  </Button>
+                  <Button asChild size="sm" variant="outline">
+                    <Link to="/services/base44-migration" onClick={() => trackEvent("service_cta_click", { service: "prompt_post", cta: "prompt_migration", prompt_title: prompt.title })}>Migration help</Link>
+                  </Button>
+                </div>
+              </div>
+
               <div className="mt-10 pt-8 border-t border-border flex flex-wrap items-center gap-2">
                 <Badge variant="secondary" className="text-xs">{prompt.category}</Badge>
                 {prompt.tags?.map((t) => (
