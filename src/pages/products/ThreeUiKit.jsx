@@ -55,7 +55,7 @@ export default function ThreeUiKit() {
     <div className="min-h-screen bg-background pb-24 px-6 pt-16">
       <Seo
         title="3D UI Element Kit — Prompts That Build Premium 3D Interfaces | KodeBase"
-        description="Get the full catalog of 3D UI element prompts — glass cards, orbit heroes, extruded buttons, depth navbars. Copy, paste, ship. One-time $25, lifetime access."
+        description="Get the full catalog of 3D UI element prompts — glass cards, orbit heroes, extruded buttons, depth navbars. Copy, paste, ship. One-time $11.25, lifetime access."
         path="/products/3d-ui-element-kit"
         type="product"
         image={OG_IMAGE}
@@ -82,7 +82,7 @@ export default function ThreeUiKit() {
           </p>
 
           <div className="inline-flex items-end gap-3 mb-8">
-            <span className="font-sora font-extrabold text-5xl text-gradient-orange">$25</span>
+            <span className="font-sora font-extrabold text-5xl text-gradient-orange">$11.25</span>
             <div className="mb-1.5 text-left text-xs text-muted-foreground">one-time · lifetime access</div>
           </div>
 
@@ -98,7 +98,7 @@ export default function ThreeUiKit() {
                   size="lg"
                   className="font-bold text-base px-8 py-6 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90 glow-orange"
                 >
-                  Get the Full Catalog — $25
+                  Get the Full Catalog — $11.25
                 </Button>
                 <p className="text-xs text-muted-foreground flex items-center gap-1.5">
                   <Lock className="w-3.5 h-3.5" /> Secure checkout via Square
@@ -156,14 +156,14 @@ export default function ThreeUiKit() {
             <Sparkles className="w-10 h-10 text-primary mx-auto mb-4" />
             <h2 className="font-sora font-bold text-2xl mb-2">One payment. The whole catalog.</h2>
             <p className="text-muted-foreground text-sm mb-6">
-              $25 once, lifetime access — including every element added later.
+              $11.25 once, lifetime access — including every element added later.
             </p>
             <Button
               onClick={handleCTA}
               size="lg"
               className="font-bold px-8 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90 glow-orange"
             >
-              Unlock All Prompts — $25
+              Unlock All Prompts — $11.25
             </Button>
           </div>
         )}

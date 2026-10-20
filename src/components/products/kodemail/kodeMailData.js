@@ -1,5 +1,5 @@
 export const KODEMAIL_PRODUCT_ID = "6aa0381df8463d7623eed1d9";
-export const KODEMAIL_PRICE = 8.96; // 86% off Birthday Sale price
+export const KODEMAIL_PRICE = 28.80; // 55% off the $64 list price
 export const KODEMAIL_LIST_PRICE = 64;
 export const KODEMAIL_OG_IMAGE =
   "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/a56ad78ac_generated_image.png";

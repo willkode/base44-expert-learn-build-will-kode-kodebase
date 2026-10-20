@@ -165,14 +165,14 @@ export default function Products() {
                         {isSummerSaleActive() ? (
                           <>
                             <Badge className="mb-1.5 text-[10px] bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
-                              Will's Birthday Sale · {getSaleDiscountPercent(p.slug)}% off
+                              Product Sale · {getSaleDiscountPercent(p.slug)}% off
                             </Badge>
                             <div className="flex items-end gap-1.5">
                               <span className="font-sora font-extrabold text-3xl">{formatUsd(getProductSalePriceCents(p.priceCents, p.slug))}</span>
                               <span className="text-muted-foreground mb-1 text-sm line-through">{formatUsd(p.priceCents)}</span>
                               <span className="text-muted-foreground mb-1 text-sm">one-time</span>
                             </div>
-                            <p className="text-xs text-primary mt-1">Sale ends {SUMMER_SALE_END_LABEL}</p>
+                            <p className="text-xs text-primary mt-1">{SUMMER_SALE_END_LABEL}</p>
                           </>
                         ) : (
                           <div className="flex items-end gap-1">

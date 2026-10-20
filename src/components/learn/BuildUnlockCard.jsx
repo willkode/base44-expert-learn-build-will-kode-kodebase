@@ -2,14 +2,14 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Lock, Check } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
-import { formatUsd } from "@/lib/summerSale";
+import { formatUsd, getProductSalePriceCents } from "@/lib/summerSale";
 import { Button } from "@/components/ui/button";
 
 // $5 lifetime unlock card for Build Your Own. `access` is the non-access
 // response from getBuildYourOwn / getBuildGuide ({ signedIn, product, total, categoryCount }).
 export default function BuildUnlockCard({ access, returnPath, className = "" }) {
   const navigate = useNavigate();
-  const price = formatUsd(access.product?.priceCents ?? 500);
+  const price = formatUsd(getProductSalePriceCents(access.product?.priceCents ?? 500, "build-your-own-lifetime"));
   const canBuy = access.total > 0 && access.product?.active;
 
   const unlock = () => {

@@ -31,7 +31,7 @@ export default function Base44DesktopIde() {
     <div className="pt-16">
       <Seo
         title="Base44 Desktop IDE — Open, Audit & Migrate Your Base44 Apps on Windows"
-        description="Base44 Desktop IDE: a Windows workbench for your Base44 account — open any app in the real editor, read the code locally, run 10 AI audits, and lift the frontend to your own hosting. $25 lifetime."
+        description="Base44 Desktop IDE: a Windows workbench for your Base44 account — open any app in the real editor, read the code locally, run 10 AI audits, and lift the frontend to your own hosting. $11.25 lifetime with 55% off."
         path="/tools/base44-desktop-ide"
         type="website"
         image={OG_IMAGE}

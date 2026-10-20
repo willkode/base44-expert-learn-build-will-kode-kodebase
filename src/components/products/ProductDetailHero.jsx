@@ -75,7 +75,7 @@ export default function ProductDetailHero({ product, onBuy }) {
         </p>
         {onSale && (
           <Badge className="mb-2 text-xs bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
-            <Sparkles className="w-3 h-3 mr-1" /> Summer Special · {getSaleDiscountPercent(product.slug)}% off · ends {SUMMER_SALE_END_LABEL}
+            <Sparkles className="w-3 h-3 mr-1" /> Product Sale · {getSaleDiscountPercent(product.slug)}% off · {SUMMER_SALE_END_LABEL}
           </Badge>
         )}
         <div className="flex items-end gap-2 mb-2">

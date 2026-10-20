@@ -20,9 +20,9 @@ const links = [
 ];
 
 const toolItems = [
-  { label: "KodeMail", to: "/products/kodemail", icon: Mail, desc: "Business email on your own domain — no DNS setup, $25 lifetime", badge: "NEW" },
-  { label: "3D UI Element Kit", to: "/products/3d-ui-element-kit", icon: Boxes, desc: "Prompts that build premium 3D interface elements — $25 lifetime", badge: "NEW" },
-  { label: "Base44 Desktop IDE", to: "/tools/base44-desktop-ide", icon: MonitorDown, desc: "Open, audit and migrate your Base44 apps on Windows — $25 lifetime", badge: "NEW" },
+  { label: "KodeMail", to: "/products/kodemail", icon: Mail, desc: "Business email on your own domain — $28.80 lifetime", badge: "NEW" },
+  { label: "3D UI Element Kit", to: "/products/3d-ui-element-kit", icon: Boxes, desc: "Prompts that build premium 3D interface elements — $11.25 lifetime", badge: "NEW" },
+  { label: "Base44 Desktop IDE", to: "/tools/base44-desktop-ide", icon: MonitorDown, desc: "Open, audit and migrate your Base44 apps on Windows — $11.25 lifetime", badge: "NEW" },
   { label: "Base44 Frontend Porter", to: "/tools/base44-frontend-porter", icon: MonitorDown, desc: "Free desktop app — host your frontend anywhere, keep the backend", badge: "FREE" },
 ];
 

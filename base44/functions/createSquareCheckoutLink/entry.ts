@@ -39,26 +39,16 @@ const SERVICE_PRICING: Record<string, { amountCents: number; name: string }> = {
 // Kode Sessions included in the 50% off promo
 const KODE_SESSION_SALE_IDS = ['kode_session_1hr', 'kode_session_2hr'];
 
-// Products never discounted by the sale (fixed-price services sold as products).
-const SALE_EXCLUDED_SLUGS = ['hire-will-kode', 'desktop-pro-access', '3d-ui-element-kit', 'build-your-own-lifetime'];
-
-// Products that are never discounted by anything — sales or coupon overrides.
+// The 55% product sale includes every catalog product, with no scheduled end.
+// Preserve existing coupon restrictions independently of sale eligibility.
 const NO_DISCOUNT_SLUGS = ['build-your-own-lifetime'];
 
-// Will's Birthday Sale: 86% off all products through Oct 19, 11:59 AM Central
-// (16:59 UTC), anchored to the current calendar year.
-const isBirthdaySaleActive = () => {
-  const now = new Date();
-  const end = new Date(Date.UTC(now.getUTCFullYear(), 9, 19, 16, 59, 0, 0));
-  return now < end;
-};
-
-Deno.serve(async (req) => {
+export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me().catch(() => null);
 
-    const { productId, productIds, serviceId, donationCents, promptSessionId, redirectUrl, couponCode, guestName, guestEmail, appUrl, expectedAmountCents } = await req.json();
+    const { productId, productIds, serviceId, donationCents, promptSessionId, redirectUrl, couponCode, guestName, guestEmail, appUrl, expectedAmountCents, quoteOnly } = await req.json();
 
     // Services can be ordered as a guest (no account needed) — everything else
     // still requires an authenticated user.
@@ -103,9 +93,9 @@ Deno.serve(async (req) => {
         if (override && Number.isFinite(override.priceCents)) {
           cents = Math.max(0, Math.round(override.priceCents));
           name = `${product.name} (Coupon ${coupon.code})`;
-        } else if (isBirthdaySaleActive() && !SALE_EXCLUDED_SLUGS.includes(product.slug)) {
-          cents = Math.round(product.priceCents * 0.14);
-          name = `${product.name} (Will's Birthday Sale 86% off)`;
+        } else if (product.priceCents > 0) {
+          cents = Math.round(product.priceCents * 45 / 100);
+          name = `${product.name} (Summer Special 55% off)`;
         } else {
           cents = product.priceCents;
           name = product.name;
@@ -175,9 +165,9 @@ Deno.serve(async (req) => {
       if ((product.priceCents || 0) === 0) {
         return Response.json({ error: 'This product is free — claim it directly, no payment needed.' }, { status: 400 });
       }
-      if (isBirthdaySaleActive() && !SALE_EXCLUDED_SLUGS.includes(product.slug)) {
-        amountCents = Math.round(product.priceCents * 0.14);
-        itemName = `${product.name} (Will's Birthday Sale 86% off)`;
+      if (product.priceCents > 0) {
+        amountCents = Math.round(product.priceCents * 45 / 100);
+        itemName = `${product.name} (Summer Special 55% off)`;
       } else {
         amountCents = product.priceCents;
         itemName = product.name;
@@ -186,6 +176,9 @@ Deno.serve(async (req) => {
     } else {
       return Response.json({ error: 'Invalid payment request.' }, { status: 400 });
     }
+
+    // Read-only price verification; never creates a payment link or reservation.
+    if (quoteOnly === true) return Response.json({ amountCents, itemName, cartItems });
 
     const env = Deno.env.get('SQUARE_ENVIRONMENT') === 'production' ? 'production' : 'sandbox';
     const baseUrl = env === 'production' ? 'https://connect.squareup.com' : 'https://connect.squareupsandbox.com';
@@ -269,4 +262,4 @@ Deno.serve(async (req) => {
   } catch (error: any) {
     return Response.json({ error: error.message }, { status: error.status || 500 });
   }
-});
+}

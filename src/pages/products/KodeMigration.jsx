@@ -23,7 +23,7 @@ const faqs = [
   { q: "Does this migrate my app automatically?", a: "This is a self-guided migration product. You use the document with ChatGPT or Claude, provide access to your app's code, review the proposed changes, and test the result." },
   { q: "Can I use ChatGPT or Claude?", a: "Yes. The workflow is designed for either assistant. Your chosen assistant needs access to the relevant app files or a connected coding environment; a public app URL alone does not expose its backend code." },
   { q: "Are hosting and AI subscriptions included?", a: "The purchase covers the migration document and prompts. Any AI subscription, hosting, database, domain, or other third-party service costs are separate." },
-  { q: "Is this a recurring payment?", a: "No. Kode Migration is a one-time purchase. The Birthday special is applied automatically while the promotion is active." },
+  { q: "Is this a recurring payment?", a: "No. Kode Migration is a one-time purchase. The 55% product sale is applied automatically while the promotion is active." },
 ];
 
 export default function KodeMigration() {
@@ -114,8 +114,8 @@ export default function KodeMigration() {
           </div>
           <div className="rounded-3xl border border-primary/30 bg-card p-6 sm:p-8 shadow-[0_0_80px_rgba(251,146,60,0.08)]">
             {sale && <div className="rounded-xl bg-primary/10 border border-primary/25 px-4 py-3 mb-7">
-              <p className="text-primary font-bold text-sm">Will's Birthday special · 86% off</p>
-              <p className="text-xs text-muted-foreground mt-1">Ends {SUMMER_SALE_END_LABEL}</p>
+              <p className="text-primary font-bold text-sm">Product Sale · 55% off</p>
+              <p className="text-xs text-muted-foreground mt-1">{SUMMER_SALE_END_LABEL}</p>
             </div>}
             <div className="flex items-center gap-3 mb-6">
               <div className="p-3 rounded-xl bg-primary/10"><FileText className="w-7 h-7 text-primary" /></div>
@@ -126,7 +126,7 @@ export default function KodeMigration() {
               {sale && <span className="text-xl text-muted-foreground line-through">{formatUsd(regularCents)}</span>}
               <span className="text-sm text-muted-foreground">one time</span>
             </div>
-            {sale && <p className="text-primary text-sm mt-2">Save {formatUsd(regularCents - priceCents)} with the Birthday special.</p>}
+            {sale && <p className="text-primary text-sm mt-2">Save {formatUsd(regularCents - priceCents)} with the 55% product sale.</p>}
             <div className="h-px bg-border my-7" />
             <ul className="space-y-4">
               {["Downloadable migration document", "Instructions for ChatGPT or Claude", "Prompts to scan and understand your app", "A guided sequence for planning and migration"].map((text) => (
@@ -148,7 +148,7 @@ export default function KodeMigration() {
             </div>
             <div className="md:w-72 rounded-2xl border border-border bg-background/60 p-6">
               <p className="font-sora font-extrabold text-4xl mb-2">${migrationPrice} <span className="font-normal font-inter text-sm text-muted-foreground">one time</span></p>
-              <p className="text-xs text-muted-foreground mb-5">{migrationSale ? "First 10 customers: $50 one time — save $149. Mobile excluded. Subject to spot availability." : "Fixed service price. The 86% Birthday discount does not apply."}</p>
+              <p className="text-xs text-muted-foreground mb-5">{migrationSale ? "First 10 customers: $50 one time — save $149. Mobile excluded. Subject to spot availability." : "Fixed service price. The product discount does not apply."}</p>
               <ServiceCheckoutButton serviceId="base44_migration" expectedAmountCents={typeof migrationPrice === "number" ? migrationPrice * 100 : undefined} disabled={migrationCheckoutDisabled} label={`Get Done for you Migration — $${migrationPrice}`} redirectPath="/services/base44-migration/next" className="h-auto py-3 whitespace-normal" />
             </div>
           </div>
@@ -194,7 +194,7 @@ export default function KodeMigration() {
           <h2 className="font-sora font-bold text-3xl sm:text-4xl mb-4">Your next move starts here.</h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-7">Get the guide. Open ChatGPT or Claude. Start understanding what it takes to bring your app to its next home.</p>
           {buyButton}
-          <p className="text-xs text-muted-foreground mt-4">Downloadable document · One-time purchase{sale ? " · Birthday special: 86% off" : ""}</p>
+          <p className="text-xs text-muted-foreground mt-4">Downloadable document · One-time purchase{sale ? " · Product Sale: 55% off" : ""}</p>
         </section>
       </div>
     </div>

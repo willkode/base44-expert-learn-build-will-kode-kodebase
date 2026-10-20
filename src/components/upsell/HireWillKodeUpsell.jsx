@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import { useCart } from "@/components/cart/CartContext";
 import { trackEvent } from "@/lib/analytics";
+import { getProductSalePriceCents, formatUsd } from "@/lib/summerSale";
 
 export const HIRE_WILL_KODE_SLUG = "hire-will-kode";
 
@@ -22,6 +23,7 @@ export default function HireWillKodeUpsell({ variant = "cart" }) {
   }, []);
 
   if (!product) return null;
+  const price = formatUsd(getProductSalePriceCents(product.priceCents, product.slug));
   const inCart = items.includes(product.id);
   if (variant === "cart" && inCart) return null;
 
@@ -45,7 +47,7 @@ export default function HireWillKodeUpsell({ variant = "cart" }) {
             Hire Will Kode — Done-For-You
           </p>
           <p className="text-xs text-muted-foreground mt-1">
-            Will personally integrates your prompts or builds a new system with them. One-time <span className="text-foreground font-semibold">$75</span>.
+            Will personally integrates your prompts or builds a new system with them. One-time <span className="text-foreground font-semibold">{price}</span>.
           </p>
           <ul className="mt-2 space-y-1">
             {["Prompts integrated for you", "Or a new system built with them"].map((f) => (
@@ -62,9 +64,9 @@ export default function HireWillKodeUpsell({ variant = "cart" }) {
         className="w-full mt-3 font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90"
       >
         {variant === "cart" ? (
-          <><Plus className="w-4 h-4 mr-1" /> Add for $75</>
+          <><Plus className="w-4 h-4 mr-1" /> Add for {price}</>
         ) : (
-          <>Hire Will Kode — $75 <ArrowRight className="w-4 h-4 ml-1" /></>
+          <>Hire Will Kode — {price} <ArrowRight className="w-4 h-4 ml-1" /></>
         )}
       </Button>
     </div>

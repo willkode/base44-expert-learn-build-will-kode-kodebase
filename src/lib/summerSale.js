@@ -1,37 +1,10 @@
-export const SUMMER_SALE_END_LABEL = "October 19 at 11:59 AM";
-
-// Will's Birthday Sale — 86% off everything, ends October 19 at 11:59 AM local
-// (Will's 40th birthday). Anchored to the current calendar year so the window
-// is correct regardless of the runtime clock.
-export function saleEndDate(now = new Date()) {
-  const year = now.getFullYear();
-  let end = new Date(year, 9, 19, 11, 59, 0, 0);
-  // If we're already past this year's window, the sale targets next year's.
-  if (now.getTime() >= end.getTime()) {
-    end = new Date(year + 1, 9, 19, 11, 59, 0, 0);
-  }
-  return end;
-}
-
-export function isSummerSaleActive(now = new Date()) {
-  // Active from now through Oct 19, 11:59 AM of the current year.
-  const year = now.getFullYear();
-  const end = new Date(year, 9, 19, 11, 59, 0, 0);
-  return now.getTime() < end.getTime();
-}
-
-// Products excluded from sale pricing (always full price).
-export const SALE_EXCLUDED_SLUGS = ["hire-will-kode", "build-your-own-lifetime"];
-
-// Will's Birthday Sale: 86% off everything (except excluded products).
-export function getSaleDiscountPercent(slug) {
-  if (SALE_EXCLUDED_SLUGS.includes(slug)) return 0;
-  return 86;
-}
-
+// Product sale remains active until explicitly changed; no deadline was specified.
+export const SUMMER_SALE_END_LABEL = "Automatically applied at checkout";
+export const SALE_EXCLUDED_SLUGS = [];
+export function isSummerSaleActive() { return true; }
+export function getSaleDiscountPercent() { return 55; }
 export function getProductSalePriceCents(priceCents, slug) {
-  if (!isSummerSaleActive()) return priceCents;
-  return Math.round(priceCents * (1 - getSaleDiscountPercent(slug) / 100));
+  return Math.round(priceCents * 45 / 100);
 }
 
 export function formatUsd(cents) {
