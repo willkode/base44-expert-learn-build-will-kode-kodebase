@@ -216,9 +216,9 @@ export default function BlogPost() {
 
               {/* CTA block */}
               <div className="mt-12 rounded-2xl border border-border bg-card/70 p-8 text-center glow-orange">
-                <h3 className="font-sora font-bold text-xl mb-2">Turn your idea into a build-ready blueprint</h3>
+                <h3 className="font-sora font-bold text-xl mb-2">Moving off Base44, or stuck on an app problem?</h3>
                 <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                  Generate your data model, roles, security rules, and copy-paste build prompts in minutes.
+                  See how a Base44 migration works, or browse the tools and services that help you build and secure your app.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                   <Button
@@ -226,8 +226,8 @@ export default function BlogPost() {
                     size="lg"
                     className="font-semibold gap-2 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] hover:opacity-90 text-white border-0"
                   >
-                    <Link to="/pricing" onClick={() => trackBlogClick(post.slug, "cta")}>
-                      Get started free
+                    <Link to="/services/base44-migration" onClick={() => trackBlogClick(post.slug, "migration_cta")}>
+                      See how migration works
                     </Link>
                   </Button>
                   <Button asChild size="lg" variant="outline" className="font-semibold">
