@@ -62,6 +62,7 @@ export default function Base44Migration() {
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <a className={ctaClass} href="#checkout" onClick={() => trackCTA("hero_checkout")}>Start My Migration — ${price} <ArrowRight className="h-4 w-4" /></a>
                 <a href="#how-it-works" className="rounded text-sm font-semibold text-slate-300 underline decoration-slate-600 underline-offset-4 hover:text-white">See how it works</a>
+                <Link to="/contact" onClick={() => trackCTA("hero_contact")} className="rounded text-sm font-semibold text-orange-300 underline decoration-orange-300/40 underline-offset-4 hover:text-orange-200">Ask a question first</Link>
               </div>
               <p className="mt-4 text-xs text-muted-foreground">One-time service fee · Mobile excluded · No account required to order</p>
             </div>
