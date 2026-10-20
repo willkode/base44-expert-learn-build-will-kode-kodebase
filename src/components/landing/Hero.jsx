@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles, Monitor } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { trackCTA } from "@/lib/analytics";
 
 const NEBULA_BG = "https://media.base44.com/images/public/6a1905a0bc76553d6c934574/412194915_d32a9ead9_Gemini_Generated_Image_cy4o04cy4o04cy4o.png";
@@ -88,6 +88,21 @@ export default function Hero() {
                 </span>
               </Button>
             </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-6 text-sm">
+            <Link
+              to="/services/base44-migration"
+              onClick={() => trackCTA({ text: "Migrate My Base44 App", location: "hero", destination: "/services/base44-migration" })}
+              className="font-semibold text-orange-300 underline underline-offset-4 hover:text-orange-200">
+              Moving off Base44? Get a migration quote
+            </Link>
+            <Link
+              to="/learn/prompt-library"
+              onClick={() => trackCTA({ text: "Browse free prompts", location: "hero", destination: "/learn/prompt-library" })}
+              className="font-semibold text-slate-300 underline underline-offset-4 hover:text-white">
+              Browse free prompts
+            </Link>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
