@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 
-export const MIGRATION_REGULAR_PRICE = 199;
+export const MIGRATION_REGULAR_PRICE = 125;
 export const MIGRATION_SALE_LABEL = "the first 10 customers";
 export default function useMigrationPrice() {
   const query = useQuery({
@@ -31,4 +31,3 @@ export default function useMigrationPrice() {
     refresh: query.refetch,
   };
 }
-

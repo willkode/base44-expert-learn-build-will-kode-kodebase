@@ -8,12 +8,12 @@ import { Loader2, Calculator, CheckCircle2, CalendarClock } from "lucide-react";
 import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 import { trackEvent, trackFormStart, trackFormSubmit, trackLead } from "@/lib/analytics";
 
-export const MIGRATION_START_PRICE = 199;
+export const MIGRATION_START_PRICE = 125;
 const FLAT_RATE_LIMIT = 100;
 const BOOKING_URL = "https://calendar.app.google/HkWivU8RSamGuGUcA";
 
 // Instant migration quote: apps with fewer than 100 pages + backend functions
-// are a flat $199 and can pay immediately. Larger apps book a call for a custom quote.
+// are a flat $125 and can pay immediately. Larger apps book a call for a custom quote.
 export default function MigrationQuoteTool() {
   const [form, setForm] = useState({ name: "", email: "", appUrl: "", pages: "", functions: "", notes: "", website: "" });
   const [quote, setQuote] = useState(null);
@@ -44,8 +44,8 @@ export default function MigrationQuoteTool() {
         name: form.name,
         email: form.email,
         phone: "",
-        subject: flatRate ? "Migration Quote — $199 flat rate" : "Migration Quote — custom quote needed",
-        message: `MIGRATION QUOTE REQUEST\n\nApp URL: ${form.appUrl}\nPages: ${form.pages}\nBackend functions: ${form.functions}\nTotal: ${total}\nQuote: ${flatRate ? "$199 flat rate" : "Custom — call required"}\n\nNotes:\n${form.notes || "—"}`,
+        subject: flatRate ? "Migration Quote — $125 flat rate" : "Migration Quote — custom quote needed",
+        message: `MIGRATION QUOTE REQUEST\n\nApp URL: ${form.appUrl}\nPages: ${form.pages}\nBackend functions: ${form.functions}\nTotal: ${total}\nQuote: ${flatRate ? "$125 flat rate" : "Custom — call required"}\n\nNotes:\n${form.notes || "—"}`,
         website: form.website,
       });
       trackFormSubmit("migration_quote_tool");

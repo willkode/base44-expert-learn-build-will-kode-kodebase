@@ -37,7 +37,7 @@ export default function Base44Migration() {
     { q: "Is an iOS or Android app included?", a: "No. Mobile app conversion is a separate $99 add-on. It creates an installable mobile wrapper around your web app, not a fully native app." },
     { q: "How long does migration take?", a: "Timing depends on your app's dependencies, data, and integrations. We review those after you share access and confirm the migration scope and timeline. No fixed turnaround is promised before that review." },
     { q: "Can I ask a question before purchasing?", a: "Yes. Use the contact link in the pricing section to share your app URL and migration questions before you order." },
-    { q: "How does the first-10 special work?", a: "The first 10 customers get $149 off: migration for $50 instead of $199. One discounted migration per customer. A spot is held for up to 30 minutes while you check out and is marked purchased when payment completes. Unpaid spots return after their payment links are canceled. The counter shows purchases and checkout holds separately. Once all 10 are purchased, standard $199 pricing returns. Mobile conversion remains an optional $99 add-on." },
+    { q: "How does the first-10 special work?", a: "The first 10 customers get $149 off: migration for $50 instead of $199. One discounted migration per customer. A spot is held for up to 30 minutes while you check out and is marked purchased when payment completes. Unpaid spots return after their payment links are canceled. The counter shows purchases and checkout holds separately. Once all 10 are purchased, standard $125 pricing (regularly $199) returns. Mobile conversion remains an optional $99 add-on." },
   ];
   const ctaClass = "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#fb923c] px-6 py-3 text-sm font-bold text-[#111827] transition-colors hover:bg-[#fdba74] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-300";
 
@@ -82,7 +82,7 @@ export default function Base44Migration() {
                 </div>
               </div>
               <div className="flex flex-wrap items-end justify-between gap-4 border-t border-border pt-5">
-                <div><p className="text-xs text-muted-foreground">Done-for-you migration</p><p className="mt-1 font-sora text-4xl font-bold">${price} {saleActive && <span className="text-lg font-normal text-muted-foreground line-through">$199</span>}</p></div>
+                <div><p className="text-xs text-muted-foreground">Done-for-you migration</p><p className="mt-1 font-sora text-4xl font-bold">${price} <span className="text-lg font-normal text-muted-foreground line-through">$199</span></p></div>
                 <p className="text-right text-xs leading-relaxed text-muted-foreground">One-time fee<br />Mobile excluded</p>
               </div>
             </div>

@@ -43,7 +43,7 @@ Deno.test("signed completed payment consumes once; failed, old, wrong amount do 
  const slot=row.slots[0];
  const payment={id:"p1",order_id:slot.order_id,status:"COMPLETED",amount_money:{amount:5000,currency:"USD"}};
  await completePromotion(base44,{...payment,status:"FAILED"});
- await completePromotion(base44,{...payment,amount_money:{amount:19900,currency:"USD"}});
+ await completePromotion(base44,{...payment,amount_money:{amount:12500,currency:"USD"}});
  await completePromotion(base44,{...payment,order_id:"historical"});
  assert(publicStatus(row).claimed===0,"invalid completions ignored");
  await completePromotion(base44,payment);await completePromotion(base44,payment);
@@ -58,7 +58,7 @@ Deno.test("mobile total and sold-out transition",async()=>{
   const s=row.slots[i];assert(s.amount_cents===14900,"mobile is +99");
   await completePromotion(base44,{id:"p"+i,order_id:s.order_id,status:"COMPLETED",amount_money:{amount:14900,currency:"USD"}});
  }
- const status=publicStatus(row);assert(status.soldOut&&status.price===199&&status.claimed===10&&status.remaining===0,"sold out returns 199");
+ const status=publicStatus(row);assert(status.soldOut&&status.price===125&&status.claimed===10&&status.remaining===0,"sold out returns 125");
 });
 Deno.test("abandoned checkout cancels before releasing; provider uncertainty retains hold",async()=>{
  reset();await reservePromotion(base44,"abandoned@example.test","base44_migration",req());

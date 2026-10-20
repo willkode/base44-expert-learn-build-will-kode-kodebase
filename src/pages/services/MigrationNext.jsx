@@ -29,7 +29,7 @@ export default function MigrationNext() {
       await base44.functions.invoke("submitContactForm", {
         name: form.name,
         email: form.email,
-        message: `BASE44 MIGRATION — new order ($199)\n\nApp URL: ${form.appUrl || "Not provided"}\n\nPreferred stack / hosting: ${form.stack || "No preference"}\n\nNotes: ${form.notes || "None"}`,
+        message: `BASE44 MIGRATION — new order ($125)\n\nApp URL: ${form.appUrl || "Not provided"}\n\nPreferred stack / hosting: ${form.stack || "No preference"}\n\nNotes: ${form.notes || "None"}`,
       });
       trackEvent("migration_details_submit", {});
       setSent(true);

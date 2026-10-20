@@ -120,9 +120,9 @@ export default async function(req) {
       if (expectedAmountCents === 5000 + addon) {
         amountCents = 5000 + addon;
         itemName = addon ? 'Base44 Migration — First 10 Special ($50) + Mobile Wrapper ($99)' : 'Base44 Migration — First 10 Special ($50; mobile excluded)';
-      } else if (expectedAmountCents === 19900 + addon && promo.soldOut) {
-        amountCents = 19900 + addon;
-        itemName = addon ? 'Base44 App Migration + Mobile App Conversion ($199 + $99)' : 'Base44 App Migration ($199)';
+      } else if (expectedAmountCents === 12500 + addon && promo.soldOut) {
+        amountCents = 12500 + addon;
+        itemName = addon ? 'Base44 App Migration + Mobile App Conversion ($125, reg. $199 + $99)' : 'Base44 App Migration ($125, reg. $199)';
       } else {
         throw promoError(promo.held > 0 && !promo.remaining ? 'Promotional spots are temporarily held at checkout. Please refresh availability shortly.' : 'Migration pricing has changed. Refresh the page to see the current offer before ordering.', 409);
       }

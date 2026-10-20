@@ -26,7 +26,7 @@ export default function MigrationCheckout() {
         <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">One-time fee</p>
         <p className="font-sora font-extrabold text-4xl tracking-tight">
           <span className="text-gradient-orange">${total}</span>
-          {saleActive && <span className="text-muted-foreground line-through text-xl ml-3">${MIGRATION_PRICE + (mobile ? MOBILE_ADDON_PRICE : 0)}</span>}
+          <span className="text-muted-foreground line-through text-xl ml-3">${MIGRATION_PRICE + (mobile ? MOBILE_ADDON_PRICE : 0)}</span>
         </p>
         <p className="text-sm text-muted-foreground mt-2">
           Done-for-you migration. Your app, on infrastructure you control.
