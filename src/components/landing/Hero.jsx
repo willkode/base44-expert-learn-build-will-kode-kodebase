@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Monitor } from "lucide-react";
+import { ArrowRight, Sparkles, Rocket } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { trackCTA } from "@/lib/analytics";
 
@@ -74,29 +74,20 @@ export default function Hero() {
             <div className="p-[1.5px] rounded-md bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15]">
               <Button
                 onClick={() => {
-                  trackCTA({ text: "Base44 Desktop IDE", location: "hero", destination: "/tools/base44-desktop-ide" });
-                  navigate("/tools/base44-desktop-ide");
+                  trackCTA({ text: "Base44 Migration", location: "hero", destination: "/services/base44-migration" });
+                  navigate("/services/base44-migration");
                 }}
                 size="lg"
                 variant="outline"
                 className="w-full bg-background hover:bg-white/10 text-white border-0 font-semibold text-base px-7 py-6">
 
-                <Monitor className="w-4 h-4 mr-1 text-amber-400" />
-                Base44 Desktop IDE
-                <span className="ml-2 text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e]">
-                  New
-                </span>
+                <Rocket className="w-4 h-4 mr-1 text-amber-400" />
+                Base44 Migration
               </Button>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-6 text-sm">
-            <Link
-              to="/services/base44-migration"
-              onClick={() => trackCTA({ text: "Migrate My Base44 App", location: "hero", destination: "/services/base44-migration" })}
-              className="font-semibold text-orange-300 underline underline-offset-4 hover:text-orange-200">
-              Moving off Base44? Get a migration quote
-            </Link>
             <Link
               to="/learn/prompt-library"
               onClick={() => trackCTA({ text: "Browse free prompts", location: "hero", destination: "/learn/prompt-library" })}
