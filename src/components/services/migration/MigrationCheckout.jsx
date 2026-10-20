@@ -3,7 +3,6 @@ import { CheckCircle, ShieldCheck, Smartphone } from "lucide-react";
 import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 
 import useMigrationPrice from "./useMigrationPrice";
-import MigrationSpotCounter from "./MigrationSpotCounter";
 
 export const MIGRATION_PRICE = 199;
 export const MOBILE_ADDON_PRICE = 99;
@@ -17,7 +16,7 @@ const includes = [
 
 export default function MigrationCheckout() {
   const [mobile, setMobile] = useState(false);
-  const { price, saleActive, checkoutDisabled } = useMigrationPrice();
+  const { price, checkoutDisabled } = useMigrationPrice();
   const total = typeof price === "number" ? price + (mobile ? MOBILE_ADDON_PRICE : 0) : "…";
 
   return (
@@ -33,8 +32,7 @@ export default function MigrationCheckout() {
         </p>
       </div>
 
-      {saleActive && <p className="text-center text-sm font-semibold text-primary mb-6">Save $149 — migration for $50 for the first 10 customers. Mobile excluded; optional mobile conversion is an additional $99.</p>}
-      <div className="mb-6 rounded-xl border border-orange-300/20 bg-orange-300/5 p-4"><MigrationSpotCounter /></div>
+      <p className="text-center text-sm font-semibold text-primary mb-6">Save $74 off the regular $199. Mobile excluded; optional mobile conversion is an additional $99.</p>
       <div className="space-y-3 mb-6">
         {includes.map((item) => (
           <div key={item} className="flex items-start gap-3">

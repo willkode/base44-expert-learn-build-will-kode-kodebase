@@ -148,7 +148,7 @@ export default function KodeMigration() {
             </div>
             <div className="md:w-72 rounded-2xl border border-border bg-background/60 p-6">
               <p className="font-sora font-extrabold text-4xl mb-2">${migrationPrice} <span className="font-normal font-inter text-sm text-muted-foreground">one time</span></p>
-              <p className="text-xs text-muted-foreground mb-5">{migrationSale ? "First 10 customers: $50 one time — save $149. Mobile excluded. Subject to spot availability." : "Fixed service price. The product discount does not apply."}</p>
+              <p className="text-xs text-muted-foreground mb-5">Fixed service price. The product discount does not apply.</p>
               <ServiceCheckoutButton serviceId="base44_migration" expectedAmountCents={typeof migrationPrice === "number" ? migrationPrice * 100 : undefined} disabled={migrationCheckoutDisabled} label={`Get Done for you Migration — $${migrationPrice}`} redirectPath="/services/base44-migration/next" className="h-auto py-3 whitespace-normal" />
             </div>
           </div>

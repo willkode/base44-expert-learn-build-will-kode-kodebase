@@ -6,7 +6,6 @@ import { faqSchema } from "@/lib/seo";
 import { trackEvent } from "@/lib/analytics";
 import MigrationCheckout from "@/components/services/migration/MigrationCheckout";
 import useMigrationPrice from "@/components/services/migration/useMigrationPrice";
-import MigrationSpotCounter from "@/components/services/migration/MigrationSpotCounter";
 import { includedSections } from "@/components/services/migration/migrationData";
 
 const pains = [
@@ -26,7 +25,7 @@ const steps = [
 ];
 
 export default function Base44Migration() {
-  const { price, saleActive } = useMigrationPrice();
+  const { price } = useMigrationPrice();
   useEffect(() => { trackEvent("page_view", { page: "base44_migration_service" }); }, []);
   const trackCTA = (cta) => trackEvent("service_cta_click", { service: "base44_migration", cta });
   const faqs = [
@@ -37,7 +36,6 @@ export default function Base44Migration() {
     { q: "Is an iOS or Android app included?", a: "No. Mobile app conversion is a separate $99 add-on. It creates an installable mobile wrapper around your web app, not a fully native app." },
     { q: "How long does migration take?", a: "Timing depends on your app's dependencies, data, and integrations. We review those after you share access and confirm the migration scope and timeline. No fixed turnaround is promised before that review." },
     { q: "Can I ask a question before purchasing?", a: "Yes. Use the contact link in the pricing section to share your app URL and migration questions before you order." },
-    { q: "How does the first-10 special work?", a: "The first 10 customers get $149 off: migration for $50 instead of $199. One discounted migration per customer. A spot is held for up to 30 minutes while you check out and is marked purchased when payment completes. Unpaid spots return after their payment links are canceled. The counter shows purchases and checkout holds separately. Once all 10 are purchased, standard $125 pricing (regularly $199) returns. Mobile conversion remains an optional $99 add-on." },
   ];
   const ctaClass = "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#fb923c] px-6 py-3 text-sm font-bold text-[#111827] transition-colors hover:bg-[#fdba74] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-300";
 
@@ -52,9 +50,8 @@ export default function Base44Migration() {
         <div aria-hidden="true" className="absolute -top-40 right-0 h-[500px] w-[500px] rounded-full bg-orange-400/10 blur-3xl pointer-events-none" />
         <div className="relative mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-20">
           <div className="mb-8 rounded-xl border border-orange-300/30 bg-orange-300/10 px-5 py-4 text-sm">
-            {saleActive && <p className="mb-4 text-lg font-bold text-orange-200">First 10 customers: $149 off · Migration for $50</p>}
-            <MigrationSpotCounter />
-            <p className="mt-3 text-xs text-slate-300">One-time fee · Mobile excluded</p>
+            <p className="mb-2 text-lg font-bold text-orange-200">Migration for $125 · regularly $199</p>
+            <p className="text-xs text-slate-300">One-time fee · Mobile excluded</p>
           </div>
           <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
             <div>

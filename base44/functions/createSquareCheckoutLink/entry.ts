@@ -115,12 +115,7 @@ export default async function(req) {
     } else if (serviceId === 'base44_migration' || serviceId === 'base44_migration_mobile') {
       const promo = publicStatus(await reconcilePromotion(base44));
       const addon = serviceId === 'base44_migration_mobile' ? 9900 : 0;
-      // A requested $50 quote must acquire a spot below. Never silently raise
-      // the amount if another customer takes the last available spot.
-      if (expectedAmountCents === 5000 + addon) {
-        amountCents = 5000 + addon;
-        itemName = addon ? 'Base44 Migration — First 10 Special ($50) + Mobile Wrapper ($99)' : 'Base44 Migration — First 10 Special ($50; mobile excluded)';
-      } else if (expectedAmountCents === 12500 + addon && promo.soldOut) {
+      if (expectedAmountCents === 12500 + addon && promo.soldOut) {
         amountCents = 12500 + addon;
         itemName = addon ? 'Base44 App Migration + Mobile App Conversion ($125, reg. $199 + $99)' : 'Base44 App Migration ($125, reg. $199)';
       } else {
@@ -232,11 +227,6 @@ export default async function(req) {
               ],
         },
       };
-    if ((serviceId === 'base44_migration' && amountCents === 5000) ||
-        (serviceId === 'base44_migration_mobile' && amountCents === 14900)) {
-      return Response.json(await reservePromotion(base44, buyerEmail, serviceId, checkoutRequest));
-    }
-
     const res = await fetch(`${baseUrl}/v2/online-checkout/payment-links`, {
       method: 'POST',
       headers: {
