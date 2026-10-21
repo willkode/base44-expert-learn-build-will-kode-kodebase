@@ -57,7 +57,7 @@ export default function Hero() {
           </h1>
 
           <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-9">
-            I'm Will Kode — full-stack since 1997, 20+ years building production apps, and 15+ years in
+            I'm Will Kode — 20+ years building production apps, and 15+ years in
             marketing. I architect, audit, secure, and ship AI-first software on whatever stack fits your
             business — the kind that survives real users.
           </p>
