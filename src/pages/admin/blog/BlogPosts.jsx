@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { FileText, Plus, ExternalLink, Sparkles, Pencil, Share2, Trash2 } from "lucide-react";
+import { FileText, Plus, ExternalLink, Sparkles, Pencil, Share2, Trash2, Image as ImageIcon, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import ShareToOcoyaDialog from "@/components/admin/blog/ShareToOcoyaDialog";
 import SuggestPostIdeasDialog from "@/components/admin/blog/SuggestPostIdeasDialog";
 import {
@@ -34,6 +35,38 @@ export default function BlogPosts() {
   const [ideasOpen, setIdeasOpen] = useState(false);
   const [deletePost, setDeletePost] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [fillingImages, setFillingImages] = useState(false);
+
+  // Generate a featured image for every live or scheduled post that has none, one at a time.
+  const missingImages = posts.filter(
+    (p) => !p.coverImageUrl && ["published", "scheduled"].includes(p.status || (p.published ? "published" : "draft"))
+  );
+  const generateMissingImages = async () => {
+    setFillingImages(true);
+    let done = 0;
+    for (const p of missingImages) {
+      try {
+        const res = await base44.functions.invoke("generateBlogFeaturedImage", {
+          blog_post_id: p.id,
+          image_prompt: p.featuredImagePrompt || "",
+          image_style: "Clean SaaS blog graphic",
+          aspect_ratio: "16:9",
+          include_brand_colors: true,
+          include_logo: false,
+        });
+        if (res.data?.success) {
+          applyUpdate({ id: p.id, coverImageUrl: res.data.imageUrl, featuredImageAlt: res.data.altText });
+          done += 1;
+        } else {
+          toast.error(`${p.title}: ${res.data?.error || "Generation failed"}`);
+        }
+      } catch (err) {
+        toast.error(`${p.title}: ${err?.response?.data?.error || "Generation failed"}`);
+      }
+    }
+    setFillingImages(false);
+    toast.success(`Generated ${done} of ${missingImages.length} images`);
+  };
 
   const handleDelete = async () => {
     if (!deletePost) return;
@@ -74,6 +107,12 @@ export default function BlogPosts() {
         description="Search, edit, approve, schedule, publish, and archive your posts."
         actions={
           <div className="flex gap-2">
+            {missingImages.length > 0 && (
+              <Button variant="outline" className="gap-2" onClick={generateMissingImages} disabled={fillingImages}>
+                {fillingImages ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
+                Generate missing images ({missingImages.length})
+              </Button>
+            )}
             <Button variant="outline" className="gap-2" onClick={() => setIdeasOpen(true)}>
               <Sparkles className="w-4 h-4" /> Suggest ideas
             </Button>
