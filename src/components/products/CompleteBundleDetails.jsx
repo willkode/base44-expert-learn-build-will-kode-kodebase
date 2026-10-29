@@ -13,17 +13,14 @@ export default function CompleteBundleDetails({ bundlePriceCents }) {
     base44.entities.Product.filter({ active: true }, "order", 100)
       .then((all) =>
         setItems(
-          // Mirrors getMyProducts({ bundleOnly: true }): only products the
-          // bundle actually delivers a file for, so the count and savings
-          // below always match what a buyer receives.
+          // Mirrors expandBundleAccess in squarePaymentWebhook — the set of
+          // products a bundle purchase actually grants — so the count and
+          // savings below always match what a buyer receives.
           all.filter(
             (p) =>
               p.slug !== "complete-builder-bundle" &&
               p.slug !== "complete-base44-knowledge-kit" &&
-              p.slug !== "prompt-vault" &&
-              (p.priceCents || 0) > 0 &&
-              p.deliversPdf &&
-              ((p.pdfFiles || []).some((f) => f?.fileUri) || p.pdfFileUri)
+              (p.priceCents || 0) > 0
           )
         )
       )
