@@ -6,7 +6,7 @@ import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
 import BundleUpsell from "@/components/checkout/BundleUpsell";
 import { trackBeginCheckout, trackPurchase, trackAddPaymentInfo } from "@/lib/analytics";
-import { isSummerSaleActive, getProductSalePriceCents, getSaleDiscountPercent, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
+import { isProductOnSale, getProductSalePriceCents, getSaleBadgeLabel, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 import { useCart } from "@/components/cart/CartContext";
 
 export default function Checkout() {
@@ -183,7 +183,7 @@ export default function Checkout() {
         desc: product.tagline,
         priceLabel: (product.priceCents || 0) === 0 ? "Free" : formatUsd(getProductSalePriceCents(product.priceCents, product.slug)),
         fullPriceLabel: formatUsd(product.priceCents),
-        onSale: isSummerSaleActive() && (product.priceCents || 0) > 0 && getSaleDiscountPercent(product.slug) > 0,
+        onSale: isProductOnSale(product.priceCents, product.slug),
         periodLabel: " one-time",
         features: product.features || [],
         supportNote: product.supportNote,
@@ -196,7 +196,7 @@ export default function Checkout() {
         desc: "One checkout, every product delivered separately in your dashboard.",
         priceLabel: formatUsd(cartProducts.reduce((s, p) => s + cartPriceFor(p), 0)),
         fullPriceLabel: formatUsd(cartProducts.reduce((s, p) => s + (p.priceCents || 0), 0)),
-        onSale: isSummerSaleActive() || !!coupon,
+        onSale: cartProducts.some((p) => isProductOnSale(p.priceCents, p.slug)) || !!coupon,
         couponCode: isCart ? coupon?.code : undefined,
         periodLabel: " one-time",
         features: cartProducts.map((p) => p.name),
@@ -275,7 +275,7 @@ export default function Checkout() {
             {item.couponCode ? (
               <p className="text-xs text-primary mb-1">Coupon {item.couponCode} applied</p>
             ) : item.onSale ? (
-              <p className="text-xs text-primary mb-1">Product Sale · {product ? `${getSaleDiscountPercent(product.slug)}% off` : "55% off"} · {SUMMER_SALE_END_LABEL}</p>
+              <p className="text-xs text-primary mb-1">{product ? getSaleBadgeLabel(product.priceCents, product.slug) : "$10 Flash Sale"} · {SUMMER_SALE_END_LABEL}</p>
             ) : null}
             {item.supportNote && <p className="text-xs text-muted-foreground mb-4">{item.supportNote}</p>}
             <ul className="space-y-2.5 mt-4">
