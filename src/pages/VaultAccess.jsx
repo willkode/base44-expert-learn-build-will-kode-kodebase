@@ -8,6 +8,7 @@ import { base44 } from "@/api/base44Client";
 import LoadingState from "@/components/shared/LoadingState";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
+import { VAULT_PRICE, VAULT_LIST_PRICE } from "@/lib/vaultPricing";
 
 const PRODUCT_ID = "6a36c8c785752800bd7580be";
 
@@ -125,9 +126,9 @@ export default function VaultAccess() {
       <div className="max-w-md w-full rounded-2xl border border-border bg-card p-10 text-center">
         <Lock className="w-12 h-12 text-primary mx-auto mb-4" />
         <h1 className="font-sora font-bold text-2xl mb-2">Vault locked</h1>
-        <p className="text-muted-foreground text-sm mb-6">Included free with Pro membership — or get lifetime access for just $5 (50% off the regular $10).</p>
+        <p className="text-muted-foreground text-sm mb-6">Included free with Pro membership — or get lifetime access for just {VAULT_PRICE} (regular {VAULT_LIST_PRICE}).</p>
         <Button onClick={() => navigate(`/checkout?product=${PRODUCT_ID}`)} className="w-full font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90">
-          Unlock for $5
+          Unlock for {VAULT_PRICE}
         </Button>
         <button onClick={() => navigate("/pro")} className="mt-3 text-sm text-primary hover:underline">
           Or get it free with Pro →
