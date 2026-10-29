@@ -6,6 +6,13 @@ import { formatUsd } from "@/lib/summerSale";
 
 // Landing section for the Complete Builder Bundle — lists every included
 // product dynamically so it always stays in sync with the catalog.
+
+// Must stay in step with BUNDLE_EXCLUDED_SLUGS in squarePaymentWebhook.
+const BUNDLE_EXCLUDED_SLUGS = [
+  "complete-builder-bundle",
+  "complete-base44-knowledge-kit",
+  "hire-will-kode",
+];
 export default function CompleteBundleDetails({ bundlePriceCents }) {
   const [items, setItems] = useState([]);
 
@@ -13,15 +20,10 @@ export default function CompleteBundleDetails({ bundlePriceCents }) {
     base44.entities.Product.filter({ active: true }, "order", 100)
       .then((all) =>
         setItems(
-          // Mirrors expandBundleAccess in squarePaymentWebhook — the set of
-          // products a bundle purchase actually grants — so the count and
-          // savings below always match what a buyer receives.
-          all.filter(
-            (p) =>
-              p.slug !== "complete-builder-bundle" &&
-              p.slug !== "complete-base44-knowledge-kit" &&
-              (p.priceCents || 0) > 0
-          )
+          // Mirrors BUNDLE_EXCLUDED_SLUGS / expandBundleAccess in
+          // squarePaymentWebhook — the set of products a bundle purchase actually
+          // grants — so the count and savings below match what a buyer receives.
+          all.filter((p) => !BUNDLE_EXCLUDED_SLUGS.includes(p.slug) && (p.priceCents || 0) > 0)
         )
       )
       .catch(() => {});
