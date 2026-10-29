@@ -14,7 +14,7 @@ import Seo from "@/components/seo/Seo";
 import { softwareApplicationSchema } from "@/lib/seo";
 import { trackSelectItem, trackAddToCart } from "@/lib/analytics";
 import { useCart } from "@/components/cart/CartContext";
-import { isSummerSaleActive, getProductSalePriceCents, getSaleDiscountPercent, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
+import { isProductOnSale, getProductSalePriceCents, getSaleBadgeLabel, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 import SummerSaleBanner from "@/components/products/SummerSaleBanner";
 import FeaturedDesktopIdeCard from "@/components/products/FeaturedDesktopIdeCard";
 import ProductStars from "@/components/products/ProductStars";
@@ -162,10 +162,10 @@ export default function Products() {
                   <div className="flex flex-col gap-4">
                     <div className="flex items-end justify-between gap-4">
                       <div>
-                        {isSummerSaleActive() ? (
+                        {isProductOnSale(p.priceCents, p.slug) ? (
                           <>
                             <Badge className="mb-1.5 text-[10px] bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
-                              Product Sale · {getSaleDiscountPercent(p.slug)}% off
+                              {getSaleBadgeLabel(p.priceCents, p.slug)}
                             </Badge>
                             <div className="flex items-end gap-1.5">
                               <span className="font-sora font-extrabold text-3xl">{formatUsd(getProductSalePriceCents(p.priceCents, p.slug))}</span>
