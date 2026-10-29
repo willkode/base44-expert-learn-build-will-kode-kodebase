@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { trackSelectItem, trackAddToCart } from "@/lib/analytics";
 import { useCart } from "@/components/cart/CartContext";
-import { isSummerSaleActive, getProductSalePriceCents, getSaleDiscountPercent, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
+import { isProductOnSale, getProductSalePriceCents, getSaleBadgeLabel, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 
 const MotionLink = motion(Link);
 
@@ -51,10 +51,10 @@ export default function FeaturedBundleCard({ product: p }) {
           </ul>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              {isSummerSaleActive() ? (
+              {isProductOnSale(p.priceCents, p.slug) ? (
                 <>
                   <Badge className="mb-1.5 text-[10px] bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
-                    Product Sale · {getSaleDiscountPercent(p.slug)}% off
+                    {getSaleBadgeLabel(p.priceCents, p.slug)}
                   </Badge>
                   <div className="flex items-end gap-1.5">
                     <span className="font-sora font-extrabold text-4xl">{formatUsd(getProductSalePriceCents(p.priceCents, p.slug))}</span>
