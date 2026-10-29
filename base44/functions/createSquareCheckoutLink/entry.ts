@@ -39,7 +39,40 @@ const SERVICE_PRICING: Record<string, { amountCents: number; name: string }> = {
 // Kode Sessions included in the 50% off promo
 const KODE_SESSION_SALE_IDS = ['kode_session_1hr', 'kode_session_2hr'];
 
-// The 55% product sale includes every catalog product, with no scheduled end.
+// $10 Flash Sale — mirror of src/lib/summerSale.js. This is the authoritative
+// copy: amounts charged are always resolved here, never trusted from the client.
+const FLASH_SALE_PRICE_CENTS = 1000;
+const ALL_ACCESS_SLUG = 'complete-builder-bundle';
+const ALL_ACCESS_PRICE_CENTS = 10000;
+// Multi-pack bundles sit the flash sale out at their regular price, so the
+// all-access tier stays the cheapest way to get everything.
+const SALE_EXCLUDED_SLUGS = [
+  'founder-stack-bundle',
+  'kode-ai-marketing-team-bundle',
+  'complete-base44-knowledge-kit',
+];
+// Services are hands-on work rather than a $10 download, so they keep the
+// previous 55% off instead of the flat flash price.
+const SERVICE_SALE_SLUGS = ['hire-will-kode'];
+const SERVICE_DISCOUNT_PERCENT = 55;
+
+// Resolves the charged amount and the Square line-item name for a catalog product.
+function saleAmountFor(product: any): { cents: number; name: string } {
+  const cents = Math.round(product.priceCents || 0);
+  if (cents <= 0) return { cents, name: product.name };
+  if (product.slug === ALL_ACCESS_SLUG) {
+    return { cents: ALL_ACCESS_PRICE_CENTS, name: `${product.name} (All-Access Flash Deal)` };
+  }
+  if (SALE_EXCLUDED_SLUGS.includes(product.slug)) return { cents, name: product.name };
+  if (SERVICE_SALE_SLUGS.includes(product.slug)) {
+    return {
+      cents: Math.round((cents * (100 - SERVICE_DISCOUNT_PERCENT)) / 100),
+      name: `${product.name} (${SERVICE_DISCOUNT_PERCENT}% off)`,
+    };
+  }
+  return { cents: FLASH_SALE_PRICE_CENTS, name: `${product.name} ($10 Flash Sale)` };
+}
+
 // Preserve existing coupon restrictions independently of sale eligibility.
 const NO_DISCOUNT_SLUGS = ['build-your-own-lifetime'];
 
@@ -93,12 +126,10 @@ export default async function(req) {
         if (override && Number.isFinite(override.priceCents)) {
           cents = Math.max(0, Math.round(override.priceCents));
           name = `${product.name} (Coupon ${coupon.code})`;
-        } else if (product.priceCents > 0) {
-          cents = Math.round(product.priceCents * 45 / 100);
-          name = `${product.name} (Summer Special 55% off)`;
         } else {
-          cents = product.priceCents;
-          name = product.name;
+          const sale = saleAmountFor(product);
+          cents = sale.cents;
+          name = sale.name;
         }
         resolved.push({ id: product.id, name, cents });
       }
@@ -160,13 +191,9 @@ export default async function(req) {
       if ((product.priceCents || 0) === 0) {
         return Response.json({ error: 'This product is free — claim it directly, no payment needed.' }, { status: 400 });
       }
-      if (product.priceCents > 0) {
-        amountCents = Math.round(product.priceCents * 45 / 100);
-        itemName = `${product.name} (Summer Special 55% off)`;
-      } else {
-        amountCents = product.priceCents;
-        itemName = product.name;
-      }
+      const sale = saleAmountFor(product);
+      amountCents = sale.cents;
+      itemName = sale.name;
       productIdResolved = product.id;
     } else {
       return Response.json({ error: 'Invalid payment request.' }, { status: 400 });
