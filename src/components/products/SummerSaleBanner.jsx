@@ -1,10 +1,18 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
-import { isSummerSaleActive } from "@/lib/summerSale";
+import {
+  isSummerSaleActive,
+  formatUsd,
+  FLASH_SALE_PRICE_CENTS,
+  ALL_ACCESS_PRICE_CENTS,
+} from "@/lib/summerSale";
 
 export default function SummerSaleBanner() {
   if (!isSummerSaleActive()) return null;
+
+  const flash = formatUsd(FLASH_SALE_PRICE_CENTS);
+  const allAccess = formatUsd(ALL_ACCESS_PRICE_CENTS);
 
   return (
     <motion.div
@@ -18,12 +26,13 @@ export default function SummerSaleBanner() {
           <Sparkles className="w-6 h-6 text-[#0a0f1e] shrink-0" />
           <div>
             <p className="font-sora font-extrabold text-lg md:text-xl text-[#0a0f1e] leading-tight">
-              55% off all products
+              {flash} Flash Sale — every product {flash}
             </p>
-            <p className="text-sm text-[#0a0f1e]/80 font-medium">Automatically applied at checkout. One-time pricing, locked in.</p>
+            <p className="text-sm text-[#0a0f1e]/80 font-medium">
+              Or unlock every product at once for {allAccess}. Applied automatically at checkout — one-time pricing, locked in.
+            </p>
           </div>
         </div>
-
       </div>
     </motion.div>
   );
