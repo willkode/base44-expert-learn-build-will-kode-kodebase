@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Vault, ArrowRight, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { VAULT_PRICE, VAULT_LIST_PRICE, VAULT_SALE_LABEL } from "@/lib/vaultPricing";
 
 export default function PromptVaultBanner({ hasAccess }) {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function PromptVaultBanner({ hasAccess }) {
             <div className="flex flex-wrap items-center gap-2 mb-1">
               <span className="font-sora font-bold text-base">Prompt Vault</span>
               {!hasAccess && (
-                <Badge className="text-[10px] bg-primary/15 text-primary border-primary/30">50% OFF · $5</Badge>
+                <Badge className="text-[10px] bg-primary/15 text-primary border-primary/30">{VAULT_SALE_LABEL}</Badge>
               )}
               {hasAccess && (
                 <Badge className="text-[10px] bg-emerald-500/15 text-emerald-400 border-emerald-500/30">Unlocked</Badge>
@@ -31,7 +32,7 @@ export default function PromptVaultBanner({ hasAccess }) {
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               {hasAccess
                 ? "Access your 20+ premium Base44 prompts"
-                : "20+ expert prompts — one-time $5 · normally $10"}
+                : `20+ expert prompts — one-time ${VAULT_PRICE} · normally ${VAULT_LIST_PRICE}`}
             </p>
           </div>
         </div>
