@@ -7,14 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
 import Seo from "@/components/seo/Seo";
 import { trackEvent } from "@/lib/analytics";
-import { getProductSalePriceCents, getSaleBadgeLabel, formatUsd } from "@/lib/summerSale";
-
-// Prompt Vault pricing — the list price mirrors the catalog row; the charged
-// price comes from the live sale rules so this page can't drift from checkout.
-const VAULT_LIST_CENTS = 1200;
-const VAULT_PRICE = formatUsd(getProductSalePriceCents(VAULT_LIST_CENTS, "prompt-vault"));
-const VAULT_LIST_PRICE = formatUsd(VAULT_LIST_CENTS);
-const VAULT_SALE_LABEL = getSaleBadgeLabel(VAULT_LIST_CENTS, "prompt-vault");
+import { VAULT_PRICE, VAULT_LIST_PRICE, VAULT_SALE_LABEL } from "@/lib/vaultPricing";
 
 const CATEGORY_ICONS = {
   "Development": Code2,
