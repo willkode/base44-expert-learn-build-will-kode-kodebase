@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Seo from "@/components/seo/Seo";
 import GlitchPreloader from "@/components/landing/GlitchPreloader";
 import { SITE, softwareApplicationSchema, faqSchema } from "@/lib/seo";
