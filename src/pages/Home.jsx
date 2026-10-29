@@ -7,6 +7,7 @@ import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
 import HeroStats from "@/components/landing/HeroStats";
 import MigrationLastChance from "@/components/landing/MigrationLastChance";
+import FlashSaleBand from "@/components/landing/FlashSaleBand";
 import LatestVideos from "@/components/landing/LatestVideos";
 import ServicesSection from "@/components/landing/ServicesSection";
 import ExploreResources from "@/components/landing/ExploreResources";
@@ -37,6 +38,7 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <FlashSaleBand />
         <MigrationLastChance />
         <HeroStats />
         <LatestVideos />
