@@ -38,7 +38,7 @@ export default function ThreeUiPreviewDialog({ element, locked, open, onOpenChan
               onClick={onUnlock}
               className="bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] font-semibold hover:opacity-90"
             >
-              Unlock All Prompts — $11.25
+              Unlock All Prompts — $10
             </Button>
           </div>
         ) : (
