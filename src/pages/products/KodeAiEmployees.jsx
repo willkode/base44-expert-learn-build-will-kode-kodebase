@@ -8,7 +8,7 @@ import ServiceFAQ from "@/components/services/ServiceFAQ";
 import { faqSchema } from "@/lib/seo";
 import { useCart } from "@/components/cart/CartContext";
 import { trackViewItem, trackSelectItem, trackAddToCart } from "@/lib/analytics";
-import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
+import { isProductOnSale, getProductSalePriceCents, getSaleBadgeLabel, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 
 const slug = "kode-ai-employees";
 const roles = [
@@ -52,7 +52,7 @@ export default function KodeAiEmployees() {
   const regular = product?.priceCents ?? 25000;
   const cents = getProductSalePriceCents(regular, slug);
   const price = formatUsd(cents);
-  const sale = isSummerSaleActive();
+  const sale = isProductOnSale(regular, slug);
   const buy = async () => {
     if (!product || buying) return;
     setBuying(true); setError("");
@@ -89,7 +89,7 @@ export default function KodeAiEmployees() {
           <p className="text-xs text-muted-foreground flex gap-2 items-center mt-4"><Lock className="w-3.5 h-3.5" />Secure checkout via Square · One-time purchase</p>
         </div>
         <div className="rounded-3xl border border-primary/30 bg-card p-6 sm:p-8 shadow-[0_0_80px_rgba(251,146,60,0.08)]">
-          {sale && <div className="rounded-xl border border-primary/25 bg-primary/10 p-4 mb-6"><p className="font-bold text-primary text-sm">Product Sale · 55% off</p><p className="text-xs text-muted-foreground mt-1">{SUMMER_SALE_END_LABEL}</p></div>}
+          {sale && <div className="rounded-xl border border-primary/25 bg-primary/10 p-4 mb-6"><p className="font-bold text-primary text-sm">{getSaleBadgeLabel(regular, slug)}</p><p className="text-xs text-muted-foreground mt-1">{SUMMER_SALE_END_LABEL}</p></div>}
           <Bot className="w-9 h-9 text-primary mb-4" /><h2 className="font-sora font-bold text-xl mb-4">The complete employee package</h2>
           <div className="flex flex-wrap gap-3 items-baseline"><span className="font-sora font-extrabold text-5xl">{price}</span>{sale && <span className="line-through text-xl text-muted-foreground">{formatUsd(regular)}</span>}<span className="text-sm text-muted-foreground">one time</span></div>
           {sale && <p className="text-sm text-primary mt-2">Save {formatUsd(regular - cents)} with the 55% product sale.</p>}
