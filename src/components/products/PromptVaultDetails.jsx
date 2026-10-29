@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Bot, Shield, TrendingUp, Code2, Megaphone, Zap, Sparkles, Lock, ChevronDown, ChevronUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
+import { VAULT_LIST_PRICE, VAULT_SALE_LABEL } from "@/lib/vaultPricing";
 
 // Category → image map
 const CATEGORY_IMAGES = {
@@ -168,7 +169,7 @@ export default function PromptVaultDetails({ onBuy, price }) {
         >
           Get Lifetime Access — {price}
         </button>
-        <p className="text-xs text-muted-foreground mt-3">Normally $10 · 50% off launch price</p>
+        <p className="text-xs text-muted-foreground mt-3">Normally {VAULT_LIST_PRICE} · {VAULT_SALE_LABEL}</p>
       </div>
     </div>
   );
