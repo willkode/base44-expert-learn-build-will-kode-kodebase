@@ -7,6 +7,14 @@ import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
 import Seo from "@/components/seo/Seo";
 import { trackEvent } from "@/lib/analytics";
+import { getProductSalePriceCents, getSaleBadgeLabel, formatUsd } from "@/lib/summerSale";
+
+// Prompt Vault pricing — the list price mirrors the catalog row; the charged
+// price comes from the live sale rules so this page can't drift from checkout.
+const VAULT_LIST_CENTS = 1200;
+const VAULT_PRICE = formatUsd(getProductSalePriceCents(VAULT_LIST_CENTS, "prompt-vault"));
+const VAULT_LIST_PRICE = formatUsd(VAULT_LIST_CENTS);
+const VAULT_SALE_LABEL = getSaleBadgeLabel(VAULT_LIST_CENTS, "prompt-vault");
 
 const CATEGORY_ICONS = {
   "Development": Code2,
@@ -88,7 +96,7 @@ export default function PromptVault() {
     <div className="min-h-screen bg-background pt-24 pb-24 px-6">
       <Seo
         title="Prompt Vault — 20+ Expert Base44 Prompts | KodeBase"
-        description="Copy-paste expert prompts for Base44 developers. Build faster, audit smarter, scale confidently. One-time $5 — 50% off launch price."
+        description="Copy-paste expert prompts for Base44 developers. Build faster, audit smarter, scale confidently. One-time {VAULT_PRICE} in the Flash Sale."
         path="/vault"
         type="product"
         image="https://media.base44.com/images/public/6a1905a0bc76553d6c934574/b1ec637c7_generated_image.png"
@@ -98,7 +106,7 @@ export default function PromptVault() {
         {/* Hero */}
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-semibold mb-6">
-            <Vault className="w-3.5 h-3.5" /> Limited Launch Price — 50% Off
+            <Vault className="w-3.5 h-3.5" /> {VAULT_SALE_LABEL}
           </div>
           <h1 className="font-sora font-bold text-4xl md:text-6xl tracking-tight mb-5">
             The <span className="text-gradient-orange">Prompt Vault</span>
@@ -109,9 +117,9 @@ export default function PromptVault() {
 
           {/* Price */}
           <div className="inline-flex items-end gap-3 mb-8">
-            <span className="font-sora font-extrabold text-5xl text-gradient-orange">$5</span>
+            <span className="font-sora font-extrabold text-5xl text-gradient-orange">{VAULT_PRICE}</span>
             <div className="mb-1.5 text-left">
-              <div className="text-muted-foreground line-through text-sm">$10</div>
+              <div className="text-muted-foreground line-through text-sm">{VAULT_LIST_PRICE}</div>
               <div className="text-xs text-muted-foreground">one-time · lifetime access</div>
             </div>
           </div>
@@ -122,7 +130,7 @@ export default function PromptVault() {
               size="lg"
               className="font-bold text-base px-8 py-6 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90 glow-orange"
             >
-              {hasAccess ? "Access My Vault" : "Get Lifetime Access — $5"}
+              {hasAccess ? "Access My Vault" : "Get Lifetime Access — {VAULT_PRICE}"}
             </Button>
             {!hasAccess && (
               <p className="text-xs text-muted-foreground flex items-center gap-1.5">
@@ -194,9 +202,9 @@ export default function PromptVault() {
             <h2 className="font-sora font-bold text-2xl mb-2">Ready to unlock the vault?</h2>
             <p className="text-muted-foreground text-sm mb-6">One-time payment. Lifetime access. New prompts added for free.</p>
             <Button onClick={handleCTA} size="lg" className="font-bold px-8 bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90 glow-orange">
-              Get Lifetime Access — $5
+              Get Lifetime Access — {VAULT_PRICE}
             </Button>
-            <p className="text-xs text-muted-foreground mt-3">Normally $10 · 50% off launch price</p>
+            <p className="text-xs text-muted-foreground mt-3">Normally {VAULT_LIST_PRICE} · {VAULT_SALE_LABEL}</p>
           </motion.div>
         )}
       </div>
