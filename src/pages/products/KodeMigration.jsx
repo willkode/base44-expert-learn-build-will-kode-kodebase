@@ -9,7 +9,7 @@ import ServiceCheckoutButton from "@/components/services/ServiceCheckoutButton";
 import { faqSchema } from "@/lib/seo";
 import { useCart } from "@/components/cart/CartContext";
 import { trackViewItem, trackSelectItem, trackAddToCart } from "@/lib/analytics";
-import { isSummerSaleActive, getProductSalePriceCents, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
+import { isProductOnSale, getProductSalePriceCents, getSaleBadgeLabel, formatUsd, SUMMER_SALE_END_LABEL } from "@/lib/summerSale";
 
 import useMigrationPrice from "@/components/services/migration/useMigrationPrice";
 
@@ -48,7 +48,7 @@ export default function KodeMigration() {
   }, []);
 
   const regularCents = product?.priceCents ?? 12500;
-  const sale = isSummerSaleActive();
+  const sale = isProductOnSale(regularCents, "kode-migration");
   const priceCents = getProductSalePriceCents(regularCents, "kode-migration");
   const price = formatUsd(priceCents);
   const buy = async () => {
@@ -114,7 +114,7 @@ export default function KodeMigration() {
           </div>
           <div className="rounded-3xl border border-primary/30 bg-card p-6 sm:p-8 shadow-[0_0_80px_rgba(251,146,60,0.08)]">
             {sale && <div className="rounded-xl bg-primary/10 border border-primary/25 px-4 py-3 mb-7">
-              <p className="text-primary font-bold text-sm">Product Sale · 55% off</p>
+              <p className="text-primary font-bold text-sm">{getSaleBadgeLabel(regularCents, "kode-migration")}</p>
               <p className="text-xs text-muted-foreground mt-1">{SUMMER_SALE_END_LABEL}</p>
             </div>}
             <div className="flex items-center gap-3 mb-6">
@@ -194,7 +194,7 @@ export default function KodeMigration() {
           <h2 className="font-sora font-bold text-3xl sm:text-4xl mb-4">Your next move starts here.</h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-7">Get the guide. Open ChatGPT or Claude. Start understanding what it takes to bring your app to its next home.</p>
           {buyButton}
-          <p className="text-xs text-muted-foreground mt-4">Downloadable document · One-time purchase{sale ? " · Product Sale: 55% off" : ""}</p>
+          <p className="text-xs text-muted-foreground mt-4">Downloadable document · One-time purchase{sale ? ` · ${getSaleBadgeLabel(regularCents, "kode-migration")}` : ""}</p>
         </section>
       </div>
     </div>
