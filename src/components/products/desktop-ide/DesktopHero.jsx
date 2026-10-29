@@ -27,7 +27,7 @@ Base44 <span className="text-gradient-orange">Desktop IDE</span>
               onClick={() => { trackEvent("cta_get_lifetime", { location: "hero" }); onEarlyAccess(); }}
               className="font-semibold bg-gradient-to-r from-[#f87171] via-[#fb923c] to-[#facc15] text-[#0a0f1e] hover:opacity-90 glow-orange"
             >
-              Get Lifetime Access — $11.25 <ArrowRight className="w-4 h-4 ml-2" />
+              Get Lifetime Access — $10 <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
             <Button size="lg" variant="outline" onClick={() => { trackEvent("cta_explore_features", { location: "hero" }); onExplore(); }}>
               See what it does
