@@ -1,5 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
+// Products a Complete Builder Bundle purchase does NOT grant — must stay in step
+// with BUNDLE_EXCLUDED_SLUGS in squarePaymentWebhook.
+const BUNDLE_EXCLUDED_SLUGS = ['complete-builder-bundle', 'complete-base44-knowledge-kit', 'hire-will-kode'];
+
 // Returns the list of products the calling user owns (has a completed Payment
 // with a productId for). Resolved entirely server-side with the service role so
 // the dashboard "My Products" section never depends on client-side RLS read
@@ -25,7 +29,7 @@ Deno.serve(async (req) => {
     }
 
     const productIds = bundleOnly
-      ? all.filter((p) => p.active !== false && p.slug !== 'complete-builder-bundle' && p.slug !== 'complete-base44-knowledge-kit' && (p.priceCents || 0) > 0).map((p) => p.id)
+      ? all.filter((p) => p.active !== false && !BUNDLE_EXCLUDED_SLUGS.includes(p.slug) && (p.priceCents || 0) > 0).map((p) => p.id)
       : purchasedIds;
     if (productIds.length === 0) return Response.json({ products: [] });
 
