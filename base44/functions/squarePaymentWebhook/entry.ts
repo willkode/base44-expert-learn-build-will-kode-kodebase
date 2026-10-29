@@ -55,12 +55,22 @@ async function isValidSignature(signatureKey, candidateUrls, rawBody, signatureH
   return false;
 }
 
+// Products a Complete Builder Bundle purchase does NOT grant: the bundle row
+// itself, the separately-sold Knowledge Kit, and hands-on services (the bundle
+// is a bundle of products, not an engagement).
+// Mirrored in getMyProducts and src/components/products/CompleteBundleDetails.jsx.
+const BUNDLE_EXCLUDED_SLUGS = [
+  'complete-builder-bundle',
+  'complete-base44-knowledge-kit',
+  'hire-will-kode',
+];
+
 // Complete Builder Bundle — expand into individual product access so every
 // included product shows up in My Products with its own download.
 async function expandBundleAccess(base44, product, userId, userEmail, paymentId) {
   if (product?.slug !== 'complete-builder-bundle') return;
   const all = await base44.asServiceRole.entities.Product.filter({ active: true });
-  const included = all.filter((p) => p.slug !== 'complete-builder-bundle' && p.slug !== 'complete-base44-knowledge-kit' && (p.priceCents || 0) > 0);
+  const included = all.filter((p) => !BUNDLE_EXCLUDED_SLUGS.includes(p.slug) && (p.priceCents || 0) > 0);
   for (const p of included) {
     await base44.asServiceRole.entities.Payment.create({
       userId,
