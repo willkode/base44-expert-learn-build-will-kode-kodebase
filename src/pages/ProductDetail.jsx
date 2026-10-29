@@ -27,7 +27,7 @@ import AppKnowledgeBaseDetails from "@/components/products/AppKnowledgeBaseDetai
 import AiAgentRecommenderDetails from "@/components/products/AiAgentRecommenderDetails";
 import { trackViewItem, trackSelectItem, trackAddToCart } from "@/lib/analytics";
 import { useCart } from "@/components/cart/CartContext";
-import { getProductSalePriceCents, formatUsd, isSummerSaleActive } from "@/lib/summerSale";
+import { getProductSalePriceCents, formatUsd, isProductOnSale } from "@/lib/summerSale";
 import ReviewsSection from "@/components/reviews/ReviewsSection";
 
 export default function ProductDetail() {
@@ -63,7 +63,7 @@ export default function ProductDetail() {
     );
   }
 
-  const onSale = isSummerSaleActive();
+  const onSale = isProductOnSale(product.priceCents, product.slug);
   const salePriceCents = getProductSalePriceCents(product.priceCents, product.slug);
   const price = formatUsd(salePriceCents);
   const fullPrice = formatUsd(product.priceCents);
