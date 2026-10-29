@@ -17,7 +17,7 @@ export const HERO_SPECS = [
   { label: "Platform", value: "Windows 10 / 11 · x64" },
   { label: "Installer", value: "80 MB · per-user" },
   { label: "Requires", value: "A Base44 account" },
-  { label: "Price", value: "$11.25 lifetime access" },
+  { label: "Price", value: "$10 lifetime access" },
 ];
 
 export const IDEA = [
@@ -119,10 +119,10 @@ export const PRICING = [
   {
     name: "Base44 Desktop IDE",
     badge: "Lifetime access",
-    price: "$11.25",
+    price: "$10",
     priceNote: "One-time payment. Lifetime access, including future updates. Requires a Base44 account.",
     tagline: "The full Windows workbench for every app in your Base44 account.",
-    cta: "Get Lifetime Access — $11.25",
+    cta: "Get Lifetime Access — $10",
     highlight: true,
     features: [
       "Every app in your account, with artwork, in one window",
@@ -147,5 +147,5 @@ export const FAQS = [
   { q: "What do the audits actually do?", a: "You pick an audit and the app composes a detailed instruction and sends it to your Base44 editor's chat, so the review runs inside Base44 where the model can read your entities, functions, permission rules and pages. Every prompt asks for findings with severity, location, cause and fix — and explicitly forbids the model from changing anything." },
   { q: "Which operating systems are supported?", a: "Windows 10 and 11 (x64) at present. The codebase is cross-platform; the packaging is not yet." },
   { q: "Why does Windows warn me when I install it?", a: "The installer is unsigned, so Windows shows a warning on first run until the installer builds reputation. Installation is per-user and does not require an administrator prompt." },
-  { q: "How much does it cost?", a: "$11.25 once, for lifetime access including future updates. You also need a Base44 account, since the app works against your real account." },
+  { q: "How much does it cost?", a: "$10 once, for lifetime access including future updates. You also need a Base44 account, since the app works against your real account." },
 ];
